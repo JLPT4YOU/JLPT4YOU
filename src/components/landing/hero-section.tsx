@@ -178,7 +178,7 @@ export function HeroSection({ translations }: HeroSectionProps) {
   }, [])
 
   return (
-    <section className="relative min-h-screen flex-center bg-background overflow-hidden">
+    <section className="relative py-16 md:py-20 lg:py-24 bg-background overflow-hidden">
       {/* Clean Sparkling Stars Background Only */}
       <SparklingStarsBackground />
       

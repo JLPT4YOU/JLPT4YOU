@@ -122,7 +122,7 @@ export const FinalCTASection = ({ translations }: FinalCTASectionProps) => {
               <Button
                 variant="outline"
                 size="lg"
-                className="w-full sm:w-auto border-2 border-background text-background px-8 py-4 text-base md:text-lg font-semibold"
+                className="w-full sm:w-auto border-2 border-background text-background px-8 py-4 text-base md:text-lg font-semibold hover:!border-background hover:!text-background hover:!bg-transparent"
               >
                 {t('finalCta.upgradeButton')}
               </Button>
