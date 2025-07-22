@@ -1,0 +1,231 @@
+/* Markdown Content Styling */
+.markdown-content {
+  /* Ensure proper spacing and typography */
+  line-height: 1.6;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+/* Fix list item rendering to prevent unnecessary line breaks */
+.markdown-content ol li,
+.markdown-content ul li {
+  display: list-item;
+  margin: 0;
+  padding: 0;
+}
+
+.markdown-content ol li > *:first-child,
+.markdown-content ul li > *:first-child {
+  display: inline;
+  margin: 0;
+}
+
+/* Ensure list markers stay with content */
+.markdown-content ol,
+.markdown-content ul {
+  padding-left: 1.5rem;
+}
+
+.markdown-content ol li::marker,
+.markdown-content ul li::marker {
+  font-weight: normal;
+}
+
+/* Text formatting - ensure proper styling */
+.markdown-content em {
+  font-style: italic;
+}
+
+.markdown-content strong {
+  font-weight: bold;
+}
+
+.markdown-content strong em,
+.markdown-content em strong {
+  font-weight: bold;
+  font-style: italic;
+}
+
+.markdown-content > *:first-child {
+  margin-top: 0 !important;
+}
+
+.markdown-content > *:last-child {
+  margin-bottom: 0 !important;
+}
+
+/* Code block improvements - Updated for Shiki */
+.markdown-content pre {
+  position: relative;
+  overflow-x: auto;
+  border-radius: 0.5rem;
+  /* Border is now handled by Shiki wrapper component */
+  border: none !important;
+}
+
+/* Force remove any borders from Shiki generated elements */
+.markdown-content pre > div {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Ensure Shiki container has no extra borders */
+.markdown-content [class*="language-"] {
+  border: none !important;
+}
+
+/* Additional override for any code elements */
+.markdown-content code {
+  border: none !important;
+}
+
+.markdown-content pre::-webkit-scrollbar {
+  height: 8px;
+}
+
+.markdown-content pre::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.markdown-content pre::-webkit-scrollbar-thumb {
+  background: var(--muted-foreground);
+  border-radius: 4px;
+}
+
+.markdown-content pre::-webkit-scrollbar-thumb:hover {
+  background: var(--foreground);
+}
+
+/* Table responsive improvements */
+.markdown-content table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: calc(var(--chat-font-size, 16px) * 0.9);
+}
+
+.markdown-content table th,
+.markdown-content table td {
+  text-align: left;
+  vertical-align: top;
+}
+
+/* List improvements */
+.markdown-content ul,
+.markdown-content ol {
+  padding-left: 1.5rem;
+}
+
+.markdown-content li {
+  margin: 0.25rem 0;
+}
+
+.markdown-content li > ul,
+.markdown-content li > ol {
+  margin: 0.25rem 0;
+}
+
+/* Link hover effects */
+.markdown-content a:hover {
+  text-decoration: underline;
+}
+
+/* Blockquote improvements */
+.markdown-content blockquote {
+  font-style: italic;
+  position: relative;
+}
+
+.markdown-content blockquote::before {
+  content: '"';
+  position: absolute;
+  left: -0.5rem;
+  top: -0.25rem;
+  font-size: 1.5em;
+  color: var(--primary);
+  opacity: 0.5;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 640px) {
+  .markdown-content {
+    font-size: calc(var(--chat-font-size, 16px) * 0.9);
+  }
+
+  .markdown-content h1 {
+    font-size: 1.5rem;
+  }
+
+  .markdown-content h2 {
+    font-size: 1.25rem;
+  }
+
+  .markdown-content h3 {
+    font-size: 1.125rem;
+  }
+
+  .markdown-content table {
+    font-size: calc(var(--chat-font-size, 16px) * 0.8);
+  }
+
+  .markdown-content pre {
+    font-size: calc(var(--chat-font-size, 16px) * 0.75);
+  }
+}
+
+/* Scroll to bottom button styling - Matches input chat background */
+.scroll-to-bottom-button {
+  border-radius: 50%;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(12px);
+  /* Use same background as chat input for consistency */
+  background: var(--chat-input-bg);
+  border: 1px solid var(--chat-input-border);
+  color: var(--foreground);
+  transition: all 0.2s ease-in-out;
+  animation: fadeInUp 0.3s ease-out;
+  /* Ensure button stays above content */
+  position: relative;
+  z-index: 20;
+}
+
+.scroll-to-bottom-button:hover {
+  /* Slightly darker/lighter on hover while maintaining input theme */
+  background: var(--chat-input-bg);
+  border-color: var(--chat-input-focus);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px -8px rgba(0, 0, 0, 0.25);
+  /* Add subtle brightness change on hover */
+  filter: brightness(0.95);
+}
+
+.scroll-to-bottom-button:active {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  filter: brightness(0.9);
+}
+
+/* Shiki Code Block Styles - Min Theme Support */
+.shiki-code-block {
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+.shiki-code-block pre {
+  margin: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  overflow-x: auto;
+}
+
+.shiki-code-block code {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  background: transparent !important;
+}
+
+/* Ensure Shiki themes work properly with our container styling */
+.shiki-code-block .shiki {
+  background: transparent !important;
+}

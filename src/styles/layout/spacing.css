@@ -1,0 +1,151 @@
+/*
+=== JLPT4YOU Unified Layout & Spacing System ===
+
+Consistent padding/margin/spacing system for the entire application.
+Based on a 8px grid system for perfect alignment and visual harmony.
+
+CORE LAYOUT CLASSES:
+*/
+
+/* 1. Container System - Horizontal Padding */
+.app-container {
+  @apply w-full;
+  padding-left: var(--spacing-md);   /* 16px mobile */
+  padding-right: var(--spacing-md);
+}
+
+@media (min-width: 640px) {
+  .app-container {
+    padding-left: var(--spacing-lg);  /* 24px tablet */
+    padding-right: var(--spacing-lg);
+  }
+}
+
+@media (min-width: 1024px) {
+  .app-container {
+    padding-left: var(--spacing-xl);  /* 32px desktop */
+    padding-right: var(--spacing-xl);
+  }
+}
+
+/* 2. Section System - Vertical Spacing */
+.app-section {
+  padding-top: var(--spacing-lg);     /* 24px mobile */
+  padding-bottom: var(--spacing-lg);
+}
+
+@media (min-width: 640px) {
+  .app-section {
+    padding-top: var(--spacing-xl);   /* 32px tablet+ */
+    padding-bottom: var(--spacing-xl);
+  }
+}
+
+/* 3. Content Width System */
+.app-content {
+  @apply max-w-6xl mx-auto;
+}
+
+/* 4. Component Spacing Classes */
+.app-gap-xs { gap: var(--spacing-xs); }
+.app-gap-sm { gap: var(--spacing-sm); }
+.app-gap-md { gap: var(--spacing-md); }
+.app-gap-lg { gap: var(--spacing-lg); }
+.app-gap-xl { gap: var(--spacing-xl); }
+
+.app-space-xs > * + * { margin-top: var(--spacing-xs); }
+.app-space-sm > * + * { margin-top: var(--spacing-sm); }
+.app-space-md > * + * { margin-top: var(--spacing-md); }
+.app-space-lg > * + * { margin-top: var(--spacing-lg); }
+.app-space-xl > * + * { margin-top: var(--spacing-xl); }
+
+/* 5. Padding Utilities */
+.app-p-xs { padding: var(--spacing-xs); }
+.app-p-sm { padding: var(--spacing-sm); }
+.app-p-md { padding: var(--spacing-md); }
+.app-p-lg { padding: var(--spacing-lg); }
+.app-p-xl { padding: var(--spacing-xl); }
+
+.app-px-xs { padding-left: var(--spacing-xs); padding-right: var(--spacing-xs); }
+.app-px-sm { padding-left: var(--spacing-sm); padding-right: var(--spacing-sm); }
+.app-px-md { padding-left: var(--spacing-md); padding-right: var(--spacing-md); }
+.app-px-lg { padding-left: var(--spacing-lg); padding-right: var(--spacing-lg); }
+.app-px-xl { padding-left: var(--spacing-xl); padding-right: var(--spacing-xl); }
+
+.app-py-xs { padding-top: var(--spacing-xs); padding-bottom: var(--spacing-xs); }
+.app-py-sm { padding-top: var(--spacing-sm); padding-bottom: var(--spacing-sm); }
+.app-py-md { padding-top: var(--spacing-md); padding-bottom: var(--spacing-md); }
+.app-py-lg { padding-top: var(--spacing-lg); padding-bottom: var(--spacing-lg); }
+.app-py-xl { padding-top: var(--spacing-xl); padding-bottom: var(--spacing-xl); }
+
+/* 6. Margin Utilities */
+.app-m-xs { margin: var(--spacing-xs); }
+.app-m-sm { margin: var(--spacing-sm); }
+.app-m-md { margin: var(--spacing-md); }
+.app-m-lg { margin: var(--spacing-lg); }
+.app-m-xl { margin: var(--spacing-xl); }
+
+.app-mx-xs { margin-left: var(--spacing-xs); margin-right: var(--spacing-xs); }
+.app-mx-sm { margin-left: var(--spacing-sm); margin-right: var(--spacing-sm); }
+.app-mx-md { margin-left: var(--spacing-md); margin-right: var(--spacing-md); }
+.app-mx-lg { margin-left: var(--spacing-lg); margin-right: var(--spacing-lg); }
+.app-mx-xl { margin-left: var(--spacing-xl); margin-right: var(--spacing-xl); }
+
+.app-my-xs { margin-top: var(--spacing-xs); margin-bottom: var(--spacing-xs); }
+.app-my-sm { margin-top: var(--spacing-sm); margin-bottom: var(--spacing-sm); }
+.app-my-md { margin-top: var(--spacing-md); margin-bottom: var(--spacing-md); }
+.app-my-lg { margin-top: var(--spacing-lg); margin-bottom: var(--spacing-lg); }
+.app-my-xl { margin-top: var(--spacing-xl); margin-bottom: var(--spacing-xl); }
+
+/* 7. Individual Margin Utilities */
+.app-mt-xs { margin-top: var(--spacing-xs); }
+.app-mt-sm { margin-top: var(--spacing-sm); }
+.app-mt-md { margin-top: var(--spacing-md); }
+.app-mt-lg { margin-top: var(--spacing-lg); }
+.app-mt-xl { margin-top: var(--spacing-xl); }
+
+.app-mb-xs { margin-bottom: var(--spacing-xs); }
+.app-mb-sm { margin-bottom: var(--spacing-sm); }
+.app-mb-md { margin-bottom: var(--spacing-md); }
+.app-mb-lg { margin-bottom: var(--spacing-lg); }
+.app-mb-xl { margin-bottom: var(--spacing-xl); }
+
+.app-ml-xs { margin-left: var(--spacing-xs); }
+.app-ml-sm { margin-left: var(--spacing-sm); }
+.app-ml-md { margin-left: var(--spacing-md); }
+.app-ml-lg { margin-left: var(--spacing-lg); }
+.app-ml-xl { margin-left: var(--spacing-xl); }
+
+.app-mr-xs { margin-right: var(--spacing-xs); }
+.app-mr-sm { margin-right: var(--spacing-sm); }
+.app-mr-md { margin-right: var(--spacing-md); }
+.app-mr-lg { margin-right: var(--spacing-lg); }
+.app-mr-xl { margin-right: var(--spacing-xl); }
+
+/*
+=== USAGE EXAMPLES ===
+
+Standard page layout:
+<div className="app-container app-section">
+  <div className="app-content">
+    <!-- Your content here -->
+  </div>
+</div>
+
+Header layout:
+<header className="app-container app-py-md">
+  <!-- Header content -->
+</header>
+
+Component spacing:
+<div className="app-space-md">
+  <div>Item 1</div>
+  <div>Item 2</div>
+  <div>Item 3</div>
+</div>
+
+Grid with consistent gaps:
+<div className="grid grid-cols-3 app-gap-lg">
+  <!-- Grid items -->
+</div>
+*/

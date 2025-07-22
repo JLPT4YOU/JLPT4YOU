@@ -1,0 +1,53 @@
+/*
+=== JLPT4YOU Font Weight System ===
+
+Semantic font weight classes using Noto Sans Japanese
+Optimized for Vietnamese, Japanese, and English content
+*/
+
+/* Semantic Font Weight Classes */
+.font-weight-light {
+  font-weight: var(--font-weight-light); /* 300 - Text phụ/muted */
+}
+
+.font-weight-normal {
+  font-weight: var(--font-weight-normal); /* 400 - Body text */
+}
+
+.font-weight-medium {
+  font-weight: var(--font-weight-medium); /* 500 - Buttons/Nav */
+}
+
+.font-weight-semibold {
+  font-weight: var(--font-weight-semibold); /* 600 - Tiêu đề phụ */
+}
+
+.font-weight-bold {
+  font-weight: var(--font-weight-bold); /* 700 - Tiêu đề chính */
+}
+
+/* Typography Hierarchy Classes */
+.heading-primary {
+  font-weight: var(--font-weight-bold);
+  line-height: 1.2;
+}
+
+.heading-secondary {
+  font-weight: var(--font-weight-semibold);
+  line-height: 1.3;
+}
+
+.body-text {
+  font-weight: var(--font-weight-normal);
+  line-height: 1.6;
+}
+
+.text-muted {
+  font-weight: var(--font-weight-light);
+  line-height: 1.5;
+}
+
+.interactive-text {
+  font-weight: var(--font-weight-medium);
+  line-height: 1.4;
+}

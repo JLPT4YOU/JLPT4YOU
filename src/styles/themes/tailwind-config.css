@@ -1,0 +1,67 @@
+/* Tailwind CSS theme configuration */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --font-sans: var(--font-noto-sans-jp);
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  --radius: var(--radius);
+
+  /* JLPT Level Colors */
+  --color-jlpt-n5: var(--jlpt-n5);
+  --color-jlpt-n5-foreground: var(--jlpt-n5-foreground);
+  --color-jlpt-n4: var(--jlpt-n4);
+  --color-jlpt-n4-foreground: var(--jlpt-n4-foreground);
+  --color-jlpt-n3: var(--jlpt-n3);
+  --color-jlpt-n3-foreground: var(--jlpt-n3-foreground);
+  --color-jlpt-n2: var(--jlpt-n2);
+  --color-jlpt-n2-foreground: var(--jlpt-n2-foreground);
+  --color-jlpt-n1: var(--jlpt-n1);
+  --color-jlpt-n1-foreground: var(--jlpt-n1-foreground);
+
+  /* Status Colors */
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-info: var(--info);
+  --color-info-foreground: var(--info-foreground);
+
+  /* Spacing System */
+  --color-spacing-xs: var(--spacing-xs);
+  --color-spacing-sm: var(--spacing-sm);
+  --color-spacing-md: var(--spacing-md);
+  --color-spacing-lg: var(--spacing-lg);
+  --color-spacing-xl: var(--spacing-xl);
+  --color-spacing-2xl: var(--spacing-2xl);
+  --color-spacing-3xl: var(--spacing-3xl);
+}

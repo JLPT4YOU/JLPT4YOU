@@ -1,0 +1,153 @@
+/* ===== PROFESSIONAL HOVER EFFECTS SYSTEM ===== */
+/* GitHub/Discord-inspired hover effects - subtle, professional, consistent */
+
+/* === CORE HOVER PRINCIPLES === */
+/* 1. Subtle brightness changes (5-10% max) */
+/* 2. No gray transitions - use existing color hierarchy */
+/* 3. Consistent timing and easing */
+/* 4. Maintain perfect contrast ratios */
+
+/* Base Professional Hover - Universal subtle effect */
+.hover-professional {
+  transition: background-color 0.15s ease-out;
+}
+
+.hover-professional:hover {
+  background-color: color-mix(in oklch, var(--muted) 95%, var(--foreground) 5%);
+}
+
+/* Primary Button Hover - Subtle darkening */
+.hover-primary {
+  transition: background-color 0.15s ease-out;
+}
+
+.hover-primary:hover {
+  background-color: color-mix(in oklch, var(--primary) 92%, transparent 8%);
+}
+
+/* Secondary Surface Hover - Move up hierarchy */
+.hover-secondary {
+  transition: background-color 0.15s ease-out;
+}
+
+.hover-secondary:hover {
+  background-color: var(--muted);
+}
+
+/* Muted Surface Hover - Subtle lift */
+.hover-muted {
+  transition: background-color 0.15s ease-out;
+}
+
+.hover-muted:hover {
+  background-color: color-mix(in oklch, var(--muted) 95%, var(--foreground) 5%);
+}
+
+/* Ghost Button Hover - Gentle background appearance */
+.hover-ghost {
+  transition: background-color 0.15s ease-out;
+}
+
+.hover-ghost:hover {
+  background-color: var(--muted);
+}
+
+/* Interactive Element Hover - For dropdowns, menus */
+.hover-interactive {
+  transition: background-color 0.15s ease-out;
+}
+
+.hover-interactive:hover {
+  background-color: var(--muted);
+}
+
+/* Destructive Button Hover - Subtle darkening */
+.hover-destructive {
+  transition: background-color 0.15s ease-out;
+}
+
+.hover-destructive:hover {
+  background-color: color-mix(in oklch, var(--destructive) 92%, transparent 8%);
+}
+
+/* === CARD HOVER EFFECTS === */
+
+/* Basic Card Hover - Subtle background lift */
+.hover-card {
+  transition: all 0.15s ease-out;
+}
+
+.hover-card:hover {
+  background-color: color-mix(in oklch, var(--card) 97%, var(--foreground) 3%);
+  box-shadow: 0 2px 8px color-mix(in oklch, var(--foreground) 8%, transparent 92%);
+}
+
+/* Card with Scale - For emphasis */
+.hover-card-scale {
+  transition: all 0.15s ease-out;
+}
+
+.hover-card-scale:hover {
+  background-color: color-mix(in oklch, var(--card) 97%, var(--foreground) 3%);
+  transform: scale(1.01);
+  box-shadow: 0 4px 12px color-mix(in oklch, var(--foreground) 8%, transparent 92%);
+}
+
+/* === UTILITY HOVER EFFECTS === */
+
+/* Scale Only - For icons or small elements */
+.hover-scale {
+  transition: transform 0.15s ease-out;
+}
+
+.hover-scale:hover {
+  transform: scale(1.05);
+}
+
+/* Opacity - For simple fade effects */
+.hover-opacity {
+  transition: opacity 0.15s ease-out;
+}
+
+.hover-opacity:hover {
+  opacity: 0.8;
+}
+
+/* === FOCUS STATES === */
+
+/* Professional Focus Ring */
+.focus-ring {
+  transition: all 0.15s ease-out;
+}
+
+.focus-ring:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+/* === LEGACY COMPATIBILITY === */
+/* Map old classes to new professional system */
+
+.hover-brightness-light {
+  transition: background-color 0.15s ease-out;
+}
+
+.hover-brightness-light:hover {
+  background-color: var(--muted);
+}
+
+.hover-brightness-medium {
+  transition: background-color 0.15s ease-out;
+}
+
+.hover-brightness-medium:hover {
+  background-color: color-mix(in oklch, var(--muted) 95%, var(--foreground) 5%);
+}
+
+.hover-brightness-strong {
+  transition: background-color 0.15s ease-out;
+}
+
+.hover-brightness-strong:hover {
+  background-color: color-mix(in oklch, var(--muted) 90%, var(--foreground) 10%);
+}
