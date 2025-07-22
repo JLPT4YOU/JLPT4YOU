@@ -1,0 +1,125 @@
+{
+  "name": "JLPT4You - Học tiếng Nhật với AI",
+  "short_name": "JLPT4You",
+  "description": "Website luyện thi JLPT hàng đầu Việt Nam với AI hỗ trợ học tập",
+  "start_url": "/auth/vn/landing",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#000000",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "vi-VN",
+  "dir": "ltr",
+  "categories": ["education", "productivity", "utilities"],
+  "icons": [
+    {
+      "src": "/favicon-16x16.svg",
+      "sizes": "16x16",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "/favicon-32x32.svg", 
+      "sizes": "32x32",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Luyện thi JLPT N5",
+      "short_name": "JLPT N5",
+      "description": "Bắt đầu luyện thi JLPT N5 - Trình độ sơ cấp",
+      "url": "/jlpt/custom/n5",
+      "icons": [
+        {
+          "src": "/shortcut-n5.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Luyện thi JLPT N4",
+      "short_name": "JLPT N4", 
+      "description": "Bắt đầu luyện thi JLPT N4 - Trình độ sơ cấp cao",
+      "url": "/jlpt/custom/n4",
+      "icons": [
+        {
+          "src": "/shortcut-n4.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Luyện thi JLPT N3",
+      "short_name": "JLPT N3",
+      "description": "Bắt đầu luyện thi JLPT N3 - Trình độ trung cấp",
+      "url": "/jlpt/custom/n3",
+      "icons": [
+        {
+          "src": "/shortcut-n3.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Challenge Mode",
+      "short_name": "Challenge",
+      "description": "Thử thách bản thân với Challenge Mode",
+      "url": "/challenge",
+      "icons": [
+        {
+          "src": "/shortcut-challenge.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshot-wide.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "JLPT4You Desktop Interface"
+    },
+    {
+      "src": "/screenshot-narrow.png", 
+      "sizes": "750x1334",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "JLPT4You Mobile Interface"
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false,
+  "edge_side_panel": {
+    "preferred_width": 400
+  },
+  "launch_handler": {
+    "client_mode": "navigate-existing"
+  }
+}

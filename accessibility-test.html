@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JLPT4YOU - Accessibility Test</title>
+    <style>
+        /* Import bảng màu mới */
+        :root {
+            /* Light Mode */
+            --background: oklch(1 0 0);                    /* Pure white (#FFFFFF) */
+            --foreground: oklch(0.25 0 0);                 /* Dark charcoal (#212121) */
+            --card: oklch(0.97 0.005 100);                 /* Light gray card (#F8F9FA) */
+            --primary: oklch(0.25 0 0);                    /* Dark charcoal (#212121) */
+            --primary-foreground: oklch(1 0 0);            /* Pure white text */
+            --secondary: oklch(0.93 0.003 90);             /* Light gray (#EFEFEF) */
+            --muted: oklch(0.88 0.002 90);                 /* Muted gray (#E0E0E0) */
+            --border: oklch(0.90 0.003 85);                /* Light border (#DEE2E6) */
+            
+            /* Chat Colors */
+            --chat-user-bg: oklch(0.25 0 0);              /* Dark charcoal user messages */
+            --chat-user-text: oklch(1 0 0);               /* Pure white text */
+            --chat-assistant-bg: oklch(0.97 0.005 100);   /* Light gray AI messages */
+            --chat-assistant-text: oklch(0.25 0 0);       /* Dark charcoal text */
+        }
+
+        .dark {
+            /* Dark Mode */
+            --background: oklch(0.12 0 0);              /* Deep charcoal (#121212) */
+            --foreground: oklch(0.88 0.002 90);         /* Light gray text (#E0E0E0) */
+            --card: oklch(0.18 0.005 240);              /* Slightly lighter card (#1E1E1E) */
+            --primary: oklch(0.88 0.002 90);            /* Light gray (#E0E0E0) */
+            --primary-foreground: oklch(0.12 0 0);      /* Dark background */
+            --secondary: oklch(0.20 0.005 240);         /* Secondary background (#242424) */
+            --muted: oklch(0.23 0.004 240);             /* Muted background (#2C2C2C) */
+            --border: oklch(0.28 0.004 240);            /* Clear border (#333333) */
+            
+            /* Chat Colors */
+            --chat-user-bg: oklch(0.88 0.002 90);       /* Light gray for user messages */
+            --chat-user-text: oklch(0.12 0 0);          /* Dark text on light background */
+            --chat-assistant-bg: oklch(0.18 0.005 240); /* Slightly lighter than background for AI */
+            --chat-assistant-text: oklch(0.88 0.002 90); /* Light gray text */
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: var(--background);
+            color: var(--foreground);
+            transition: all 0.3s ease;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background: var(--primary);
+            color: var(--primary-foreground);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .test-section {
+            margin: 40px 0;
+            padding: 20px;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+        }
+
+        .test-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .color-test {
+            padding: 16px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .bg-primary { background: var(--primary); color: var(--primary-foreground); }
+        .bg-secondary { background: var(--secondary); color: var(--foreground); }
+        .bg-muted { background: var(--muted); color: var(--foreground); }
+        .bg-chat-user { background: var(--chat-user-bg); color: var(--chat-user-text); }
+        .bg-chat-assistant { background: var(--chat-assistant-bg); color: var(--chat-assistant-text); }
+
+        .contrast-info {
+            font-size: 12px;
+            margin-top: 8px;
+            opacity: 0.8;
+        }
+
+        h1, h2, h3 { color: var(--foreground); }
+        
+        .button {
+            padding: 12px 24px;
+            background: var(--primary);
+            color: var(--primary-foreground);
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 8px;
+            font-weight: 500;
+        }
+
+        .button:hover {
+            opacity: 0.9;
+        }
+
+        .text-samples {
+            line-height: 1.6;
+        }
+
+        .text-samples p {
+            margin: 12px 0;
+        }
+
+        .small-text { font-size: 14px; }
+        .large-text { font-size: 18px; }
+    </style>
+</head>
+<body>
+    <button class="theme-toggle" onclick="toggleTheme()">🌙 Toggle Dark Mode</button>
+    
+    <div class="container">
+        <h1>JLPT4YOU - Accessibility & Readability Test</h1>
+        <p>Kiểm tra bảng màu chuyên nghiệp mới với tiêu chuẩn WCAG 2.1</p>
+
+        <div class="test-section">
+            <h2>🎨 Color Contrast Tests</h2>
+            <div class="test-grid">
+                <div class="color-test bg-primary">
+                    <h3>Primary Button</h3>
+                    <p>Đây là text trên nền primary. Contrast ratio cần đạt tối thiểu 4.5:1 cho text thường và 3:1 cho text lớn.</p>
+                    <div class="contrast-info">Primary: #212121 on #FFFFFF (Light) | #E0E0E0 on #121212 (Dark)</div>
+                </div>
+
+                <div class="color-test bg-secondary">
+                    <h3>Secondary Background</h3>
+                    <p>Text trên nền secondary cần đảm bảo độ tương phản tốt cho việc đọc lâu dài.</p>
+                    <div class="contrast-info">Secondary: #212121 on #EFEFEF (Light) | #E0E0E0 on #242424 (Dark)</div>
+                </div>
+
+                <div class="color-test bg-muted">
+                    <h3>Muted Elements</h3>
+                    <p>Các phần tử muted vẫn cần đảm bảo readability, đặc biệt cho người dùng có vấn đề về thị lực.</p>
+                    <div class="contrast-info">Muted: #212121 on #E0E0E0 (Light) | #E0E0E0 on #2C2C2C (Dark)</div>
+                </div>
+
+                <div class="color-test bg-chat-user">
+                    <h3>User Messages</h3>
+                    <p>Tin nhắn của người dùng cần có contrast cao để dễ đọc trong môi trường chat.</p>
+                    <div class="contrast-info">User: #FFFFFF on #212121 (Light) | #121212 on #E0E0E0 (Dark)</div>
+                </div>
+
+                <div class="color-test bg-chat-assistant">
+                    <h3>AI Assistant Messages</h3>
+                    <p>Tin nhắn AI cần đảm bảo readability tốt cho việc đọc nội dung dài và phức tạp.</p>
+                    <div class="contrast-info">Assistant: #212121 on #F8F9FA (Light) | #E0E0E0 on #1E1E1E (Dark)</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>📝 Text Readability Tests</h2>
+            <div class="text-samples">
+                <p class="small-text">Small text (14px): Đây là văn bản nhỏ để kiểm tra khả năng đọc. Cần đảm bảo contrast ratio tối thiểu 4.5:1.</p>
+                <p>Normal text (16px): Văn bản thường dùng trong ứng dụng. Đây là kích thước chính cho nội dung học tập JLPT.</p>
+                <p class="large-text">Large text (18px): Văn bản lớn có thể sử dụng contrast ratio thấp hơn (3:1) nhưng vẫn nên đảm bảo 4.5:1.</p>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>🔘 Interactive Elements</h2>
+            <button class="button">Primary Button</button>
+            <button class="button" style="background: var(--secondary); color: var(--foreground);">Secondary Button</button>
+            <button class="button" style="background: var(--muted); color: var(--foreground);">Muted Button</button>
+        </div>
+
+        <div class="test-section">
+            <h2>✅ WCAG 2.1 Compliance Checklist</h2>
+            <ul>
+                <li>✅ Contrast ratio ≥ 4.5:1 cho text thường</li>
+                <li>✅ Contrast ratio ≥ 3:1 cho text lớn (18px+)</li>
+                <li>✅ Không dựa vào màu sắc duy nhất để truyền đạt thông tin</li>
+                <li>✅ Hỗ trợ dark mode cho người dùng nhạy cảm với ánh sáng</li>
+                <li>✅ Màu sắc thân thiện với người mù màu (monochrome base)</li>
+                <li>✅ Focus indicators rõ ràng cho keyboard navigation</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        function toggleTheme() {
+            document.body.classList.toggle('dark');
+            const button = document.querySelector('.theme-toggle');
+            const isDark = document.body.classList.contains('dark');
+            button.textContent = isDark ? '☀️ Toggle Light Mode' : '🌙 Toggle Dark Mode';
+        }
+    </script>
+</body>
+</html>

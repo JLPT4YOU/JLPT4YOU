@@ -1,0 +1,136 @@
+/* Status Colors - Monochrome System */
+/* Replaces hardcode colors with design system variables */
+
+/* === EXAM STATUS COLORS === */
+
+/* Correct Answer Status */
+.status-correct {
+  @apply bg-success/10 text-success border-success/20;
+}
+
+.status-correct-solid {
+  @apply bg-success text-success-foreground;
+}
+
+.status-correct-outline {
+  @apply border border-success text-success bg-transparent;
+}
+
+/* Incorrect Answer Status */
+.status-incorrect {
+  @apply bg-destructive/10 text-destructive border-destructive/20;
+}
+
+.status-incorrect-solid {
+  @apply bg-destructive text-destructive-foreground;
+}
+
+.status-incorrect-outline {
+  @apply border border-destructive text-destructive bg-transparent;
+}
+
+/* Flagged Question Status */
+.status-flagged {
+  @apply bg-warning/10 text-warning border-warning/20;
+}
+
+.status-flagged-solid {
+  @apply bg-warning text-warning-foreground;
+}
+
+.status-flagged-outline {
+  @apply border border-warning text-warning bg-transparent;
+}
+
+/* Neutral/Default Status */
+.status-neutral {
+  @apply bg-muted/50 text-muted-foreground border-muted;
+}
+
+.status-neutral-solid {
+  @apply bg-muted text-muted-foreground;
+}
+
+/* === PROVIDER STATUS COLORS === */
+
+/* Primary Provider (Gemini multimodal, main features) */
+.provider-primary {
+  @apply bg-primary/10 text-primary border-primary/20;
+}
+
+.provider-primary-solid {
+  @apply bg-primary text-primary-foreground;
+}
+
+/* Secondary Provider (Alternative features) */
+.provider-secondary {
+  @apply bg-secondary/10 text-secondary-foreground border-secondary/20;
+}
+
+.provider-secondary-solid {
+  @apply bg-secondary text-secondary-foreground;
+}
+
+/* Accent Provider (Special features) */
+.provider-accent {
+  @apply bg-accent/10 text-accent-foreground border-accent/20;
+}
+
+.provider-accent-solid {
+  @apply bg-accent text-accent-foreground;
+}
+
+/* === INTERACTIVE STATUS COLORS === */
+
+/* Success State (for test results, operations) */
+.interactive-success {
+  @apply bg-success/10 text-success border-success/20 hover:bg-success/20 transition-colors;
+}
+
+/* Error State (for test results, operations) */
+.interactive-error {
+  @apply bg-destructive/10 text-destructive border-destructive/20 hover:bg-destructive/20 transition-colors;
+}
+
+/* Info State (for neutral information) */
+.interactive-info {
+  @apply bg-info/10 text-info border-info/20 hover:bg-info/20 transition-colors;
+}
+
+/* === ICON STATUS COLORS === */
+
+/* Status icons with consistent colors */
+.icon-correct {
+  @apply text-success;
+}
+
+.icon-incorrect {
+  @apply text-destructive;
+}
+
+.icon-flagged {
+  @apply text-warning;
+}
+
+.icon-neutral {
+  @apply text-muted-foreground;
+}
+
+/* === BADGE STATUS COLORS === */
+
+/* Small status badges */
+.badge-correct {
+  @apply inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-success/10 text-success;
+}
+
+.badge-incorrect {
+  @apply inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-destructive/10 text-destructive;
+}
+
+.badge-flagged {
+  @apply inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-warning/10 text-warning;
+}
+
+.badge-neutral {
+  @apply inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-muted/50 text-muted-foreground;
+}
