@@ -118,29 +118,29 @@
   outline-offset: 2px;
 }
 
-/* === BRIGHTNESS HOVER EFFECTS === */
-/* For buttons that need brightness adjustment without color change */
+/* === LEGACY COMPATIBILITY === */
+/* Map old classes to new professional system */
 
 .hover-brightness-light {
-  transition: filter 0.15s ease-out;
+  transition: background-color 0.15s ease-out;
 }
 
 .hover-brightness-light:hover {
-  filter: brightness(1.1);
+  background-color: var(--muted);
 }
 
 .hover-brightness-medium {
-  transition: filter 0.15s ease-out;
+  transition: background-color 0.15s ease-out;
 }
 
 .hover-brightness-medium:hover {
-  filter: brightness(1.15);
+  background-color: color-mix(in oklch, var(--muted) 95%, var(--foreground) 5%);
 }
 
 .hover-brightness-strong {
-  transition: filter 0.15s ease-out;
+  transition: background-color 0.15s ease-out;
 }
 
 .hover-brightness-strong:hover {
-  filter: brightness(1.2);
+  background-color: color-mix(in oklch, var(--muted) 90%, var(--foreground) 10%);
 }

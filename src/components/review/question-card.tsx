@@ -80,7 +80,7 @@ export function QuestionCard({
   return (
     <div className="bg-background rounded-2xl p-6 md:p-8">
       {/* Header */}
-      <div className="flex items-center gap-3 mb-6">
+      <div className="flex-start mb-6">
         <div className="flex items-center gap-2">
           <span className="text-sm font-semibold text-muted-foreground">
             {t('reviewAnswers.question.number', { number: questionNumber })}
@@ -102,7 +102,7 @@ export function QuestionCard({
 
         {/* Question Text and Details Button */}
         <div className="flex items-start justify-between gap-4 mb-6">
-          <div className="flex-1 text-base text-foreground leading-relaxed whitespace-pre-line">
+          <div className="flex-1 text-body whitespace-pre-line">
             {question.question}
           </div>
           <Button

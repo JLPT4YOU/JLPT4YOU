@@ -182,7 +182,7 @@ export const PricingSection = ({ translations }: PricingSectionProps) => {
                       className={`
                         w-full py-3 text-base md:text-lg font-medium
                         ${tier.isRecommended
-                          ? 'bg-foreground text-background hover-brightness-medium'
+                          ? 'bg-foreground text-background hover:bg-foreground/90 transition-colors'
                           : 'bg-transparent border-border text-foreground hover-ghost'
                         }
                       `}
