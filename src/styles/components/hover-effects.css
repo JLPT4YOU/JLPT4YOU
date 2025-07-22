@@ -7,11 +7,25 @@
 /* 3. Consistent timing and easing */
 /* 4. Maintain perfect contrast ratios */
 
-/* Removed unused hover classes:
-   - hover-professional (0% usage)
-   - hover-primary (0% usage)
-   - hover-secondary (0% usage)
-*/
+/* === BUTTON HOVER EFFECTS === */
+
+/* Primary Button Hover - Subtle darkening for primary buttons */
+.hover-primary {
+  transition: background-color 0.15s ease-out;
+}
+
+.hover-primary:hover {
+  background-color: color-mix(in oklch, var(--primary) 92%, transparent 8%);
+}
+
+/* Secondary Button Hover - Move up hierarchy */
+.hover-secondary {
+  transition: background-color 0.15s ease-out;
+}
+
+.hover-secondary:hover {
+  background-color: var(--muted);
+}
 
 /* Muted Surface Hover - Subtle lift */
 .hover-muted {
