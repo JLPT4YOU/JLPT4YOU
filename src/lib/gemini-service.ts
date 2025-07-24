@@ -21,6 +21,7 @@ import {
   detectTitleLanguage,
   convertMessagesToGemini
 } from './ai-shared-utils';
+import { GeminiFileHandler } from './gemini/gemini-file-handler';
 
 export interface GeminiMessage {
   role: 'user' | 'model';
@@ -65,12 +66,11 @@ export interface UseGeminiServiceOptions {
 
 export class GeminiService extends BaseAIService {
   private client: GoogleGenAI | null = null;
+  private fileHandler: GeminiFileHandler | null = null;
   protected defaultModel: string = GEMINI_MODELS.FLASH_2_0;
   protected storageKeyPrefix: string = 'gemini';
 
   // Constants for file processing
-  private static readonly FILE_PROCESSING_CHECK_INTERVAL = 2000; // 2 seconds
-  private static readonly REMOTE_FILE_PROCESSING_CHECK_INTERVAL = 5000; // 5 seconds
   private static readonly MAX_TITLE_LENGTH = 50;
 
   constructor(apiKey?: string) {
@@ -79,6 +79,7 @@ export class GeminiService extends BaseAIService {
     if (key) {
       this.apiKey = key;
       this.client = new GoogleGenAI({ apiKey: key });
+      this.fileHandler = new GeminiFileHandler(this.client);
       this.isConfigured = true;
     }
   }
@@ -89,6 +90,7 @@ export class GeminiService extends BaseAIService {
   configure(apiKey: string): void {
     this.apiKey = apiKey;
     this.client = new GoogleGenAI({ apiKey });
+    this.fileHandler = new GeminiFileHandler(this.client);
     this.isConfigured = true;
     this.saveApiKeyToStorage(apiKey);
   }
@@ -419,37 +421,11 @@ export class GeminiService extends BaseAIService {
     try {
       this.ensureConfigured();
 
-      const pdfBuffer = await fetch(url)
-        .then((response) => response.arrayBuffer());
-
-      const fileBlob = new Blob([pdfBuffer], { type: 'application/pdf' });
-
-      const file = await this.client!.files.upload({
-        file: fileBlob,
-        config: {
-          displayName: displayName,
-        },
-      });
-
-      // Wait for the file to be processed
-      if (!file.name) {
-        throw new Error('File upload failed - no file name returned');
+      if (!this.fileHandler) {
+        throw new Error('File handler not initialized');
       }
 
-      let getFile = await this.client!.files.get({ name: file.name });
-      while (getFile.state === 'PROCESSING') {
-        getFile = await this.client!.files.get({ name: file.name });
-
-        await new Promise((resolve) => {
-          setTimeout(resolve, GeminiService.REMOTE_FILE_PROCESSING_CHECK_INTERVAL);
-        });
-      }
-
-      if (getFile.state === 'FAILED') {
-        throw new Error('File processing failed.');
-      }
-
-      return getFile;
+      return await this.fileHandler.uploadRemotePDF(url, displayName);
     } catch (error) {
       console.error(`Failed to upload PDF ${displayName}:`, error);
       throw error;
@@ -467,49 +443,11 @@ export class GeminiService extends BaseAIService {
     try {
       this.ensureConfigured();
 
-      const content: any[] = [prompt];
-
-      // Upload and process each PDF file
-      for (let i = 0; i < files.length; i++) {
-        const file = files[i];
-
-        const uploadedFile = await this.client!.files.upload({
-          file: file,
-          config: {
-            displayName: file.name,
-          },
-        });
-
-        if (!uploadedFile.name) {
-          throw new Error(`File upload failed for ${file.name}`);
-        }
-
-        // Wait for processing
-        let getFile = await this.client!.files.get({ name: uploadedFile.name });
-        while (getFile.state === 'PROCESSING') {
-          getFile = await this.client!.files.get({ name: uploadedFile.name });
-
-          await new Promise((resolve) => {
-            setTimeout(resolve, GeminiService.FILE_PROCESSING_CHECK_INTERVAL);
-          });
-        }
-
-        if (getFile.state === 'FAILED') {
-          throw new Error(`File processing failed for ${file.name}`);
-        }
-
-        if (getFile.uri && getFile.mimeType) {
-          const fileContent = this.createPartFromUri(getFile.uri, getFile.mimeType);
-          content.push(fileContent);
-        }
+      if (!this.fileHandler) {
+        throw new Error('File handler not initialized');
       }
 
-      const response = await this.client!.models.generateContent({
-        model: modelId,
-        contents: content,
-      });
-
-      return response.text || 'No response generated';
+      return await this.fileHandler.processMultipleLocalPDFs(prompt, files, modelId);
     } catch (error) {
       console.error('Failed to process multiple local PDFs:', error);
       throw error;
@@ -527,41 +465,18 @@ export class GeminiService extends BaseAIService {
     try {
       this.ensureConfigured();
 
-      const content: any[] = [prompt];
-
-      // Upload and process each PDF
-      for (const { url, displayName } of pdfUrls) {
-        const file = await this.uploadRemotePDF(url, displayName);
-
-        if (file.uri && file.mimeType) {
-          const fileContent = this.createPartFromUri(file.uri, file.mimeType);
-          content.push(fileContent);
-        }
+      if (!this.fileHandler) {
+        throw new Error('File handler not initialized');
       }
 
-      const response = await this.client!.models.generateContent({
-        model: modelId,
-        contents: content,
-      });
-
-      return response.text || 'No response generated';
+      return await this.fileHandler.processMultiplePDFs(prompt, pdfUrls, modelId);
     } catch (error) {
       console.error('Failed to process multiple PDFs:', error);
       throw error;
     }
   }
 
-  /**
-   * Create part from URI (helper function)
-   */
-  private createPartFromUri(uri: string, mimeType: string): any {
-    return {
-      fileData: {
-        fileUri: uri,
-        mimeType: mimeType
-      }
-    };
-  }
+
 
   /**
    * Upload file to Gemini and get URI
@@ -570,21 +485,14 @@ export class GeminiService extends BaseAIService {
     try {
       this.ensureConfigured();
 
-      // Convert File to base64 for upload
-      const arrayBuffer = await file.arrayBuffer();
-      const base64 = Buffer.from(arrayBuffer).toString('base64');
+      if (!this.fileHandler) {
+        throw new Error('File handler not initialized');
+      }
 
-      const uploadedFile = await this.client!.files.upload({
-        file: base64,
-        config: {
-          mimeType: file.type,
-          displayName: file.name
-        },
-      });
-
+      const result = await this.fileHandler.uploadFile(file);
       return {
-        uri: uploadedFile.uri || '',
-        mimeType: uploadedFile.mimeType || file.type
+        uri: result.uri,
+        mimeType: result.mimeType
       };
     } catch (error) {
       console.error('File upload error:', error);
@@ -645,29 +553,11 @@ export class GeminiService extends BaseAIService {
       if (contents.length > 0 && files.length > 0) {
         const lastMessage = contents[contents.length - 1];
         if (lastMessage.role === 'user') {
-          // Add file parts (cast to any to bypass TypeScript restrictions)
-          const fileParts = files.map(file => {
-            if (file.uri) {
-              // Use uploaded file URI
-              return {
-                fileData: {
-                  mimeType: file.mimeType,
-                  fileUri: file.uri
-                }
-              };
-            } else if (file.data) {
-              // Use inline data
-              return {
-                inlineData: {
-                  mimeType: file.mimeType,
-                  data: file.data
-                }
-              };
-            } else {
-              throw new Error('File must have either URI or data');
-            }
-          });
+          if (!this.fileHandler) {
+            throw new Error('File handler not initialized');
+          }
 
+          const fileParts = this.fileHandler.createFileParts(files);
           // Add file parts to message (cast to bypass TypeScript)
           (lastMessage.parts as any[]).push(...fileParts);
         }
@@ -750,29 +640,11 @@ export class GeminiService extends BaseAIService {
       if (contents.length > 0 && files.length > 0) {
         const lastMessage = contents[contents.length - 1];
         if (lastMessage.role === 'user') {
-          // Add file parts (cast to any to bypass TypeScript restrictions)
-          const fileParts = files.map(file => {
-            if (file.uri) {
-              // Use uploaded file URI
-              return {
-                fileData: {
-                  mimeType: file.mimeType,
-                  fileUri: file.uri
-                }
-              };
-            } else if (file.data) {
-              // Use inline data
-              return {
-                inlineData: {
-                  mimeType: file.mimeType,
-                  data: file.data
-                }
-              };
-            } else {
-              throw new Error('File must have either URI or data');
-            }
-          });
+          if (!this.fileHandler) {
+            throw new Error('File handler not initialized');
+          }
 
+          const fileParts = this.fileHandler.createFileParts(files);
           // Add file parts to message (cast to bypass TypeScript)
           (lastMessage.parts as any[]).push(...fileParts);
         }
@@ -843,29 +715,11 @@ export class GeminiService extends BaseAIService {
       if (contents.length > 0 && files.length > 0) {
         const lastMessage = contents[contents.length - 1];
         if (lastMessage.role === 'user') {
-          // Add file parts (cast to any to bypass TypeScript restrictions)
-          const fileParts = files.map(file => {
-            if (file.uri) {
-              // Use uploaded file URI
-              return {
-                fileData: {
-                  mimeType: file.mimeType,
-                  fileUri: file.uri
-                }
-              };
-            } else if (file.data) {
-              // Use inline data
-              return {
-                inlineData: {
-                  mimeType: file.mimeType,
-                  data: file.data
-                }
-              };
-            } else {
-              throw new Error('File must have either URI or data');
-            }
-          });
+          if (!this.fileHandler) {
+            throw new Error('File handler not initialized');
+          }
 
+          const fileParts = this.fileHandler.createFileParts(files);
           // Add file parts to message (cast to bypass TypeScript)
           (lastMessage.parts as any[]).push(...fileParts);
         }

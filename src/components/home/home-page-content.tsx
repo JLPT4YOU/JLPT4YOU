@@ -135,7 +135,7 @@ function HomeContent({ t, language }: HomeContentProps) {
       id: 12,
       key: "landing",
       icon: GraduationCap,
-      href: `/auth/${language}/landing`,
+      href: `/${language}/landing`,
       bgColor: "bg-primary/10",
       textColor: "text-primary"
     }

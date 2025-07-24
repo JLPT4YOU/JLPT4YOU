@@ -51,8 +51,9 @@ export const ROUTE_PATTERNS = {
   drivingTest: '/{lang}/driving/{type}/test',
   drivingTestSetup: '/{lang}/driving/{type}/test-setup',
   
-  // Auth routes (different pattern)
-  auth: '/auth/{lang}',
+// Updated Auth routes
+  auth: '/{lang}',
+  landing: '/{lang}/landing',
   authType: '/auth/{lang}/{type}',
   
   // Legacy routes (for redirects)
@@ -188,7 +189,7 @@ export const routes = {
     generateRoute('auth', language, { type: 'forgot-password' }),
   
   landing: (language: Language) => 
-    generateRoute('auth', language, { type: 'landing' })
+    `/${language}/landing`
 }
 
 // Route parsing utilities

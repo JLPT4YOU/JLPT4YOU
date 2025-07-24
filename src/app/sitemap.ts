@@ -23,44 +23,44 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const authRoutes = [
     // Landing pages - High priority for SEO
     {
-      url: `${baseUrl}/auth/vn/landing`,
+      url: `${baseUrl}/vn/landing`,
       lastModified: currentDate,
       changeFrequency: 'weekly' as const,
       priority: 0.9,
       alternates: {
         languages: {
-          'vi-VN': `${baseUrl}/auth/vn/landing`,
-          'ja-JP': `${baseUrl}/auth/jp/landing`,
-          'en-US': `${baseUrl}/auth/en/landing`,
-          'x-default': `${baseUrl}/auth/vn/landing`
+          'vi-VN': `${baseUrl}/vn/landing`,
+          'ja-JP': `${baseUrl}/jp/landing`,
+          'en-US': `${baseUrl}/en/landing`,
+          'x-default': `${baseUrl}/vn/landing`
         }
       }
     },
     {
-      url: `${baseUrl}/auth/jp/landing`,
+      url: `${baseUrl}/jp/landing`,
       lastModified: currentDate,
       changeFrequency: 'weekly' as const,
       priority: 0.9,
       alternates: {
         languages: {
-          'vi-VN': `${baseUrl}/auth/vn/landing`,
-          'ja-JP': `${baseUrl}/auth/jp/landing`,
-          'en-US': `${baseUrl}/auth/en/landing`,
-          'x-default': `${baseUrl}/auth/vn/landing`
+          'vi-VN': `${baseUrl}/vn/landing`,
+          'ja-JP': `${baseUrl}/jp/landing`,
+          'en-US': `${baseUrl}/en/landing`,
+          'x-default': `${baseUrl}/vn/landing`
         }
       }
     },
     {
-      url: `${baseUrl}/auth/en/landing`,
+      url: `${baseUrl}/en/landing`,
       lastModified: currentDate,
       changeFrequency: 'weekly' as const,
       priority: 0.9,
       alternates: {
         languages: {
-          'vi-VN': `${baseUrl}/auth/vn/landing`,
-          'ja-JP': `${baseUrl}/auth/jp/landing`,
-          'en-US': `${baseUrl}/auth/en/landing`,
-          'x-default': `${baseUrl}/auth/vn/landing`
+          'vi-VN': `${baseUrl}/vn/landing`,
+          'ja-JP': `${baseUrl}/jp/landing`,
+          'en-US': `${baseUrl}/en/landing`,
+          'x-default': `${baseUrl}/vn/landing`
         }
       }
     },

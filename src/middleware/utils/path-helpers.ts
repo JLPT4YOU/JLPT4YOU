@@ -146,14 +146,19 @@ export function addLanguagePrefix(pathname: string, language: Language): string 
   
   // Handle special cases
   if (cleanPath === '/') {
-    return `/auth/${language}/landing`
+    return `/${language}/landing`
   }
   
-  // Handle auth paths
+  // Handle auth paths (but not landing)
   if (cleanPath.startsWith('/login') || cleanPath.startsWith('/register') || 
-      cleanPath.startsWith('/forgot-password') || cleanPath.startsWith('/landing')) {
+      cleanPath.startsWith('/forgot-password')) {
     const authPath = cleanPath.slice(1) // Remove leading slash
     return `/auth/${language}/${authPath}`
+  }
+  
+  // Handle landing page
+  if (cleanPath.startsWith('/landing')) {
+    return `/${language}/landing`
   }
   
   // Handle regular paths
