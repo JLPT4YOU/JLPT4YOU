@@ -149,17 +149,44 @@ export const createFileProcessor = (): FileProcessor => {
     } catch (error) {
       console.warn('Failed to convert files from messages, trying alternative method:', error);
 
-      // Fallback: try to extract File objects from messages and convert directly
-      const allFiles: File[] = [];
+      // Fallback: try to process data URLs directly
+      const fileData = [];
       for (const message of messages) {
-        if (message.files) {
-          // This is a fallback - in practice, we might need to reconstruct File objects
-          // from the FileAttachment data, but this is complex
-          console.warn('Fallback file processing not fully implemented');
+        if (message.files && message.files.length > 0) {
+          for (const file of message.files) {
+            try {
+              // Handle data URLs (already base64 encoded)
+              if (file.url && file.url.startsWith('data:')) {
+                const base64Data = file.url.split(',')[1];
+                if (base64Data) {
+                  fileData.push({
+                    data: base64Data,
+                    mimeType: file.type || 'application/octet-stream',
+                    name: file.name
+                  });
+                  console.log('Successfully processed data URL file in fallback:', file.name);
+                }
+              } else if (file.url && file.url.startsWith('blob:')) {
+                // For blob URLs that can't be fetched due to CSP, we need to skip them
+                console.warn(`Skipping blob URL file due to CSP restrictions: ${file.name}`);
+                // Could potentially show user a message about re-uploading the file
+              } else {
+                console.warn(`Unsupported file URL format: ${file.url}`);
+              }
+            } catch (fileError) {
+              console.error(`Error processing file ${file.name} in fallback:`, fileError);
+            }
+          }
         }
       }
 
-      throw error; // Re-throw the original error for now
+      if (fileData.length > 0) {
+        console.log('Fallback method processed some files:', { fileCount: fileData.length });
+        return fileData;
+      }
+
+      // If no files could be processed, throw the original error
+      throw error;
     }
   };
 

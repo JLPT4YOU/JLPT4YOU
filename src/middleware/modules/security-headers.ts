@@ -91,9 +91,10 @@ export function generateCSPHeader(pathname: string, isAuthenticated: boolean): s
     'script-src': ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
     'style-src': ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
     'font-src': ["'self'", 'https://fonts.gstatic.com'],
-    'img-src': ["'self'", 'data:', 'https:'],
+    'img-src': ["'self'", 'data:', 'blob:', 'https:'],
     'connect-src': [
       "'self'",
+      'blob:',                                      // Allow blob URLs for file processing
       'https://generativelanguage.googleapis.com',  // Gemini API
       'https://api.groq.com',                       // Groq API
       'https://prrizpzrdepnjjkyrimh.supabase.co'    // Supabase API
