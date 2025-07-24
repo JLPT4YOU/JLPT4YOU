@@ -174,7 +174,7 @@ export const createOptimizedChatStateManager = (
   setChats: React.Dispatch<React.SetStateAction<Chat[]>>
 ): ChatStateManager => {
   const baseManager = createChatStateManager(setChats);
-    const pendingUpdates = new Map<string, Partial<Message>>()
+  const pendingUpdates = new Map<string, () => void>();
   let updateScheduled = false;
 
   const scheduleUpdate = (key: string, updateFn: () => void) => {
