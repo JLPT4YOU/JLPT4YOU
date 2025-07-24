@@ -22,6 +22,7 @@ import {
   convertMessagesToGemini
 } from './ai-shared-utils';
 import { GeminiFileHandler } from './gemini/gemini-file-handler';
+import { GeminiStreamingHandler } from './gemini/gemini-streaming-handler';
 
 export interface GeminiMessage {
   role: 'user' | 'model';
@@ -67,6 +68,7 @@ export interface UseGeminiServiceOptions {
 export class GeminiService extends BaseAIService {
   private client: GoogleGenAI | null = null;
   private fileHandler: GeminiFileHandler | null = null;
+  private streamingHandler: GeminiStreamingHandler | null = null;
   protected defaultModel: string = GEMINI_MODELS.FLASH_2_0;
   protected storageKeyPrefix: string = 'gemini';
 
@@ -80,6 +82,7 @@ export class GeminiService extends BaseAIService {
       this.apiKey = key;
       this.client = new GoogleGenAI({ apiKey: key });
       this.fileHandler = new GeminiFileHandler(this.client);
+      this.streamingHandler = new GeminiStreamingHandler(this.client, this.fileHandler);
       this.isConfigured = true;
     }
   }
@@ -91,38 +94,12 @@ export class GeminiService extends BaseAIService {
     this.apiKey = apiKey;
     this.client = new GoogleGenAI({ apiKey });
     this.fileHandler = new GeminiFileHandler(this.client);
+    this.streamingHandler = new GeminiStreamingHandler(this.client, this.fileHandler);
     this.isConfigured = true;
     this.saveApiKeyToStorage(apiKey);
   }
 
-  /**
-   * Get appropriate tools configuration based on options
-   */
-  private getToolsConfig(options?: UseGeminiServiceOptions): any[] {
-    const tools: any[] = [];
 
-    // Add URL context if enabled
-    if (options?.enableUrlContext) {
-      tools.push({ urlContext: {} });
-    }
-
-    // Add Google Search if enabled
-    if (options?.enableGoogleSearch) {
-      tools.push({ googleSearch: {} });
-    }
-
-    // Add Code Execution if enabled
-    if (options?.enableCodeExecution) {
-      tools.push({ codeExecution: {} });
-    }
-
-    // Fallback to basic tools if enableTools is true but no specific tools enabled
-    if (options?.enableTools && tools.length === 0) {
-      tools.push({ googleSearch: {} });
-    }
-
-    return tools;
-  }
 
   /**
    * Convert AIMessage format to Gemini format (excluding system messages)
@@ -192,10 +169,17 @@ export class GeminiService extends BaseAIService {
       // Tạo config cơ bản
       const systemPrompt = getCurrentSystemPrompt();
 
+      // Simple tools config for sendMessage
+      const tools: any[] = [];
+      if (options?.enableUrlContext) tools.push({ urlContext: {} });
+      if (options?.enableGoogleSearch) tools.push({ googleSearch: {} });
+      if (options?.enableCodeExecution) tools.push({ codeExecution: {} });
+      if (options?.enableTools && tools.length === 0) tools.push({ googleSearch: {} });
+
       const configOptions: any = {
         temperature: options?.temperature,
         systemInstruction: systemPrompt,
-        tools: this.getToolsConfig(options)
+        tools
       };
 
       // Chỉ thêm thinkingConfig nếu model hỗ trợ và tính năng được bật
@@ -239,41 +223,16 @@ export class GeminiService extends BaseAIService {
     try {
       this.ensureConfigured();
 
-      const model = options?.model || this.defaultModel;
+      if (!this.streamingHandler) {
+        throw new Error('Streaming handler not initialized');
+      }
 
-      // Kiểm tra xem model có hỗ trợ thinking không
-      const modelInfo = getModelInfo(model);
-      const supportsThinkingMode = modelInfo?.supportsThinking || false;
-
-      // Tạo config cơ bản
-      const configOptions: any = {
-        temperature: options?.temperature,
-        systemInstruction: getCurrentSystemPrompt(),
-        tools: this.getToolsConfig(options)
+      const streamingOptions = {
+        ...options,
+        model: options?.model || this.defaultModel
       };
 
-      // Chỉ thêm thinkingConfig nếu model hỗ trợ và tính năng được bật
-      if (supportsThinkingMode && options?.enableThinking) {
-        configOptions.thinkingConfig = {
-          thinkingBudget: options?.thinkingConfig?.thinkingBudget ?? -1,
-          includeThoughts: options?.thinkingConfig?.includeThoughts ?? true
-        };
-      }
-
-      const config = createGeminiConfig(configOptions);
-      const contents = this.convertMessages(messages);
-
-      const response = await this.client!.models.generateContentStream({
-        model,
-        config,
-        contents,
-      });
-
-      for await (const chunk of response) {
-        if (chunk.text) {
-          onChunk(chunk.text);
-        }
-      }
+      await this.streamingHandler.streamMessage(messages, onChunk, streamingOptions);
     } catch (error) {
       console.error('Gemini streamMessage error:', error);
       throw this.handleApiError(error, 'stream tin nhắn');
@@ -292,65 +251,21 @@ export class GeminiService extends BaseAIService {
     try {
       this.ensureConfigured();
 
-      const model = options?.model || this.defaultModel;
-
-      // Kiểm tra xem model có hỗ trợ thinking không
-      const modelInfo = getModelInfo(model);
-      const supportsThinkingMode = modelInfo?.supportsThinking || false;
-
-      if (!supportsThinkingMode) {
-        // Fallback to regular streaming if thinking not supported
-        await this.streamMessage(messages, onAnswerChunk, options);
-        return {};
+      if (!this.streamingHandler) {
+        throw new Error('Streaming handler not initialized');
       }
 
-      // Tạo config với thinking enabled
-      const configOptions: any = {
-        temperature: options?.temperature,
-        systemInstruction: getCurrentSystemPrompt(),
-        tools: this.getToolsConfig(options),
-        thinkingConfig: {
-          thinkingBudget: options?.thinkingConfig?.thinkingBudget ?? -1,
-          includeThoughts: true
-        }
+      const streamingOptions = {
+        ...options,
+        model: options?.model || this.defaultModel
       };
 
-      const config = createGeminiConfig(configOptions);
-      const contents = this.convertMessages(messages);
-
-      const response = await this.client!.models.generateContentStream({
-        model,
-        config,
-        contents,
-      });
-
-      let thoughtsTokenCount = 0;
-      let outputTokenCount = 0;
-
-      for await (const chunk of response) {
-        // Process each part in the chunk
-        const parts = chunk.candidates?.[0]?.content?.parts || [];
-
-        parts.forEach((part: any) => {
-          if (!part.text) return;
-
-          if (part.thought) {
-            // This is a thought chunk
-            onThoughtChunk(part.text);
-          } else {
-            // This is an answer chunk
-            onAnswerChunk(part.text);
-          }
-        });
-
-        // Update token counts if available
-        if (chunk.usageMetadata) {
-          thoughtsTokenCount = chunk.usageMetadata.thoughtsTokenCount || thoughtsTokenCount;
-          outputTokenCount = chunk.usageMetadata.candidatesTokenCount || outputTokenCount;
-        }
-      }
-
-      return { thoughtsTokenCount, outputTokenCount };
+      return await this.streamingHandler.streamMessageWithThinking(
+        messages,
+        onThoughtChunk,
+        onAnswerChunk,
+        streamingOptions
+      );
     } catch (error) {
       console.error('Gemini streamMessageWithThinking error:', error);
       throw this.handleApiError(error, 'stream tin nhắn với thinking');
@@ -519,83 +434,22 @@ export class GeminiService extends BaseAIService {
     try {
       this.ensureConfigured();
 
-      const model = options?.model || this.defaultModel;
-      const modelInfo = getModelInfo(model);
-
-      if (!modelInfo?.supportsFiles) {
-        throw new Error(`Model ${model} does not support file uploads`);
+      if (!this.streamingHandler) {
+        throw new Error('Streaming handler not initialized');
       }
 
-      // Kiểm tra xem model có hỗ trợ thinking không
-      const supportsThinkingMode = modelInfo?.supportsThinking || false;
-
-      if (!supportsThinkingMode) {
-        // Fallback to regular file streaming if thinking not supported
-        await this.streamMessageWithFiles(messages, files, onAnswerChunk, options);
-        return {};
-      }
-
-      // Tạo config với thinking enabled (same as text-only)
-      const configOptions: any = {
-        temperature: options?.temperature,
-        systemInstruction: getCurrentSystemPrompt(),
-        tools: this.getToolsConfig(options),
-        thinkingConfig: {
-          thinkingBudget: options?.thinkingConfig?.thinkingBudget ?? -1,
-          includeThoughts: true
-        }
+      const streamingOptions = {
+        ...options,
+        model: options?.model || this.defaultModel
       };
 
-      const config = createGeminiConfig(configOptions);
-      const contents = this.convertMessages(messages);
-
-      // Add files to the last user message
-      if (contents.length > 0 && files.length > 0) {
-        const lastMessage = contents[contents.length - 1];
-        if (lastMessage.role === 'user') {
-          if (!this.fileHandler) {
-            throw new Error('File handler not initialized');
-          }
-
-          const fileParts = this.fileHandler.createFileParts(files);
-          // Add file parts to message (cast to bypass TypeScript)
-          (lastMessage.parts as any[]).push(...fileParts);
-        }
-      }
-
-      const response = await this.client!.models.generateContentStream({
-        model,
-        config,
-        contents,
-      });
-
-      let thoughtsTokenCount = 0;
-      let outputTokenCount = 0;
-
-      for await (const chunk of response) {
-        // Process each part in the chunk (same as text-only thinking)
-        const parts = chunk.candidates?.[0]?.content?.parts || [];
-
-        parts.forEach((part: any) => {
-          if (!part.text) return;
-
-          if (part.thought) {
-            // This is a thought chunk
-            onThoughtChunk(part.text);
-          } else {
-            // This is an answer chunk
-            onAnswerChunk(part.text);
-          }
-        });
-
-        // Update token counts if available
-        if (chunk.usageMetadata) {
-          thoughtsTokenCount = chunk.usageMetadata.thoughtsTokenCount || thoughtsTokenCount;
-          outputTokenCount = chunk.usageMetadata.candidatesTokenCount || outputTokenCount;
-        }
-      }
-
-      return { thoughtsTokenCount, outputTokenCount };
+      return await this.streamingHandler.streamMessageWithFilesAndThinking(
+        messages,
+        files,
+        onThoughtChunk,
+        onAnswerChunk,
+        streamingOptions
+      );
     } catch (error) {
       console.error('Gemini sendMessageWithFiles error:', error);
       throw this.handleApiError(error, 'gửi tin nhắn với file');
@@ -620,47 +474,21 @@ export class GeminiService extends BaseAIService {
     try {
       this.ensureConfigured();
 
-      const model = options?.model || this.defaultModel;
-      const modelInfo = getModelInfo(model);
-
-      if (!modelInfo?.supportsFiles) {
-        throw new Error(`Model ${model} does not support file uploads`);
+      if (!this.streamingHandler) {
+        throw new Error('Streaming handler not initialized');
       }
 
-      // Tạo config cơ bản (no thinking)
-      const configOptions: any = {
-        temperature: options?.temperature,
-        systemInstruction: getCurrentSystemPrompt()
+      const streamingOptions = {
+        ...options,
+        model: options?.model || this.defaultModel
       };
 
-      const config = createGeminiConfig(configOptions);
-      const contents = this.convertMessages(messages);
-
-      // Add files to the last user message
-      if (contents.length > 0 && files.length > 0) {
-        const lastMessage = contents[contents.length - 1];
-        if (lastMessage.role === 'user') {
-          if (!this.fileHandler) {
-            throw new Error('File handler not initialized');
-          }
-
-          const fileParts = this.fileHandler.createFileParts(files);
-          // Add file parts to message (cast to bypass TypeScript)
-          (lastMessage.parts as any[]).push(...fileParts);
-        }
-      }
-
-      const response = await this.client!.models.generateContentStream({
-        model,
-        config,
-        contents,
-      });
-
-      for await (const chunk of response) {
-        if (chunk.text) {
-          onChunk(chunk.text);
-        }
-      }
+      await this.streamingHandler.streamMessageWithFiles(
+        messages,
+        files,
+        onChunk,
+        streamingOptions
+      );
     } catch (error) {
       console.error('Gemini streamMessageWithFiles error:', error);
       throw this.handleApiError(error, 'stream tin nhắn với file');
