@@ -120,9 +120,9 @@ describe('URL Generation Module', () => {
   })
   
   describe('generateLanguageRedirectUrl', () => {
-    test('should generate auth landing URL for root path', () => {
+    test('should generate landing URL for root path', () => {
       const result = generateLanguageRedirectUrl('/', 'vn', mockRequest)
-      expect(result).toBe('https://example.com/auth/vn/landing')
+      expect(result).toBe('https://example.com/vn/landing')
     })
     
     test('should generate auth URLs for auth paths', () => {
@@ -234,8 +234,8 @@ describe('URL Generation Module', () => {
     })
     
     test('generateLandingUrl should create landing URLs', () => {
-      expect(generateLandingUrl('vn', origin)).toBe('https://example.com/auth/vn/landing')
-      expect(generateLandingUrl('en', origin)).toBe('https://example.com/auth/en/landing')
+      expect(generateLandingUrl('vn', origin)).toBe('https://example.com/vn/landing')
+      expect(generateLandingUrl('en', origin)).toBe('https://example.com/en/landing')
     })
     
     test('generateLoginUrl should create login URLs', () => {

@@ -286,7 +286,7 @@ describe('getLocalizedPath', () => {
     expect(getLocalizedPath('login', 'jp')).toBe('/auth/jp/login')
     expect(getLocalizedPath('register', 'en')).toBe('/auth/en/register')
     expect(getLocalizedPath('forgot-password', 'vn')).toBe('/auth/vn/forgot-password')
-    expect(getLocalizedPath('landing', 'jp')).toBe('/auth/jp/landing')
+    expect(getLocalizedPath('landing', 'jp')).toBe('/jp/landing')
   })
 
   test('should create home paths correctly', () => {

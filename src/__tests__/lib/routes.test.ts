@@ -107,7 +107,6 @@ describe('generateRoute', () => {
       expect(generateRoute('auth', 'vn', { type: 'login' })).toBe('/auth/vn/login')
       expect(generateRoute('auth', 'jp', { type: 'register' })).toBe('/auth/jp/register')
       expect(generateRoute('auth', 'en', { type: 'forgot-password' })).toBe('/auth/en/forgot-password')
-      expect(generateRoute('auth', 'vn', { type: 'landing' })).toBe('/auth/vn/landing')
     })
   })
 })
@@ -145,7 +144,7 @@ describe('routes convenience functions', () => {
     expect(routes.login(language)).toBe('/auth/vn/login')
     expect(routes.register(language)).toBe('/auth/vn/register')
     expect(routes.forgotPassword(language)).toBe('/auth/vn/forgot-password')
-    expect(routes.landing(language)).toBe('/auth/vn/landing')
+    expect(routes.landing(language)).toBe('/vn/landing')
   })
 
   test('should work with all languages', () => {

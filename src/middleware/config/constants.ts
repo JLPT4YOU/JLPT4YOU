@@ -58,7 +58,7 @@ export const LANGUAGE_CODE_MAP: LanguageCodeMap = {
  * Route path constants for middleware processing
  */
 export const ROUTE_PATHS: RoutePaths = {
-  AUTH_PATHS: ['/login', '/register', '/forgot-password', '/landing'] as const,
+  AUTH_PATHS: ['/login', '/register', '/forgot-password'] as const,
   FEATURE_PATHS: ['/jlpt', '/challenge', '/driving'] as const,
   HOME_PATHS: ['/home'] as const,
   SKIP_PATHS: ['/_next/', '/api/', '/static/', '/favicon'] as const,

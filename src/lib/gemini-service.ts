@@ -8,72 +8,29 @@
 import { GoogleGenAI } from '@google/genai';
 import {
   GEMINI_MODELS,
-  createGeminiConfig,
   getModelInfo,
-  getAvailableModels as getAvailableGeminiModels,
   type GeminiModelInfo
 } from './gemini-config';
 import { BaseAIService, AIMessage } from './ai-config';
-import { getCurrentSystemPrompt, getAICommunicationLanguage, detectLanguageFromMessage } from './prompt-storage';
-import {
-  createTitleGenerationPrompt,
-  createFallbackTitle,
-  detectTitleLanguage,
-  convertMessagesToGemini
-} from './ai-shared-utils';
+
 import { GeminiFileHandler } from './gemini/gemini-file-handler';
 import { GeminiStreamingHandler } from './gemini/gemini-streaming-handler';
-
-export interface GeminiMessage {
-  role: 'user' | 'model';
-  parts: Array<{
-    text: string;
-    inlineData?: {
-      mimeType: string;
-      data: string; // base64 encoded
-    };
-  }>;
-}
+import { GeminiTitleGenerator } from './gemini/gemini-title-generator';
+import { GeminiUtils } from './gemini/gemini-utils';
+import {
+  GeminiConfigHelper,
+  UseGeminiServiceOptions
+} from './gemini/gemini-config-helper';
 
 
-
-export interface CodeExecutionResult {
-  text?: string;
-  executableCode?: {
-    language: string;
-    code: string;
-  };
-  codeExecutionResult?: {
-    outcome: string;
-    output: string;
-  };
-}
-
-
-
-export interface UseGeminiServiceOptions {
-  model?: string;
-  temperature?: number;
-  enableThinking?: boolean;
-  enableTools?: boolean;
-  enableGoogleSearch?: boolean;
-  enableUrlContext?: boolean;
-  enableCodeExecution?: boolean;
-  thinkingConfig?: {
-    thinkingBudget?: number; // 0 = off, -1 = dynamic thinking
-    includeThoughts?: boolean; // Enable thought summaries
-  };
-}
 
 export class GeminiService extends BaseAIService {
   private client: GoogleGenAI | null = null;
   private fileHandler: GeminiFileHandler | null = null;
   private streamingHandler: GeminiStreamingHandler | null = null;
+  private titleGenerator: GeminiTitleGenerator | null = null;
   protected defaultModel: string = GEMINI_MODELS.FLASH_2_0;
   protected storageKeyPrefix: string = 'gemini';
-
-  // Constants for file processing
-  private static readonly MAX_TITLE_LENGTH = 50;
 
   constructor(apiKey?: string) {
     super(apiKey);
@@ -83,6 +40,7 @@ export class GeminiService extends BaseAIService {
       this.client = new GoogleGenAI({ apiKey: key });
       this.fileHandler = new GeminiFileHandler(this.client);
       this.streamingHandler = new GeminiStreamingHandler(this.client, this.fileHandler);
+      this.titleGenerator = new GeminiTitleGenerator(this.client);
       this.isConfigured = true;
     }
   }
@@ -95,6 +53,7 @@ export class GeminiService extends BaseAIService {
     this.client = new GoogleGenAI({ apiKey });
     this.fileHandler = new GeminiFileHandler(this.client);
     this.streamingHandler = new GeminiStreamingHandler(this.client, this.fileHandler);
+    this.titleGenerator = new GeminiTitleGenerator(this.client);
     this.isConfigured = true;
     this.saveApiKeyToStorage(apiKey);
   }
@@ -104,49 +63,11 @@ export class GeminiService extends BaseAIService {
   /**
    * Convert AIMessage format to Gemini format (excluding system messages)
    */
-  private convertMessages(messages: AIMessage[]): GeminiMessage[] {
-    return convertMessagesToGemini(messages) as GeminiMessage[];
+  private convertMessages(messages: AIMessage[]): any[] {
+    return GeminiConfigHelper.convertMessages(messages);
   }
 
-  /**
-   * Parse code execution results from response
-   */
-  private parseCodeExecutionResults(response: any): { text: string; codeResults?: CodeExecutionResult[] } {
-    const parts = response?.candidates?.[0]?.content?.parts || [];
-    let combinedText = '';
-    const codeResults: CodeExecutionResult[] = [];
 
-    parts.forEach((part: any) => {
-      if (part.text) {
-        combinedText += part.text + '\n';
-      }
-
-      if (part.executableCode && part.executableCode.code) {
-        codeResults.push({
-          text: part.text,
-          executableCode: {
-            language: part.executableCode.language || 'python',
-            code: part.executableCode.code
-          }
-        });
-      }
-
-      if (part.codeExecutionResult && part.codeExecutionResult.output) {
-        const lastResult = codeResults[codeResults.length - 1];
-        if (lastResult) {
-          lastResult.codeExecutionResult = {
-            outcome: part.codeExecutionResult.outcome || 'success',
-            output: part.codeExecutionResult.output
-          };
-        }
-      }
-    });
-
-    return {
-      text: combinedText.trim() || 'No response generated',
-      codeResults: codeResults.length > 0 ? codeResults : undefined
-    };
-  }
 
 
 
@@ -162,35 +83,14 @@ export class GeminiService extends BaseAIService {
 
       const model = options?.model || this.defaultModel;
 
-      // Kiểm tra xem model có hỗ trợ thinking không trước khi thêm thinkingConfig
-      const modelInfo = getModelInfo(model);
-      const supportsThinkingMode = modelInfo?.supportsThinking || false;
+      // Validate model and options
+      GeminiConfigHelper.validateModelOptions(model, options);
 
-      // Tạo config cơ bản
-      const systemPrompt = getCurrentSystemPrompt();
-
-      // Simple tools config for sendMessage
-      const tools: any[] = [];
-      if (options?.enableUrlContext) tools.push({ urlContext: {} });
-      if (options?.enableGoogleSearch) tools.push({ googleSearch: {} });
-      if (options?.enableCodeExecution) tools.push({ codeExecution: {} });
-      if (options?.enableTools && tools.length === 0) tools.push({ googleSearch: {} });
-
-      const configOptions: any = {
-        temperature: options?.temperature,
-        systemInstruction: systemPrompt,
-        tools
-      };
-
-      // Chỉ thêm thinkingConfig nếu model hỗ trợ và tính năng được bật
-      if (supportsThinkingMode && options?.enableThinking) {
-        configOptions.thinkingConfig = {
-          thinkingBudget: options?.thinkingConfig?.thinkingBudget ?? -1,
-          includeThoughts: options?.thinkingConfig?.includeThoughts ?? true
-        };
-      }
-
-      const config = createGeminiConfig(configOptions);
+      // Build configuration using helper
+      const config = GeminiConfigHelper.buildConfig({
+        ...options,
+        model
+      });
       const contents = this.convertMessages(messages);
 
       const response = await this.client!.models.generateContent({
@@ -201,14 +101,14 @@ export class GeminiService extends BaseAIService {
 
       // Parse code execution results if present
       if (options?.enableCodeExecution) {
-        const parsed = this.parseCodeExecutionResults(response);
+        const parsed = GeminiConfigHelper.parseCodeExecutionResults(response);
         return parsed.text;
       }
 
       return response.text || 'No response generated';
     } catch (error) {
       console.error('Gemini sendMessage error:', error);
-      throw this.handleApiError(error, 'gửi tin nhắn');
+      throw GeminiUtils.handleApiError(error, 'gửi tin nhắn');
     }
   }
 
@@ -235,7 +135,7 @@ export class GeminiService extends BaseAIService {
       await this.streamingHandler.streamMessage(messages, onChunk, streamingOptions);
     } catch (error) {
       console.error('Gemini streamMessage error:', error);
-      throw this.handleApiError(error, 'stream tin nhắn');
+      throw GeminiUtils.handleApiError(error, 'stream tin nhắn');
     }
   }
 
@@ -268,7 +168,7 @@ export class GeminiService extends BaseAIService {
       );
     } catch (error) {
       console.error('Gemini streamMessageWithThinking error:', error);
-      throw this.handleApiError(error, 'stream tin nhắn với thinking');
+      throw GeminiUtils.handleApiError(error, 'stream tin nhắn với thinking');
     }
   }
 
@@ -279,53 +179,14 @@ export class GeminiService extends BaseAIService {
     try {
       this.ensureConfigured();
 
-      // Detect language for title generation
-      const language = detectTitleLanguage(firstMessage);
-
-      // Create optimized prompt for the detected/selected language
-      const prompt = createTitleGenerationPrompt(language, firstMessage);
-
-      const response = await this.client!.models.generateContent({
-        model: GEMINI_MODELS.FLASH_LITE_2_0,
-        contents: [{
-          role: 'user',
-          parts: [{ text: prompt }]
-        }],
-        config: {
-          maxOutputTokens: 20,
-          temperature: 1.0,
-        }
-      });
-
-      const title = response.text?.trim() || createFallbackTitle(language);
-
-      // Ensure title is not too long
-      if (title.length > GeminiService.MAX_TITLE_LENGTH) {
-        return title.substring(0, GeminiService.MAX_TITLE_LENGTH - 3) + '...';
+      if (!this.titleGenerator) {
+        throw new Error('Title generator not initialized');
       }
 
-      return title;
+      return await this.titleGenerator.generateChatTitle(firstMessage);
     } catch (error) {
       console.error('Failed to generate chat title:', error);
-      // Create a simple title from first message
-      const words = firstMessage.trim().split(' ').slice(0, 4);
-      const fallbackTitle = words.join(' ');
-
-      if (fallbackTitle) {
-        return fallbackTitle;
-      }
-
-      // Language-specific fallback titles
-      const aiLanguage = typeof window !== 'undefined' ? localStorage.getItem('ai_language') || 'auto' : 'auto';
-
-      let language: string;
-      if (aiLanguage === 'auto') {
-        language = detectLanguageFromMessage(firstMessage);
-      } else {
-        language = getAICommunicationLanguage(firstMessage);
-      }
-
-      return createFallbackTitle(language);
+      throw GeminiUtils.handleApiError(error, 'tạo tiêu đề chat');
     }
   }
 
@@ -411,7 +272,7 @@ export class GeminiService extends BaseAIService {
       };
     } catch (error) {
       console.error('File upload error:', error);
-      throw this.handleApiError(error, 'upload file');
+      throw GeminiUtils.handleApiError(error, 'upload file');
     }
   }
 
@@ -452,7 +313,7 @@ export class GeminiService extends BaseAIService {
       );
     } catch (error) {
       console.error('Gemini sendMessageWithFiles error:', error);
-      throw this.handleApiError(error, 'gửi tin nhắn với file');
+      throw GeminiUtils.handleApiError(error, 'gửi tin nhắn với file');
     }
   }
 
@@ -491,7 +352,7 @@ export class GeminiService extends BaseAIService {
       );
     } catch (error) {
       console.error('Gemini streamMessageWithFiles error:', error);
-      throw this.handleApiError(error, 'stream tin nhắn với file');
+      throw GeminiUtils.handleApiError(error, 'stream tin nhắn với file');
     }
   }
 
@@ -513,45 +374,24 @@ export class GeminiService extends BaseAIService {
       this.ensureConfigured();
 
       const model = options?.model || this.defaultModel;
-      const modelInfo = getModelInfo(model);
 
-      if (!modelInfo?.supportsFiles) {
+      // Validate model supports files
+      if (!GeminiConfigHelper.supportsFiles(model)) {
         throw new Error(`Model ${model} does not support file uploads`);
       }
 
-      // Kiểm tra xem model có hỗ trợ thinking không
-      const supportsThinkingMode = modelInfo?.supportsThinking || false;
-
-      // Tạo config cơ bản
-      const configOptions: any = {
-        temperature: options?.temperature,
-        systemInstruction: getCurrentSystemPrompt()
-      };
-
-      // Chỉ thêm thinkingConfig nếu model hỗ trợ và tính năng được bật
-      if (supportsThinkingMode && options?.enableThinking) {
-        configOptions.thinkingConfig = {
-          thinkingBudget: options?.thinkingConfig?.thinkingBudget ?? -1,
-          includeThoughts: options?.thinkingConfig?.includeThoughts ?? true
-        };
-      }
-
-      const config = createGeminiConfig(configOptions);
+      // Build configuration using helper
+      const config = GeminiConfigHelper.buildFileConfig({
+        ...options,
+        model
+      });
       const contents = this.convertMessages(messages);
 
       // Add files to the last user message
-      if (contents.length > 0 && files.length > 0) {
-        const lastMessage = contents[contents.length - 1];
-        if (lastMessage.role === 'user') {
-          if (!this.fileHandler) {
-            throw new Error('File handler not initialized');
-          }
-
-          const fileParts = this.fileHandler.createFileParts(files);
-          // Add file parts to message (cast to bypass TypeScript)
-          (lastMessage.parts as any[]).push(...fileParts);
-        }
+      if (!this.fileHandler) {
+        throw new Error('File handler not initialized');
       }
+      GeminiUtils.addFilesToMessage(contents, files, this.fileHandler.createFileParts.bind(this.fileHandler));
 
       const response = await this.client!.models.generateContent({
         model,
@@ -562,7 +402,7 @@ export class GeminiService extends BaseAIService {
       return response.text || 'No response generated';
     } catch (error) {
       console.error('Gemini sendMessageWithFiles error:', error);
-      throw this.handleApiError(error, 'gửi tin nhắn với file');
+      throw GeminiUtils.handleApiError(error, 'gửi tin nhắn với file');
     }
   }
 
@@ -572,33 +412,14 @@ export class GeminiService extends BaseAIService {
    * Validate API key
    */
   async validateApiKey(apiKey: string): Promise<boolean> {
-    try {
-      const testClient = new GoogleGenAI({ apiKey });
-      const response = await testClient.models.generateContent({
-        model: GEMINI_MODELS.FLASH_2_5,
-        config: createGeminiConfig({
-          systemInstruction: 'You are a helpful AI assistant.' // Simple prompt for validation
-        }),
-        contents: [{ role: 'user', parts: [{ text: 'Hello' }] }],
-      });
-
-      return !!response.text;
-    } catch (error) {
-      // Suppress console error for quota exhausted during validation
-      if (error instanceof Error && error.message.toLowerCase().includes('quota')) {
-        console.warn('API key validation failed due to quota exhaustion');
-      } else {
-        console.error('API key validation failed:', error);
-      }
-      return false;
-    }
+    return await GeminiUtils.validateApiKey(apiKey);
   }
 
   /**
    * Get available models
    */
   getAvailableModels(): GeminiModelInfo[] {
-    return getAvailableGeminiModels();
+    return GeminiUtils.getAvailableModels();
   }
 
   /**

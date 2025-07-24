@@ -38,17 +38,17 @@ const nextConfig: NextConfig = {
     return [
       // Old language-specific auth routes to new auth structure
       {
-        source: '/vn/(login|register|forgot-password|landing)',
+        source: '/vn/(login|register|forgot-password)',
         destination: '/auth/vn/$1',
         permanent: true,
       },
       {
-        source: '/jp/(login|register|forgot-password|landing)',
+        source: '/jp/(login|register|forgot-password)',
         destination: '/auth/jp/$1',
         permanent: true,
       },
       {
-        source: '/en/(login|register|forgot-password|landing)',
+        source: '/en/(login|register|forgot-password)',
         destination: '/auth/en/$1',
         permanent: true,
       }

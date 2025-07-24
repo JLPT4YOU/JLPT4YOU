@@ -51,6 +51,7 @@ export interface RoutePaths {
 export interface LanguagePatterns {
   readonly LANGUAGE_PREFIX: RegExp
   readonly LANGUAGE_AUTH_PATTERN: RegExp
+  readonly LANGUAGE_LANDING_PATTERN: RegExp
   readonly LANGUAGE_HOME_PATTERN: RegExp
   readonly EXTRACT_LANGUAGE: RegExp
 }

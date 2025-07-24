@@ -122,7 +122,8 @@ export interface RouteParams {
   challenge: { level: string }
   driving: { type: 'honmen' | 'karimen' }
   home: {}
-  auth: { type: 'login' | 'register' | 'forgot-password' | 'landing' }
+  landing: {}
+  auth: { type: 'login' | 'register' | 'forgot-password' }
 }
 
 export function generateRoute<T extends RouteFeature>(
