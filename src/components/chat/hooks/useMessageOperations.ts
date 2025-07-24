@@ -36,7 +36,7 @@ interface MessageOperationsProps {
   generateAIResponse: (chatId: string, messages: Message[]) => Promise<void>;
 }
 
-export const createMessageOperations = (props: MessageOperationsProps, t: (key: string) => any, handleError: (error: Error) => void): MessageOperations => {
+export const useMessageOperations = (props: MessageOperationsProps): MessageOperations => {
   const {
     aiProviderManager,
     setIsLoading,
@@ -49,6 +49,10 @@ export const createMessageOperations = (props: MessageOperationsProps, t: (key: 
     fileProcessor,
     generateAIResponse
   } = props;
+
+  // Use hooks inside the hook
+  const { t } = useTranslations();
+  const { handleError } = useErrorHandler();
 
   const handleSendMessage = async (content: string, files?: File[]) => {
     if (!content.trim() && (!files || files.length === 0)) return;

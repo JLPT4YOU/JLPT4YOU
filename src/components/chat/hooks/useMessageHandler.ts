@@ -30,7 +30,7 @@ import { useErrorHandler } from '@/hooks/use-error-handler';
 import { createOptimizedChatStateManager } from './useChatStateManager';
 import { createFileProcessor } from './useFileProcessor';
 import { createStreamingHandlers } from './useStreamingHandlers';
-import { createMessageOperations } from './useMessageOperations';
+import { useMessageOperations } from './useMessageOperations';
 
 interface UseMessageHandlerProps {
   // Dependencies
@@ -260,7 +260,7 @@ export const useMessageHandler = (props: UseMessageHandlerProps): UseMessageHand
   };
 
   // Create message operations after generateAIResponse is defined
-  const messageOperations = createMessageOperations({
+  const messageOperations = useMessageOperations({
     aiProviderManager,
     setIsLoading,
     setLastFailedMessage,
