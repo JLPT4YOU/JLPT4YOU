@@ -196,18 +196,25 @@ export const CompactModelSelector: React.FC<CompactModelSelectorProps> = ({
 
   return (
     <Select value={selectedModel} onValueChange={onModelChange}>
-      <SelectTrigger className={cn("w-auto min-w-[120px] rounded-2xl border-0", className)}>
+      <SelectTrigger className={cn("w-auto min-w-[100px] sm:min-w-[120px] rounded-2xl border-0", className)}>
         <SelectValue>
-          <span className="truncate">
+          <span className="truncate text-xs sm:text-sm max-w-[80px] sm:max-w-none">
             {currentModel?.name || 'Select Model'}
           </span>
         </SelectValue>
       </SelectTrigger>
-      <SelectContent className="rounded-2xl border-0">
+      <SelectContent className="rounded-2xl border-0 w-64 sm:w-80 max-w-[90vw]">
         {availableModels.map((model) => (
           <SelectItem key={model.id} value={model.id}>
-            <div className="flex items-center gap-2">
-              <span className="font-medium">{model.name}</span>
+            <div className="flex flex-col gap-1 w-full">
+              <span className="font-medium text-sm sm:text-base leading-tight break-words">
+                {model.name}
+              </span>
+              {model.description && (
+                <span className="text-xs text-muted-foreground leading-relaxed whitespace-normal break-words">
+                  {model.description}
+                </span>
+              )}
               {/* Feature indicators */}
               <div className="flex gap-1">
                 {model.supportsFiles && (

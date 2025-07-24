@@ -46,7 +46,7 @@ export async function generateMetadata({ params }: LandingPageProps): Promise<Me
     authors: [{ name: 'JLPT4You Team' }],
     openGraph: {
       ...seoConfig.openGraph,
-      url: `https://jlpt4you.com/auth/${lang}/landing`,
+      url: `https://jlpt4you.com/${lang}/landing`,
       images: [
         {
           url: 'https://jlpt4you.com/og-image-landing.jpg',
@@ -61,7 +61,7 @@ export async function generateMetadata({ params }: LandingPageProps): Promise<Me
       images: ['https://jlpt4you.com/twitter-image-landing.jpg']
     },
     alternates: {
-      canonical: `https://jlpt4you.com/auth/${lang}/landing`,
+      canonical: `https://jlpt4you.com/${lang}/landing`,
       languages: Object.fromEntries(
         hreflangLinks.map(link => [
           link.hreflang === 'vi-VN' ? 'vi' :

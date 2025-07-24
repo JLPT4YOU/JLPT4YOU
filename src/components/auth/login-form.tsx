@@ -10,6 +10,8 @@ import { useAuthForm, LoginFormData } from "@/hooks/use-auth-form"
 import { TranslationData, Language } from "@/lib/i18n"
 import { useTranslation } from "@/lib/use-translation"
 import { cn } from "@/lib/utils"
+import { useSearchParams } from "next/navigation"
+import { useState, useEffect } from "react"
 
 interface LoginFormProps {
   className?: string
@@ -50,12 +52,33 @@ export function LoginForm({
   const translationHook = useTranslation(translations || {} as TranslationData)
   const t = translations ? translationHook.t : null
   const getText = (key: string, fallback: string) => t ? t(key) : fallback
+  
+  const searchParams = useSearchParams()
+  const [showRegistrationSuccess, setShowRegistrationSuccess] = useState(false)
 
+  // Check if user just registered
+  useEffect(() => {
+    const registered = searchParams.get('registered')
+    const confirm = searchParams.get('confirm')
+    if (registered === 'true') {
+      setShowRegistrationSuccess(true)
+      // Auto-hide after 8 seconds
+      const timer = setTimeout(() => setShowRegistrationSuccess(false), 8000)
+      return () => clearTimeout(timer)
+    }
+  }, [searchParams])
 
 
   return (
     <div className={cn("space-y-6 md:space-y-8", className)}>
       <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
+        {/* Registration Success Message */}
+        {showRegistrationSuccess && (
+          <div className="p-3 text-sm text-green-700 bg-green-50 border border-green-200 rounded-md dark:text-green-400 dark:bg-green-950 dark:border-green-800">
+            {getText('auth.messages.registrationSuccess', 'Đăng ký thành công! Vui lòng kiểm tra email để xác nhận tài khoản.')}
+          </div>
+        )}
+        
         {/* General Error */}
         {errors.general && (
           <div className="p-3 text-sm text-destructive bg-destructive/10 border border-destructive/20 rounded-md">

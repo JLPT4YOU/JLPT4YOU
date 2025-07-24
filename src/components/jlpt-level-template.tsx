@@ -1,17 +1,16 @@
 "use client"
 
 import Link from "next/link";
-import { ArrowLeft, GraduationCap, Clock, FileText, Users, Sparkles, Play } from "lucide-react";
+import { Clock, FileText, Users, Play, GraduationCap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTranslations } from "@/hooks/use-translations";
 
 interface JLPTLevelTemplateProps {
   level: "N1" | "N2" | "N3" | "N4" | "N5";
   type: "official" | "custom";
-  backHref: string;
 }
 
-export function JLPTLevelTemplate({ level, type, backHref }: JLPTLevelTemplateProps) {
+export function JLPTLevelTemplate({ level, type }: JLPTLevelTemplateProps) {
   const { translations, t, language, isLoading } = useTranslations();
 
   if (isLoading || !translations) {
@@ -44,38 +43,6 @@ export function JLPTLevelTemplate({ level, type, backHref }: JLPTLevelTemplatePr
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header Section */}
-      <div className="border-b bg-gradient-to-r from-muted/50 to-accent/30">
-        <div className="app-container app-section">
-          <div className="app-content">
-            <div className="flex items-center app-gap-md app-mb-md">
-              <Link href={backHref}>
-                <Button variant="ghost" size="icon" className="rounded-full">
-                  <ArrowLeft className="w-5 h-5" />
-                </Button>
-              </Link>
-              <div className={`w-12 h-12 bg-[oklch(var(--jlpt-${level.toLowerCase()}))] rounded-full flex items-center justify-center relative`}>
-                <span className={`text-lg font-bold text-[oklch(var(--jlpt-${level.toLowerCase()}-foreground))]`}>
-                  {level}
-                </span>
-                {isCustom && (
-                  <div className="absolute -top-1 -right-1 w-4 h-4 bg-accent rounded-full flex items-center justify-center">
-                    <Sparkles className="w-2.5 h-2.5 text-accent-foreground" />
-                  </div>
-                )}
-              </div>
-            </div>
-            <div className="text-center app-space-md">
-              <h1 className="text-2xl sm:text-3xl font-bold text-foreground">
-                {customTitle}
-              </h1>
-              <p className="text-muted-foreground mt-2">
-                {customDescription}
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
 
       {/* Content Section */}
       <div className="app-container app-section">
@@ -116,11 +83,6 @@ export function JLPTLevelTemplate({ level, type, backHref }: JLPTLevelTemplatePr
                   <Button size="lg" className="w-full sm:w-auto px-8 rounded-xl">
                     <Play className="w-5 h-5 mr-2" />
                     {t('jlpt.template.startTest')}
-                  </Button>
-                </Link>
-                <Link href={backHref}>
-                  <Button variant="outline" className="w-full sm:w-auto rounded-xl bg-muted/30 hover:bg-accent/50">
-                    {t('common.back')}
                   </Button>
                 </Link>
               </div>

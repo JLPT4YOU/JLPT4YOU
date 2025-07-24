@@ -161,7 +161,7 @@ export function useAuthForm<T extends AuthFormData>(
   }, [handleInputChange])
 
   // Get auth context
-  const { login } = useAuth()
+  const { login, register } = useAuth()
 
   // Auth actions based on form type
   const performAuthAction = useCallback(async (data: T): Promise<void> => {
@@ -183,13 +183,28 @@ export function useAuthForm<T extends AuthFormData>(
 
       case 'register':
         const registerData = data as RegisterFormData
-        if (registerData.email === "existing@jlpt4you.com") {
-          throw new Error(getMessage('general', 'emailExists'))
+        const registerResult = await register(
+          registerData.email, 
+          registerData.password,
+          { name: registerData.email.split('@')[0] } // Extract name from email as default
+        )
+
+        if (registerResult.success) {
+          if (registerResult.error && registerResult.error.includes('xác nhận email')) {
+            // Show success message about email confirmation
+            const loginPath = language
+              ? getLocalizedPath('login?registered=true&confirm=true', language)
+              : '/auth/vn/login?registered=true&confirm=true'
+            router.push(loginPath)
+          } else {
+            // Registration successful, redirect to login
+            const loginPath = language
+              ? getLocalizedPath('login?registered=true', language)
+              : '/auth/vn/login?registered=true'
+            router.push(loginPath)
+          }
         } else {
-          const loginPath = language
-            ? getLocalizedPath('login?registered=true', language)
-            : '/auth/vn/login?registered=true'
-          router.push(loginPath)
+          throw new Error(registerResult.error || getMessage('general', 'registrationFailed'))
         }
         break
 
@@ -201,7 +216,7 @@ export function useAuthForm<T extends AuthFormData>(
       default:
         throw new Error(getMessage('general', 'error'))
     }
-  }, [config, router, getMessage, login])
+  }, [config, router, getMessage, login, register])
 
   // Handle form submission
   const handleSubmit = useCallback(async (e: React.FormEvent) => {
@@ -276,9 +291,30 @@ export function useAuthForm<T extends AuthFormData>(
   }, [router, config.language])
 
   // Social login handler
-  const handleSocialLogin = useCallback((provider: string) => {
-    console.log(`${config.formType} with ${provider}`)
-    // Implement social login logic here
+  const handleSocialLogin = useCallback(async (provider: string) => {
+    if (provider.toLowerCase() !== 'google') {
+      console.warn(`${provider} login not implemented yet`)
+      return
+    }
+
+    setIsLoading(true)
+    setErrors({})
+
+    try {
+      const { authService } = await import('@/lib/auth-service')
+      const result = await authService.signInWithOAuth('google')
+      
+      if (!result.success) {
+        setErrors({ general: result.error || 'Đã xảy ra lỗi khi đăng nhập với Google.' })
+      }
+      // If successful, the auth state change will be handled by the auth context
+      // and user will be redirected automatically
+    } catch (error) {
+      console.error('Social login error:', error)
+      setErrors({ general: 'Đã xảy ra lỗi khi đăng nhập với Google. Vui lòng thử lại.' })
+    } finally {
+      setIsLoading(false)
+    }
   }, [config.formType])
 
   // Resend email handler (for forgot password)

@@ -1,6 +1,6 @@
 "use client"
 
-import { ArrowLeft, Mail, CheckCircle } from "lucide-react"
+import { Mail, CheckCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -94,14 +94,7 @@ export function ForgotPasswordForm({
             {isLoading ? getText('auth.loading.resending', 'Đang gửi lại...') : getText('auth.buttons.resendEmail', 'Gửi lại email')}
           </Button>
           
-          <Button
-            onClick={navigateToLogin}
-            variant="ghost"
-            className="w-full"
-          >
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            {getText('auth.buttons.backToLogin', 'Quay lại đăng nhập')}
-          </Button>
+
         </div>
       </div>
     )
@@ -109,15 +102,6 @@ export function ForgotPasswordForm({
 
   return (
     <div className={cn("space-y-6 md:space-y-8", className)}>
-      {/* Back Button */}
-      <Button
-        onClick={navigateToLogin}
-        variant="ghost"
-        className="p-0 h-auto font-normal text-sm md:text-base"
-      >
-        <ArrowLeft className="h-4 w-4 mr-2" />
-        {getText('auth.buttons.backToLogin', 'Quay lại đăng nhập')}
-      </Button>
 
       <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
         {/* General Error */}

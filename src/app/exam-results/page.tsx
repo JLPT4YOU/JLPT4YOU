@@ -2,14 +2,13 @@
 
 import { useState, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { Button } from '@/components/ui/button'
-import { ArrowLeft } from 'lucide-react'
 import { LanguagePageWrapper } from '@/components/language-page-wrapper'
 import { ScoreDisplay } from '@/components/exam-results/score-display'
 import { SectionAnalysis } from '@/components/exam-results/section-analysis'
 import { ResultsActions } from '@/components/exam-results/results-actions'
 import { generateMockExamResult } from '@/lib/exam-results-utils'
 import { ExamResult } from '@/types'
+import { Button } from '@/components/ui/button'
 
 interface ExamResultsContentProps {
   t: (key: string) => any
@@ -117,30 +116,6 @@ function ExamResultsContent({ t, language }: ExamResultsContentProps) {
 
 
       <div className="relative">
-        {/* Header */}
-        <div className="app-container app-py-md border-b border-border/50">
-          <div className="app-content max-w-4xl mx-auto">
-            <div className="flex items-center gap-4">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => router.back()}
-                className="flex items-center gap-2"
-              >
-                <ArrowLeft className="h-4 w-4" />
-                {t('common.back')}
-              </Button>
-              <div className="flex-1">
-                <h1 className="text-lg font-semibold text-foreground">
-                  {t('examResults.title', { examType: t(`examResults.examTypes.${examResult.examType}`) })}
-                </h1>
-                <p className="text-sm text-muted-foreground">
-                  {t(`examResults.examTypes.${examResult.examType}`)} • {examResult.level.toUpperCase()}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
 
         {/* Main Content */}
         <div className="app-container app-py-lg md:app-py-2xl">

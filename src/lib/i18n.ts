@@ -542,9 +542,14 @@ export function getLocalizedPath(path: string, language: Language): string {
   // Remove leading slash
   const cleanPath = path.startsWith('/') ? path.slice(1) : path
 
+  // Handle landing page - no auth prefix
+  if (cleanPath === 'landing') {
+    return `/${language}/landing`
+  }
+
   // Handle auth-related paths - use language codes for SEO
   if (cleanPath === '' || cleanPath === 'login' || cleanPath === 'register' ||
-      cleanPath === 'forgot-password' || cleanPath === 'landing') {
+      cleanPath === 'forgot-password') {
     const authPath = cleanPath === '' ? 'login' : cleanPath
     return `/auth/${language}/${authPath}`
   }

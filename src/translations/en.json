@@ -823,9 +823,47 @@
       "comingSoon": "This page is under construction. Please come back later!"
     },
     "settings": {
-      "title": "Settings",
-      "description": "Account customization - Feature under development",
-      "comingSoon": "This page is under construction. Please come back later!"
+      "title": "Account Settings",
+      "description": "Manage your personal information and account security",
+      "sidebar": {
+        "title": "Settings"
+      },
+      "profile": {
+        "title": "Personal Information",
+        "description": "Manage your display information and avatar",
+        "avatar": "Avatar Icon",
+        "avatarDescription": "Choose an icon for your display avatar",
+"name": "Name",
+        "email": "Email",
+        "emailReadonly": "Email cannot be changed",
+        "accountType": "Account Type",
+        "createdDate": "Created Date",
+        "saveChanges": "Save Changes",
+        "saving": "Saving...",
+        "updateSuccess": "Profile updated successfully!",
+        "updateError": "An error occurred while updating"
+      },
+      "security": {
+        "title": "Account Security",
+        "description": "Manage your password and security",
+        "password": "Password",
+        "lastChanged": "Last changed",
+        "neverChanged": "Never changed password",
+        "changePassword": "Change Password",
+        "currentPassword": "Current Password",
+        "newPassword": "New Password",
+        "confirmPassword": "Confirm New Password",
+        "passwordLength": "Password must be 6-8 characters",
+        "passwordMismatch": "Password confirmation does not match",
+        "changePasswordSuccess": "Password changed successfully!",
+        "changePasswordError": "An error occurred while changing password"
+      },
+      "iconSelector": {
+        "title": "Choose Avatar Icon",
+        "search": "Search icons...",
+        "noResults": "No matching icons found",
+        "selected": "Selected"
+      }
     },
     "upgrade": {
       "title": "Upgrade",
@@ -859,8 +897,9 @@
       "chatHistory": "Chat History",
       "clearHistory": "Clear All Chat History",
       "clearHistoryWarning": "This will permanently delete all your chat conversations",
-      "close": "Close",
-      "confirmClear": "Are you sure you want to clear all chat history? This action cannot be undone."
+      "confirmClear": "Are you sure you want to clear all chat history? This action cannot be undone.",
+      "confirmClearTitle": "Clear All Chat History",
+      "close": "Close"
     },
     "loading": "Loading iRIN...",
     "languages": {

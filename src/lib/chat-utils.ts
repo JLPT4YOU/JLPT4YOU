@@ -121,6 +121,8 @@ export function formatFileSize(bytes: number): string {
  * Validates file type for upload
  */
 export function validateFileType(file: File, allowedTypes: string[]): boolean {
+  if (!file.type) return false;
+
   return allowedTypes.some(type => {
     if (type.endsWith('/*')) {
       const category = type.slice(0, -2);
@@ -142,7 +144,7 @@ export function getFileExtension(filename: string): string {
  * Checks if file is an image
  */
 export function isImageFile(file: File): boolean {
-  return file.type.startsWith('image/');
+  return file.type ? file.type.startsWith('image/') : false;
 }
 
 /**

@@ -51,9 +51,8 @@ export function generateMockExamResult(
       const sectionCorrect = Math.floor(sectionTotal * (0.5 + Math.random() * 0.4)) // 50-90% per section
       const sectionPercentage = Math.round((sectionCorrect / sectionTotal) * 100)
       
-      return {
+return {
         name: section,
-        displayName: getSectionDisplayName(section),
         score: sectionCorrect,
         total: sectionTotal,
         percentage: sectionPercentage,
@@ -86,7 +85,7 @@ export function generateMockExamResult(
 /**
  * Get display name for section
  */
-function getSectionDisplayName(section: string, t?: (key: string) => string): string {
+export function getSectionDisplayName(section: string, t?: (key: string) => string): string {
   if (t) {
     return t(`examResults.sections.names.${section}`) || section
   }

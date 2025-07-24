@@ -132,7 +132,7 @@ class ImageStorageManager {
     }
 
     // Validate file type
-    if (!file.type.startsWith('image/')) {
+    if (!file.type || !file.type.startsWith('image/')) {
       throw new Error('File is not an image');
     }
 

@@ -5,6 +5,9 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { LanguagePageWrapper } from '@/components/language-page-wrapper'
 
+// Force dynamic rendering for pages using useSearchParams
+export const dynamic = 'force-dynamic'
+
 import { ReviewHeader } from '@/components/review/review-header'
 import { QuestionFilters } from '@/components/review/question-filters'
 import { QuestionCard } from '@/components/review/question-card'
@@ -51,11 +54,7 @@ function ReviewAnswersContent({ t, language }: ReviewAnswersContentProps) {
     }, 800)
   }, [searchParams])
 
-  const handleBack = () => {
-    // Navigate back to results page with same parameters
-    const params = new URLSearchParams(searchParams.toString())
-    router.push(`/exam-results?${params.toString()}`)
-  }
+
 
   const handleToggleExpand = (questionId: number) => {
     setExpandedQuestion(prev => prev === questionId ? null : questionId)
@@ -121,7 +120,6 @@ function ReviewAnswersContent({ t, language }: ReviewAnswersContentProps) {
           {/* Header */}
           <ReviewHeader
             reviewData={reviewData}
-            onBack={handleBack}
           />
 
           {/* Filters */}

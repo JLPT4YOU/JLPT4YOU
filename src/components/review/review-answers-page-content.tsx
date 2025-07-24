@@ -56,11 +56,7 @@ export function ReviewAnswersPageContent({ translations, language }: ReviewAnswe
     setCurrentPage(1)
   }, [currentFilter])
 
-  const handleBack = () => {
-    // Navigate back to results page with same parameters
-    const params = new URLSearchParams(searchParams.toString())
-    router.push(`/${language}/exam-results?${params.toString()}`)
-  }
+
 
   // const handleRetakeTest = () => {
   //   if (!reviewData) return
@@ -124,7 +120,6 @@ export function ReviewAnswersPageContent({ translations, language }: ReviewAnswe
           {/* Header */}
           <ReviewHeader
             reviewData={reviewData}
-            onBack={handleBack}
           />
 
           {/* Filters */}

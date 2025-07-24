@@ -186,7 +186,7 @@ export const chatUtils = {
     const updatedFiles: FileAttachment[] = [];
 
     for (const file of message.files) {
-      if (file.type.startsWith('image/') && !file.isPersistent) {
+      if (file.type && file.type.startsWith('image/') && !file.isPersistent) {
         try {
           // Convert blob URL back to File object for storage
           if (!file.url || !file.url.startsWith('blob:')) {

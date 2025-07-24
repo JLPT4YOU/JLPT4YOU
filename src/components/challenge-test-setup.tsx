@@ -12,8 +12,7 @@ import {
   BookOpenCheck,
   Headphones,
   Clock,
-  Trophy,
-  ArrowLeft
+  Trophy
 } from "lucide-react"
 import Link from "next/link"
 
@@ -98,36 +97,6 @@ export function ChallengeTestSetup({ level }: ChallengeTestSetupProps) {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header Section */}
-      <div className="border-b bg-gradient-to-r from-muted/50 to-accent/30">
-        <div className="app-container app-section">
-          <div className="app-content">
-            <div className="flex items-center app-gap-md app-mb-md">
-              <Link href="/challenge">
-                <Button variant="ghost" size="icon" className="rounded-full">
-                  <ArrowLeft className="w-5 h-5" />
-                </Button>
-              </Link>
-              <div className={`w-12 h-12 bg-[oklch(var(--jlpt-${level.toLowerCase()}))] rounded-full flex items-center justify-center shadow-lg relative`}>
-                <span className={`text-lg font-bold text-[oklch(var(--jlpt-${level.toLowerCase()}-foreground))]`}>
-                  {level.toUpperCase()}
-                </span>
-                <div className="absolute -top-1 -right-1 w-6 h-6 bg-primary rounded-full flex items-center justify-center">
-                  <Trophy className="w-3 h-3 text-primary-foreground" />
-                </div>
-              </div>
-              <div>
-                <h1 className="text-xl font-bold text-foreground">
-                  {t('challenge.setup.title').replace('{level}', currentLevelInfo?.title || '')}
-                </h1>
-                <p className="text-sm text-muted-foreground">
-                  {t('challenge.setup.subtitle').replace('{description}', currentLevelInfo?.description || '')}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
 
       <div className="app-container app-section">
         <div className="app-content">

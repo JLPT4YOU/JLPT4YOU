@@ -1,6 +1,6 @@
 "use client"
 
-import React from 'react'
+import React, { Suspense } from 'react'
 import { useLanguageContext } from '@/contexts/language-context'
 import { Language, TranslationData } from '@/lib/i18n'
 
@@ -92,8 +92,8 @@ function DefaultErrorFallback({
   )
 }
 
-// Main wrapper component
-export function LanguagePageWrapper({
+// Internal component that uses useLanguageContext
+function LanguagePageWrapperInner({
   children,
   fallback,
   errorFallback,
@@ -139,6 +139,15 @@ export function LanguagePageWrapper({
         isAuthenticated
       })}
     </>
+  )
+}
+
+// Main wrapper component with Suspense boundary
+export function LanguagePageWrapper(props: LanguagePageWrapperProps) {
+  return (
+    <Suspense fallback={props.loadingFallback || props.fallback || <DefaultLoadingFallback />}>
+      <LanguagePageWrapperInner {...props} />
+    </Suspense>
   )
 }
 

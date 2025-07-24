@@ -1,6 +1,7 @@
 "use client"
 
 import { GraduationCap, User, LogOut, Settings, BarChart3 } from "lucide-react"
+import { getIconComponent } from "@/components/settings/icon-selector"
 
 import { useRouter, usePathname } from "next/navigation"
 import { ThemeToggle } from "@/components/theme-toggle"
@@ -98,14 +99,17 @@ export function Header() {
                       size="icon"
                       className="h-8 w-8 bg-background/80 border border-border/50 text-foreground hover-brightness-light focus-ring focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                     >
-                      <User className="h-5 w-5 text-foreground" />
+                      {(() => {
+                        const AvatarIcon = getIconComponent(user.avatarIcon || undefined)
+                        return <AvatarIcon className="h-5 w-5 text-foreground" />
+                      })()}
                       <span className="sr-only">Menu người dùng</span>
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-56">
                     <div className="flex items-center justify-start gap-2 app-p-sm">
                       <div className="flex flex-col app-space-xs leading-none">
-                        <p className="font-medium">{user.name}</p>
+<p className="font-medium">{user.name}</p>
                         <p className="w-[200px] truncate text-sm text-muted-foreground">
                           {user.email}
                         </p>

@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link";
-import { ArrowLeft, Car, Clock, FileText, Users, BookOpen, GraduationCap, Play } from "lucide-react";
+import { Car, Clock, FileText, Users, BookOpen, GraduationCap, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTranslations } from "@/hooks/use-translations";
 
@@ -54,31 +54,6 @@ export function DrivingLevelTemplate({ level }: DrivingLevelTemplateProps) {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header Section */}
-      <div className="border-b bg-gradient-to-r from-muted/50 to-accent/30">
-        <div className="app-container app-section">
-          <div className="app-content">
-            <div className="flex items-center app-gap-md app-mb-md">
-              <Link href="/driving">
-                <Button variant="ghost" size="icon" className="rounded-full">
-                  <ArrowLeft className="w-5 h-5" />
-                </Button>
-              </Link>
-              <div className={`w-12 h-12 ${info.bgColor} rounded-full flex items-center justify-center`}>
-                <IconComponent className={`w-6 h-6 ${info.textColor}`} />
-              </div>
-            </div>
-            <div className="text-center app-space-md">
-              <h1 className="text-2xl sm:text-3xl font-bold text-foreground">
-                {info.title}
-              </h1>
-              <p className="text-muted-foreground mt-2">
-                {info.description}
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
 
       {/* Content Section */}
       <div className="app-container app-section">
@@ -119,11 +94,6 @@ export function DrivingLevelTemplate({ level }: DrivingLevelTemplateProps) {
                   <Button size="lg" className="w-full sm:w-auto px-8 rounded-xl">
                     <Play className="w-5 h-5 mr-2" />
                     {t('driving.template.startTest')}
-                  </Button>
-                </Link>
-                <Link href="/driving">
-                  <Button variant="outline" className="w-full sm:w-auto rounded-xl bg-muted/30 hover:bg-accent/50">
-                    {t('driving.template.backToSelection')}
                   </Button>
                 </Link>
               </div>

@@ -69,7 +69,17 @@ export const ProviderSelector: React.FC<ProviderSelectorProps> = ({
 
   const handleConfigureProvider = (provider: ProviderType, event: React.MouseEvent) => {
     event.stopPropagation();
-    onConfigureProvider?.(provider);
+    // Close dropdown immediately before triggering popup
+    setIsOpen(false);
+    // Use setTimeout to ensure dropdown closes before popup opens
+    setTimeout(() => {
+      try {
+        onConfigureProvider?.(provider);
+      } catch (error) {
+        console.error('Error configuring provider:', error);
+        // Dropdown is already closed, so error won't affect UI state
+      }
+    }, 100);
   };
 
   const getProviderIcon = (provider: ProviderType) => {
@@ -89,6 +99,17 @@ export const ProviderSelector: React.FC<ProviderSelectorProps> = ({
         return 'Google Gemini';
       case 'groq':
         return 'Groq (Llama)';
+      default:
+        return provider;
+    }
+  };
+
+  const getProviderShortName = (provider: ProviderType) => {
+    switch (provider) {
+      case 'gemini':
+        return 'Google';
+      case 'groq':
+        return 'Groq';
       default:
         return provider;
     }
@@ -117,15 +138,19 @@ export const ProviderSelector: React.FC<ProviderSelectorProps> = ({
             className="h-8 gap-2 px-3 text-xs font-medium"
           >
             {getProviderIcon(currentProvider)}
-            <span className="hidden sm:inline">
+            <span className="sm:hidden truncate">
+              {getProviderShortName(currentProvider)}
+            </span>
+            <span className="hidden sm:inline truncate">
               {getProviderDisplayName(currentProvider)}
             </span>
+            {/* Status badge - only show on desktop */}
             {currentConfig?.isConfigured ? (
-              <Badge variant="secondary" className="h-4 px-1 text-[10px]">
+              <Badge variant="secondary" className="hidden sm:inline-flex h-4 px-1 text-[10px]">
                 Ready
               </Badge>
             ) : (
-              <Badge variant="destructive" className="h-4 px-1 text-[10px]">
+              <Badge variant="destructive" className="hidden sm:inline-flex h-4 px-1 text-[10px]">
                 Setup
               </Badge>
             )}
@@ -133,7 +158,7 @@ export const ProviderSelector: React.FC<ProviderSelectorProps> = ({
           </Button>
         </DropdownMenuTrigger>
 
-        <DropdownMenuContent align="start" className="w-80">
+        <DropdownMenuContent align="start" className="w-72 sm:w-80 max-w-[90vw]">
           <div className="p-2">
             <div className="text-sm font-medium mb-2">AI Providers</div>
             <div className="text-xs text-muted-foreground mb-3">
@@ -149,23 +174,18 @@ export const ProviderSelector: React.FC<ProviderSelectorProps> = ({
             >
               <div className="flex items-center gap-3 flex-1">
                 {getProviderIcon(config.type)}
-                <div className="flex-1">
-                  <div className="flex items-center gap-2">
-                    <span className="font-medium text-sm">
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="font-medium text-xs sm:text-sm leading-tight break-words flex-1">
                       {getProviderDisplayName(config.type)}
                     </span>
                     {currentProvider === config.type && (
-                      <Check className="h-4 w-4 text-primary" />
+                      <Check className="h-4 w-4 text-primary flex-shrink-0" />
                     )}
                   </div>
-                  <div className="text-xs text-muted-foreground">
+                  <div className="text-xs text-muted-foreground leading-relaxed whitespace-normal break-words">
                     {getProviderDescription(config.type)}
                   </div>
-                  {config.defaultModel && (
-                    <div className="text-xs text-muted-foreground mt-1">
-                      Default: {config.defaultModel}
-                    </div>
-                  )}
                 </div>
               </div>
 

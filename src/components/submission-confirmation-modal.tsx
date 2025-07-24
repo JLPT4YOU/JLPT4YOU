@@ -3,7 +3,6 @@
 import { Button } from "@/components/ui/button"
 import {
   Send,
-  ArrowLeft,
   CheckCircle,
   AlertCircle,
   Flag,
@@ -210,7 +209,6 @@ export function SubmissionConfirmationModal({
                 size="lg"
                 className="flex-1 h-20 md:h-24 text-base md:text-xl lg:text-2xl font-semibold px-2 sm:px-4 md:px-8 lg:px-10"
               >
-                <ArrowLeft className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 lg:w-8 lg:h-8 mr-2 sm:mr-3 md:mr-4" />
                 <span className="truncate">{t('exam.submission.cancel')}</span>
               </Button>
 

@@ -17,14 +17,10 @@ export default async function JLPTLevelPage({ params }: JLPTLevelPageProps) {
     notFound()
   }
 
-  // Generate back href based on type
-  const backHref = `/jlpt/${type}`
-
   return (
     <JLPTLevelTemplate
       level={level.toUpperCase() as 'N1' | 'N2' | 'N3' | 'N4' | 'N5'}
       type={type as 'custom' | 'official'}
-      backHref={backHref}
     />
   )
 }

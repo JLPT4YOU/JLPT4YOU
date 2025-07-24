@@ -7,8 +7,9 @@ import { Button } from '@/components/ui/button';
 import { Message } from './index';
 import { copyToClipboard } from '@/lib/chat-utils';
 import { MarkdownRenderer } from './MarkdownRenderer';
-import { MemoizedThinkingDisplay, GroqThinkingDisplay, parseGroqThinkingFromMessage } from './ThinkingDisplay';
+import { MemoizedThinkingDisplay } from './ThinkingDisplay';
 import { EditableMessage } from './EditableMessage';
+import { InlinePulsingDot } from './ThreeDots';
 
 interface MessageBubbleProps {
   message: Message;
@@ -16,6 +17,9 @@ interface MessageBubbleProps {
   isAIGenerating?: boolean;
   hasSubsequentMessages?: boolean;
   onEditMessage?: (messageId: string, newContent: string, files?: File[]) => void;
+  selectedModel?: string;
+  enableThinking?: boolean;
+  onToggleThinking?: () => void;
 }
 
 const MessageBubbleComponent: React.FC<MessageBubbleProps> = ({
@@ -23,7 +27,10 @@ const MessageBubbleComponent: React.FC<MessageBubbleProps> = ({
   currentProvider = 'gemini',
   isAIGenerating = false,
   hasSubsequentMessages = false,
-  onEditMessage
+  onEditMessage,
+  selectedModel,
+  enableThinking = false,
+  onToggleThinking
 }) => {
   const [isCopied, setIsCopied] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -96,7 +103,7 @@ const MessageBubbleComponent: React.FC<MessageBubbleProps> = ({
           )}>
             {message.files.map((file, index) => (
               <div key={index} className="relative">
-                {file.type.startsWith('image/') ? (
+                {file.type && file.type.startsWith('image/') ? (
                   <img
                     src={file.url}
                     alt={file.name}
@@ -143,8 +150,11 @@ const MessageBubbleComponent: React.FC<MessageBubbleProps> = ({
           </div>
         )}
 
-        {/* Thinking Display - Only for AI messages with thinking data */}
+        {/* Thinking Display - For AI messages with thinking data or when thinking is in progress */}
         {!isUser && message.thinking && (
+          message.thinking.thoughtSummary ||
+          (message.status === 'sending' && !message.thinking.isThinkingComplete)
+        ) && (
           <MemoizedThinkingDisplay
             thoughtSummary={message.thinking.thoughtSummary}
             thinkingTimeSeconds={message.thinking.thinkingTimeSeconds}
@@ -164,6 +174,9 @@ const MessageBubbleComponent: React.FC<MessageBubbleProps> = ({
               onCancel={handleEditCancel}
               hasSubsequentMessages={hasSubsequentMessages}
               currentProvider={currentProvider}
+              selectedModel={selectedModel}
+              enableThinking={enableThinking}
+              onToggleThinking={onToggleThinking}
               className="w-full"
             />
           </div>
@@ -188,34 +201,24 @@ const MessageBubbleComponent: React.FC<MessageBubbleProps> = ({
                   {message.content}
                 </p>
               ) : (
-                // AI responses: check for thinking content based on provider
-                (() => {
-                  // Check if this is a Groq message with thinking content
-                  if (currentProvider === 'groq') {
-                    const { hasThinking } = parseGroqThinkingFromMessage(message.content);
-                    if (hasThinking) {
-                      return (
-                        <GroqThinkingDisplay
-                          content={message.content}
-                          className="w-full"
-                        />
-                      );
-                    }
-                  }
-
-                  // Default: rich markdown rendering
-                  return (
-                    <MarkdownRenderer
-                      content={message.content}
-                      className="w-full"
-                    />
-                  );
-                })()
+                // AI responses: rich markdown rendering or typing indicator
+                message.content ? (
+                  <MarkdownRenderer
+                    content={message.content}
+                    className="w-full"
+                  />
+                ) : isAIGenerating && !message.thinking?.thoughtSummary ? (
+                  // Show pulsing dot only when AI is generating AND no thinking content yet
+                  <InlinePulsingDot size="md" />
+                ) : null
               )}
             </div>
 
             {/* Action Buttons - Copy and Edit */}
-            <div className="flex justify-end items-center gap-2 mt-1 w-full">
+            <div className={cn(
+              "flex items-center gap-2 mt-1 w-full",
+              isUser ? "justify-end" : "justify-start pl-3 sm:pl-4"
+            )}>
               {/* Edit Button - Only for user messages */}
               {showEditButton && (
                 <Button
@@ -223,12 +226,12 @@ const MessageBubbleComponent: React.FC<MessageBubbleProps> = ({
                   size="sm"
                   onClick={handleEditClick}
                   className={cn(
-                    "p-1 h-auto rounded hover:bg-muted/50 transition-all duration-200",
+                    "p-2 h-auto rounded hover:bg-muted/50 transition-all duration-200",
                     "opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-foreground"
                   )}
                   title="Chỉnh sửa tin nhắn"
                 >
-                  <Edit3 className="w-3 h-3" />
+                  <Edit3 className="w-4 h-4" />
                 </Button>
               )}
 
@@ -236,16 +239,16 @@ const MessageBubbleComponent: React.FC<MessageBubbleProps> = ({
               <button
                 onClick={handleCopy}
                 className={cn(
-                  "p-1 rounded hover:bg-muted/50 transition-all duration-200",
+                  "p-2 rounded hover:bg-muted/50 transition-all duration-200",
                   "opacity-0 group-hover:opacity-100",
                   isCopied ? "text-green-500 opacity-100" : "text-muted-foreground hover:text-foreground"
                 )}
                 title={isCopied ? "Đã copy!" : "Copy tin nhắn"}
               >
                 {isCopied ? (
-                  <Check className="w-3 h-3" />
+                  <Check className="w-4 h-4" />
                 ) : (
-                  <Copy className="w-3 h-3" />
+                  <Copy className="w-4 h-4" />
                 )}
               </button>
             </div>

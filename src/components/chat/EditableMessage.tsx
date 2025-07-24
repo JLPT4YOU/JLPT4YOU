@@ -5,10 +5,12 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { ArrowUp, X, AlertTriangle, Loader2 } from 'lucide-react';
+import { ArrowUp, X, Loader2, Lightbulb } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Message, FileAttachment } from './index';
 import { supportsFileUploads } from '@/lib/chat-utils';
+import { supportsThinking } from '@/lib/model-utils';
+import { GEMINI_MODELS } from '@/lib/gemini-config';
 
 interface EditableMessageProps {
   message: Message;
@@ -17,6 +19,9 @@ interface EditableMessageProps {
   className?: string;
   hasSubsequentMessages?: boolean;
   currentProvider?: 'gemini' | 'groq';
+  selectedModel?: string;
+  enableThinking?: boolean;
+  onToggleThinking?: () => void;
 }
 
 export const EditableMessage: React.FC<EditableMessageProps> = ({
@@ -25,11 +30,14 @@ export const EditableMessage: React.FC<EditableMessageProps> = ({
   onCancel,
   className,
   hasSubsequentMessages = false,
-  currentProvider = 'gemini'
+  currentProvider = 'gemini',
+  selectedModel,
+  enableThinking = false,
+  onToggleThinking
 }) => {
   const [content, setContent] = useState(message.content);
   const [files, setFiles] = useState<File[]>([]);
-  const [showConfirmation, setShowConfirmation] = useState(false);
+  const [existingFiles, setExistingFiles] = useState<FileAttachment[]>(message.files || []);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -74,16 +82,36 @@ export const EditableMessage: React.FC<EditableMessageProps> = ({
     setFiles(selectedFiles);
   };
 
-  // Handle send (save) with confirmation if needed
-  const handleSend = () => {
-    if (hasSubsequentMessages && !showConfirmation) {
-      setShowConfirmation(true);
-      return;
+  // Convert FileAttachment to File object for sending
+  const convertFileAttachmentToFile = async (fileAttachment: FileAttachment): Promise<File | null> => {
+    try {
+      if (fileAttachment.url.startsWith('blob:') || fileAttachment.url.startsWith('data:')) {
+        const response = await fetch(fileAttachment.url);
+        const blob = await response.blob();
+        return new File([blob], fileAttachment.name, { type: fileAttachment.type });
+      }
+    } catch (error) {
+      console.error('Error converting FileAttachment to File:', error);
     }
+    return null;
+  };
 
+  // Handle send (save) - include both existing and new files
+  const handleSend = async () => {
     const trimmedContent = content.trim();
     if (trimmedContent) {
-      onSave(trimmedContent, files.length > 0 ? files : undefined);
+      // Convert existing files to File objects
+      const existingFileObjects: File[] = [];
+      for (const fileAttachment of existingFiles) {
+        const file = await convertFileAttachmentToFile(fileAttachment);
+        if (file) {
+          existingFileObjects.push(file);
+        }
+      }
+
+      // Combine existing and new files
+      const allFiles = [...existingFileObjects, ...files];
+      onSave(trimmedContent, allFiles.length > 0 ? allFiles : undefined);
     }
   };
 
@@ -100,75 +128,53 @@ export const EditableMessage: React.FC<EditableMessageProps> = ({
 
   // Remove existing file attachment
   const removeExistingFile = (index: number) => {
-    // This would need to be implemented based on how file attachments are managed
-    console.log('Remove existing file at index:', index);
+    setExistingFiles(prev => prev.filter((_, i) => i !== index));
   };
 
   return (
     <div className={cn("space-y-3", className)}>
-      {/* Confirmation Dialog */}
-      {showConfirmation && (
-        <div className="mb-4 p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
-          <div className="flex items-start gap-3">
-            <AlertTriangle className="w-5 h-5 text-yellow-600 dark:text-yellow-400 mt-0.5 flex-shrink-0" />
-            <div className="flex-1">
-              <h4 className="text-sm font-medium text-yellow-800 dark:text-yellow-200 mb-1">
-                Xác nhận chỉnh sửa
-              </h4>
-              <p className="text-sm text-yellow-700 dark:text-yellow-300 mb-3">
-                Việc chỉnh sửa tin nhắn này sẽ xóa tất cả tin nhắn phía sau (bao gồm cả phản hồi của AI).
-                Bạn có chắc chắn muốn tiếp tục?
-              </p>
-              <div className="flex gap-2">
-                <Button
-                  size="sm"
-                  variant="default"
-                  onClick={() => {
-                    setShowConfirmation(false);
-                    const trimmedContent = content.trim();
-                    if (trimmedContent) {
-                      onSave(trimmedContent, files.length > 0 ? files : undefined);
-                    }
-                  }}
-                  className="bg-yellow-600 hover:bg-yellow-700 text-white"
-                >
-                  Xác nhận
-                </Button>
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={() => setShowConfirmation(false)}
-                >
-                  Hủy
-                </Button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* File Attachments Display - Above input like InputArea */}
-      {((message.files && message.files.length > 0) || files.length > 0) && (
+      {(existingFiles.length > 0 || files.length > 0) && (
         <div className="mb-3 space-y-2">
           {/* Existing Files */}
-          {message.files && message.files.length > 0 && (
+          {existingFiles.length > 0 && (
             <div>
               <div className="text-xs text-muted-foreground mb-2">File hiện tại:</div>
               <div className="flex flex-wrap gap-2">
-                {message.files.map((file, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center gap-2 px-2 py-1 bg-muted rounded-md text-xs"
-                  >
-                    <span className="truncate max-w-[150px]">{file.name}</span>
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={() => removeExistingFile(index)}
-                      className="h-auto p-0.5 text-muted-foreground hover:text-destructive"
-                    >
-                      <X className="w-3 h-3" />
-                    </Button>
+                {existingFiles.map((file, index) => (
+                  <div key={index} className="relative group">
+                    {/* Image Preview */}
+                    {file.type.startsWith('image/') ? (
+                      <div className="relative">
+                        <img
+                          src={file.url}
+                          alt={file.name}
+                          className="w-16 h-16 object-cover rounded-lg border shadow-sm"
+                        />
+                        {/* Remove Button */}
+                        <button
+                          type="button"
+                          onClick={() => removeExistingFile(index)}
+                          className="absolute -top-1 -right-1 w-5 h-5 bg-destructive text-destructive-foreground rounded-full flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity shadow-sm"
+                        >
+                          ×
+                        </button>
+                      </div>
+                    ) : (
+                      /* PDF/Other Files */
+                      <div className="flex items-center gap-2 px-3 py-2 bg-muted rounded-lg text-sm border">
+                        <span className="truncate max-w-[150px]">{file.name}</span>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => removeExistingFile(index)}
+                          className="h-auto p-0.5 text-muted-foreground hover:text-destructive"
+                        >
+                          <X className="w-3 h-3" />
+                        </Button>
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
@@ -181,19 +187,38 @@ export const EditableMessage: React.FC<EditableMessageProps> = ({
               <div className="text-xs text-muted-foreground mb-2">File mới:</div>
               <div className="flex flex-wrap gap-2">
                 {files.map((file, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center gap-2 px-2 py-1 bg-primary/10 border border-primary/20 rounded-md text-xs"
-                  >
-                    <span className="truncate max-w-[150px]">{file.name}</span>
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={() => setFiles(files.filter((_, i) => i !== index))}
-                      className="h-auto p-0.5 text-primary hover:text-destructive"
-                    >
-                      <X className="w-3 h-3" />
-                    </Button>
+                  <div key={index} className="relative group">
+                    {/* Image Preview */}
+                    {file.type.startsWith('image/') ? (
+                      <div className="relative">
+                        <img
+                          src={URL.createObjectURL(file)}
+                          alt={file.name}
+                          className="w-16 h-16 object-cover rounded-lg border shadow-sm border-primary/20"
+                        />
+                        {/* Remove Button */}
+                        <button
+                          type="button"
+                          onClick={() => setFiles(files.filter((_, i) => i !== index))}
+                          className="absolute -top-1 -right-1 w-5 h-5 bg-destructive text-destructive-foreground rounded-full flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity shadow-sm"
+                        >
+                          ×
+                        </button>
+                      </div>
+                    ) : (
+                      /* PDF/Other Files */
+                      <div className="flex items-center gap-2 px-3 py-2 bg-primary/10 border border-primary/20 rounded-lg text-sm">
+                        <span className="truncate max-w-[150px]">{file.name}</span>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => setFiles(files.filter((_, i) => i !== index))}
+                          className="h-auto p-0.5 text-primary hover:text-destructive"
+                        >
+                          <X className="w-3 h-3" />
+                        </Button>
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
@@ -278,6 +303,26 @@ export const EditableMessage: React.FC<EditableMessageProps> = ({
                     <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                     </svg>
+                  </Button>
+                )}
+
+                {/* Thinking Toggle Button - Only show for 2.5 models except PRO_2_5 (always on) */}
+                {selectedModel && supportsThinking(selectedModel) && selectedModel !== GEMINI_MODELS.PRO_2_5 && onToggleThinking && (
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={onToggleThinking}
+                    className={cn(
+                      "h-8 w-8 rounded-lg hover:bg-accent/50 border-0 transition-colors",
+                      "flex items-center justify-center",
+                      enableThinking
+                        ? "bg-yellow-500/20 text-yellow-600 hover:bg-yellow-500/30"
+                        : "text-muted-foreground hover:text-foreground"
+                    )}
+                    title={enableThinking ? "Tắt chế độ nghiên cứu sâu" : "Bật chế độ nghiên cứu sâu"}
+                  >
+                    <Lightbulb className="w-4 h-4 flex-shrink-0" />
                   </Button>
                 )}
 

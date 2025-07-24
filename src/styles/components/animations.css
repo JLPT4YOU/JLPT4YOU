@@ -71,6 +71,56 @@
   }
 }
 
+/* Typing indicator animations */
+@keyframes wave {
+  0%, 40%, 100% {
+    transform: scaleY(0.4);
+    opacity: 0.5;
+  }
+  20% {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+}
+
+@keyframes typing-dots {
+  0%, 60%, 100% {
+    transform: translateY(0);
+    opacity: 0.4;
+  }
+  30% {
+    transform: translateY(-8px);
+    opacity: 1;
+  }
+}
+
+@keyframes thinking-pulse {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+}
+
+/* Smooth pulsing animation - to nhỏ to mượt mà */
+@keyframes smooth-pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  50% {
+    transform: scale(1.4);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+}
+
 /* Exam Interface Pause Overlay Animations */
 @keyframes fade-in {
   from {
@@ -116,6 +166,23 @@
 
 .animate-pulse-soft {
   animation: pulse-soft 2s infinite;
+}
+
+/* Typing indicator animation classes */
+.animate-wave {
+  animation: wave 1.4s ease-in-out infinite;
+}
+
+.animate-typing-dots {
+  animation: typing-dots 1.4s ease-in-out infinite;
+}
+
+.animate-thinking-pulse {
+  animation: thinking-pulse 2s ease-in-out infinite;
+}
+
+.animate-smooth-pulse {
+  animation: smooth-pulse 1.5s ease-in-out infinite;
 }
 
 /* Staggered animations */

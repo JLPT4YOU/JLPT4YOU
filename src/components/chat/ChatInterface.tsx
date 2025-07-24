@@ -3,6 +3,7 @@
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { MessageBubble } from './MessageBubble';
 import { InputArea } from './InputArea';
+import { MessagePulsingDot } from './ThreeDots';
 
 import { cn } from '@/lib/utils';
 import { useTranslations } from '@/hooks/use-translations';
@@ -154,10 +155,22 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
                       isAIGenerating={isLoading}
                       hasSubsequentMessages={hasSubsequentMessages}
                       onEditMessage={onEditMessage}
+                      selectedModel={selectedModel}
+                      enableThinking={enableThinking}
+                      onToggleThinking={onToggleThinking}
                     />
                   </div>
                 );
               })}
+
+              {/* Show pulsing dot when loading and last message is from user AND no AI message being generated */}
+              {isLoading && messages.length > 0 &&
+               messages[messages.length - 1]?.role === 'user' &&
+               !messages.some(msg => msg.role === 'assistant' && msg.status === 'sending') && (
+                <div className="animate-message-in">
+                  <MessagePulsingDot />
+                </div>
+              )}
             </div>
 
             <div ref={messagesEndRef} />

@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link";
-import { ArrowLeft, GraduationCap, BookOpen } from "lucide-react";
+import { GraduationCap, BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "@/lib/use-translation";
 import { useEffect, useState } from "react";
@@ -50,26 +50,6 @@ export function JLPTTypeSelection({ type, lang }: JLPTTypeSelectionProps) {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header Section */}
-      <div className="border-b bg-gradient-to-r from-muted/50 to-accent/30">
-        <div className="app-container app-section">
-          <div className="app-content">
-            <div className="flex items-center app-mb-md">
-              <Link href={`/${lang}/jlpt`}>
-                <Button variant="ghost" size="icon" className="mr-2">
-                  <ArrowLeft className="h-5 w-5" />
-                </Button>
-              </Link>
-              <h1 className="text-2xl font-bold text-foreground">
-                {typeTitle}
-              </h1>
-            </div>
-            <p className="text-muted-foreground">
-              {typeDescription}
-            </p>
-          </div>
-        </div>
-      </div>
 
       {/* Level Selection */}
       <div className="app-container app-section">

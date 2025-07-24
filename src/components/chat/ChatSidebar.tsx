@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { Chat } from './index';
-import { Plus, MessageSquare, Trash2, GraduationCap, Menu } from 'lucide-react';
+import { Edit, MessageSquare, Trash2, GraduationCap, PanelLeft, Edit3, Check, X } from 'lucide-react';
 import { useTranslations } from '@/hooks/use-translations';
 
 interface ChatSidebarProps {
@@ -15,6 +15,7 @@ interface ChatSidebarProps {
   onNewChat?: () => void;
   onSelectChat?: (chatId: string) => void;
   onDeleteChat?: (chatId: string) => void;
+  onEditChatTitle?: (chatId: string, newTitle: string) => void;
   isLargeScreen?: boolean;
 }
 
@@ -26,10 +27,45 @@ export const ChatSidebar: React.FC<ChatSidebarProps> = ({
   onNewChat,
   onSelectChat,
   onDeleteChat,
+  onEditChatTitle,
   isLargeScreen = false
 }) => {
   const { t } = useTranslations();
   const [hoveredChatId, setHoveredChatId] = useState<string | null>(null);
+  const [editingChatId, setEditingChatId] = useState<string | null>(null);
+  const [editingTitle, setEditingTitle] = useState<string>('');
+
+  // Handle start editing title
+  const handleStartEditTitle = (chatId: string, currentTitle: string) => {
+    setEditingChatId(chatId);
+    setEditingTitle(currentTitle);
+  };
+
+  // Handle save title
+  const handleSaveTitle = () => {
+    if (editingChatId && editingTitle.trim() && onEditChatTitle) {
+      onEditChatTitle(editingChatId, editingTitle.trim());
+    }
+    setEditingChatId(null);
+    setEditingTitle('');
+  };
+
+  // Handle cancel editing
+  const handleCancelEdit = () => {
+    setEditingChatId(null);
+    setEditingTitle('');
+  };
+
+  // Handle key press in edit input
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleSaveTitle();
+    } else if (e.key === 'Escape') {
+      e.preventDefault();
+      handleCancelEdit();
+    }
+  };
 
   return (
     <>
@@ -49,18 +85,15 @@ export const ChatSidebar: React.FC<ChatSidebarProps> = ({
         isOpen ? "translate-x-0" : "-translate-x-full"
       )}>
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-sidebar-border flex-shrink-0">
+        <div className="flex items-center justify-between px-6 py-5 border-b border-sidebar-border flex-shrink-0">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
               <GraduationCap className="w-4 h-4 text-primary" />
             </div>
-            <div>
-              <h2 className="text-lg font-semibold text-sidebar-foreground">
+            <div className="leading-tight">
+              <h2 className="text-lg font-semibold text-sidebar-foreground leading-tight">
                 iRIN Sensei
               </h2>
-              <p className="text-xs text-muted-foreground">
-                {t ? t('chat.aiAssistant') : 'AI Assistant'}
-              </p>
             </div>
           </div>
           {/* Toggle Button - Show on mobile always, on desktop only when sidebar is open */}
@@ -80,7 +113,7 @@ export const ChatSidebar: React.FC<ChatSidebarProps> = ({
             }}
             title={isLargeScreen ? 'Close sidebar' : 'Close'}
           >
-            <Menu className="w-4 h-4" />
+            <PanelLeft className="w-4 h-4" />
           </Button>
         </div>
 
@@ -90,7 +123,7 @@ export const ChatSidebar: React.FC<ChatSidebarProps> = ({
             className="w-full bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm justify-start"
             onClick={onNewChat}
           >
-            <Plus className="w-4 h-4 mr-2" />
+            <Edit className="w-4 h-4 mr-2" />
             {t ? t('chat.newChat') : 'New Chat'}
           </Button>
         </div>
@@ -138,22 +171,79 @@ export const ChatSidebar: React.FC<ChatSidebarProps> = ({
                   {/* Chat Info */}
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between">
-                      <h3 className="text-sm font-medium truncate">
-                        {chat.title}
-                      </h3>
-                      {/* Delete Button */}
-                      {(hoveredChatId === chat.id || currentChatId === chat.id) && (
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            onDeleteChat?.(chat.id);
-                          }}
-                          className="h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-destructive hover:bg-destructive/10"
-                        >
-                          <Trash2 className="w-3 h-3" />
-                        </Button>
+                      {/* Title - Editable or Display */}
+                      {editingChatId === chat.id ? (
+                        <div className="flex items-center gap-1 flex-1">
+                          <input
+                            type="text"
+                            value={editingTitle}
+                            onChange={(e) => setEditingTitle(e.target.value)}
+                            onKeyDown={handleKeyPress}
+                            onBlur={handleSaveTitle}
+                            className="flex-1 text-sm font-medium bg-transparent border-b border-primary focus:outline-none focus:border-primary"
+                            autoFocus
+                            onClick={(e) => e.stopPropagation()}
+                          />
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleSaveTitle();
+                            }}
+                            className="h-5 w-5 text-green-600 hover:text-green-700 hover:bg-green-100"
+                          >
+                            <Check className="w-3 h-3" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleCancelEdit();
+                            }}
+                            className="h-5 w-5 text-muted-foreground hover:text-destructive hover:bg-destructive/10"
+                          >
+                            <X className="w-3 h-3" />
+                          </Button>
+                        </div>
+                      ) : (
+                        <>
+                          <h3 className="text-sm font-medium truncate">
+                            {chat.title}
+                          </h3>
+                          {/* Action Buttons */}
+                          {(hoveredChatId === chat.id || currentChatId === chat.id) && (
+                            <div className="flex items-center gap-1">
+                              {/* Edit Title Button */}
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleStartEditTitle(chat.id, chat.title);
+                                }}
+                                className="h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-primary hover:bg-primary/10"
+                                title={t ? t('chat.editTitle') : 'Edit title'}
+                              >
+                                <Edit3 className="w-3 h-3" />
+                              </Button>
+                              {/* Delete Button */}
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  onDeleteChat?.(chat.id);
+                                }}
+                                className="h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-destructive hover:bg-destructive/10"
+                                title={t ? t('chat.deleteChat') : 'Delete chat'}
+                              >
+                                <Trash2 className="w-3 h-3" />
+                              </Button>
+                            </div>
+                          )}
+                        </>
                       )}
                     </div>
                     {chat.lastMessage && (

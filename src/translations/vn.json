@@ -823,9 +823,47 @@
       "comingSoon": "Trang này đang được xây dựng. Vui lòng quay lại sau!"
     },
     "settings": {
-      "title": "Cài đặt",
-      "description": "Tùy chỉnh tài khoản - Tính năng đang được phát triển",
-      "comingSoon": "Trang này đang được xây dựng. Vui lòng quay lại sau!"
+      "title": "Cài đặt tài khoản",
+      "description": "Quản lý thông tin cá nhân và bảo mật tài khoản của bạn",
+      "sidebar": {
+        "title": "Cài đặt"
+      },
+      "profile": {
+        "title": "Thông tin cá nhân",
+        "description": "Quản lý thông tin hiển thị và avatar",
+        "avatar": "Avatar Icon",
+        "avatarDescription": "Chọn icon để làm avatar hiển thị",
+"name": "Tên",
+        "email": "Email",
+        "emailReadonly": "Email không thể thay đổi",
+        "accountType": "Loại tài khoản",
+        "createdDate": "Ngày tạo",
+        "saveChanges": "Lưu thay đổi",
+        "saving": "Đang lưu...",
+        "updateSuccess": "Cập nhật thông tin thành công!",
+        "updateError": "Có lỗi xảy ra khi cập nhật"
+      },
+      "security": {
+        "title": "Bảo mật tài khoản",
+        "description": "Quản lý mật khẩu và bảo mật",
+        "password": "Mật khẩu",
+        "lastChanged": "Đổi lần cuối",
+        "neverChanged": "Chưa từng đổi mật khẩu",
+        "changePassword": "Đổi mật khẩu",
+        "currentPassword": "Mật khẩu hiện tại",
+        "newPassword": "Mật khẩu mới",
+        "confirmPassword": "Xác nhận mật khẩu mới",
+        "passwordLength": "Mật khẩu phải có từ 6-8 ký tự",
+        "passwordMismatch": "Mật khẩu xác nhận không khớp",
+        "changePasswordSuccess": "Đổi mật khẩu thành công!",
+        "changePasswordError": "Có lỗi xảy ra khi đổi mật khẩu"
+      },
+      "iconSelector": {
+        "title": "Chọn Icon Avatar",
+        "search": "Tìm kiếm icon...",
+        "noResults": "Không tìm thấy icon nào phù hợp",
+        "selected": "Đã chọn"
+      }
     },
     "upgrade": {
       "title": "Nâng cấp",
@@ -859,8 +897,9 @@
       "chatHistory": "Lịch sử trò chuyện",
       "clearHistory": "Xóa toàn bộ lịch sử",
       "clearHistoryWarning": "Thao tác này sẽ xóa vĩnh viễn tất cả cuộc trò chuyện của bạn",
-      "close": "Đóng",
-      "confirmClear": "Bạn có chắc chắn muốn xóa toàn bộ lịch sử chat? Hành động này không thể hoàn tác."
+      "confirmClear": "Bạn có chắc chắn muốn xóa toàn bộ lịch sử trò chuyện? Hành động này không thể hoàn tác.",
+      "confirmClearTitle": "Xóa toàn bộ lịch sử chat",
+      "close": "Đóng"
     },
     "loading": "Đang tải iRIN...",
     "languages": {
@@ -879,6 +918,8 @@
 
     "newChatTitle": "Cuộc trò chuyện mới",
     "generatingTitle": "Đang tạo tiêu đề...",
+    "editTitle": "Chỉnh sửa tiêu đề",
+    "deleteChat": "Xóa cuộc trò chuyện",
     "retry": "Thử lại",
     "stopGeneration": "Dừng tạo nội dung",
     "scrollToBottom": "Cuộn xuống cuối",

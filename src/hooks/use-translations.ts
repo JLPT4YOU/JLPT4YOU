@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useCallback, useMemo } from 'react'
+import { useState, useEffect, useCallback, useMemo, Suspense } from 'react'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import {
   Language,
@@ -33,10 +33,18 @@ export interface UseTranslationsReturn {
 /**
  * Enhanced hook for translations with automatic loading and language switching
  */
+function useSearchParamsSafe() {
+  try {
+    return useSearchParams()
+  } catch {
+    return new URLSearchParams()
+  }
+}
+
 export function useTranslations(): UseTranslationsReturn {
   const pathname = usePathname()
   const router = useRouter()
-  const searchParams = useSearchParams()
+  const searchParams = useSearchParamsSafe()
   
   // State management
   const [translations, setTranslations] = useState<TranslationData | null>(null)

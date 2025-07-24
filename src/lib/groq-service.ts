@@ -13,11 +13,10 @@ import {
   createGroqConfig,
   getGroqModelInfo,
   getAvailableGroqModels,
-  type GroqModelInfo,
-  IRIN_GROQ_SYSTEM_INSTRUCTION
+  type GroqModelInfo
 } from './groq-config';
 import { BaseAIService, AIMessage } from './ai-config';
-import { getCurrentSystemPrompt } from './prompt-storage';
+import { getCurrentSystemPrompt, getAICommunicationLanguage, detectLanguageFromMessage } from './prompt-storage';
 import {
   createTitleGenerationPrompt,
   createFallbackTitle,
@@ -95,7 +94,7 @@ export class GroqService extends BaseAIService {
    * Convert AIMessage format to Groq format
    */
   private convertMessages(messages: AIMessage[]): Array<{ role: string; content: string }> {
-    const systemPrompt = getCurrentSystemPrompt() || IRIN_GROQ_SYSTEM_INSTRUCTION;
+    const systemPrompt = getCurrentSystemPrompt();
 
     const convertedMessages: Array<{ role: string; content: string }> = [
       { role: 'system', content: systemPrompt }

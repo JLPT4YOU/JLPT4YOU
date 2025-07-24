@@ -254,6 +254,29 @@ export function generateHreflangLinks(basePath: string): Array<{
 }> {
   const baseUrl = 'https://jlpt4you.com'
   
+  // Check if it's landing page
+  if (basePath === '/landing') {
+    return [
+      {
+        hreflang: 'vi-VN',
+        href: `${baseUrl}/vn/landing`
+      },
+      {
+        hreflang: 'ja-JP', 
+        href: `${baseUrl}/jp/landing`
+      },
+      {
+        hreflang: 'en-US',
+        href: `${baseUrl}/en/landing`
+      },
+      {
+        hreflang: 'x-default',
+        href: `${baseUrl}/vn/landing` // Vietnamese as default
+      }
+    ]
+  }
+  
+  // For auth pages, keep auth prefix
   return [
     {
       hreflang: 'vi-VN',

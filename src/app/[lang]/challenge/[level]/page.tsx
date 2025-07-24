@@ -3,6 +3,9 @@ import { ProtectedRoute } from "@/components/auth/protected-route"
 import { notFound } from "next/navigation"
 import { isValidJLPTLevel } from "@/lib/utils"
 
+// Force dynamic rendering for pages using useSearchParams
+export const dynamic = 'force-dynamic'
+
 interface ChallengeLevelPageProps {
   params: Promise<{
     lang: string

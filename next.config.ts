@@ -4,19 +4,19 @@ const nextConfig: NextConfig = {
   // ESLint configuration
   eslint: {
     // Ignore ESLint errors during build for now
-    ignoreDuringBuilds: true,
+    ignoreDuringBuilds: false,
   },
 
   // TypeScript configuration
   typescript: {
     // Ignore TypeScript errors during build for now
-    ignoreBuildErrors: true,
+    ignoreBuildErrors: false,
   },
 
   // Enable experimental features for better performance and SEO
   experimental: {
     // Enable optimized package imports
-    optimizePackageImports: ['lucide-react', 'framer-motion', 'web-vitals']
+    optimizePackageImports: ['lucide-react', 'framer-motion', 'web-vitals'],
   },
 
   // Image optimization for better Core Web Vitals

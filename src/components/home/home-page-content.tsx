@@ -15,6 +15,7 @@ import {
   Trophy
 } from "lucide-react";
 import { useAuth } from "@/contexts/auth-context";
+import { getIconComponent } from "@/components/settings/icon-selector";
 import { Language, TranslationData, createTranslationFunction } from "@/lib/i18n";
 
 interface HomePageContentProps {
@@ -146,12 +147,15 @@ function HomeContent({ t, language }: HomeContentProps) {
       <div className="border-b bg-gradient-to-r from-muted/50 to-accent/30 -mx-6 px-6 mb-6">
         <div className="py-6">
             <div className="flex items-center app-gap-md">
-              <div className="w-12 h-12 bg-muted rounded-full flex items-center justify-center">
-                <User className="w-6 h-6 text-foreground" />
+              <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center border-2 border-primary/20">
+                {(() => {
+                  const AvatarIcon = getIconComponent(user.avatarIcon || undefined)
+                  return <AvatarIcon className="w-6 h-6 text-primary" />
+                })()}
               </div>
               <div className="app-space-xs">
                 <h2 className="text-xl sm:text-2xl font-bold text-foreground">
-                  {t('home.userGreeting').replace('{{name}}', user.name)}
+{t('home.userGreeting').replace('{{name}}', user.name)}
                 </h2>
                 <div className="flex items-center app-gap-xs mt-1">
                   <span className="inline-flex items-center app-px-xs app-py-xs rounded-full text-xs font-medium bg-primary/10 text-primary">

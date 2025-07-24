@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { ArrowLeft, LucideIcon } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { TranslationData, Language } from "@/lib/i18n";
 
 export interface CardItem {
@@ -19,8 +18,6 @@ export interface CardItem {
 export interface BasePageTemplateProps {
   title: string;
   subtitle?: string;
-  backHref?: string;
-  backLabel?: string;
   cards: CardItem[];
   translations: TranslationData;
   language: Language;
@@ -34,8 +31,6 @@ export interface BasePageTemplateProps {
 export function BasePageTemplate({
   title,
   subtitle,
-  backHref,
-  backLabel,
   cards,
   translations,
   language,
@@ -53,16 +48,6 @@ export function BasePageTemplate({
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background to-muted/30 flex items-center justify-center relative app-container">
-      {/* Back button positioned absolutely */}
-      {backHref && (
-        <Link href={backHref} className="absolute left-4 top-8 z-10">
-          <Button variant="ghost" size="sm" className="gap-2">
-            <ArrowLeft className="h-4 w-4" />
-            {backLabel || t('common.back')}
-          </Button>
-        </Link>
-      )}
-      
       {/* Main content container - perfectly centered */}
       <div className="w-full max-w-7xl mx-auto app-px-md app-py-lg sm:app-px-lg lg:app-px-xl">
         <div className="flex flex-col items-center justify-center app-space-lg sm:app-space-xl">

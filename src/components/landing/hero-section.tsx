@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { SimpleTetrisAnimation } from "./simple-tetris-animation"
 import { useEffect, useState } from "react"
-import { TranslationData } from "@/lib/i18n"
+import { TranslationData, getLocalizedPath } from "@/lib/i18n"
 import { useTranslation } from "@/lib/use-translation"
 // No learning icons needed - only stars background
 
@@ -166,7 +166,7 @@ interface HeroSectionProps {
 export function HeroSection({ translations }: HeroSectionProps) {
   const router = useRouter()
   const [isVisible, setIsVisible] = useState(false)
-  const { t } = useTranslation(translations)
+  const { t, currentLanguage } = useTranslation(translations)
 
   useEffect(() => {
     // Start animation after component mounts
@@ -215,7 +215,7 @@ export function HeroSection({ translations }: HeroSectionProps) {
             >
               <Button
                 size="lg"
-                onClick={() => router.push('/register')}
+                onClick={() => router.push(getLocalizedPath('register', currentLanguage))}
                 className="bg-primary text-primary-foreground px-8 py-3 text-base md:text-lg font-medium min-w-[180px] md:min-w-[200px]"
               >
                 {t('hero.ctaButton')}

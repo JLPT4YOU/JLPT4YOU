@@ -164,7 +164,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
     category: model.category,
     supportsStreaming: model.supportsStreaming,
     supportsFiles: model.supportsFiles,
-    supportsTTS: model.supportsTTS
+    supportsTTS: false // Removed from GeminiModelInfo
   }));
 
   // Get current chat

@@ -1,15 +1,13 @@
 "use client"
 
 import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { ArrowLeft, BarChart3, CheckCircle, XCircle, Flag, Target } from 'lucide-react'
+import { BarChart3, CheckCircle, XCircle, Flag, Target } from 'lucide-react'
 import { ReviewData } from '@/types'
 import { cn } from '@/lib/utils'
 import { useTranslations } from '@/hooks/use-translations'
 
 interface ReviewHeaderProps {
   reviewData: ReviewData
-  onBack: () => void
 }
 
 interface StatItemProps {
@@ -41,7 +39,7 @@ function StatItem({ icon, label, value, className, labelClassName }: StatItemPro
   )
 }
 
-export function ReviewHeader({ reviewData, onBack }: ReviewHeaderProps) {
+export function ReviewHeader({ reviewData }: ReviewHeaderProps) {
   const { t } = useTranslations()
   const { examResult, correctCount, incorrectCount, unansweredCount: flaggedCount, totalQuestions } = reviewData
 
@@ -56,17 +54,8 @@ export function ReviewHeader({ reviewData, onBack }: ReviewHeaderProps) {
 
   return (
     <div className="space-y-4">
-      {/* Back Button & Title */}
+      {/* Title */}
       <div className="flex items-center gap-4">
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={onBack}
-          className="flex items-center gap-2 bg-muted/20 hover:bg-accent/40"
-        >
-          <ArrowLeft className="h-4 w-4" />
-          {t('reviewAnswers.header.backToResults')}
-        </Button>
         <div className="flex-1">
           <h1 className="text-lg font-semibold text-foreground">
             {t('reviewAnswers.header.title')}

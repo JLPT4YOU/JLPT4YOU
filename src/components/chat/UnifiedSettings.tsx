@@ -32,6 +32,7 @@ import { PromptSettings } from './PromptSettings';
 import { hasCustomPrompt } from '@/lib/prompt-storage';
 import { getAvailableModels, GEMINI_MODEL_INFO } from '@/lib/gemini-config';
 import { cn } from '@/lib/utils';
+import { ConfirmationDialog } from '@/components/ui/confirmation-dialog';
 
 interface UnifiedSettingsProps {
   isOpen: boolean;
@@ -74,6 +75,7 @@ export const UnifiedSettings: React.FC<UnifiedSettingsProps> = ({
   const { theme, setTheme } = useTheme();
   const { t } = useTranslations();
   const [mounted, setMounted] = useState(false);
+  const [showClearHistoryDialog, setShowClearHistoryDialog] = useState(false);
 
   // Prevent hydration mismatch
   useEffect(() => {
@@ -169,11 +171,12 @@ export const UnifiedSettings: React.FC<UnifiedSettingsProps> = ({
   };
 
   const handleClearHistory = () => {
-    const confirmMessage = t ? t('chat.settings.confirmClear') : 'Are you sure you want to clear all chat history? This action cannot be undone.';
-    if (window.confirm(confirmMessage)) {
-      localStorage.removeItem('chat_history');
-      onClearHistory?.();
-    }
+    setShowClearHistoryDialog(true);
+  };
+
+  const handleConfirmClearHistory = () => {
+    localStorage.removeItem('chat_history');
+    onClearHistory?.();
   };
 
   const toggleTheme = () => {
@@ -525,6 +528,18 @@ export const UnifiedSettings: React.FC<UnifiedSettingsProps> = ({
           </div>
         </div>
       </DialogContent>
+
+      {/* Clear History Confirmation Dialog */}
+      <ConfirmationDialog
+        isOpen={showClearHistoryDialog}
+        onOpenChange={setShowClearHistoryDialog}
+        onConfirm={handleConfirmClearHistory}
+        title={t ? t('chat.settings.confirmClearTitle') : 'Xóa toàn bộ lịch sử chat'}
+        description={t ? t('chat.settings.confirmClear') : 'Bạn có chắc chắn muốn xóa toàn bộ lịch sử trò chuyện? Hành động này không thể hoàn tác.'}
+        confirmText={t ? t('chat.settings.clearHistory') : 'Xóa lịch sử'}
+        cancelText={t ? t('common.cancel') : 'Hủy'}
+        variant="destructive"
+      />
     </Dialog>
   );
 };

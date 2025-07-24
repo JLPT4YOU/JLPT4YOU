@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import { ChevronDown, ChevronRight, Brain, Clock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -23,6 +23,17 @@ export const ThinkingDisplay: React.FC<ThinkingDisplayProps> = ({
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
+  // Auto-expand when thinking is in progress, auto-collapse when complete
+  useEffect(() => {
+    if (!isThinkingComplete) {
+      // Đang thinking: tự động mở rộng để hiển thị real-time
+      setIsExpanded(true);
+    } else if (isThinkingComplete) {
+      // Thinking hoàn tất: tự động thu gọn (bất kể isStreaming)
+      setIsExpanded(false);
+    }
+  }, [isThinkingComplete]);
+
   // Don't render if no thinking data
   if (!thoughtSummary && !isStreaming) {
     return null;
@@ -39,21 +50,28 @@ export const ThinkingDisplay: React.FC<ThinkingDisplayProps> = ({
       {/* Header */}
       <Button
         variant="ghost"
-        onClick={() => setIsExpanded(!isExpanded)}
+        onClick={() => {
+          // Chỉ cho phép toggle khi thinking đã hoàn tất
+          if (isThinkingComplete) {
+            setIsExpanded(!isExpanded);
+          }
+        }}
         className={cn(
           "group w-full justify-between p-3 h-auto font-normal",
           "hover:bg-muted/50 dark:hover:bg-muted/30",
-          "text-foreground hover:text-foreground"
+          "text-foreground hover:text-foreground",
+          // Disable hover effect khi đang thinking
+          !isThinkingComplete && "cursor-default hover:bg-transparent"
         )}
       >
         <div className="flex items-center gap-2 min-w-0 flex-1">
           <Brain className="w-4 h-4 flex-shrink-0" />
           <span className="text-sm font-medium truncate">
-            {isStreaming && !isThinkingComplete ? 'Đang suy nghĩ...' : 'Quá trình suy nghĩ'}
+            {!isThinkingComplete ? 'Đang suy nghĩ...' : 'Quá trình suy nghĩ'}
           </span>
 
           {/* Progress indicator for streaming */}
-          {isStreaming && !isThinkingComplete && (
+          {!isThinkingComplete && (
             <div className="flex items-center gap-1 ml-2 flex-shrink-0">
               <div className="w-1 h-1 bg-foreground/60 rounded-full animate-pulse" />
               <div className="w-1 h-1 bg-foreground/60 rounded-full animate-pulse delay-75" />
@@ -71,16 +89,18 @@ export const ThinkingDisplay: React.FC<ThinkingDisplayProps> = ({
             </div>
           )}
 
-          {/* Expand/Collapse icon */}
-          {isExpanded ? (
-            <ChevronDown className="w-4 h-4 flex-shrink-0" />
-          ) : (
-            <ChevronRight className="w-4 h-4 flex-shrink-0" />
+          {/* Expand/Collapse icon - Chỉ hiển thị khi có thể toggle */}
+          {isThinkingComplete && (
+            isExpanded ? (
+              <ChevronDown className="w-4 h-4 flex-shrink-0" />
+            ) : (
+              <ChevronRight className="w-4 h-4 flex-shrink-0" />
+            )
           )}
         </div>
       </Button>
 
-      {/* Content */}
+      {/* Content - Always show when expanded */}
       {isExpanded && (
         <div className="px-3 pb-3 border-t border-border/30">
           <div className="pt-3">
@@ -90,17 +110,20 @@ export const ThinkingDisplay: React.FC<ThinkingDisplayProps> = ({
                   content={thoughtSummary}
                   className="text-foreground"
                 />
+                {/* Show streaming indicator at the end if still thinking */}
+                {!isThinkingComplete && (
+                  <div className="flex items-center gap-2 text-muted-foreground text-sm mt-2 pt-2 border-t border-border/20">
+                    <Clock className="w-4 h-4 animate-spin" />
+                    <span>Đang tiếp tục suy nghĩ...</span>
+                  </div>
+                )}
               </div>
-            ) : isStreaming ? (
+            ) : !isThinkingComplete ? (
               <div className="flex items-center gap-2 text-muted-foreground text-sm">
                 <Clock className="w-4 h-4 animate-spin" />
                 <span>Đang phân tích và suy luận...</span>
               </div>
-            ) : (
-              <p className="text-muted-foreground text-sm italic">
-                Không có dữ liệu suy nghĩ
-              </p>
-            )}
+            ) : null}
           </div>
         </div>
       )}
@@ -120,134 +143,4 @@ export const MemoizedThinkingDisplay = React.memo(ThinkingDisplay, (prevProps, n
 
 MemoizedThinkingDisplay.displayName = 'MemoizedThinkingDisplay';
 
-/**
- * Parse thinking content from Groq message
- */
-export function parseGroqThinkingFromMessage(content: string): {
-  hasThinking: boolean;
-  thinkingContent: string;
-  answer: string;
-} {
-  // Check for Groq thinking markers
-  const thinkingMarkers = [
-    // Format: **🤔 Quá trình suy nghĩ:**\n...\n**💡 Câu trả lời:**\n...
-    /\*\*🤔 Quá trình suy nghĩ:\*\*([\s\S]*?)\*\*💡 Câu trả lời:\*\*/,
-    // Format: <think>...</think>
-    /<think>([\s\S]*?)<\/think>/gi
-  ];
 
-  for (const marker of thinkingMarkers) {
-    const match = content.match(marker);
-    if (match) {
-      const thinkingContent = match[1]?.trim() || '';
-      let answer = content.replace(marker, '').trim();
-
-      // Clean up answer by removing any remaining thinking markers
-      answer = answer.replace(/\*\*💡 Câu trả lời:\*\*/g, '').trim();
-
-      return {
-        hasThinking: true,
-        thinkingContent,
-        answer
-      };
-    }
-  }
-
-  return {
-    hasThinking: false,
-    thinkingContent: '',
-    answer: content
-  };
-}
-
-/**
- * Groq Thinking Display Component
- */
-interface GroqThinkingDisplayProps {
-  content: string;
-  className?: string;
-}
-
-export const GroqThinkingDisplay: React.FC<GroqThinkingDisplayProps> = ({
-  content,
-  className
-}) => {
-  const [isExpanded, setIsExpanded] = useState(true); // Start expanded during thinking
-  const { hasThinking, thinkingContent, answer } = parseGroqThinkingFromMessage(content);
-
-  // Auto-collapse after thinking is complete and answer starts
-  React.useEffect(() => {
-    if (hasThinking && answer.trim()) {
-      // If we have both thinking and answer, auto-collapse after a short delay
-      const timer = setTimeout(() => {
-        setIsExpanded(false);
-      }, 2000); // 2 second delay to let user see the thinking completed
-
-      return () => clearTimeout(timer);
-    }
-  }, [hasThinking, answer]);
-
-  if (!hasThinking) {
-    return (
-      <div className={cn("whitespace-pre-wrap", className)}>
-        <MarkdownRenderer content={content} />
-      </div>
-    );
-  }
-
-  return (
-    <div className={cn("space-y-3", className)}>
-      {/* Thinking Section - Match Gemini Style */}
-      <div className={cn(
-        "border border-border rounded-lg bg-muted/30 dark:bg-muted/20",
-        "mb-3 overflow-hidden transition-all duration-200"
-      )}>
-        {/* Header - Match Gemini Style */}
-        <Button
-          variant="ghost"
-          onClick={() => setIsExpanded(!isExpanded)}
-          className={cn(
-            "group w-full justify-between p-3 h-auto font-normal",
-            "hover:bg-muted/50 dark:hover:bg-muted/30",
-            "text-foreground hover:text-foreground"
-          )}
-        >
-          <div className="flex items-center gap-2 min-w-0 flex-1">
-            <Brain className="w-4 h-4 flex-shrink-0" />
-            <span className="text-sm font-medium truncate">
-              Quá trình suy nghĩ
-            </span>
-          </div>
-
-          <div className="flex items-center gap-2 flex-shrink-0 ml-2">
-            {/* Expand/Collapse icon */}
-            {isExpanded ? (
-              <ChevronDown className="w-4 h-4 flex-shrink-0" />
-            ) : (
-              <ChevronRight className="w-4 h-4 flex-shrink-0" />
-            )}
-          </div>
-        </Button>
-
-        {/* Content - Match Gemini Style */}
-        {isExpanded && (
-          <div className="px-3 pb-3 border-t border-border/30">
-            <div className="pt-3">
-              <div className="prose prose-sm max-w-none dark:prose-invert">
-                <MarkdownRenderer
-                  content={thinkingContent}
-                  className="text-foreground"
-                />
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* Answer Section - Clean without extra styling */}
-      <div className="text-gray-900 dark:text-gray-100">
-        <MarkdownRenderer content={answer} />
-      </div>
-    </div>
-  );
-};

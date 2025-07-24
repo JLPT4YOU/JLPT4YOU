@@ -13,13 +13,23 @@ export const GEMINI_MODELS = {
   // Gemini 2.5 Series (Support Google Search + Thinking)
   PRO_2_5: 'gemini-2.5-pro',
   FLASH_2_5: 'gemini-2.5-flash',
-  FLASH_LITE_2_5: 'gemini-2.5-flash-lite-preview-06-17',
+  FLASH_LITE_2_5: 'gemini-2.5-flash-lite',
+  FLASH_LITE_PREVIEW_2_5: 'gemini-2.5-flash-lite-preview-06-17',
   FLASH_PREVIEW_2_5: 'gemini-2.5-flash-preview-05-20',
 
   // Gemini 2.0 Series (Support Google Search)
   FLASH_2_0: 'gemini-2.0-flash',
+  FLASH_001_2_0: 'gemini-2.0-flash-001',
+  FLASH_EXP_2_0: 'gemini-2.0-flash-exp',
   FLASH_LITE_2_0: 'gemini-2.0-flash-lite',
-  FLASH_EXP_2_0: 'gemini-2.0-flash-exp'
+  FLASH_LITE_001_2_0: 'gemini-2.0-flash-lite-001',
+  FLASH_LITE_PREVIEW_2_0: 'gemini-2.0-flash-lite-preview',
+  FLASH_LITE_PREVIEW_0205_2_0: 'gemini-2.0-flash-lite-preview-02-05',
+
+  // Gemini 2.0 Thinking Series (Support Google Search + Thinking)
+  FLASH_THINKING_EXP_2_0: 'gemini-2.0-flash-thinking-exp',
+  FLASH_THINKING_EXP_0121_2_0: 'gemini-2.0-flash-thinking-exp-01-21',
+  FLASH_THINKING_EXP_1219_2_0: 'gemini-2.0-flash-thinking-exp-1219'
 } as const;
 
 // Model metadata for UI and selection
@@ -29,13 +39,10 @@ export interface GeminiModelInfo {
   description: string;
   supportsStreaming: boolean;
   supportsFiles: boolean;
-  supportsAudio: boolean;
-  supportsTTS: boolean;
   supportsGoogleSearch?: boolean;
   supportsThinking?: boolean;
   supportsCodeExecution?: boolean;
-  costTier: 'free' | 'low' | 'medium' | 'high';
-  category: 'text' | 'multimodal' | 'audio' | 'tts';
+  category: 'text' | 'multimodal';
 }
 
 export const GEMINI_MODEL_INFO: Record<string, GeminiModelInfo> = {
@@ -46,12 +53,9 @@ export const GEMINI_MODEL_INFO: Record<string, GeminiModelInfo> = {
     description: 'Most capable model with thinking mode',
     supportsStreaming: true,
     supportsFiles: true,
-    supportsAudio: false,
-    supportsTTS: false,
     supportsGoogleSearch: true,
     supportsThinking: true,
     supportsCodeExecution: true,
-    costTier: 'high',
     category: 'multimodal',
   },
   [GEMINI_MODELS.FLASH_2_5]: {
@@ -60,26 +64,31 @@ export const GEMINI_MODEL_INFO: Record<string, GeminiModelInfo> = {
     description: 'Fast with thinking mode',
     supportsStreaming: true,
     supportsFiles: true,
-    supportsAudio: false,
-    supportsTTS: false,
     supportsGoogleSearch: true,
     supportsThinking: true,
     supportsCodeExecution: true,
-    costTier: 'medium',
     category: 'multimodal',
   },
   [GEMINI_MODELS.FLASH_LITE_2_5]: {
     id: GEMINI_MODELS.FLASH_LITE_2_5,
-    name: 'Gemini 2.5 Flash-Lite Preview',
+    name: 'Gemini 2.5 Flash-Lite',
     description: 'Most cost-efficient with thinking',
     supportsStreaming: true,
     supportsFiles: true,
-    supportsAudio: false,
-    supportsTTS: false,
     supportsGoogleSearch: true,
     supportsThinking: true,
     supportsCodeExecution: true,
-    costTier: 'low',
+    category: 'multimodal',
+  },
+  [GEMINI_MODELS.FLASH_LITE_PREVIEW_2_5]: {
+    id: GEMINI_MODELS.FLASH_LITE_PREVIEW_2_5,
+    name: 'Gemini 2.5 Flash-Lite Preview',
+    description: 'Preview version of Flash-Lite',
+    supportsStreaming: true,
+    supportsFiles: true,
+    supportsGoogleSearch: true,
+    supportsThinking: true,
+    supportsCodeExecution: true,
     category: 'multimodal',
   },
   [GEMINI_MODELS.FLASH_PREVIEW_2_5]: {
@@ -88,12 +97,9 @@ export const GEMINI_MODEL_INFO: Record<string, GeminiModelInfo> = {
     description: 'Preview version with latest features',
     supportsFiles: true,
     supportsStreaming: true,
-    supportsAudio: false,
-    supportsTTS: false,
     supportsGoogleSearch: true,
     supportsThinking: true,
     supportsCodeExecution: true,
-    costTier: 'medium',
     category: 'multimodal',
   },
 
@@ -104,26 +110,20 @@ export const GEMINI_MODEL_INFO: Record<string, GeminiModelInfo> = {
     description: 'Next-gen with search',
     supportsStreaming: true,
     supportsFiles: true,
-    supportsAudio: false,
-    supportsTTS: false,
     supportsGoogleSearch: true,
     supportsThinking: false,
     supportsCodeExecution: false,
-    costTier: 'medium',
     category: 'multimodal',
   },
-  [GEMINI_MODELS.FLASH_LITE_2_0]: {
-    id: GEMINI_MODELS.FLASH_LITE_2_0,
-    name: 'Gemini 2.0 Flash-Lite',
-    description: 'Cost-efficient with search',
+  [GEMINI_MODELS.FLASH_001_2_0]: {
+    id: GEMINI_MODELS.FLASH_001_2_0,
+    name: 'Gemini 2.0 Flash-001',
+    description: 'Stable version of 2.0 Flash',
     supportsStreaming: true,
     supportsFiles: true,
-    supportsAudio: false,
-    supportsTTS: false,
     supportsGoogleSearch: true,
     supportsThinking: false,
     supportsCodeExecution: false,
-    costTier: 'low',
     category: 'multimodal',
   },
   [GEMINI_MODELS.FLASH_EXP_2_0]: {
@@ -132,12 +132,88 @@ export const GEMINI_MODEL_INFO: Record<string, GeminiModelInfo> = {
     description: 'Experimental features and capabilities',
     supportsStreaming: true,
     supportsFiles: true,
-    supportsAudio: false,
-    supportsTTS: false,
     supportsGoogleSearch: true,
     supportsThinking: false,
     supportsCodeExecution: false,
-    costTier: 'medium',
+    category: 'multimodal',
+  },
+  [GEMINI_MODELS.FLASH_LITE_2_0]: {
+    id: GEMINI_MODELS.FLASH_LITE_2_0,
+    name: 'Gemini 2.0 Flash-Lite',
+    description: 'Cost-efficient with search',
+    supportsStreaming: true,
+    supportsFiles: true,
+    supportsGoogleSearch: true,
+    supportsThinking: false,
+    supportsCodeExecution: false,
+    category: 'multimodal',
+  },
+  [GEMINI_MODELS.FLASH_LITE_001_2_0]: {
+    id: GEMINI_MODELS.FLASH_LITE_001_2_0,
+    name: 'Gemini 2.0 Flash-Lite-001',
+    description: 'Stable version of 2.0 Flash-Lite',
+    supportsStreaming: true,
+    supportsFiles: true,
+    supportsGoogleSearch: true,
+    supportsThinking: false,
+    supportsCodeExecution: false,
+    category: 'multimodal',
+  },
+  [GEMINI_MODELS.FLASH_LITE_PREVIEW_2_0]: {
+    id: GEMINI_MODELS.FLASH_LITE_PREVIEW_2_0,
+    name: 'Gemini 2.0 Flash-Lite Preview',
+    description: 'Preview version of Flash-Lite',
+    supportsStreaming: true,
+    supportsFiles: true,
+    supportsGoogleSearch: true,
+    supportsThinking: false,
+    supportsCodeExecution: false,
+    category: 'multimodal',
+  },
+  [GEMINI_MODELS.FLASH_LITE_PREVIEW_0205_2_0]: {
+    id: GEMINI_MODELS.FLASH_LITE_PREVIEW_0205_2_0,
+    name: 'Gemini 2.0 Flash-Lite Preview 02-05',
+    description: 'Specific preview build from 02-05',
+    supportsStreaming: true,
+    supportsFiles: true,
+    supportsGoogleSearch: true,
+    supportsThinking: false,
+    supportsCodeExecution: false,
+    category: 'multimodal',
+  },
+
+  // Gemini 2.0 Thinking Series (Support Google Search + Thinking)
+  [GEMINI_MODELS.FLASH_THINKING_EXP_2_0]: {
+    id: GEMINI_MODELS.FLASH_THINKING_EXP_2_0,
+    name: 'Gemini 2.0 Flash Thinking Experimental',
+    description: 'Experimental thinking mode for 2.0',
+    supportsStreaming: true,
+    supportsFiles: true,
+    supportsGoogleSearch: true,
+    supportsThinking: true,
+    supportsCodeExecution: false,
+    category: 'multimodal',
+  },
+  [GEMINI_MODELS.FLASH_THINKING_EXP_0121_2_0]: {
+    id: GEMINI_MODELS.FLASH_THINKING_EXP_0121_2_0,
+    name: 'Gemini 2.0 Flash Thinking Exp 01-21',
+    description: 'Thinking experimental build from 01-21',
+    supportsStreaming: true,
+    supportsFiles: true,
+    supportsGoogleSearch: true,
+    supportsThinking: true,
+    supportsCodeExecution: false,
+    category: 'multimodal',
+  },
+  [GEMINI_MODELS.FLASH_THINKING_EXP_1219_2_0]: {
+    id: GEMINI_MODELS.FLASH_THINKING_EXP_1219_2_0,
+    name: 'Gemini 2.0 Flash Thinking Exp 12-19',
+    description: 'Thinking experimental build from 12-19',
+    supportsStreaming: true,
+    supportsFiles: true,
+    supportsGoogleSearch: true,
+    supportsThinking: true,
+    supportsCodeExecution: false,
     category: 'multimodal',
   }
 };
@@ -202,56 +278,28 @@ export const DEFAULT_GEMINI_CONFIG = {
   responseMimeType: 'text/plain'
 };
 
-// System Instructions for iRIN - Versatile AI Teacher
-export const IRIN_SYSTEM_INSTRUCTION = [
-  {
-    text: `You are iRIN, a versatile AI teacher and assistant from the JLPT4YOU learning platform.
-
-Your core identity:
-- You are iRIN, a knowledgeable and adaptable AI teacher who can help with any subject
-- You work for the JLPT4YOU platform, but you're a multi-disciplinary educator
-- You can discuss and teach any topic the user is interested in
-- You are encouraging, patient, and adapt to each user's learning style and interests
-- You always maintain a helpful, educational, and engaging approach
-
-Your capabilities include:
-- Multi-subject education and tutoring (mathematics, science, literature, history, etc.)
-- Japanese language learning and JLPT exam preparation (one of your specialties)
-- General knowledge and discussions on various topics
-- Problem-solving and creative thinking
-- Academic support across all educational levels
-- Personalized guidance based on user preferences and learning goals
-
-Guidelines:
-- Always respond in a helpful, encouraging, and educational manner
-- Provide clear explanations with practical examples and context
-- Use Vietnamese when communicating with Vietnamese learners
-- Adapt your teaching style to the student's level, needs, and subject matter
-- Encourage learning and provide motivation across all subjects
-- Focus on practical, real-world application of knowledge and skills
-- Maintain your identity as iRIN from JLPT4YOU regardless of the topic discussed
-
-Remember: You are a versatile educator who can help with any subject while maintaining your core identity as iRIN.`,
-  },
-];
+// Note: System instructions are now handled dynamically through prompt-storage.ts
+// This ensures proper integration with user customization and language switching
 
 // Configuration builder function
 export function createGeminiConfig(overrides?: any) {
   const { systemInstruction, model, thinkingConfig, ...configOverrides } = overrides || {};
-  
+
   const finalModel = model || DEFAULT_GEMINI_CONFIG.model;
   const baseConfig: any = {
     ...DEFAULT_GEMINI_CONFIG,
     model: finalModel,
-    systemInstruction: systemInstruction || IRIN_SYSTEM_INSTRUCTION,
+    // systemInstruction must be provided by the caller (usually from getCurrentSystemPrompt())
+    // No fallback to ensure proper integration with dynamic prompt system
+    systemInstruction: systemInstruction,
     ...configOverrides,
   };
-  
+
   // Only add thinkingConfig for models that support thinking
   if (supportsThinking(finalModel) && thinkingConfig) {
     baseConfig.thinkingConfig = thinkingConfig;
   }
-  
+
   return baseConfig;
 }
 
@@ -266,26 +314,35 @@ export function getModelInfo(modelId: string): GeminiModelInfo | undefined {
 
 // Helper functions to check model capabilities
 export function supportsThinking(modelId: string): boolean {
-  // Only 2.5 series models support thinking mode
+  // 2.5 series models and 2.0 thinking experimental models support thinking mode
   return modelId === GEMINI_MODELS.PRO_2_5 ||
          modelId === GEMINI_MODELS.FLASH_2_5 ||
          modelId === GEMINI_MODELS.FLASH_LITE_2_5 ||
-         modelId === GEMINI_MODELS.FLASH_PREVIEW_2_5;
+         modelId === GEMINI_MODELS.FLASH_LITE_PREVIEW_2_5 ||
+         modelId === GEMINI_MODELS.FLASH_PREVIEW_2_5 ||
+         modelId === GEMINI_MODELS.FLASH_THINKING_EXP_2_0 ||
+         modelId === GEMINI_MODELS.FLASH_THINKING_EXP_0121_2_0 ||
+         modelId === GEMINI_MODELS.FLASH_THINKING_EXP_1219_2_0;
 }
 
 export function supportsGoogleSearch(modelId: string): boolean {
-  // 2.5 and 2.0 series models support Google Search
+  // All 2.5 and 2.0 series models support Google Search
   return supportsThinking(modelId) ||
          modelId === GEMINI_MODELS.FLASH_2_0 ||
+         modelId === GEMINI_MODELS.FLASH_001_2_0 ||
+         modelId === GEMINI_MODELS.FLASH_EXP_2_0 ||
          modelId === GEMINI_MODELS.FLASH_LITE_2_0 ||
-         modelId === GEMINI_MODELS.FLASH_EXP_2_0;
+         modelId === GEMINI_MODELS.FLASH_LITE_001_2_0 ||
+         modelId === GEMINI_MODELS.FLASH_LITE_PREVIEW_2_0 ||
+         modelId === GEMINI_MODELS.FLASH_LITE_PREVIEW_0205_2_0;
 }
 
 export function supportsCodeExecution(modelId: string): boolean {
-  // Only 2.5 series models support Code Execution, 2.0 models do not
+  // Only 2.5 series models support Code Execution, 2.0 models (including thinking) do not
   return modelId === GEMINI_MODELS.PRO_2_5 ||
          modelId === GEMINI_MODELS.FLASH_2_5 ||
          modelId === GEMINI_MODELS.FLASH_LITE_2_5 ||
+         modelId === GEMINI_MODELS.FLASH_LITE_PREVIEW_2_5 ||
          modelId === GEMINI_MODELS.FLASH_PREVIEW_2_5;
 }
 

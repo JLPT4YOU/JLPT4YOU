@@ -52,7 +52,7 @@ function SectionCard({ section, index, t }: SectionCardProps) {
           </div>
           <div>
             <h3 className="text-sm font-semibold text-foreground">
-              {t(`examResults.sections.names.${section.name}`) || section.displayName}
+{t(`examResults.sections.names.${section.name}`)}
             </h3>
             <p className="text-xs text-muted-foreground">
               {section.score}/{section.total} {t('examResults.stats.correctAnswers')}

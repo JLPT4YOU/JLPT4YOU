@@ -116,7 +116,7 @@ const ShikiCodeBlock: React.FC<ShikiCodeBlockProps> = ({
 
   // Block code với Shiki highlighting
   return (
-    <div className="relative group my-4">
+    <div className="relative group my-4 w-full max-w-full">
       {/* Copy button */}
       <Button
         variant="ghost"
@@ -147,9 +147,10 @@ const ShikiCodeBlock: React.FC<ShikiCodeBlockProps> = ({
       {/* Shiki highlighted code */}
       <div
         className={cn(
-          "shiki-code-block overflow-hidden",
+          "shiki-code-block overflow-x-auto overflow-y-hidden",
           "[&_pre]:!m-0 [&_pre]:!p-0",
           "[&_pre]:!bg-transparent [&_pre]:!border-none",
+          "[&_pre]:!overflow-x-auto",
           "[&_code]:block [&_code]:w-full [&_code]:min-w-full",
           "[&_.shiki]:!bg-transparent [&_.shiki]:!border-none"
         )}
@@ -161,6 +162,9 @@ const ShikiCodeBlock: React.FC<ShikiCodeBlockProps> = ({
           borderRadius: 'var(--code-block-radius)',
           padding: language && language !== 'text' ? '2.5rem 1rem 1rem 1rem' : '1rem',
           fontFamily: 'ui-monospace, SFMono-Regular, "SF Mono", Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
+          maxWidth: '100%',
+          wordBreak: 'normal',
+          whiteSpace: 'pre',
         }}
         dangerouslySetInnerHTML={{ __html: highlightedHtml }}
       />

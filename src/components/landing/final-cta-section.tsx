@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { ArrowRight, Star } from "lucide-react"
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import { TranslationData } from "@/lib/i18n"
+import { TranslationData, getLocalizedPath } from "@/lib/i18n"
 import { useTranslation } from "@/lib/use-translation"
 
 interface FinalCTASectionProps {
@@ -15,7 +15,7 @@ interface FinalCTASectionProps {
 // Final CTA Section Component
 export const FinalCTASection = ({ translations }: FinalCTASectionProps) => {
   const router = useRouter()
-  const { t } = useTranslation(translations)
+  const { t, currentLanguage } = useTranslation(translations)
   const [stars, setStars] = useState<Array<{
     id: number
     left: number
@@ -112,7 +112,7 @@ export const FinalCTASection = ({ translations }: FinalCTASectionProps) => {
             >
               <Button
                 size="lg"
-                onClick={() => router.push('/register')}
+                onClick={() => router.push(getLocalizedPath('register', currentLanguage))}
                 className="w-full sm:w-auto bg-background text-foreground px-8 py-4 text-base md:text-lg font-semibold shadow-lg group hover-brightness-light"
               >
                 {t('finalCta.button')}

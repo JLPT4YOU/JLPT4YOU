@@ -51,7 +51,7 @@ export function LandingHeader({ translations }: LandingHeaderProps) {
             {/* Logo và tên ứng dụng */}
             <div
               className="flex items-center app-gap-sm hover-opacity focus-ring rounded-md cursor-pointer"
-              onClick={() => router.push('/')}
+              onClick={() => router.push(getLocalizedPath('landing', currentLanguage))}
             >
               <div className="flex items-center justify-center w-8 h-8 rounded-md bg-muted">
                 <GraduationCap className="h-5 w-5 text-foreground" />

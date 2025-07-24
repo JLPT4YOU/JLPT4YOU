@@ -58,9 +58,14 @@
 .markdown-content pre {
   position: relative;
   overflow-x: auto;
+  overflow-y: hidden;
   border-radius: 0.5rem;
   /* Border is now handled by Shiki wrapper component */
   border: none !important;
+  /* Prevent text wrapping */
+  white-space: pre;
+  word-break: normal;
+  word-wrap: normal;
 }
 
 /* Force remove any borders from Shiki generated elements */
@@ -68,16 +73,23 @@
   border: none !important;
   outline: none !important;
   box-shadow: none !important;
+  /* Ensure horizontal scrolling */
+  overflow-x: auto;
+  white-space: pre;
 }
 
 /* Ensure Shiki container has no extra borders */
 .markdown-content [class*="language-"] {
   border: none !important;
+  overflow-x: auto;
+  white-space: pre;
 }
 
 /* Additional override for any code elements */
 .markdown-content code {
   border: none !important;
+  white-space: pre;
+  word-break: normal;
 }
 
 .markdown-content pre::-webkit-scrollbar {
@@ -170,6 +182,9 @@
 
   .markdown-content pre {
     font-size: calc(var(--chat-font-size, 16px) * 0.75);
+    /* Ensure horizontal scrolling works on mobile */
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
   }
 }
 
@@ -208,6 +223,14 @@
 /* Shiki Code Block Styles - Min Theme Support */
 .shiki-code-block {
   font-family: ui-monospace, SFMono-Regular, "SF Mono", Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  /* Enable horizontal scrolling */
+  overflow-x: auto;
+  overflow-y: hidden;
+  /* Ensure content doesn't wrap */
+  white-space: pre;
+  word-break: normal;
+  /* Smooth scrolling */
+  scroll-behavior: smooth;
 }
 
 .shiki-code-block pre {
@@ -216,6 +239,10 @@
   background: transparent !important;
   border: none !important;
   overflow-x: auto;
+  /* Prevent text wrapping */
+  white-space: pre;
+  word-wrap: normal;
+  word-break: normal;
 }
 
 .shiki-code-block code {
@@ -223,9 +250,62 @@
   font-size: inherit;
   line-height: inherit;
   background: transparent !important;
+  /* Ensure code doesn't wrap */
+  white-space: pre;
+  word-break: normal;
+  display: block;
+  min-width: max-content;
 }
 
 /* Ensure Shiki themes work properly with our container styling */
 .shiki-code-block .shiki {
   background: transparent !important;
+  /* Prevent wrapping in Shiki container */
+  white-space: pre;
+  overflow-x: auto;
+}
+
+/* Custom scrollbar for code blocks */
+.shiki-code-block::-webkit-scrollbar {
+  height: 8px;
+  width: 8px;
+}
+
+.shiki-code-block::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 4px;
+}
+
+.shiki-code-block::-webkit-scrollbar-thumb {
+  background: var(--muted-foreground);
+  border-radius: 4px;
+  opacity: 0.6;
+}
+
+.shiki-code-block::-webkit-scrollbar-thumb:hover {
+  background: var(--foreground);
+  opacity: 0.8;
+}
+
+/* Firefox scrollbar styling */
+.shiki-code-block {
+  scrollbar-width: thin;
+  scrollbar-color: var(--muted-foreground) transparent;
+}
+
+/* Mobile optimizations */
+@media (max-width: 640px) {
+  .shiki-code-block {
+    /* Larger scrollbar on mobile for easier interaction */
+    scrollbar-width: auto;
+  }
+
+  .shiki-code-block::-webkit-scrollbar {
+    height: 12px;
+  }
+
+  .shiki-code-block::-webkit-scrollbar-thumb {
+    background: var(--muted-foreground);
+    opacity: 0.8;
+  }
 }

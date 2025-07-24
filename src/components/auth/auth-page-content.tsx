@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, Suspense } from "react"
 import { useSearchParams } from "next/navigation"
 import { AuthLayoutWithLanguage } from "@/components/auth/auth-layout-with-language"
 import { LoginForm } from "@/components/auth/login-form"
@@ -14,18 +14,31 @@ interface AuthPageContentProps {
   language: Language
 }
 
-export function AuthPageContent({ translations, initialMode, language }: AuthPageContentProps) {
+function AuthPageContentInner({ translations, initialMode, language }: AuthPageContentProps) {
   const searchParams = useSearchParams()
   const { t } = useTranslation(translations)
   const [mode, setMode] = useState<'login' | 'register'>(initialMode)
+  const [showRegistrationSuccess, setShowRegistrationSuccess] = useState(false)
 
   // Check if user just registered
   useEffect(() => {
     const registered = searchParams.get('registered')
+    const confirm = searchParams.get('confirm')
     if (registered === 'true') {
       setMode('login')
+      setShowRegistrationSuccess(true)
+      // Auto-hide after 5 seconds
+      const timer = setTimeout(() => setShowRegistrationSuccess(false), 5000)
+      return () => clearTimeout(timer)
     }
   }, [searchParams])
+
+  // Registration success message
+  const registrationSuccessMessage = showRegistrationSuccess ? (
+    <div className="p-3 text-sm text-green-700 bg-green-50 border border-green-200 rounded-md dark:text-green-400 dark:bg-green-950 dark:border-green-800">
+      {t('auth.messages.registrationSuccess') || 'Registration successful! Please check your email to confirm.'}
+    </div>
+  ) : null;
 
   const handleSwitchToRegister = () => {
     setMode('register')
@@ -68,5 +81,13 @@ export function AuthPageContent({ translations, initialMode, language }: AuthPag
         />
       )}
     </AuthLayoutWithLanguage>
+  )
+}
+
+export function AuthPageContent(props: AuthPageContentProps) {
+  return (
+    <Suspense fallback={<div className="flex items-center justify-center min-h-screen">Loading...</div>}>
+      <AuthPageContentInner {...props} />
+    </Suspense>
   )
 }

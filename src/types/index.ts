@@ -123,7 +123,6 @@ export interface ExamResult {
 // Section Result for detailed analysis
 export interface SectionResult {
   name: string
-  displayName: string
   score: number
   total: number
   percentage: number

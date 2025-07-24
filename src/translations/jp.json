@@ -823,9 +823,47 @@
       "comingSoon": "このページは構築中です。後でお戻りください！"
     },
     "settings": {
-      "title": "設定",
-      "description": "アカウントカスタマイズ - 機能開発中",
-      "comingSoon": "このページは構築中です。後でお戻りください！"
+      "title": "アカウント設定",
+      "description": "個人情報とアカウントセキュリティを管理",
+      "sidebar": {
+        "title": "設定"
+      },
+      "profile": {
+        "title": "個人情報",
+        "description": "表示情報とアバターを管理",
+        "avatar": "アバターアイコン",
+        "avatarDescription": "表示アバター用のアイコンを選択",
+"name": "名前",
+        "email": "メールアドレス",
+        "emailReadonly": "メールアドレスは変更できません",
+        "accountType": "アカウントタイプ",
+        "createdDate": "作成日",
+        "saveChanges": "変更を保存",
+        "saving": "保存中...",
+        "updateSuccess": "プロフィールが正常に更新されました！",
+        "updateError": "更新中にエラーが発生しました"
+      },
+      "security": {
+        "title": "アカウントセキュリティ",
+        "description": "パスワードとセキュリティを管理",
+        "password": "パスワード",
+        "lastChanged": "最終変更",
+        "neverChanged": "パスワードを変更したことがありません",
+        "changePassword": "パスワード変更",
+        "currentPassword": "現在のパスワード",
+        "newPassword": "新しいパスワード",
+        "confirmPassword": "新しいパスワードの確認",
+        "passwordLength": "パスワードは6-8文字である必要があります",
+        "passwordMismatch": "パスワード確認が一致しません",
+        "changePasswordSuccess": "パスワードが正常に変更されました！",
+        "changePasswordError": "パスワード変更中にエラーが発生しました"
+      },
+      "iconSelector": {
+        "title": "アバターアイコンを選択",
+        "search": "アイコンを検索...",
+        "noResults": "一致するアイコンが見つかりません",
+        "selected": "選択済み"
+      }
     },
     "upgrade": {
       "title": "アップグレード",
@@ -859,8 +897,9 @@
       "chatHistory": "チャット履歴",
       "clearHistory": "全チャット履歴を削除",
       "clearHistoryWarning": "すべてのチャット会話が永続的に削除されます",
-      "close": "閉じる",
-      "confirmClear": "すべてのチャット履歴を削除してもよろしいですか？この操作は元に戻せません。"
+      "confirmClear": "すべてのチャット履歴を削除してもよろしいですか？この操作は元に戻せません。",
+      "confirmClearTitle": "全チャット履歴を削除",
+      "close": "閉じる"
     },
     "loading": "iRIN先生を読み込み中...",
     "languages": {
