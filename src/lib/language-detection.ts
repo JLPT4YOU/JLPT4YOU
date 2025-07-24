@@ -171,12 +171,23 @@ export function generateLanguageRedirectUrl(
   preserveQuery?: string
 ): string {
   const cleanPath = basePath.startsWith('/') ? basePath.slice(1) : basePath
-  let redirectUrl = `/auth/${detectedLanguage}/${cleanPath}`
-  
+
+  // Auth routes should use /auth/[lang]/[path] format
+  const authRoutes = ['login', 'register', 'forgot-password']
+  const isAuthRoute = authRoutes.includes(cleanPath)
+
+  let redirectUrl: string
+  if (isAuthRoute) {
+    redirectUrl = `/auth/${detectedLanguage}/${cleanPath}`
+  } else {
+    // Non-auth routes use /[lang]/[path] format
+    redirectUrl = `/${detectedLanguage}/${cleanPath}`
+  }
+
   if (preserveQuery) {
     redirectUrl += `?${preserveQuery}`
   }
-  
+
   return redirectUrl
 }
 

@@ -148,12 +148,17 @@ export function generateLanguageRedirectUrl(pathname: string, language: Language
 export function shouldRedirectToCleanUrl(pathname: string, isAuthenticated: boolean): boolean {
   if (!isAuthenticated) return false
   if (!hasLanguagePrefix(pathname)) return false
-  
+
   // Don't redirect auth routes - they need language prefixes for SEO
   if (LANGUAGE_PATTERNS.LANGUAGE_AUTH_PATTERN.test(pathname)) {
     return false
   }
-  
+
+  // Don't redirect landing routes - they need language prefixes for SEO
+  if (LANGUAGE_PATTERNS.LANGUAGE_LANDING_PATTERN.test(pathname)) {
+    return false
+  }
+
   // Redirect all other language-prefixed routes for authenticated users
   return true
 }

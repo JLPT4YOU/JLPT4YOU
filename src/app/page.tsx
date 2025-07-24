@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/auth-context";
-import { detectClientLanguage, generateLanguageRedirectUrl } from "@/lib/language-detection";
+import { detectClientLanguage } from "@/lib/language-detection";
 
 export default function RootPage() {
   const router = useRouter();
@@ -15,9 +15,9 @@ export default function RootPage() {
         // If user is authenticated, redirect to home
         router.replace('/home');
       } else {
-        // Detect user's preferred language and redirect accordingly
+        // Detect user's preferred language and redirect to landing page
         const preferredLanguage = detectClientLanguage();
-        const redirectUrl = generateLanguageRedirectUrl('login', preferredLanguage);
+        const redirectUrl = `/${preferredLanguage}/landing`;
         router.replace(redirectUrl);
       }
     }

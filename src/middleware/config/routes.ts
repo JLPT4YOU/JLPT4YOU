@@ -30,6 +30,7 @@ export const PROTECTED_ROUTES = [
  */
 export const ALWAYS_PREFIXED_ROUTES = [
   '/auth',
+  '/landing',
   ...ROUTE_PATHS.AUTH_PATHS
 ] as const
 

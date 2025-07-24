@@ -4,7 +4,6 @@
  * Extracted from useMessageHandler to improve maintainability
  */
 
-import { Buffer } from 'buffer';
 import { Message } from '../index';
 
 export interface FileProcessor {
@@ -43,7 +42,14 @@ export const createFileProcessor = (): FileProcessor => {
               }
 
               const arrayBuffer = await response.arrayBuffer();
-              const base64 = Buffer.from(arrayBuffer).toString('base64');
+
+              // Use browser-compatible base64 conversion
+              const uint8Array = new Uint8Array(arrayBuffer);
+              let binaryString = '';
+              for (let i = 0; i < uint8Array.length; i++) {
+                binaryString += String.fromCharCode(uint8Array[i]);
+              }
+              const base64 = btoa(binaryString);
 
               fileData.push({
                 data: base64,
@@ -53,14 +59,16 @@ export const createFileProcessor = (): FileProcessor => {
 
               console.log('Successfully converted file:', file.name);
             } catch (error) {
+              const errorMessage = error instanceof Error ? error.message : String(error);
               console.error('Error converting file to base64:', {
                 fileName: file.name,
                 fileUrl: file.url,
-                error: error instanceof Error ? error.message : error
+                error: errorMessage,
+                errorType: typeof error
               });
 
               // Continue with other files instead of failing completely
-              throw new Error(`Failed to process file "${file.name}": ${error instanceof Error ? error.message : 'Unknown error'}`);
+              throw new Error(`Failed to process file "${file.name}": ${errorMessage}`);
             }
           } else if (file.url && file.url.startsWith('data:')) {
             // Handle data URLs (already base64 encoded)
@@ -73,8 +81,13 @@ export const createFileProcessor = (): FileProcessor => {
               });
               console.log('Successfully processed data URL file:', file.name);
             } catch (error) {
-              console.error('Error processing data URL file:', file.name, error);
-              throw new Error(`Failed to process data URL file "${file.name}"`);
+              const errorMessage = error instanceof Error ? error.message : String(error);
+              console.error('Error processing data URL file:', {
+                fileName: file.name,
+                error: errorMessage,
+                errorType: typeof error
+              });
+              throw new Error(`Failed to process data URL file "${file.name}": ${errorMessage}`);
             }
           } else {
             console.warn('Skipping file without valid URL:', { name: file.name, url: file.url });
@@ -94,7 +107,14 @@ export const createFileProcessor = (): FileProcessor => {
     for (const file of files) {
       try {
         const arrayBuffer = await file.arrayBuffer();
-        const base64 = Buffer.from(arrayBuffer).toString('base64');
+
+        // Use browser-compatible base64 conversion
+        const uint8Array = new Uint8Array(arrayBuffer);
+        let binaryString = '';
+        for (let i = 0; i < uint8Array.length; i++) {
+          binaryString += String.fromCharCode(uint8Array[i]);
+        }
+        const base64 = btoa(binaryString);
 
         fileData.push({
           data: base64,
@@ -104,8 +124,13 @@ export const createFileProcessor = (): FileProcessor => {
 
         console.log('Successfully converted File object:', file.name);
       } catch (error) {
-        console.error('Error converting File object to base64:', file.name, error);
-        throw new Error(`Failed to process file "${file.name}": ${error instanceof Error ? error.message : 'Unknown error'}`);
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        console.error('Error converting File object to base64:', {
+          fileName: file.name,
+          error: errorMessage,
+          errorType: typeof error
+        });
+        throw new Error(`Failed to process file "${file.name}": ${errorMessage}`);
       }
     }
 
