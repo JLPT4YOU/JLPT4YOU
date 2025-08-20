@@ -28,8 +28,10 @@ export async function OPTIONS(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  let body: any;
+  
   try {
-    const body = await request.json();
+    body = await request.json();
     const { text, source_lang = 'auto', target_lang = 'vi', method = 'mazii' } = body;
 
     if (!text) {
