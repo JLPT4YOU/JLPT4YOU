@@ -18,6 +18,37 @@ const nextConfig: NextConfig = {
     ignoreBuildErrors: false,
   },
 
+  // Output configuration for better performance
+  output: 'standalone',
+
+  // Webpack configuration for better build performance
+  webpack: (config, { dev, isServer }) => {
+    // Optimize for production builds
+    if (!dev) {
+      config.optimization = {
+        ...config.optimization,
+        splitChunks: {
+          chunks: 'all',
+          cacheGroups: {
+            vendor: {
+              test: /[\\/]node_modules[\\/]/,
+              name: 'vendors',
+              chunks: 'all',
+            },
+          },
+        },
+      }
+    }
+
+    // Ignore specific warnings that don't affect functionality
+    config.ignoreWarnings = [
+      { module: /node_modules\/@supabase\/realtime-js/ },
+      { message: /Critical dependency: the request of a dependency is an expression/ },
+    ]
+
+    return config
+  },
+
   // Enable experimental features for better performance and SEO
   experimental: {
     // Enable optimized package imports
