@@ -90,8 +90,8 @@ class EnhancedTranslateService {
     const currentRetries = this.retryCount.get(retryKey) || 0;
 
     try {
-      // Try Google Translate first (most reliable)
-      const result = await this.translateWithGoogle(text, sourceLanguage, targetLanguage);
+      // Try server-side API first (most reliable bypass)
+      const result = await this.translateWithServerAPI(text, sourceLanguage, targetLanguage);
 
       // Reset retry count on success
       this.retryCount.delete(retryKey);
@@ -101,20 +101,68 @@ class EnhancedTranslateService {
 
       return result;
     } catch (error) {
-      console.error('Google Translate failed:', error);
+      console.error('Server API translation failed, trying client-side:', error);
 
-      // Increment retry count
-      this.retryCount.set(retryKey, currentRetries + 1);
+      try {
+        // Fallback to client-side Google Translate
+        const result = await this.translateWithGoogle(text, sourceLanguage, targetLanguage);
 
-      // If we haven't exceeded max retries, try fallback
-      if (currentRetries < this.maxRetries) {
-        return await this.translateWithFallback(text, sourceLanguage, targetLanguage);
-      } else {
-        // Reset retry count and return fallback result
+        // Reset retry count on success
         this.retryCount.delete(retryKey);
-        return await this.translateWithFallback(text, sourceLanguage, targetLanguage);
+
+        // Cache the result
+        this.cache.set(cacheKey, result);
+
+        return result;
+      } catch (clientError) {
+        console.error('Client-side Google Translate failed:', clientError);
+
+        // Increment retry count
+        this.retryCount.set(retryKey, currentRetries + 1);
+
+        // If we haven't exceeded max retries, try fallback
+        if (currentRetries < this.maxRetries) {
+          return await this.translateWithFallback(text, sourceLanguage, targetLanguage);
+        } else {
+          // Reset retry count and return fallback result
+          this.retryCount.delete(retryKey);
+          return await this.translateWithFallback(text, sourceLanguage, targetLanguage);
+        }
       }
     }
+  }
+
+  /**
+   * Server-side API translation (bypass CORS and browser restrictions)
+   */
+  private async translateWithServerAPI(
+    text: string,
+    sourceLanguage: string,
+    targetLanguage: string
+  ): Promise<TranslationResult> {
+    const response = await fetch('/api/translate', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        text,
+        sourceLanguage,
+        targetLanguage,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Server API failed: ${response.status} ${response.statusText}`);
+    }
+
+    const result = await response.json();
+
+    if (result.error) {
+      throw new Error(`Server API error: ${result.error}`);
+    }
+
+    return result;
   }
 
   /**
