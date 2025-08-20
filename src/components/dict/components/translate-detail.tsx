@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
-import { googleTranslateService, type TranslationResult, SUPPORTED_LANGUAGES } from '@/lib/translate/google-translate-service';
+import { enhancedTranslateService, type TranslationResult, SUPPORTED_LANGUAGES } from '@/lib/translate/enhanced-translate-service';
 import { Languages, ArrowRightLeft, Volume2, Copy, Check } from 'lucide-react';
 
 interface TranslateDetailProps {
@@ -46,7 +46,7 @@ export function TranslateDetail({ selectedItem, initialQuery }: TranslateDetailP
     setError(null);
 
     try {
-      const result = await googleTranslateService.translate(
+      const result = await enhancedTranslateService.translate(
         sourceText,
         sourceLanguage === 'auto' ? 'auto' : sourceLanguage,
         targetLanguage

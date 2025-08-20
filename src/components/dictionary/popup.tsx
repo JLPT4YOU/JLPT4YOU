@@ -5,7 +5,7 @@ import { sanitizeHtml } from './sanitizer';
 import { createKanjiAnimator, Animator } from './kanjiAnimator';
 import { ModalOverlay } from './overlay';
 import { dictService, type WordDetail } from '@/lib/dict/dict-service';
-import { googleTranslateService, type TranslationResult } from '@/lib/translate/google-translate-service';
+import { enhancedTranslateService, type TranslationResult } from '@/lib/translate/enhanced-translate-service';
 import './styles.css';
 
 export type DictionaryPopupProps = {
@@ -118,7 +118,7 @@ export function DictionaryPopup({ query, anchorRect, onClose }: DictionaryPopupP
     setTranslateLoading(true);
     setTranslateError(null);
 
-    googleTranslateService.translate(query, 'auto', 'vi')
+    enhancedTranslateService.translate(query, 'auto', 'vi')
       .then((result) => {
         if (cancelled) return;
         setTranslateData(result);
