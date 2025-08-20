@@ -52,6 +52,12 @@ class EnhancedTranslateService {
   private cache = new Map<string, TranslationResult>();
   private readonly cacheExpiry = 5 * 60 * 1000; // 5 minutes
 
+  // Rate limiting and retry logic
+  private lastRequestTime = 0;
+  private readonly minRequestInterval = 500; // 500ms between requests
+  private retryCount = new Map<string, number>();
+  private readonly maxRetries = 3;
+
   /**
    * Primary translation method with enhanced features
    */
@@ -71,19 +77,43 @@ class EnhancedTranslateService {
       return cached;
     }
 
+    // Rate limiting: ensure minimum interval between requests
+    const now = Date.now();
+    const timeSinceLastRequest = now - this.lastRequestTime;
+    if (timeSinceLastRequest < this.minRequestInterval) {
+      await new Promise(resolve => setTimeout(resolve, this.minRequestInterval - timeSinceLastRequest));
+    }
+    this.lastRequestTime = Date.now();
+
+    // Retry logic
+    const retryKey = cacheKey;
+    const currentRetries = this.retryCount.get(retryKey) || 0;
+
     try {
       // Try Google Translate first (most reliable)
       const result = await this.translateWithGoogle(text, sourceLanguage, targetLanguage);
-      
+
+      // Reset retry count on success
+      this.retryCount.delete(retryKey);
+
       // Cache the result
       this.cache.set(cacheKey, result);
-      
+
       return result;
     } catch (error) {
       console.error('Google Translate failed:', error);
-      
-      // Fallback to alternative methods
-      return await this.translateWithFallback(text, sourceLanguage, targetLanguage);
+
+      // Increment retry count
+      this.retryCount.set(retryKey, currentRetries + 1);
+
+      // If we haven't exceeded max retries, try fallback
+      if (currentRetries < this.maxRetries) {
+        return await this.translateWithFallback(text, sourceLanguage, targetLanguage);
+      } else {
+        // Reset retry count and return fallback result
+        this.retryCount.delete(retryKey);
+        return await this.translateWithFallback(text, sourceLanguage, targetLanguage);
+      }
     }
   }
 
@@ -96,15 +126,17 @@ class EnhancedTranslateService {
     targetLanguage: string
   ): Promise<TranslationResult> {
     const url = this.buildGoogleUrl(text, sourceLanguage, targetLanguage);
-    
+
+    // Detect browser and adjust headers accordingly
+    const headers = this.getBrowserOptimizedHeaders();
+
     const response = await fetch(url, {
       method: 'GET',
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-        'Accept': 'application/json, text/plain, */*',
-        'Accept-Language': 'en-US,en;q=0.9,ja;q=0.8,vi;q=0.7',
-        'Referer': 'https://translate.google.com/',
-      },
+      headers,
+      // Add credentials for better compatibility
+      credentials: 'omit',
+      // Add referrer policy
+      referrerPolicy: 'no-referrer-when-downgrade',
     });
 
     if (!response.ok) {
@@ -116,6 +148,52 @@ class EnhancedTranslateService {
   }
 
   /**
+   * Get browser-optimized headers for better compatibility
+   */
+  private getBrowserOptimizedHeaders(): Record<string, string> {
+    const userAgent = navigator.userAgent;
+    const isSafari = /Safari/.test(userAgent) && !/Chrome/.test(userAgent);
+    const isChrome = /Chrome/.test(userAgent);
+    const isFirefox = /Firefox/.test(userAgent);
+
+    let headers: Record<string, string> = {
+      'Accept': 'application/json, text/plain, */*',
+      'Accept-Language': 'en-US,en;q=0.9,ja;q=0.8,vi;q=0.7',
+      'Cache-Control': 'no-cache',
+      'Pragma': 'no-cache',
+    };
+
+    if (isSafari) {
+      // Safari-specific headers
+      headers['User-Agent'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Safari/605.1.15';
+      headers['Sec-Fetch-Dest'] = 'empty';
+      headers['Sec-Fetch-Mode'] = 'cors';
+      headers['Sec-Fetch-Site'] = 'cross-site';
+    } else if (isChrome) {
+      // Chrome-specific headers with rotation
+      const chromeVersions = ['120.0.0.0', '119.0.0.0', '118.0.0.0', '117.0.0.0'];
+      const randomVersion = chromeVersions[Math.floor(Math.random() * chromeVersions.length)];
+      headers['User-Agent'] = `Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/${randomVersion} Safari/537.36`;
+      headers['sec-ch-ua'] = `"Google Chrome";v="${randomVersion.split('.')[0]}", "Chromium";v="${randomVersion.split('.')[0]}", "Not_A Brand";v="99"`;
+      headers['sec-ch-ua-mobile'] = '?0';
+      headers['sec-ch-ua-platform'] = '"macOS"';
+    } else if (isFirefox) {
+      // Firefox-specific headers
+      headers['User-Agent'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:109.0) Gecko/20100101 Firefox/119.0';
+    } else {
+      // Default headers
+      headers['User-Agent'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';
+    }
+
+    // Add referer only for non-Safari browsers
+    if (!isSafari) {
+      headers['Referer'] = 'https://translate.google.com/';
+    }
+
+    return headers;
+  }
+
+  /**
    * Fallback translation methods
    */
   private async translateWithFallback(
@@ -123,14 +201,24 @@ class EnhancedTranslateService {
     sourceLanguage: string,
     targetLanguage: string
   ): Promise<TranslationResult> {
-    // Try alternative Google endpoints
+    // Try alternative Google endpoints with different strategies
     const alternativeEndpoints = [
       'https://translate.google.com/translate_a/single',
       'https://clients5.google.com/translate_a/single',
+      'https://translate.googleapis.com/translate_a/single',
+      // Add more endpoints for better fallback
+      'https://translate.google.cn/translate_a/single', // China endpoint
     ];
 
-    for (const endpoint of alternativeEndpoints) {
+    // Try each endpoint with different approaches
+    for (let i = 0; i < alternativeEndpoints.length; i++) {
+      const endpoint = alternativeEndpoints[i];
       try {
+        // Add delay between attempts to avoid rate limiting
+        if (i > 0) {
+          await new Promise(resolve => setTimeout(resolve, 1000 * i));
+        }
+
         const result = await this.tryAlternativeGoogleEndpoint(
           endpoint, text, sourceLanguage, targetLanguage
         );
@@ -138,6 +226,14 @@ class EnhancedTranslateService {
       } catch (error) {
         console.warn(`Alternative endpoint ${endpoint} failed:`, error);
       }
+    }
+
+    // Try with simplified parameters as last resort
+    try {
+      const result = await this.trySimplifiedTranslation(text, sourceLanguage, targetLanguage);
+      if (result) return result;
+    } catch (error) {
+      console.warn('Simplified translation failed:', error);
     }
 
     // If all else fails, return a basic result
@@ -150,6 +246,39 @@ class EnhancedTranslateService {
       timestamp: Date.now(),
       confidence: 0
     };
+  }
+
+  /**
+   * Try simplified translation with minimal parameters
+   */
+  private async trySimplifiedTranslation(
+    text: string,
+    sourceLanguage: string,
+    targetLanguage: string
+  ): Promise<TranslationResult | null> {
+    const params = new URLSearchParams({
+      client: 'gtx',
+      sl: sourceLanguage,
+      tl: targetLanguage,
+      q: text,
+    });
+
+    const url = `https://translate.googleapis.com/translate_a/single?${params.toString()}`;
+
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; Trident/6.0)',
+        'Accept': '*/*',
+      },
+    });
+
+    if (!response.ok) {
+      return null;
+    }
+
+    const data = await response.json();
+    return this.parseGoogleResponse(data, text, sourceLanguage, targetLanguage);
   }
 
   /**
@@ -175,11 +304,14 @@ class EnhancedTranslateService {
 
     const url = `${baseUrl}?${params.toString()}`;
 
+    // Use optimized headers for alternative endpoints
+    const headers = this.getBrowserOptimizedHeaders();
+
     const response = await fetch(url, {
       method: 'GET',
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36',
-      },
+      headers,
+      credentials: 'omit',
+      referrerPolicy: 'no-referrer-when-downgrade',
     });
 
     if (!response.ok) {
@@ -331,16 +463,30 @@ class EnhancedTranslateService {
    */
   clearCache(): void {
     this.cache.clear();
+    this.retryCount.clear();
   }
 
   /**
    * Get cache statistics
    */
-  getCacheStats(): { size: number; keys: string[] } {
+  getCacheStats(): { size: number; keys: string[]; retryCount: number } {
     return {
       size: this.cache.size,
-      keys: Array.from(this.cache.keys())
+      keys: Array.from(this.cache.keys()),
+      retryCount: this.retryCount.size
     };
+  }
+
+  /**
+   * Clean expired cache entries
+   */
+  cleanExpiredCache(): void {
+    const now = Date.now();
+    for (const [key, result] of this.cache.entries()) {
+      if (now - result.timestamp > this.cacheExpiry) {
+        this.cache.delete(key);
+      }
+    }
   }
 
   /**
