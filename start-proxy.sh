@@ -1,12 +1,10 @@
 #!/bin/bash
 
-# Start Google Translate Proxy Server for Safari bypass
-# This script starts the Python proxy server on port 8080
+# Script to start the Google Translate Proxy Server
+# For local development and testing Safari CORS bypass
 
-echo "🚀 Starting Google Translate Proxy Server for Safari bypass..."
-echo "📍 Server will be available at: http://localhost:8080"
-echo "🔧 API endpoint: http://localhost:8080/translate"
-echo "🍎 Safari test: http://localhost:8080/test-safari"
+echo "🚀 Starting Google Translate Proxy Server..."
+echo "📍 Server will run on: http://localhost:8080"
 echo ""
 
 # Check if Python 3 is installed
@@ -15,14 +13,16 @@ if ! command -v python3 &> /dev/null; then
     exit 1
 fi
 
-# Check if required packages are installed
-echo "📦 Checking required packages..."
-python3 -c "import flask, flask_cors, requests" 2>/dev/null
-if [ $? -ne 0 ]; then
-    echo "📦 Installing required packages..."
+# Check if Flask is installed
+if ! python3 -c "import flask" &> /dev/null; then
+    echo "📦 Installing required Python packages..."
     pip3 install flask flask-cors requests
 fi
 
 # Start the proxy server
-echo "🔄 Starting proxy server..."
+echo "✅ Starting proxy server..."
+echo "   - Use Ctrl+C to stop the server"
+echo ""
+
+# Run the proxy server
 python3 proxy_server.py

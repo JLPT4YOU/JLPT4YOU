@@ -42,7 +42,8 @@ export const SUPPORTED_LANGUAGES: LanguageOption[] = [
 
 class EnhancedTranslateService {
   private readonly googleBaseUrl = 'https://translate.googleapis.com/translate_a/single';
-  private readonly proxyServerUrl = 'http://localhost:8080'; // Proxy server for Safari bypass
+  private readonly proxyUrl: string;
+  private readonly useProxy: boolean;
   private readonly defaultParams = {
     client: 'gtx',
     dt: ['t', 'bd', 'ex', 'ld', 'md', 'qca', 'rw', 'rm', 'ss', 'at'],
@@ -53,34 +54,24 @@ class EnhancedTranslateService {
   private cache = new Map<string, TranslationResult>();
   private readonly cacheExpiry = 5 * 60 * 1000; // 5 minutes
 
-  // Rate limiting and retry logic
-  private lastRequestTime = 0;
-  private readonly minRequestInterval = 500; // 500ms between requests
-  private retryCount = new Map<string, number>();
-  private readonly maxRetries = 3;
-
-  /**
-   * Detect if current browser is Safari
-   */
-  private isSafari(): boolean {
-    if (typeof window === 'undefined') return false;
-    const userAgent = window.navigator.userAgent;
-    return /Safari/.test(userAgent) && !/Chrome/.test(userAgent);
-  }
-
-  /**
-   * Check if proxy server is available
-   */
-  private async isProxyAvailable(): Promise<boolean> {
-    try {
-      const response = await fetch(`${this.proxyServerUrl}/health`, {
-        method: 'GET',
-        signal: AbortSignal.timeout(2000), // 2 second timeout
-      });
-      return response.ok;
-    } catch (error) {
-      console.warn('Proxy server not available:', error);
-      return false;
+  constructor() {
+    // Detect if we should use proxy (for Safari CORS bypass)
+    // Use proxy in production or when Safari is detected
+    const isProduction = process.env.NODE_ENV === 'production';
+    const isSafari = typeof window !== 'undefined' && 
+      /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+    
+    this.useProxy = isProduction || isSafari;
+    
+    // Configure proxy URL based on environment
+    if (process.env.NEXT_PUBLIC_PROXY_URL) {
+      this.proxyUrl = process.env.NEXT_PUBLIC_PROXY_URL;
+    } else if (typeof window !== 'undefined') {
+      // Use same domain proxy in production
+      this.proxyUrl = `${window.location.origin}/api/translate-proxy`;
+    } else {
+      // Default local proxy
+      this.proxyUrl = 'http://localhost:8080/translate';
     }
   }
 
@@ -103,166 +94,20 @@ class EnhancedTranslateService {
       return cached;
     }
 
-    // Rate limiting: ensure minimum interval between requests
-    const now = Date.now();
-    const timeSinceLastRequest = now - this.lastRequestTime;
-    if (timeSinceLastRequest < this.minRequestInterval) {
-      await new Promise(resolve => setTimeout(resolve, this.minRequestInterval - timeSinceLastRequest));
-    }
-    this.lastRequestTime = Date.now();
-
-    // Retry logic
-    const retryKey = cacheKey;
-    const currentRetries = this.retryCount.get(retryKey) || 0;
-
     try {
-      // For Safari, try proxy server first if available
-      if (this.isSafari() && await this.isProxyAvailable()) {
-        console.log('Safari detected, using proxy server');
-        const result = await this.translateWithProxy(text, sourceLanguage, targetLanguage);
-
-        // Reset retry count on success
-        this.retryCount.delete(retryKey);
-
-        // Cache the result
-        this.cache.set(cacheKey, result);
-
-        return result;
-      }
-
-      // Try server-side API first (most reliable bypass)
-      const result = await this.translateWithServerAPI(text, sourceLanguage, targetLanguage);
-
-      // Reset retry count on success
-      this.retryCount.delete(retryKey);
-
+      // Try Google Translate first (most reliable)
+      const result = await this.translateWithGoogle(text, sourceLanguage, targetLanguage);
+      
       // Cache the result
       this.cache.set(cacheKey, result);
-
+      
       return result;
     } catch (error) {
-      console.error('Primary translation method failed, trying fallback:', error);
-
-      try {
-        // For Safari, try proxy server as fallback
-        if (this.isSafari()) {
-          try {
-            const result = await this.translateWithProxy(text, sourceLanguage, targetLanguage);
-
-            // Reset retry count on success
-            this.retryCount.delete(retryKey);
-
-            // Cache the result
-            this.cache.set(cacheKey, result);
-
-            return result;
-          } catch (proxyError) {
-            console.error('Proxy server failed:', proxyError);
-          }
-        }
-
-        // Fallback to client-side Google Translate
-        const result = await this.translateWithGoogle(text, sourceLanguage, targetLanguage);
-
-        // Reset retry count on success
-        this.retryCount.delete(retryKey);
-
-        // Cache the result
-        this.cache.set(cacheKey, result);
-
-        return result;
-      } catch (clientError) {
-        console.error('Client-side Google Translate failed:', clientError);
-
-        // Increment retry count
-        this.retryCount.set(retryKey, currentRetries + 1);
-
-        // If we haven't exceeded max retries, try fallback
-        if (currentRetries < this.maxRetries) {
-          return await this.translateWithFallback(text, sourceLanguage, targetLanguage);
-        } else {
-          // Reset retry count and return fallback result
-          this.retryCount.delete(retryKey);
-          return await this.translateWithFallback(text, sourceLanguage, targetLanguage);
-        }
-      }
+      console.error('Google Translate failed:', error);
+      
+      // Fallback to alternative methods
+      return await this.translateWithFallback(text, sourceLanguage, targetLanguage);
     }
-  }
-
-  /**
-   * Server-side API translation (bypass CORS and browser restrictions)
-   */
-  private async translateWithServerAPI(
-    text: string,
-    sourceLanguage: string,
-    targetLanguage: string
-  ): Promise<TranslationResult> {
-    const response = await fetch('/api/translate', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        text,
-        sourceLanguage,
-        targetLanguage,
-      }),
-    });
-
-    if (!response.ok) {
-      throw new Error(`Server API failed: ${response.status} ${response.statusText}`);
-    }
-
-    const result = await response.json();
-
-    if (result.error) {
-      throw new Error(`Server API error: ${result.error}`);
-    }
-
-    return result;
-  }
-
-  /**
-   * Proxy server translation (Safari bypass)
-   */
-  private async translateWithProxy(
-    text: string,
-    sourceLanguage: string,
-    targetLanguage: string
-  ): Promise<TranslationResult> {
-    const response = await fetch(`${this.proxyServerUrl}/translate`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        text,
-        source_lang: sourceLanguage,
-        target_lang: targetLanguage,
-        method: 'mazii' // Use mazii method for better compatibility
-      }),
-    });
-
-    if (!response.ok) {
-      throw new Error(`Proxy server failed: ${response.status} ${response.statusText}`);
-    }
-
-    const result = await response.json();
-
-    if (!result.success) {
-      throw new Error(`Proxy server error: ${result.error}`);
-    }
-
-    // Convert proxy response to our TranslationResult format
-    return {
-      translatedText: result.translated_text,
-      originalText: result.original_text,
-      sourceLanguage: result.source_language,
-      targetLanguage: result.target_language,
-      confidence: result.confidence,
-      service: `Proxy Server (${result.method})`,
-      timestamp: Date.now(),
-    };
   }
 
   /**
@@ -273,18 +118,22 @@ class EnhancedTranslateService {
     sourceLanguage: string,
     targetLanguage: string
   ): Promise<TranslationResult> {
+    // Use proxy if configured (for Safari CORS bypass)
+    if (this.useProxy) {
+      return await this.translateWithProxy(text, sourceLanguage, targetLanguage);
+    }
+
+    // Direct Google Translate call (for local dev)
     const url = this.buildGoogleUrl(text, sourceLanguage, targetLanguage);
-
-    // Detect browser and adjust headers accordingly
-    const headers = this.getBrowserOptimizedHeaders();
-
+    
     const response = await fetch(url, {
       method: 'GET',
-      headers,
-      // Add credentials for better compatibility
-      credentials: 'omit',
-      // Add referrer policy
-      referrerPolicy: 'no-referrer-when-downgrade',
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        'Accept': 'application/json, text/plain, */*',
+        'Accept-Language': 'en-US,en;q=0.9,ja;q=0.8,vi;q=0.7',
+        'Referer': 'https://translate.google.com/',
+      },
     });
 
     if (!response.ok) {
@@ -296,49 +145,50 @@ class EnhancedTranslateService {
   }
 
   /**
-   * Get browser-optimized headers for better compatibility
+   * Translate using proxy server (for Safari CORS bypass)
    */
-  private getBrowserOptimizedHeaders(): Record<string, string> {
-    const userAgent = navigator.userAgent;
-    const isSafari = /Safari/.test(userAgent) && !/Chrome/.test(userAgent);
-    const isChrome = /Chrome/.test(userAgent);
-    const isFirefox = /Firefox/.test(userAgent);
+  private async translateWithProxy(
+    text: string,
+    sourceLanguage: string,
+    targetLanguage: string
+  ): Promise<TranslationResult> {
+    try {
+      const response = await fetch(this.proxyUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          text,
+          source_lang: sourceLanguage,
+          target_lang: targetLanguage,
+          method: 'mazii' // Use mazii method for better results
+        })
+      });
 
-    let headers: Record<string, string> = {
-      'Accept': 'application/json, text/plain, */*',
-      'Accept-Language': 'en-US,en;q=0.9,ja;q=0.8,vi;q=0.7',
-      'Cache-Control': 'no-cache',
-      'Pragma': 'no-cache',
-    };
+      if (!response.ok) {
+        throw new Error(`Proxy translate failed: ${response.status}`);
+      }
 
-    if (isSafari) {
-      // Safari-specific headers
-      headers['User-Agent'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Safari/605.1.15';
-      headers['Sec-Fetch-Dest'] = 'empty';
-      headers['Sec-Fetch-Mode'] = 'cors';
-      headers['Sec-Fetch-Site'] = 'cross-site';
-    } else if (isChrome) {
-      // Chrome-specific headers with rotation
-      const chromeVersions = ['120.0.0.0', '119.0.0.0', '118.0.0.0', '117.0.0.0'];
-      const randomVersion = chromeVersions[Math.floor(Math.random() * chromeVersions.length)];
-      headers['User-Agent'] = `Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/${randomVersion} Safari/537.36`;
-      headers['sec-ch-ua'] = `"Google Chrome";v="${randomVersion.split('.')[0]}", "Chromium";v="${randomVersion.split('.')[0]}", "Not_A Brand";v="99"`;
-      headers['sec-ch-ua-mobile'] = '?0';
-      headers['sec-ch-ua-platform'] = '"macOS"';
-    } else if (isFirefox) {
-      // Firefox-specific headers
-      headers['User-Agent'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:109.0) Gecko/20100101 Firefox/119.0';
-    } else {
-      // Default headers
-      headers['User-Agent'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';
+      const data = await response.json();
+      
+      if (!data.success) {
+        throw new Error(data.error || 'Translation failed');
+      }
+
+      return {
+        translatedText: data.translated_text,
+        originalText: text,
+        sourceLanguage: data.source_language || sourceLanguage,
+        targetLanguage: data.target_language || targetLanguage,
+        confidence: data.confidence,
+        service: `Google Translate (via ${data.method} proxy)`,
+        timestamp: Date.now()
+      };
+    } catch (error) {
+      console.error('Proxy translation error:', error);
+      throw error;
     }
-
-    // Add referer only for non-Safari browsers
-    if (!isSafari) {
-      headers['Referer'] = 'https://translate.google.com/';
-    }
-
-    return headers;
   }
 
   /**
@@ -349,24 +199,14 @@ class EnhancedTranslateService {
     sourceLanguage: string,
     targetLanguage: string
   ): Promise<TranslationResult> {
-    // Try alternative Google endpoints with different strategies
+    // Try alternative Google endpoints
     const alternativeEndpoints = [
       'https://translate.google.com/translate_a/single',
       'https://clients5.google.com/translate_a/single',
-      'https://translate.googleapis.com/translate_a/single',
-      // Add more endpoints for better fallback
-      'https://translate.google.cn/translate_a/single', // China endpoint
     ];
 
-    // Try each endpoint with different approaches
-    for (let i = 0; i < alternativeEndpoints.length; i++) {
-      const endpoint = alternativeEndpoints[i];
+    for (const endpoint of alternativeEndpoints) {
       try {
-        // Add delay between attempts to avoid rate limiting
-        if (i > 0) {
-          await new Promise(resolve => setTimeout(resolve, 1000 * i));
-        }
-
         const result = await this.tryAlternativeGoogleEndpoint(
           endpoint, text, sourceLanguage, targetLanguage
         );
@@ -374,14 +214,6 @@ class EnhancedTranslateService {
       } catch (error) {
         console.warn(`Alternative endpoint ${endpoint} failed:`, error);
       }
-    }
-
-    // Try with simplified parameters as last resort
-    try {
-      const result = await this.trySimplifiedTranslation(text, sourceLanguage, targetLanguage);
-      if (result) return result;
-    } catch (error) {
-      console.warn('Simplified translation failed:', error);
     }
 
     // If all else fails, return a basic result
@@ -394,39 +226,6 @@ class EnhancedTranslateService {
       timestamp: Date.now(),
       confidence: 0
     };
-  }
-
-  /**
-   * Try simplified translation with minimal parameters
-   */
-  private async trySimplifiedTranslation(
-    text: string,
-    sourceLanguage: string,
-    targetLanguage: string
-  ): Promise<TranslationResult | null> {
-    const params = new URLSearchParams({
-      client: 'gtx',
-      sl: sourceLanguage,
-      tl: targetLanguage,
-      q: text,
-    });
-
-    const url = `https://translate.googleapis.com/translate_a/single?${params.toString()}`;
-
-    const response = await fetch(url, {
-      method: 'GET',
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; Trident/6.0)',
-        'Accept': '*/*',
-      },
-    });
-
-    if (!response.ok) {
-      return null;
-    }
-
-    const data = await response.json();
-    return this.parseGoogleResponse(data, text, sourceLanguage, targetLanguage);
   }
 
   /**
@@ -452,14 +251,11 @@ class EnhancedTranslateService {
 
     const url = `${baseUrl}?${params.toString()}`;
 
-    // Use optimized headers for alternative endpoints
-    const headers = this.getBrowserOptimizedHeaders();
-
     const response = await fetch(url, {
       method: 'GET',
-      headers,
-      credentials: 'omit',
-      referrerPolicy: 'no-referrer-when-downgrade',
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36',
+      },
     });
 
     if (!response.ok) {
@@ -611,30 +407,16 @@ class EnhancedTranslateService {
    */
   clearCache(): void {
     this.cache.clear();
-    this.retryCount.clear();
   }
 
   /**
    * Get cache statistics
    */
-  getCacheStats(): { size: number; keys: string[]; retryCount: number } {
+  getCacheStats(): { size: number; keys: string[] } {
     return {
       size: this.cache.size,
-      keys: Array.from(this.cache.keys()),
-      retryCount: this.retryCount.size
+      keys: Array.from(this.cache.keys())
     };
-  }
-
-  /**
-   * Clean expired cache entries
-   */
-  cleanExpiredCache(): void {
-    const now = Date.now();
-    for (const [key, result] of this.cache.entries()) {
-      if (now - result.timestamp > this.cacheExpiry) {
-        this.cache.delete(key);
-      }
-    }
   }
 
   /**
