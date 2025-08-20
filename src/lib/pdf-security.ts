@@ -41,6 +41,8 @@ export function validateReferrer(request: NextRequest): boolean {
   // Get allowed domains
   const allowedDomains = [
     process.env.NEXT_PUBLIC_SITE_URL,
+    'jlpt-4-you.vercel.app', // ✅ FIXED: Add production domain
+    'jlpt4you.com', // ✅ FIXED: Add custom domain if exists
     'localhost',
     '127.0.0.1'
   ].filter(Boolean)
