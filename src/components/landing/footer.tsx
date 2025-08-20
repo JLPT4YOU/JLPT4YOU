@@ -48,10 +48,10 @@ export const Footer = ({ translations }: FooterProps) => {
 
   return (
     <footer className="relative bg-background border-t border-border/50">
-      <div className="app-container">
+      <div className="app-container px-4">
         {/* Main Footer Content */}
-        <div className="py-12 md:py-16">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-12">
+        <div className="py-8 md:py-16">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 lg:gap-12">
             {/* Brand Section */}
             <div className="lg:col-span-2">
               <motion.div
@@ -61,15 +61,15 @@ export const Footer = ({ translations }: FooterProps) => {
                 transition={{ duration: 0.6 }}
               >
                 {/* Logo */}
-                <div className="flex items-center gap-2 mb-4">
-                  <div className="w-8 h-8 bg-foreground rounded-lg flex items-center justify-center">
-                    <GraduationCap className="w-5 h-5 text-background" />
+                <div className="flex items-center gap-2 mb-3 md:mb-4">
+                  <div className="w-7 md:w-8 h-7 md:h-8 bg-foreground rounded-lg flex items-center justify-center">
+                    <GraduationCap className="w-4 md:w-5 h-4 md:h-5 text-background" />
                   </div>
-                  <span className="text-xl font-bold text-foreground">JLPT4YOU</span>
+                  <span className="text-lg md:text-xl font-bold text-foreground">JLPT4YOU</span>
                 </div>
 
                 {/* Description */}
-                <p className="text-base text-muted-foreground leading-relaxed mb-6 max-w-md">
+                <p className="text-sm md:text-base text-muted-foreground leading-relaxed mb-4 md:mb-6 max-w-md">
                   {t('footer.description')}
                 </p>
 
@@ -200,7 +200,7 @@ export const Footer = ({ translations }: FooterProps) => {
             {/* Made with love */}
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <span>{t('footer.madeWithLove')}</span>
-              <Heart className="w-4 h-4 text-red-500 fill-current" />
+              <Heart className="w-4 h-4 text-foreground fill-current" />
               <span>{t('footer.madeWithLoveFor')}</span>
             </div>
 

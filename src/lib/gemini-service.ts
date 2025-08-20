@@ -22,6 +22,28 @@ import {
   UseGeminiServiceOptions
 } from './gemini/gemini-config-helper';
 
+// Type definitions
+interface GeminiContent {
+  role: 'user' | 'model';
+  parts: Array<{ text: string }>;
+}
+
+interface UploadedFile {
+  name: string;
+  displayName: string;
+  mimeType: string;
+  sizeBytes: number;
+  createTime: string;
+  updateTime: string;
+  expirationTime: string;
+  sha256Hash: string;
+  uri: string;
+  state: string;
+}
+
+// Re-export types for external use
+export type { UseGeminiServiceOptions };
+
 
 
 export class GeminiService extends BaseAIService {
@@ -63,7 +85,7 @@ export class GeminiService extends BaseAIService {
   /**
    * Convert AIMessage format to Gemini format (excluding system messages)
    */
-  private convertMessages(messages: AIMessage[]): any[] {
+  private convertMessages(messages: AIMessage[]): GeminiContent[] {
     return GeminiConfigHelper.convertMessages(messages);
   }
 
@@ -151,7 +173,8 @@ export class GeminiService extends BaseAIService {
     try {
       this.ensureConfigured();
 
-      if (!this.streamingHandler) {
+      // Đảm bảo streamingHandler được khởi tạo với client đã cấu hình
+      if (!this.streamingHandler || !this.client) {
         throw new Error('Streaming handler not initialized');
       }
 
@@ -193,7 +216,7 @@ export class GeminiService extends BaseAIService {
   /**
    * Upload PDF from URL to Gemini
    */
-  async uploadRemotePDF(url: string, displayName: string): Promise<any> {
+  async uploadRemotePDF(url: string, displayName: string): Promise<UploadedFile | any> {
     try {
       this.ensureConfigured();
 
@@ -295,7 +318,8 @@ export class GeminiService extends BaseAIService {
     try {
       this.ensureConfigured();
 
-      if (!this.streamingHandler) {
+      // Đảm bảo streamingHandler được khởi tạo với client đã cấu hình
+      if (!this.streamingHandler || !this.client) {
         throw new Error('Streaming handler not initialized');
       }
 

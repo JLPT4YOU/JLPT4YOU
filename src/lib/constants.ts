@@ -23,7 +23,7 @@ export const JLPT_LEVEL_INFO = {
     description: 'Hiểu được tiếng Nhật cơ bản ở mức độ cao hơn',
     kanji: 300,
     vocabulary: 1500,
-    color: 'bg-blue-500'
+    color: 'bg-primary'
   },
   N3: {
     name: 'N3 - Trung cấp',
@@ -83,7 +83,7 @@ export const STORAGE_KEYS = {
   USER_PROGRESS: 'jlpt4you_user_progress',
   STUDY_SETTINGS: 'jlpt4you_study_settings',
   THEME: 'jlpt4you_theme',
-  AUTH_TOKEN: 'jlpt4you_auth_token',
+  // ✅ FIXED: Removed AUTH_TOKEN since we now use Supabase's built-in session management
   USER_DATA: 'jlpt4you_user_data'
 } as const
 

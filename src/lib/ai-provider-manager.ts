@@ -6,6 +6,7 @@
 import { AIService, AIMessage } from './ai-config';
 import { getGeminiService } from './gemini-service';
 import { getGroqService } from './groq-service';
+import { createSecureAIService, SecureAIServiceWrapper } from './secure-ai-service-wrapper';
 
 export type ProviderType = 'gemini' | 'groq';
 
@@ -23,24 +24,26 @@ export interface ChatMessage extends AIMessage {
 }
 
 export class AIProviderManager {
-  private providers: Map<ProviderType, AIService> = new Map();
+  private providers: Map<ProviderType, SecureAIServiceWrapper> = new Map();
   private currentProvider: ProviderType = 'gemini'; // Default provider
-  
+
   constructor() {
     this.initializeProviders();
   }
 
   /**
-   * Initialize all available providers
+   * Initialize all available providers với secure wrappers
    */
   private initializeProviders(): void {
-    // Initialize Gemini
+    // Initialize Gemini với secure wrapper
     const geminiService = getGeminiService();
-    this.providers.set('gemini', geminiService);
+    const secureGeminiService = createSecureAIService('gemini', geminiService);
+    this.providers.set('gemini', secureGeminiService);
 
-    // Initialize Groq
+    // Initialize Groq với secure wrapper
     const groqService = getGroqService();
-    this.providers.set('groq', groqService);
+    const secureGroqService = createSecureAIService('groq', groqService);
+    this.providers.set('groq', secureGroqService);
 
     // Load current provider from localStorage
     const savedProvider = this.getSavedProvider();
@@ -111,17 +114,27 @@ export class AIProviderManager {
   }
 
   /**
-   * Configure a provider with API key
+   * Configure a provider - now just clears cache to force refetch
    */
-  configureProvider(provider: ProviderType, apiKey: string): void {
+  configureProvider(provider: ProviderType, apiKey?: string): void {
     const service = this.providers.get(provider);
     if (!service) {
       throw new Error(`Provider ${provider} is not available`);
     }
 
-    if ('configure' in service && typeof service.configure === 'function') {
-      service.configure(apiKey);
+    // Clear cache to force refetch from server
+    service.clearCache();
+
+    // Notify listeners (e.g., ProviderSelector) that provider configuration changed
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(
+        new CustomEvent('ai-provider-config-changed', {
+          detail: { provider },
+        }),
+      );
     }
+
+
   }
 
   /**
@@ -138,6 +151,15 @@ export class AIProviderManager {
   }
 
   /**
+   * Clear all API key caches (useful for logout)
+   */
+  clearAllCaches(): void {
+    this.providers.forEach((service) => {
+      service.clearCache();
+    });
+  }
+
+  /**
    * Get all provider configurations
    */
   getProviderConfigs(): ProviderConfig[] {
@@ -151,7 +173,7 @@ export class AIProviderManager {
       if ('getDefaultModel' in service && typeof service.getDefaultModel === 'function') {
         try {
           defaultModel = service.getDefaultModel();
-        } catch (error) {
+        } catch {
           // Ignore error if method doesn't exist
         }
       }
@@ -181,7 +203,7 @@ export class AIProviderManager {
   /**
    * Send message using current provider
    */
-  async sendMessage(messages: AIMessage[], options?: any): Promise<string> {
+  async sendMessage(messages: AIMessage[], options?: Record<string, unknown>): Promise<string> {
     const service = this.getCurrentService();
     return service.sendMessage(messages, options);
   }
@@ -190,9 +212,9 @@ export class AIProviderManager {
    * Stream message using current provider
    */
   async streamMessage(
-    messages: AIMessage[], 
-    onChunk: (chunk: string) => void, 
-    options?: any
+    messages: AIMessage[],
+    onChunk: (chunk: string) => void,
+    options?: Record<string, unknown>
   ): Promise<void> {
     const service = this.getCurrentService();
     return service.streamMessage(messages, onChunk, options);
@@ -227,7 +249,7 @@ export class AIProviderManager {
   /**
    * Get available models for current provider
    */
-  getAvailableModels(): any[] {
+  getAvailableModels(): unknown[] {
     const service = this.getCurrentService();
     
     if ('getAvailableModels' in service && typeof service.getAvailableModels === 'function') {
@@ -240,14 +262,14 @@ export class AIProviderManager {
   /**
    * Get available models for specific provider
    */
-  getProviderModels(provider: ProviderType): any[] {
+  getProviderModels(provider: ProviderType): unknown[] {
     const service = this.providers.get(provider);
     if (!service) return [];
-    
+
     if ('getAvailableModels' in service && typeof service.getAvailableModels === 'function') {
       return service.getAvailableModels();
     }
-    
+
     return [];
   }
 
@@ -279,8 +301,6 @@ export class AIProviderManager {
    * Check if current provider supports a feature
    */
   supportsFeature(feature: 'streaming' | 'files' | 'vision' | 'thinking'): boolean {
-    const service = this.getCurrentService();
-    
     // This would need to be implemented based on provider capabilities
     // For now, return basic support
     switch (feature) {

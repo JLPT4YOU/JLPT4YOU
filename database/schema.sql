@@ -86,22 +86,33 @@ CREATE TABLE public.user_progress (
     CONSTRAINT valid_exam_count CHECK (total_exams_taken >= 0)
 );
 
--- Study sessions table (for detailed tracking)
-CREATE TABLE public.study_sessions (
+-- User API Keys table (for encrypted API key storage)
+CREATE TABLE public.user_api_keys (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+    provider TEXT NOT NULL CHECK (provider IN ('gemini','groq')),
+    key_encrypted TEXT NOT NULL, -- Base64 encoded encrypted data
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW(),
+    UNIQUE(user_id, provider)
+);
+
+-- Books table for library management
+CREATE TABLE public.books (
     id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-    user_id UUID REFERENCES public.users(id) ON DELETE CASCADE NOT NULL,
-    session_type TEXT NOT NULL, -- 'exam', 'practice', 'review'
-    duration INTEGER NOT NULL, -- Duration in seconds
-    questions_answered INTEGER DEFAULT 0,
-    correct_answers INTEGER DEFAULT 0,
-    topics_covered TEXT[] DEFAULT '{}',
-    started_at TIMESTAMPTZ NOT NULL,
-    ended_at TIMESTAMPTZ NOT NULL,
-    metadata JSONB DEFAULT '{}'::jsonb,
-    
-    CONSTRAINT valid_duration CHECK (duration >= 0),
-    CONSTRAINT valid_session_time CHECK (ended_at >= started_at),
-    CONSTRAINT valid_answers_count CHECK (correct_answers >= 0 AND correct_answers <= questions_answered)
+    title TEXT NOT NULL,
+    author TEXT NOT NULL,
+    description TEXT,
+    category TEXT NOT NULL CHECK (category IN ('n1', 'n2', 'n3', 'n4', 'n5', 'other')),
+    file_url TEXT NOT NULL, -- Supabase Storage URL
+    file_name TEXT NOT NULL, -- Original file name
+    file_size BIGINT NOT NULL, -- File size in bytes
+    pages INTEGER DEFAULT 0,
+    status TEXT DEFAULT 'draft' CHECK (status IN ('draft', 'published', 'archived')),
+    uploaded_by UUID REFERENCES auth.users(id) ON DELETE SET NULL,
+    created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
+    updated_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
+    metadata JSONB DEFAULT '{}'::jsonb
 );
 
 -- Indexes for better performance
@@ -111,14 +122,19 @@ CREATE INDEX idx_exam_results_user_id ON public.exam_results(user_id);
 CREATE INDEX idx_exam_results_type_level ON public.exam_results(exam_type, exam_level);
 CREATE INDEX idx_exam_results_created_at ON public.exam_results(created_at DESC);
 CREATE INDEX idx_user_progress_user_id ON public.user_progress(user_id);
-CREATE INDEX idx_study_sessions_user_id ON public.study_sessions(user_id);
-CREATE INDEX idx_study_sessions_started_at ON public.study_sessions(started_at DESC);
+CREATE INDEX idx_user_api_keys_user_id ON public.user_api_keys(user_id);
+CREATE INDEX idx_user_api_keys_provider ON public.user_api_keys(provider);
+CREATE INDEX idx_books_category ON public.books(category);
+CREATE INDEX idx_books_status ON public.books(status);
+CREATE INDEX idx_books_created_at ON public.books(created_at DESC);
+CREATE INDEX idx_books_uploaded_by ON public.books(uploaded_by);
 
 -- Row Level Security (RLS) Policies
 ALTER TABLE public.users ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.exam_results ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.user_progress ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.study_sessions ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.user_api_keys ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.books ENABLE ROW LEVEL SECURITY;
 
 -- Users policies
 CREATE POLICY "Users can view own profile" ON public.users
@@ -141,12 +157,9 @@ CREATE POLICY "Users can view own progress" ON public.user_progress
 CREATE POLICY "Users can update own progress" ON public.user_progress
     FOR ALL USING (auth.uid() = user_id);
 
--- Study sessions policies
-CREATE POLICY "Users can view own study sessions" ON public.study_sessions
-    FOR SELECT USING (auth.uid() = user_id);
-
-CREATE POLICY "Users can insert own study sessions" ON public.study_sessions
-    FOR INSERT WITH CHECK (auth.uid() = user_id);
+-- User API Keys policies
+CREATE POLICY "Users can manage own API keys" ON public.user_api_keys
+    FOR ALL USING (auth.uid() = user_id);
 
 -- Functions and Triggers
 -- Function to automatically update updated_at timestamp
@@ -192,47 +205,51 @@ CREATE TRIGGER on_auth_user_created
     AFTER INSERT ON auth.users
     FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
 
--- Function to calculate and update user progress
-CREATE OR REPLACE FUNCTION public.update_user_progress_stats(user_uuid UUID)
-RETURNS VOID AS $$
-DECLARE
-    total_time INTEGER;
-    total_exams INTEGER;
-    best_challenge DECIMAL(5,2);
-    current_streak INTEGER;
-BEGIN
-    -- Calculate total study time from exam results
-    SELECT COALESCE(SUM(time_spent), 0) INTO total_time
-    FROM public.exam_results
-    WHERE user_id = user_uuid;
+-- Helper functions for API key encryption/decryption
+CREATE OR REPLACE FUNCTION public.encrypt_api_key(api_key TEXT, user_secret TEXT)
+RETURNS TEXT
+LANGUAGE SQL
+SECURITY DEFINER
+AS $$
+  SELECT encode(extensions.pgp_sym_encrypt(api_key, user_secret), 'base64');
+$$;
 
-    -- Calculate total exams taken
-    SELECT COUNT(*) INTO total_exams
-    FROM public.exam_results
-    WHERE user_id = user_uuid;
+CREATE OR REPLACE FUNCTION public.decrypt_api_key(encrypted_key TEXT, user_secret TEXT)
+RETURNS TEXT
+LANGUAGE SQL
+SECURITY DEFINER
+AS $$
+  SELECT extensions.pgp_sym_decrypt(decode(encrypted_key, 'base64'), user_secret);
+$$;
 
-    -- Calculate best challenge score
-    SELECT COALESCE(MAX(score), 0) INTO best_challenge
-    FROM public.exam_results
-    WHERE user_id = user_uuid AND exam_type = 'CHALLENGE';
+-- Books policies
+-- All users can view published books
+CREATE POLICY "Anyone can view published books" ON public.books
+    FOR SELECT USING (status = 'published');
 
-    -- Calculate current challenge streak (simplified)
-    SELECT COALESCE(COUNT(*), 0) INTO current_streak
-    FROM public.exam_results
-    WHERE user_id = user_uuid
-      AND exam_type = 'CHALLENGE'
-      AND score >= 80
-      AND created_at >= NOW() - INTERVAL '7 days';
+-- Only admins can insert books
+CREATE POLICY "Admins can insert books" ON public.books
+    FOR INSERT WITH CHECK (
+        EXISTS (
+            SELECT 1 FROM public.users
+            WHERE id = auth.uid() AND role = 'Admin'
+        )
+    );
 
-    -- Update user progress
-    UPDATE public.user_progress
-    SET
-        total_study_time = total_time,
-        total_exams_taken = total_exams,
-        challenge_best_score = best_challenge,
-        challenge_streak = current_streak,
-        last_activity = NOW(),
-        updated_at = NOW()
-    WHERE user_id = user_uuid;
-END;
-$$ language 'plpgsql' SECURITY DEFINER;
+-- Only admins can update books
+CREATE POLICY "Admins can update books" ON public.books
+    FOR UPDATE USING (
+        EXISTS (
+            SELECT 1 FROM public.users
+            WHERE id = auth.uid() AND role = 'Admin'
+        )
+    );
+
+-- Only admins can delete books
+CREATE POLICY "Admins can delete books" ON public.books
+    FOR DELETE USING (
+        EXISTS (
+            SELECT 1 FROM public.users
+            WHERE id = auth.uid() AND role = 'Admin'
+        )
+    );

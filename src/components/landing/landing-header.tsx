@@ -8,6 +8,7 @@ import { LanguageSwitcher } from "@/components/language-switcher"
 import { useEffect, useState } from "react"
 import { TranslationData, getLocalizedPath } from "@/lib/i18n"
 import { useTranslation } from "@/lib/use-translation"
+import { setLanguagePreferenceFromPath } from "@/lib/auth-utils"
 
 interface LandingHeaderProps {
   translations: TranslationData
@@ -65,71 +66,62 @@ export function LandingHeader({ translations }: LandingHeaderProps) {
               <nav className="hidden lg:flex items-center app-gap-md">
                 <a
                   href="#features"
-                  className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+                  className="text-sm font-medium text-muted-foreground hover-link"
                 >
                   {t('footer.links.product.features')}
                 </a>
                 <a
                   href="#ai-demo-section"
-                  className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+                  className="text-sm font-medium text-muted-foreground hover-link"
                 >
                   {t('footer.links.product.aiDemo')}
                 </a>
                 <a
                   href="#pricing"
-                  className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+                  className="text-sm font-medium text-muted-foreground hover-link"
                 >
                   {t('footer.links.product.pricing')}
                 </a>
                 <a
                   href="#why-choose-us"
-                  className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+                  className="text-sm font-medium text-muted-foreground hover-link"
                 >
                   {t('whyChooseUs.title')}
                 </a>
               </nav>
 
               {/* Language Switcher */}
-              <LanguageSwitcher translations={translations} variant="compact" />
+              <LanguageSwitcher variant="compact" />
 
               {/* Theme Toggle */}
               <ThemeToggle />
 
-              {/* CTA Buttons */}
+              {/* CTA Buttons - Desktop Only */}
               <div className="hidden md:flex items-center app-gap-xs">
                 <Button
                   variant="ghost"
-                  onClick={() => router.push(getLocalizedPath('login', currentLanguage))}
+                  onClick={() => {
+                    // Set language preference before redirecting to auth
+                    setLanguagePreferenceFromPath(window.location.pathname)
+                    router.push(getLocalizedPath('login', currentLanguage))
+                  }}
                   className="bg-muted/10 text-sm"
                 >
                   {t('header.login')}
                 </Button>
                 <Button
-                  onClick={() => router.push(getLocalizedPath('register', currentLanguage))}
+                  onClick={() => {
+                    // Set language preference before redirecting to auth
+                    setLanguagePreferenceFromPath(window.location.pathname)
+                    router.push(getLocalizedPath('register', currentLanguage))
+                  }}
                   className="bg-primary text-sm"
                 >
                   {t('hero.ctaButton')}
                 </Button>
               </div>
 
-              {/* Mobile CTA */}
-              <div className="md:hidden flex items-center app-gap-xs">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => router.push(getLocalizedPath('login', currentLanguage))}
-                  className="bg-muted/10 text-xs px-3"
-                >
-                  {t('header.login')}
-                </Button>
-                <Button
-                  size="sm"
-                  onClick={() => router.push(getLocalizedPath('register', currentLanguage))}
-                  className="bg-primary text-xs px-3"
-                >
-                  {t('header.register')}
-                </Button>
-              </div>
+              {/* Mobile: No CTA buttons - cleaner header */}
             </div>
           </div>
         </div>

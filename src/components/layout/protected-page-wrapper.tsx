@@ -25,23 +25,21 @@ export function ProtectedPageWrapper({
   showHeader = true,
   preserveScroll = true
 }: ProtectedPageWrapperProps) {
-  const { t, switchLanguage, isLoading, error } = useTranslations(translations, language)
-  const { preserveScroll: handleScrollPreservation } = useScrollPreservation()
+  const { t, switchLanguage, isLoading } = useTranslations()
+  const { saveScrollPosition, restoreScrollPosition } = useScrollPreservation()
   
   // Handle language switching with scroll preservation
   const handleLanguageSwitch = async (newLanguage: Language) => {
     if (preserveScroll) {
-      handleScrollPreservation()
+      saveScrollPosition()
     }
     await switchLanguage(newLanguage)
+    if (preserveScroll) {
+      restoreScrollPosition()
+    }
   }
   
-  // Handle translation errors
-  useEffect(() => {
-    if (error) {
-      console.error('Translation error in ProtectedPageWrapper:', error)
-    }
-  }, [error])
+
   
   if (isLoading) {
     return <ProtectedPageSkeleton showHeader={showHeader} />
@@ -85,7 +83,7 @@ function ProtectedPageSkeleton({ showHeader = true }: { showHeader?: boolean }) 
           </div>
           
           {/* Cards skeleton */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-6">
             {Array.from({ length: 6 }).map((_, i) => (
               <div key={i} className="h-32 bg-muted rounded-lg" />
             ))}
@@ -98,19 +96,19 @@ function ProtectedPageSkeleton({ showHeader = true }: { showHeader?: boolean }) 
 
 // Hook for easier usage
 export function useProtectedPage(language: Language, translations: TranslationData) {
-  const { t, switchLanguage, isLoading, error } = useTranslations(translations, language)
-  const { preserveScroll } = useScrollPreservation()
-  
+  const { t, switchLanguage, isLoading } = useTranslations()
+  const { saveScrollPosition, restoreScrollPosition } = useScrollPreservation()
+
   const handleLanguageSwitch = async (newLanguage: Language) => {
-    preserveScroll()
+    saveScrollPosition()
     await switchLanguage(newLanguage)
+    restoreScrollPosition()
   }
-  
+
   return {
     t,
     language,
     isLoading,
-    error,
     handleLanguageSwitch
   }
 }

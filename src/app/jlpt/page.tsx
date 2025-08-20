@@ -6,12 +6,11 @@ import { ProtectedPageWrapper } from "@/components/layout/page-wrapper";
 export default function JLPTPage() {
   return (
     <ProtectedPageWrapper>
-      {({ language, translations, t, isAuthenticated }) => (
-        <JLPTPageContent 
-          key={language} 
-          translations={translations} 
+      {({ language, translations, isAuthenticated }) => (
+        <JLPTPageContent
+          key={language}
+          translations={translations}
           language={language}
-          t={t}
           isAuthenticated={isAuthenticated}
         />
       )}

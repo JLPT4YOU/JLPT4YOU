@@ -24,9 +24,25 @@ export interface Question {
   question: string
   options: string[]
   correctAnswer: number
-  explanation?: string
-  difficulty: 'easy' | 'medium' | 'hard'
-  tags: string[]
+  explanation?: string | DetailedExplanation
+  difficulty: 'easy' | 'medium' | 'hard' | 'extremely_hard'
+  tags?: string[]
+  question_type?: string
+}
+
+// Detailed Explanation Interface for AI-generated questions
+export interface DetailedExplanation {
+  correct_answer: string
+  why_correct: string
+  wrong_answers: {
+    option_0?: string
+    option_1?: string
+    option_2?: string
+    option_3?: string
+  }
+  additional_notes: string
+  example_usage: string
+  translation?: string
 }
 
 // Vocabulary Item
@@ -111,6 +127,7 @@ export interface ExamResult {
   correctAnswers: number
   incorrectAnswers: number
   unansweredQuestions: number
+  flaggedQuestions: number
   timeSpent: number // in seconds
   timeLimit: number // in seconds
   percentage: number

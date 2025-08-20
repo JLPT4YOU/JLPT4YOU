@@ -1,16 +1,20 @@
 "use client"
 
-import { GraduationCap, User, LogOut, Settings, BarChart3 } from "lucide-react"
+import { GraduationCap, LogOut, Settings, BarChart3, Home, Infinity, Shield } from "lucide-react"
 import { getIconComponent } from "@/components/settings/icon-selector"
-
-import { useRouter, usePathname } from "next/navigation"
+import { getRoleClasses, getExpiryDisplayText, getExpiryTextColor, getUserBalanceDisplay } from '@/lib/role-utils'
+import { useAuth } from '@/contexts/auth-context-simple'
+import { useUserData } from '@/hooks/use-user-data' // ✅ ADDED: Import user data hook
+import { useEffect, useState } from 'react'
+import { useRouter } from "next/navigation"
+import { getLoginUrl } from '@/lib/auth-utils'
 import { ThemeToggle } from "@/components/theme-toggle"
 import { LanguageSwitcher } from "@/components/language-switcher"
 import { Button } from "@/components/ui/button"
 import { useNavigationProtection } from "@/components/anti-cheat-system"
-import { useAuth } from "@/contexts/auth-context"
-import { getLanguageFromPath, DEFAULT_LANGUAGE } from "@/lib/i18n"
-import { useTranslations } from "@/hooks/use-translations"
+import NotificationButton from "@/components/notifications/NotificationButton"
+
+import { useLanguageContext } from "@/contexts/language-context"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -45,21 +49,41 @@ function ProtectedLink({ href, children, className }: ProtectedLinkProps) {
 }
 
 export function Header() {
-  const { user, logout } = useAuth()
-  const router = useRouter()
-  const pathname = usePathname()
-  
-  // Use the new enhanced translations hook
-  const { translations, t, language, isLoading } = useTranslations()
+  const { user, signOut } = useAuth() // Auth user (basic info)
+  const { userData, loading: userDataLoading } = useUserData() // Full user data from public.users
+  const [balanceDisplay, setBalanceDisplay] = useState<string>('')
 
-  const handleLogout = () => {
-    logout()
-    router.push('/auth/vn/login')
+  // Fetch user balance for display
+  useEffect(() => {
+    if (user?.id) {
+      getUserBalanceDisplay(user.id).then(setBalanceDisplay)
+    }
+  }, [user?.id])
+
+  const router = useRouter()
+
+  // Use language context for consistent translations
+  const { translations, t, language } = useLanguageContext()
+
+  const handleLogout = async () => {
+    await signOut() // ✅ FIXED: Use signOut instead of logout
+    router.push(getLoginUrl()) // Use dynamic language-aware auth URL
   }
 
-  // Get current language for dynamic links
-  const currentLanguage = language
-  const homeUrl = `/${currentLanguage}/home`
+  const handleGoHome = () => {
+    router.push(homeUrl)
+  }
+
+  const handleGoSettings = () => {
+    router.push('/settings')
+  }
+
+  const handleGoAdmin = () => {
+    router.push('/admin')
+  }
+
+  // Use clean URL for authenticated users
+  const homeUrl = `/home`
 
   // Helper function for getting text with fallback
   const getText = (key: string, fallback: string) => t ? t(key) : fallback
@@ -82,13 +106,15 @@ export function Header() {
               {/* Language Switcher */}
               {translations && (
                 <LanguageSwitcher
-                  translations={translations}
                   variant="compact"
                 />
               )}
 
               {/* Theme Toggle */}
               <ThemeToggle />
+
+              {/* Notification Button - Only show if user is authenticated */}
+              {user && <NotificationButton />}
 
               {/* User Dropdown Menu - Only show if user is authenticated */}
               {user && (
@@ -97,40 +123,68 @@ export function Header() {
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="h-8 w-8 bg-background/80 border border-border/50 text-foreground hover-brightness-light focus-ring focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                      className="h-8 w-8 bg-background/80 border border-border/50 text-foreground hover-brightness-light focus-button"
                     >
                       {(() => {
-                        const AvatarIcon = getIconComponent(user.avatarIcon || undefined)
+                        const AvatarIcon = getIconComponent(userData?.avatar_icon || undefined)
                         return <AvatarIcon className="h-5 w-5 text-foreground" />
                       })()}
-                      <span className="sr-only">Menu người dùng</span>
+                      <span className="sr-only">{getText('header.userMenu.screenReader', 'Menu người dùng')}</span>
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-56">
                     <div className="flex items-center justify-start gap-2 app-p-sm">
                       <div className="flex flex-col app-space-xs leading-none">
-<p className="font-medium">{user.name}</p>
+                        <p className="font-medium">{userData?.name || user?.email?.split('@')[0] || 'User'}</p>
                         <p className="w-[200px] truncate text-sm text-muted-foreground">
-                          {user.email}
+                          {user?.email}
                         </p>
                         <div className="flex items-center app-gap-xs mt-1">
-                          <span className="inline-flex items-center app-px-xs app-py-xs rounded-full text-xs font-medium bg-primary/10 text-primary">
-                            {user.role}
+                          <span className={getRoleClasses(userData?.role as any)}>
+                            {userData?.role || 'Free'}
                           </span>
-                          {user.expiryDate && (
-                            <span className="text-xs text-muted-foreground">
-                              {getText('header.userMenu.expiryDate', 'đến')} {user.expiryDate}
-                            </span>
-                          )}
+                          {(() => {
+                            const expiryText = getExpiryDisplayText(userData?.role as any, userData?.subscription_expires_at)
+                            const expiryColor = getExpiryTextColor(userData?.role as any, userData?.subscription_expires_at)
+
+                            if (expiryText === 'unlimited') {
+                              return (
+                                <div className={`flex items-center gap-2 text-sm ${expiryColor}`}>
+                                  <span>{getText('header.userMenu.expiryDate', 'Hạn sử dụng')}:</span>
+                                  <Infinity className="w-5 h-5 flex-shrink-0 mt-1" />
+                                </div>
+                              )
+                            }
+
+                            if (expiryText) {
+                              return (
+                                <span className={`text-sm ${expiryColor}`}>
+                                  {expiryText}
+                                </span>
+                              )
+                            }
+                            return null
+                          })()}
                         </div>
+                        {balanceDisplay && (
+                          <div className="text-sm text-green-600 font-bold mt-2">
+                            {balanceDisplay}
+                          </div>
+                        )}
                       </div>
                     </div>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem>
-                      <Settings className="mr-2 h-4 w-4" />
-                      {getText('header.userMenu.profile', 'Hồ sơ cá nhân')}
+                    {userData?.role === 'Admin' && ( // Only Admin users have admin access
+                      <DropdownMenuItem onClick={handleGoAdmin}>
+                        <Shield className="mr-2 h-4 w-4" />
+                        Admin Dashboard
+                      </DropdownMenuItem>
+                    )}
+                    <DropdownMenuItem onClick={handleGoHome}>
+                      <Home className="mr-2 h-4 w-4" />
+                      {getText('header.userMenu.home', 'Home')}
                     </DropdownMenuItem>
-                    <DropdownMenuItem>
+                    <DropdownMenuItem onClick={handleGoSettings}>
                       <Settings className="mr-2 h-4 w-4" />
                       {getText('header.userMenu.settings', 'Cài đặt')}
                     </DropdownMenuItem>

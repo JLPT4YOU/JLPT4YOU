@@ -1,0 +1,19 @@
+[2025-08-04 19:22:08] 100% MIGRATION TESTING STARTED
+[2025-08-04 19:22:08] Target: Complete migration to Supabase authentication
+[2025-08-04 19:22:08] PASS: 100% Distribution - All users using Supabase authentication
+[2025-08-04 19:22:09] PASS: Server Health - Server responding on port 3001
+[2025-08-04 19:22:14] PASS: Success Rate - 100% (target: ≥99%)
+[2025-08-04 19:22:14] FAIL: Response Time - 396.7ms (target: <100ms)
+[2025-08-04 19:22:14] PASS: Error Rate - 0% errors (target: <1%)
+[2025-08-04 19:22:14] PASS: Vietnamese Auth - HTTP 200
+[2025-08-04 19:22:14] PASS: Japanese Auth - HTTP 200
+[2025-08-04 19:22:15] PASS: English Auth - HTTP 200
+[2025-08-04 19:22:15] PASS: Home Route Protection - HTTP 307 (redirect)
+[2025-08-04 19:22:16] PASS: JLPT Route Access - HTTP 200
+[2025-08-04 19:22:16] PASS: Challenge Route Access - HTTP 200
+[2025-08-04 19:22:16] FAIL: Landing Page Access - HTTP 307
+[2025-08-04 19:22:17] PASS: API Health Check - HTTP 200
+[2025-08-04 19:22:17] FAIL: Load Test Success Rate - 5% (target: ≥95%)
+[2025-08-04 19:22:17] PASS: Load Test Performance - 0ms (target: <200ms)
+[2025-08-04 19:22:17] 100% MIGRATION: NEEDS_ATTENTION - 80% pass rate
+[2025-08-04 19:22:17] 100% MIGRATION TESTING COMPLETED

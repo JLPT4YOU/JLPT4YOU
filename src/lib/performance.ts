@@ -258,13 +258,15 @@ export function usePerformanceMonitoring() {
     measureWebVitals((metrics) => {
       const score = calculatePerformanceScore(metrics)
       
-      // Log performance data (in production, send to analytics)
-      console.log('Performance Metrics:', {
-        metrics,
-        score: score.score,
-        grade: score.grade,
-        details: score.details
-      })
+      // Log performance data in development, send to analytics in production
+      if (process.env.NODE_ENV === 'development') {
+        console.log('Performance Metrics:', {
+          metrics,
+          score: score.score,
+          grade: score.grade,
+          details: score.details
+        })
+      }
 
       // Send to analytics service (example)
       if (process.env.NODE_ENV === 'production') {

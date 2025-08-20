@@ -123,8 +123,8 @@ export function FullscreenRequirementModal({
           {/* Mobile Device Detection */}
           {isMobile ? (
             <div className="text-center app-space-md">
-              <div className="w-16 h-16 bg-blue-500/10 rounded-full flex items-center justify-center mx-auto app-mb-md">
-                <Smartphone className="w-8 h-8 text-blue-600" />
+              <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto app-mb-md">
+                <Smartphone className="w-8 h-8 text-primary" />
               </div>
               
               <h3 className="text-lg font-semibold text-foreground app-mb-sm">
@@ -162,8 +162,8 @@ export function FullscreenRequirementModal({
           ) : (
             /* Desktop Fullscreen Requirement */
             <div className="text-center app-space-md">
-              <div className="w-16 h-16 bg-blue-500/10 rounded-full flex items-center justify-center mx-auto app-mb-md">
-                <Monitor className="w-8 h-8 text-blue-600" />
+              <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto app-mb-md">
+                <Monitor className="w-8 h-8 text-primary" />
               </div>
               
               <h3 className="text-lg font-semibold text-foreground app-mb-sm">

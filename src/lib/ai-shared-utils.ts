@@ -10,18 +10,62 @@ import { getAICommunicationLanguage, detectLanguageFromMessage } from './prompt-
  * Language-specific title generation templates
  */
 const TITLE_GENERATION_TEMPLATES: Record<string, string> = {
-  'Tiếng Việt': `Tạo tiêu đề ngắn gọn 4-6 từ cho cuộc trò chuyện này. Chỉ trả về tiêu đề bằng tiếng Việt, không giải thích:`,
-  'English': `Create a concise 4-6 word title for this conversation. Only return the title in English, no explanation:`,
-  '日本語': `この会話の簡潔な4-6語のタイトルを作成してください。日本語でタイトルのみを返し、説明は不要です：`
+  'Tiếng Việt': `Bạn là chuyên gia tạo tiêu đề sáng tạo. Hãy phân tích nội dung tin nhắn và tạo một tiêu đề:
+
+YÊU CẦU:
+- 4-6 từ, súc tích và có ý nghĩa
+- Phản ánh chính xác chủ đề hoặc mục đích của cuộc trò chuyện
+- Sử dụng từ ngữ hấp dẫn, dễ nhớ
+- Tránh từ chung chung như "hỏi về", "thảo luận"
+- Ưu tiên từ khóa quan trọng nhất
+
+VÍ DỤ:
+- "Làm thế nào để học tiếng Nhật hiệu quả?" → "Chiến lược học tiếng Nhật"
+- "Tôi muốn tìm hiểu về AI" → "Khám phá trí tuệ nhân tạo"
+- "Giúp tôi viết CV xin việc" → "Tối ưu hóa CV chuyên nghiệp"
+
+Chỉ trả về tiêu đề bằng tiếng Việt, không giải thích:`,
+
+  'English': `You are a creative title generation expert. Analyze the message content and create a compelling title:
+
+REQUIREMENTS:
+- 4-6 words, concise and meaningful
+- Accurately reflect the topic or purpose of the conversation
+- Use engaging, memorable language
+- Avoid generic words like "asking about", "discussing"
+- Prioritize the most important keywords
+
+EXAMPLES:
+- "How to learn Japanese effectively?" → "Japanese Learning Strategies"
+- "I want to understand AI" → "Exploring Artificial Intelligence"
+- "Help me write a resume" → "Professional Resume Optimization"
+
+Only return the title in English, no explanation:`,
+
+  '日本語': `あなたは創造的なタイトル生成の専門家です。メッセージの内容を分析し、魅力的なタイトルを作成してください：
+
+要件：
+- 4-6語、簡潔で意味のある
+- 会話のトピックや目的を正確に反映
+- 魅力的で覚えやすい言葉を使用
+- 「について聞く」「議論する」などの一般的な言葉を避ける
+- 最も重要なキーワードを優先
+
+例：
+- "日本語を効果的に学ぶ方法は？" → "日本語学習戦略"
+- "AIについて理解したい" → "人工知能の探求"
+- "履歴書を書くのを手伝って" → "プロ履歴書最適化"
+
+日本語でタイトルのみを返し、説明は不要です：`
 };
 
 /**
  * Language-specific fallback titles
  */
 const FALLBACK_TITLES: Record<string, string> = {
-  'Tiếng Việt': 'Cuộc trò chuyện mới',
-  'English': 'New Chat',
-  '日本語': '新しいチャット'
+  'Tiếng Việt': 'Trò chuyện với AI',
+  'English': 'AI Conversation',
+  '日本語': 'AI との会話'
 };
 
 /**
@@ -34,7 +78,15 @@ export function createTitleGenerationPrompt(language: string, firstMessage: stri
   }
 
   // For custom languages, create a dynamic prompt
-  return `Create a concise 4-6 word title for this conversation in ${language}.
+  return `You are a creative title generation expert. Analyze the message content and create a compelling title in ${language}:
+
+REQUIREMENTS:
+- 4-6 words, concise and meaningful
+- Accurately reflect the topic or purpose of the conversation
+- Use engaging, memorable language in ${language}
+- Avoid generic words like "asking about", "discussing"
+- Prioritize the most important keywords
+
 IMPORTANT: Respond ONLY in ${language}, no other language. Only return the title, no explanation:
 
 "${firstMessage}"`;
@@ -49,8 +101,8 @@ export function createFallbackTitle(language: string): string {
     return FALLBACK_TITLES[language];
   }
 
-  // For custom languages, create a generic fallback
-  return `New Chat (${language})`;
+  // For custom languages, create a more meaningful fallback
+  return `AI Chat (${language})`;
 }
 
 /**

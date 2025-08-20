@@ -1,12 +1,13 @@
 "use client"
 
 import { useState, useEffect, Suspense } from "react"
-import { useSearchParams } from "next/navigation"
+import { useSearchParams, useRouter } from "next/navigation"
 import { AuthLayoutWithLanguage } from "@/components/auth/auth-layout-with-language"
 import { LoginForm } from "@/components/auth/login-form"
 import { RegisterForm } from "@/components/auth/register-form"
 import { TranslationData, Language, getLocalizedPath } from "@/lib/i18n"
 import { useTranslation } from "@/lib/use-translation"
+import { setLanguagePreferenceFromPath } from "@/lib/auth-utils"
 
 interface AuthPageContentProps {
   translations: TranslationData
@@ -16,9 +17,15 @@ interface AuthPageContentProps {
 
 function AuthPageContentInner({ translations, initialMode, language }: AuthPageContentProps) {
   const searchParams = useSearchParams()
+  const router = useRouter()
   const { t } = useTranslation(translations)
   const [mode, setMode] = useState<'login' | 'register'>(initialMode)
   const [showRegistrationSuccess, setShowRegistrationSuccess] = useState(false)
+
+  // Set language preference when component mounts
+  useEffect(() => {
+    setLanguagePreferenceFromPath(window.location.pathname)
+  }, [language])
 
   // Check if user just registered
   useEffect(() => {
@@ -35,21 +42,19 @@ function AuthPageContentInner({ translations, initialMode, language }: AuthPageC
 
   // Registration success message
   const registrationSuccessMessage = showRegistrationSuccess ? (
-    <div className="p-3 text-sm text-green-700 bg-green-50 border border-green-200 rounded-md dark:text-green-400 dark:bg-green-950 dark:border-green-800">
+    <div className="p-3 text-sm text-success-foreground bg-success/10 border border-success/20 rounded-md">
       {t('auth.messages.registrationSuccess') || 'Registration successful! Please check your email to confirm.'}
     </div>
   ) : null;
 
   const handleSwitchToRegister = () => {
-    setMode('register')
     const registerPath = getLocalizedPath('register', language)
-    window.history.pushState({}, '', registerPath)
+    router.push(registerPath)
   }
 
   const handleSwitchToLogin = () => {
-    setMode('login')
     const loginPath = getLocalizedPath('login', language)
-    window.history.pushState({}, '', loginPath)
+    router.push(loginPath)
   }
 
   const getTitle = () => {

@@ -27,43 +27,43 @@ function JLPTOfficialPageContentInner({ translations, language }: JLPTOfficialPa
       level: "N1",
       description: t('challenge.levels.n1'),
       href: `/${language}/jlpt/official/n1`,
-      bgColor: "bg-[oklch(var(--jlpt-n1))]",
-      textColor: "text-[oklch(var(--jlpt-n1-foreground))]"
+      bgColor: "bg-card",
+      textColor: "text-foreground"
     },
     {
       level: "N2",
       description: t('challenge.levels.n2'),
       href: `/${language}/jlpt/official/n2`,
-      bgColor: "bg-[oklch(var(--jlpt-n2))]",
-      textColor: "text-[oklch(var(--jlpt-n2-foreground))]"
+      bgColor: "bg-card",
+      textColor: "text-foreground"
     },
     {
       level: "N3",
       description: t('challenge.levels.n3'),
       href: `/${language}/jlpt/official/n3`,
-      bgColor: "bg-[oklch(var(--jlpt-n3))]",
-      textColor: "text-[oklch(var(--jlpt-n3-foreground))]"
+      bgColor: "bg-card",
+      textColor: "text-foreground"
     },
     {
       level: "N4",
       description: t('challenge.levels.n4'),
       href: `/${language}/jlpt/official/n4`,
-      bgColor: "bg-[oklch(var(--jlpt-n4))]",
-      textColor: "text-[oklch(var(--jlpt-n4-foreground))]"
+      bgColor: "bg-card",
+      textColor: "text-foreground"
     },
     {
       level: "N5",
       description: t('challenge.levels.n5'),
       href: `/${language}/jlpt/official/n5`,
-      bgColor: "bg-[oklch(var(--jlpt-n5))]",
-      textColor: "text-[oklch(var(--jlpt-n5-foreground))]"
+      bgColor: "bg-card",
+      textColor: "text-foreground"
     }
   ];
 
   return (
     <div className="min-h-screen bg-background">
       {/* Header Section */}
-      <div className="border-b bg-gradient-to-r from-muted/50 to-accent/30">
+      <div className="border-b bg-muted/30">
         <div className="app-container app-section">
           <div className="app-content">
             <div className="text-center app-space-md">
@@ -85,10 +85,10 @@ function JLPTOfficialPageContentInner({ translations, language }: JLPTOfficialPa
       <div className="app-container app-section">
         <div className="app-content">
           <div className="max-w-6xl mx-auto">
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 app-gap-md">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4 md:gap-6">
               {jlptLevels.map((level) => (
                 <Link key={level.level} href={level.href}>
-                  <div className="group cursor-pointer bg-muted/10 rounded-2xl p-6 md:p-8 text-center transition-all duration-200 hover:bg-muted/30 border border-border/20">
+                  <div className="group cursor-pointer bg-muted/10 rounded-2xl p-6 md:p-8 text-center hover-card border border-border/20">
                     <div className={`w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-4 group-hover:scale-105 transition-transform duration-200 ${level.bgColor} relative`}>
                       <span className={`text-2xl font-bold ${level.textColor}`}>
                         {level.level}

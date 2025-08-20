@@ -3,19 +3,12 @@
 import { Trophy } from "lucide-react";
 import { TranslationData, Language, createTranslationFunction } from "@/lib/i18n";
 import { BasePageTemplate } from "@/components/layout/base-page-template";
+import { createPageContent, type BasePageContentProps } from "@/components/shared/component-utils";
 
-interface ChallengePageContentProps {
-  translations: TranslationData;
-  language: Language;
-}
+interface ChallengePageContentProps extends BasePageContentProps {}
 
-export function ChallengePageContent({ translations, language }: ChallengePageContentProps) {
-  return (
-    <ChallengePageContentInner translations={translations} language={language} />
-  );
-}
-
-function ChallengePageContentInner({ translations, language }: ChallengePageContentProps) {
+export const ChallengePageContent = createPageContent(
+  function ChallengePageContentInner({ translations, language }: ChallengePageContentProps) {
   const t = createTranslationFunction(translations);
   
   const challengeLevels = [
@@ -23,35 +16,35 @@ function ChallengePageContentInner({ translations, language }: ChallengePageCont
       level: "N1",
       description: t('challenge.levels.n1'),
       href: "/challenge/n1", // Clean URL for authenticated users
-      bgColor: "bg-muted",
+      bgColor: "bg-card",
       textColor: "text-foreground"
     },
     {
       level: "N2",
       description: t('challenge.levels.n2'),
       href: "/challenge/n2", // Clean URL for authenticated users
-      bgColor: "bg-muted",
+      bgColor: "bg-card",
       textColor: "text-foreground"
     },
     {
       level: "N3",
       description: t('challenge.levels.n3'),
       href: "/challenge/n3", // Clean URL for authenticated users
-      bgColor: "bg-muted",
+      bgColor: "bg-card",
       textColor: "text-foreground"
     },
     {
       level: "N4",
       description: t('challenge.levels.n4'),
       href: "/challenge/n4", // Clean URL for authenticated users
-      bgColor: "bg-muted",
+      bgColor: "bg-card",
       textColor: "text-foreground"
     },
     {
       level: "N5",
       description: t('challenge.levels.n5'),
       href: "/challenge/n5", // Clean URL for authenticated users
-      bgColor: "bg-muted",
+      bgColor: "bg-card",
       textColor: "text-foreground"
     }
   ];
@@ -78,4 +71,5 @@ function ChallengePageContentInner({ translations, language }: ChallengePageCont
       t={t}
     />
   );
-}
+  }
+);

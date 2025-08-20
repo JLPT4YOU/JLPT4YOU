@@ -59,7 +59,7 @@ export function JLPTTypeSelection({ type, lang }: JLPTTypeSelectionProps) {
               {t('jlpt.selectLevel')}
             </h2>
             
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 app-gap-md">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4 md:gap-6">
               {levels.map((level) => (
                 <Link key={level} href={`/${lang}/jlpt/${type}/${level.toLowerCase()}`}>
                   <div className="group cursor-pointer bg-muted/10 rounded-2xl p-6 md:p-8 text-center transition-all duration-200 hover:bg-muted/30 border border-border/20">

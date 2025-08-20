@@ -28,7 +28,7 @@ function DrivingPageContentInner({ translations, language }: DrivingPageContentP
       details: t('driving.testTypes.karimen.details'),
       icon: BookOpen,
       href: `/${language}/driving/karimen`,
-      bgColor: "bg-muted",
+      bgColor: "bg-card",
       textColor: "text-foreground"
     },
     {
@@ -39,7 +39,7 @@ function DrivingPageContentInner({ translations, language }: DrivingPageContentP
       details: t('driving.testTypes.honmen.details'),
       icon: GraduationCap,
       href: `/${language}/driving/honmen`,
-      bgColor: "bg-muted",
+      bgColor: "bg-card",
       textColor: "text-foreground"
     }
   ];

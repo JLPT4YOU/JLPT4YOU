@@ -39,7 +39,12 @@ export function getModelCapabilities(modelId: string): ModelCapabilities {
  * Checks if model supports thinking mode
  */
 export function supportsThinking(modelId: string): boolean {
-  // Groq models do not support thinking mode
+  // GPT-OSS models support reasoning thinking mode
+  if (modelId.includes('openai/gpt-oss')) {
+    return true;
+  }
+
+  // Other Groq models do not support thinking mode
   if (isGroqModel(modelId)) {
     return false;
   }
@@ -136,10 +141,10 @@ export function getOptimalModelForTask(
   availableModels: string[]
 ): string {
   const preferences = {
-    chat: [GEMINI_MODELS.FLASH_2_0, GEMINI_MODELS.PRO_1_5],
+    chat: [GEMINI_MODELS.FLASH_2_0, GEMINI_MODELS.PRO_2_5],
     code: [GEMINI_MODELS.PRO_2_5, GEMINI_MODELS.FLASH_2_0],
-    analysis: [GEMINI_MODELS.PRO_2_5, GEMINI_MODELS.PRO_1_5],
-    creative: [GEMINI_MODELS.PRO_1_5, GEMINI_MODELS.FLASH_2_0],
+    analysis: [GEMINI_MODELS.PRO_2_5, GEMINI_MODELS.PRO_2_5],
+    creative: [GEMINI_MODELS.PRO_2_5, GEMINI_MODELS.FLASH_2_0],
     search: [GEMINI_MODELS.FLASH_2_0, GEMINI_MODELS.PRO_2_5]
   };
 

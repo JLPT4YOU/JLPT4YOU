@@ -1,18 +1,39 @@
 "use client"
 
-import { useEffect } from "react";
+import { useEffect, Suspense, lazy } from "react";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/contexts/auth-context";
-import { ChatLayout } from "@/components/chat/ChatLayout";
+import { useAuth } from '@/contexts/auth-context-simple';
+import { getLoginUrl } from '@/lib/auth-utils';
+
+// Dynamic import for ChatLayout to reduce initial bundle size
+const ChatLayout = lazy(() => import("@/components/chat/ChatLayout").then(module => ({
+  default: module.ChatLayout
+})));
+
+// Loading fallback component for ChatLayout
+function ChatLoadingFallback() {
+  return (
+    <div className="h-full bg-background flex items-center justify-center">
+      <div className="text-center space-y-4">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-foreground mx-auto"></div>
+        <div className="text-foreground text-sm">Loading iRIN Sensei Chat...</div>
+      </div>
+    </div>
+  );
+}
 
 export default function IrinPage() {
-  const { isAuthenticated, isLoading } = useAuth();
+  const { user, loading } = useAuth(); // ✅ FIXED: Use correct property names
+
+  // ✅ FIXED: Derive authentication state from user
+  const isAuthenticated = !!user;
+  const isLoading = loading;
   const router = useRouter();
 
   useEffect(() => {
     // Redirect unauthenticated users to login
     if (!isLoading && !isAuthenticated) {
-      router.push("/login");
+      router.push(getLoginUrl()); // Use dynamic language-aware auth URL
     }
   }, [isAuthenticated, isLoading, router]);
 
@@ -33,7 +54,9 @@ export default function IrinPage() {
   // Render the modern white theme chat interface
   return (
     <div className="h-screen bg-background overflow-hidden">
-      <ChatLayout />
+      <Suspense fallback={<ChatLoadingFallback />}>
+        <ChatLayout />
+      </Suspense>
     </div>
   );
 }

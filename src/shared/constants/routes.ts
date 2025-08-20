@@ -6,56 +6,74 @@
 import { Language } from '@/lib/i18n'
 
 // Route feature types
-export type RouteFeature = 'home' | 'jlpt' | 'challenge' | 'driving' | 'auth'
+export type RouteFeature = 'home' | 'jlpt' | 'challenge' | 'driving' | 'dict' | 'study' | 'library' | 'auth' | 'landing' | 'settings' | 'exam-results' | 'review-answers'
 export type JLPTType = 'official' | 'custom'
+export type StudyType = 'theory' | 'practice'
 export type AuthType = 'login' | 'register' | 'forgot-password' | 'landing'
 
 // Route parameter interfaces
 export interface RouteParams {
   home: {}
-  jlpt: { 
+  jlpt: {
     type?: JLPTType
     level?: string
     action?: 'test' | 'test-setup'
   }
-  challenge: { 
+  challenge: {
     level: string
     action?: 'test' | 'test-setup'
   }
-  driving: { 
+  driving: {
     type: 'honmen' | 'karimen'
     action?: 'test' | 'test-setup'
   }
-  auth: { 
+  dict: {}
+  study: {
+    type?: StudyType
+  }
+  library: {
+    category?: 'jlpt' | 'other'
+    level?: string
+  }
+  auth: {
     type: AuthType
   }
+  landing: {}
+  settings: {}
+  'exam-results': {}
+  'review-answers': {}
 }
 
 // Base route patterns
 export const ROUTE_PATTERNS = {
-  // Language-aware routes
-  home: '/{lang}/home',
-  jlpt: '/{lang}/jlpt',
-  jlptType: '/{lang}/jlpt/{type}',
-  jlptLevel: '/{lang}/jlpt/{type}/{level}',
-  jlptTest: '/{lang}/jlpt/{type}/{level}/test',
-  jlptTestSetup: '/{lang}/jlpt/{type}/{level}/test-setup',
-  
-  challenge: '/{lang}/challenge',
-  challengeLevel: '/{lang}/challenge/{level}',
-  challengeTest: '/{lang}/challenge/{level}/test',
-  challengeTestSetup: '/{lang}/challenge/{level}/test-setup',
-  
-  driving: '/{lang}/driving',
-  drivingType: '/{lang}/driving/{type}',
-  drivingTest: '/{lang}/driving/{type}/test',
-  drivingTestSetup: '/{lang}/driving/{type}/test-setup',
-  
-// Updated Auth routes
+  // Protected routes (clean URLs for authenticated users)
+  home: '/home',
+  jlpt: '/jlpt',
+  jlptType: '/jlpt/{type}',
+  jlptLevel: '/jlpt/{type}/{level}',
+  jlptTest: '/jlpt/{type}/{level}/test',
+  jlptTestSetup: '/jlpt/{type}/{level}/test-setup',
+
+  challenge: '/challenge',
+  challengeLevel: '/challenge/{level}',
+  challengeTest: '/challenge/{level}/test',
+  challengeTestSetup: '/challenge/{level}/test-setup',
+
+  driving: '/driving',
+  drivingType: '/driving/{type}',
+  drivingTest: '/driving/{type}/test',
+  drivingTestSetup: '/driving/{type}/test-setup',
+
+  dict: '/dict',
+
+  study: '/study',
+  studyType: '/study/{type}',
+
+  // Public routes (language-prefixed)
   auth: '/{lang}',
   landing: '/{lang}/landing',
   authType: '/auth/{lang}/{type}',
-  
+
   // Legacy routes (for redirects)
   legacyJlpt: '/jlpt/{type}/{level}',
   legacyChallenge: '/challenge/{level}',
@@ -71,62 +89,77 @@ export function generateRoute<T extends RouteFeature>(
 ): string {
   switch (feature) {
     case 'home':
-      return `/${language}/home`
-    
+      return '/home'
+
     case 'jlpt': {
       const jlptParams = params as RouteParams['jlpt']
-      let path = `/${language}/jlpt`
-      
+      let path = '/jlpt'
+
       if (jlptParams.type) {
         path += `/${jlptParams.type}`
-        
+
         if (jlptParams.level) {
           path += `/${jlptParams.level}`
-          
+
           if (jlptParams.action) {
             path += `/${jlptParams.action}`
           }
         }
       }
-      
+
       return path
     }
-    
+
     case 'challenge': {
       const challengeParams = params as RouteParams['challenge']
-      let path = `/${language}/challenge`
-      
+      let path = '/challenge'
+
       if (challengeParams.level) {
         path += `/${challengeParams.level}`
-        
+
         if (challengeParams.action) {
           path += `/${challengeParams.action}`
         }
       }
-      
+
       return path
     }
-    
+
     case 'driving': {
       const drivingParams = params as RouteParams['driving']
-      let path = `/${language}/driving`
-      
+      let path = '/driving'
+
       if (drivingParams.type) {
         path += `/${drivingParams.type}`
-        
+
         if (drivingParams.action) {
           path += `/${drivingParams.action}`
         }
       }
-      
+
       return path
     }
-    
+
+    case 'study': {
+      const studyParams = params as RouteParams['study']
+      let path = '/study'
+
+      if (studyParams.type) {
+        path += `/${studyParams.type}`
+      }
+
+      return path
+    }
+
     case 'auth': {
       const authParams = params as RouteParams['auth']
       return `/auth/${language}/${authParams.type}`
     }
-    
+
+    case 'landing': {
+      return `/${language}/landing`
+    }
+
     default:
       return `/${language}`
   }
@@ -134,61 +167,65 @@ export function generateRoute<T extends RouteFeature>(
 
 // Convenience functions for common routes
 export const routes = {
-  home: (language: Language) => 
-    generateRoute('home', language, {}),
-  
-  jlpt: (language: Language) => 
-    generateRoute('jlpt', language, {}),
-  
-  jlptOfficial: (language: Language) => 
-    generateRoute('jlpt', language, { type: 'official' }),
-  
-  jlptCustom: (language: Language) => 
-    generateRoute('jlpt', language, { type: 'custom' }),
-  
-  jlptLevel: (language: Language, type: JLPTType, level: string) => 
-    generateRoute('jlpt', language, { type, level }),
-  
-  jlptTest: (language: Language, type: JLPTType, level: string) => 
-    generateRoute('jlpt', language, { type, level, action: 'test' }),
-  
-  jlptTestSetup: (language: Language, type: JLPTType, level: string) => 
-    generateRoute('jlpt', language, { type, level, action: 'test-setup' }),
-  
-  challenge: (language: Language) => 
-    generateRoute('challenge', language, { level: '' }).replace('//', '/'),
-  
-  challengeLevel: (language: Language, level: string) => 
-    generateRoute('challenge', language, { level }),
-  
-  challengeTest: (language: Language, level: string) => 
-    generateRoute('challenge', language, { level, action: 'test' }),
-  
-  challengeTestSetup: (language: Language, level: string) => 
-    generateRoute('challenge', language, { level, action: 'test-setup' }),
-  
-  driving: (language: Language) => 
-    generateRoute('driving', language, { type: 'honmen' }).replace('/honmen', ''),
-  
-  drivingType: (language: Language, type: 'honmen' | 'karimen') => 
-    generateRoute('driving', language, { type }),
-  
-  drivingTest: (language: Language, type: 'honmen' | 'karimen') => 
-    generateRoute('driving', language, { type, action: 'test' }),
-  
-  drivingTestSetup: (language: Language, type: 'honmen' | 'karimen') => 
-    generateRoute('driving', language, { type, action: 'test-setup' }),
-  
-  login: (language: Language) => 
+  // Protected routes (clean URLs - language parameter ignored for consistency)
+  home: (language?: Language) => '/home',
+
+  jlpt: (language?: Language) => '/jlpt',
+
+  jlptOfficial: (language?: Language) => '/jlpt/official',
+
+  jlptCustom: (language?: Language) => '/jlpt/custom',
+
+  jlptLevel: (language: Language, type: JLPTType, level: string) =>
+    `/jlpt/${type}/${level}`,
+
+  jlptTest: (language: Language, type: JLPTType, level: string) =>
+    `/jlpt/${type}/${level}/test`,
+
+  jlptTestSetup: (language: Language, type: JLPTType, level: string) =>
+    `/jlpt/${type}/${level}/test-setup`,
+
+  challenge: (language?: Language) => '/challenge',
+
+  challengeLevel: (language: Language, level: string) =>
+    `/challenge/${level}`,
+
+  challengeTest: (language: Language, level: string) =>
+    `/challenge/${level}/test`,
+
+  challengeTestSetup: (language: Language, level: string) =>
+    `/challenge/${level}/test-setup`,
+
+  driving: (language?: Language) => '/driving',
+
+  drivingType: (language: Language, type: 'honmen' | 'karimen') =>
+    `/driving/${type}`,
+
+  drivingTest: (language: Language, type: 'honmen' | 'karimen') =>
+    `/driving/${type}/test`,
+
+  drivingTestSetup: (language: Language, type: 'honmen' | 'karimen') =>
+    `/driving/${type}/test-setup`,
+
+  dict: () => '/dict',
+
+  study: (language?: Language) => '/study',
+
+  studyTheory: (language?: Language) => '/study/theory',
+
+  studyPractice: (language?: Language) => '/study/practice',
+
+  // Public routes (language-prefixed)
+  login: (language: Language) =>
     generateRoute('auth', language, { type: 'login' }),
-  
-  register: (language: Language) => 
+
+  register: (language: Language) =>
     generateRoute('auth', language, { type: 'register' }),
-  
-  forgotPassword: (language: Language) => 
+
+  forgotPassword: (language: Language) =>
     generateRoute('auth', language, { type: 'forgot-password' }),
-  
-  landing: (language: Language) => 
+
+  landing: (language: Language) =>
     `/${language}/landing`
 }
 
@@ -199,59 +236,77 @@ export function parseRoute(pathname: string): {
   params: Record<string, string>
 } {
   const segments = pathname.split('/').filter(Boolean)
-  
+
   if (segments.length === 0) {
     return { language: null, feature: null, params: {} }
   }
-  
-  // Check for auth routes first (different pattern)
+
+  // Check for auth routes first (/auth/{lang}/{type})
   if (segments[0] === 'auth' && segments.length >= 2) {
     const language = getLanguageFromSegment(segments[1])
     const authType = segments[2] as AuthType
-    
+
     return {
       language,
       feature: 'auth',
       params: { type: authType }
     }
   }
-  
-  // Standard language-aware routes
-  const language = getLanguageFromSegment(segments[0])
-  if (!language) {
-    return { language: null, feature: null, params: {} }
+
+  // Check for language-prefixed public routes (/{lang}/landing)
+  const firstSegmentLanguage = getLanguageFromSegment(segments[0])
+  if (firstSegmentLanguage && segments.length >= 2) {
+    const feature = segments[1] as RouteFeature
+    const params: Record<string, string> = {}
+
+    // Parse feature-specific parameters for lang-prefixed routes
+    switch (feature) {
+      case 'landing':
+        return { language: firstSegmentLanguage, feature: 'landing' as RouteFeature, params: {} }
+    }
+
+    return { language: firstSegmentLanguage, feature, params }
   }
-  
-  if (segments.length === 1) {
-    return { language, feature: null, params: {} }
-  }
-  
-  const feature = segments[1] as RouteFeature
+
+  // Handle clean URLs for protected routes (no language prefix)
+  const feature = segments[0] as RouteFeature
   const params: Record<string, string> = {}
-  
-  // Parse feature-specific parameters
+
+  // Parse feature-specific parameters for clean URLs
   switch (feature) {
     case 'home':
-      break
-    
+      return { language: null, feature, params: {} }
+
     case 'jlpt':
-      if (segments[2]) params.type = segments[2]
-      if (segments[3]) params.level = segments[3]
-      if (segments[4]) params.action = segments[4]
-      break
-    
-    case 'challenge':
+      if (segments[1]) params.type = segments[1]
       if (segments[2]) params.level = segments[2]
       if (segments[3]) params.action = segments[3]
-      break
-    
+      return { language: null, feature, params }
+
+    case 'challenge':
+      if (segments[1]) params.level = segments[1]
+      if (segments[2]) params.action = segments[2]
+      return { language: null, feature, params }
+
     case 'driving':
-      if (segments[2]) params.type = segments[2]
-      if (segments[3]) params.action = segments[3]
-      break
+      if (segments[1]) params.type = segments[1]
+      if (segments[2]) params.action = segments[2]
+      return { language: null, feature, params }
+
+    case 'study':
+      if (segments[1]) params.type = segments[1]
+      return { language: null, feature, params }
+
+    case 'dict':
+    case 'library':
+    case 'settings':
+    case 'exam-results':
+    case 'review-answers':
+      return { language: null, feature, params: {} }
   }
-  
-  return { language, feature, params }
+
+  // If no match found, return null
+  return { language: null, feature: null, params: {} }
 }
 
 // Helper function to get language from URL segment
@@ -283,98 +338,110 @@ export function generateBreadcrumbs(
   translations: any
 ): Breadcrumb[] {
   const { language, feature, params } = parseRoute(pathname)
-  
-  if (!language || !feature) {
+
+  if (!feature) {
     return []
   }
-  
+
   const breadcrumbs: Breadcrumb[] = [
     {
-      label: translations.common.home || 'Home',
-      href: routes.home(language),
+      label: translations.common?.home || 'Home',
+      href: routes.home(),
       isActive: false
     }
   ]
-  
+
   switch (feature) {
     case 'jlpt':
       breadcrumbs.push({
         label: translations.jlpt?.page?.title || 'JLPT',
-        href: routes.jlpt(language),
+        href: routes.jlpt(),
         isActive: !params.type
       })
-      
+
       if (params.type) {
         breadcrumbs.push({
           label: translations.jlpt?.[params.type]?.page?.title || params.type,
-          href: generateRoute('jlpt', language, { type: params.type as JLPTType }),
+          href: `/jlpt/${params.type}`,
           isActive: !params.level
         })
-        
+
         if (params.level) {
           breadcrumbs.push({
             label: params.level.toUpperCase(),
-            href: generateRoute('jlpt', language, { 
-              type: params.type as JLPTType, 
-              level: params.level 
-            }),
+            href: `/jlpt/${params.type}/${params.level}`,
             isActive: !params.action
           })
         }
       }
       break
-    
+
     case 'challenge':
       breadcrumbs.push({
         label: translations.challenge?.page?.title || 'Challenge',
-        href: routes.challenge(language),
+        href: routes.challenge(),
         isActive: !params.level
       })
-      
+
       if (params.level) {
         breadcrumbs.push({
           label: `Challenge ${params.level.toUpperCase()}`,
-          href: routes.challengeLevel(language, params.level),
+          href: `/challenge/${params.level}`,
           isActive: !params.action
         })
       }
       break
-    
+
     case 'driving':
       breadcrumbs.push({
         label: translations.driving?.page?.title || 'Driving',
-        href: routes.driving(language),
+        href: routes.driving(),
         isActive: !params.type
       })
-      
+
       if (params.type) {
         breadcrumbs.push({
           label: params.type === 'honmen' ? 'Honmen' : 'Karimen',
-          href: routes.drivingType(language, params.type as 'honmen' | 'karimen'),
+          href: `/driving/${params.type}`,
           isActive: !params.action
+        })
+      }
+      break
+
+    case 'study':
+      breadcrumbs.push({
+        label: translations.study?.page?.title || 'Study',
+        href: routes.study(),
+        isActive: !params.type
+      })
+
+      if (params.type) {
+        breadcrumbs.push({
+          label: params.type === 'theory' ? 'Theory' : 'Practice',
+          href: `/study/${params.type}`,
+          isActive: true
         })
       }
       break
   }
-  
+
   // Mark the last item as active
   if (breadcrumbs.length > 0) {
     breadcrumbs[breadcrumbs.length - 1].isActive = true
   }
-  
+
   return breadcrumbs
 }
 
 // URL validation
 export function isValidRoute(pathname: string): boolean {
   const { language, feature, params } = parseRoute(pathname)
-  
-  if (!language) return false
-  if (!feature) return true // Root language route is valid
-  
-  const validFeatures: RouteFeature[] = ['home', 'jlpt', 'challenge', 'driving', 'auth']
+
+  if (!feature) return false
+
+  const validFeatures: RouteFeature[] = ['home', 'jlpt', 'challenge', 'driving', 'dict', 'study', 'library', 'settings', 'exam-results', 'review-answers', 'auth', 'landing']
   if (!validFeatures.includes(feature)) return false
-  
+
   // Feature-specific validation
   switch (feature) {
     case 'jlpt':
@@ -382,22 +449,33 @@ export function isValidRoute(pathname: string): boolean {
       if (params.level && !isValidJLPTLevel(params.level)) return false
       if (params.action && !['test', 'test-setup'].includes(params.action)) return false
       break
-    
+
     case 'challenge':
       if (params.level && !isValidJLPTLevel(params.level)) return false
       if (params.action && !['test', 'test-setup'].includes(params.action)) return false
       break
-    
+
     case 'driving':
       if (params.type && !['honmen', 'karimen'].includes(params.type)) return false
       if (params.action && !['test', 'test-setup'].includes(params.action)) return false
       break
-    
+
+    case 'study':
+      if (params.type && !['theory', 'practice'].includes(params.type)) return false
+      break
+
     case 'auth':
-      if (params.type && !['login', 'register', 'forgot-password', 'landing'].includes(params.type)) return false
+      // Auth routes require language
+      if (!language) return false
+      if (params.type && !['login', 'register', 'forgot-password'].includes(params.type)) return false
+      break
+
+    case 'landing':
+      // Landing routes require language
+      if (!language) return false
       break
   }
-  
+
   return true
 }
 

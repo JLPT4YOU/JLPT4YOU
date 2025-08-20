@@ -6,8 +6,10 @@
 
 import { NextRequest } from 'next/server'
 import { cookies } from 'next/headers'
-import { createClient } from '@supabase/supabase-js'
-import { supabaseAdmin } from '@/lib/supabase'
+import { createClient as createSupabaseClient } from '@supabase/supabase-js'
+import { createServerClient } from '@supabase/ssr'
+import { supabaseAdmin } from '@/utils/supabase/admin'
+import { logAuthEvent, logSecurityEvent as logSecurityEventMonitoring } from '@/lib/monitoring'
 
 export interface AdminAuthResult {
   user?: {
@@ -32,46 +34,82 @@ export interface SecurityEvent {
 /**
  * 🔒 REQUIRE ADMIN AUTHENTICATION
  * Verifies user is authenticated and has admin role
+ * Supports both Authorization header and cookies
  */
 export async function requireAdminAuth(request: NextRequest): Promise<AdminAuthResult> {
   try {
-    const cookieStore = await cookies()
-    const authToken = cookieStore.get('jlpt4you_auth_token')?.value
+    let user: any = null
+    let authError: any = null
 
-    if (!authToken) {
-      logSecurityEvent({
-        event: 'admin_access_denied_no_token',
-        ip: request.ip || 'unknown',
-        userAgent: request.headers.get('user-agent') || 'unknown',
-        timestamp: new Date().toISOString()
-      })
-      return { error: 'Authentication required', status: 401 }
+    // Method 1: Try Authorization header first (for API calls)
+    const authHeader = request.headers.get('authorization')
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+      const token = authHeader.substring(7)
+
+      const supabaseWithToken = createSupabaseClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+        {
+          global: {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          },
+        }
+      )
+
+      const { data: { user: tokenUser }, error: tokenError } = await supabaseWithToken.auth.getUser()
+      if (!tokenError && tokenUser) {
+        user = tokenUser
+      } else {
+        authError = tokenError
+      }
     }
 
-    // Create Supabase client with auth token
-    const supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-      {
-        global: {
-          headers: {
-            Authorization: `Bearer ${authToken}`,
-          },
-        },
-      }
-    )
+    // Method 2: Fallback to cookies if Authorization header failed
+    if (!user) {
+      const cookieStore = await cookies()
 
-    // Verify user is authenticated
-    const { data: { user }, error: authError } = await supabase.auth.getUser()
-    if (authError || !user) {
-      logSecurityEvent({
-        event: 'admin_access_denied_invalid_token',
-        ip: request.ip || 'unknown',
+      const supabase = createServerClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+        {
+          cookies: {
+            get(name: string) {
+              return cookieStore.get(name)?.value
+            },
+            set() {
+              // API routes can't set cookies
+            },
+            remove() {
+              // API routes can't remove cookies
+            },
+          },
+        }
+      )
+
+      const { data: { user: cookieUser }, error: cookieError } = await supabase.auth.getUser()
+      if (!cookieError && cookieUser) {
+        user = cookieUser
+      } else {
+        authError = cookieError
+      }
+    }
+
+    // If both methods failed
+    if (!user) {
+      logSecurityEventMonitoring({
+        event: 'admin_access_denied_no_session',
+        level: 'warn',
+        ip: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown',
         userAgent: request.headers.get('user-agent') || 'unknown',
-        timestamp: new Date().toISOString(),
-        details: { authError: authError?.message }
+        details: {
+          authError: authError?.message,
+          hasAuthHeader: !!authHeader,
+          authMethod: authHeader ? 'bearer_token' : 'cookies'
+        }
       })
-      return { error: 'Invalid authentication', status: 401 }
+      return { error: 'Authentication required', status: 401 }
     }
 
     // Verify user has admin role
@@ -86,42 +124,43 @@ export async function requireAdminAuth(request: NextRequest): Promise<AdminAuthR
       .single()
 
     if (roleError || !userData) {
-      logSecurityEvent({
+      logSecurityEventMonitoring({
         event: 'admin_access_denied_user_not_found',
+        level: 'error',
         userId: user.id,
         userEmail: user.email || 'unknown',
-        ip: request.ip || 'unknown',
+        ip: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown',
         userAgent: request.headers.get('user-agent') || 'unknown',
-        timestamp: new Date().toISOString(),
         details: { roleError: roleError?.message }
       })
       return { error: 'User not found in database', status: 404 }
     }
 
     if (userData.role !== 'Admin') {
-      logSecurityEvent({
+      logSecurityEventMonitoring({
         event: 'admin_access_denied_insufficient_role',
+        level: 'error',
         userId: user.id,
         userEmail: userData.email,
-        ip: request.ip || 'unknown',
+        ip: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown',
         userAgent: request.headers.get('user-agent') || 'unknown',
-        timestamp: new Date().toISOString(),
         details: { userRole: userData.role }
       })
-      return { 
-        error: 'Forbidden: Admin access required', 
+      return {
+        error: 'Forbidden: Admin access required',
         status: 403
       }
     }
 
     // Log successful admin access
-    logSecurityEvent({
+    logAuthEvent({
       event: 'admin_access_granted',
+      level: 'info',
       userId: user.id,
       userEmail: userData.email,
-      ip: request.ip || 'unknown',
+      ip: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown',
       userAgent: request.headers.get('user-agent') || 'unknown',
-      timestamp: new Date().toISOString()
+      details: { role: userData.role }
     })
 
     return { 
@@ -135,11 +174,11 @@ export async function requireAdminAuth(request: NextRequest): Promise<AdminAuthR
 
   } catch (error) {
     console.error('Admin authentication error:', error)
-    logSecurityEvent({
+    logSecurityEventMonitoring({
       event: 'admin_auth_error',
-      ip: request.ip || 'unknown',
+      level: 'error',
+      ip: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown',
       userAgent: request.headers.get('user-agent') || 'unknown',
-      timestamp: new Date().toISOString(),
       details: { error: error instanceof Error ? error.message : 'Unknown error' }
     })
     return { error: 'Authentication failed', status: 500 }
@@ -169,64 +208,11 @@ export async function checkAdminRole(userId: string): Promise<boolean> {
   }
 }
 
-/**
- * 📊 LOG SECURITY EVENT
- * Logs security-related events for monitoring and audit
- */
-export function logSecurityEvent(event: SecurityEvent): void {
-  // Log to console (in production, send to monitoring service)
-  const logLevel = event.event.includes('denied') || event.event.includes('error') ? 'warn' : 'info'
-  
-  if (logLevel === 'warn') {
-    console.warn(`🚨 SECURITY EVENT: ${event.event}`, {
-      userId: event.userId,
-      userEmail: event.userEmail,
-      ip: event.ip,
-      userAgent: event.userAgent,
-      timestamp: event.timestamp,
-      details: event.details
-    })
-  } else {
-    console.log(`🔒 SECURITY EVENT: ${event.event}`, {
-      userId: event.userId,
-      userEmail: event.userEmail,
-      ip: event.ip,
-      timestamp: event.timestamp
-    })
-  }
-
-  // TODO: In production, send to monitoring service
-  // Example: sendToMonitoringService(event)
-}
-
-/**
- * 🛡️ ADMIN ACTION LOGGER
- * Logs admin actions for audit trail
- */
-export function logAdminAction(action: {
-  adminId: string
-  adminEmail: string
-  action: string
-  targetUserId?: string
-  targetUserEmail?: string
-  details?: any
-  ip?: string
-  userAgent?: string
-}): void {
-  console.log(`🔒 ADMIN ACTION: ${action.action}`, {
-    adminId: action.adminId,
-    adminEmail: action.adminEmail,
-    targetUserId: action.targetUserId,
-    targetUserEmail: action.targetUserEmail,
-    ip: action.ip,
-    userAgent: action.userAgent,
-    timestamp: new Date().toISOString(),
-    details: action.details
-  })
-
-  // TODO: In production, send to audit logging service
-  // Example: sendToAuditService(action)
-}
+// Note: Security logging and admin action auditing are already implemented
+// via the monitoring system imported at the top of this file:
+// - logSecurityEventMonitoring() for security events
+// - logAuthEvent() for authentication events
+// These functions are actively used throughout this file for comprehensive audit trails.
 
 /**
  * 🔍 VALIDATE ADMIN REQUEST

@@ -5,6 +5,7 @@
 
 import { Chat, Message } from '@/components/chat/index';
 import { GROQ_MODELS } from './groq-config';
+import { debounce, sleep } from '@/lib/utils';
 
 /**
  * Detects URLs in text content
@@ -164,20 +165,7 @@ export function createSafeFilename(filename: string): string {
     .replace(/^_|_$/g, ''); // Remove leading/trailing underscores
 }
 
-/**
- * Debounces a function call
- */
-export function debounce<T extends (...args: any[]) => any>(
-  func: T,
-  wait: number
-): (...args: Parameters<T>) => void {
-  let timeout: NodeJS.Timeout;
-  
-  return (...args: Parameters<T>) => {
-    clearTimeout(timeout);
-    timeout = setTimeout(() => func(...args), wait);
-  };
-}
+// debounce function moved to @/lib/utils for consolidation
 
 /**
  * Throttles a function call
@@ -197,12 +185,8 @@ export function throttle<T extends (...args: any[]) => any>(
   };
 }
 
-/**
- * Creates a delay promise
- */
-export function delay(ms: number): Promise<void> {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
+// delay function moved to @/lib/utils as 'sleep' for consolidation
+// Use: import { sleep } from '@/lib/utils' instead of delay
 
 /**
  * Safely parses JSON with fallback

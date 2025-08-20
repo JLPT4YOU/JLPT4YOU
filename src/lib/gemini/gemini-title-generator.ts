@@ -36,8 +36,8 @@ export class GeminiTitleGenerator {
           parts: [{ text: prompt }]
         }],
         config: {
-          maxOutputTokens: 20,
-          temperature: 1.0,
+          maxOutputTokens: 30, // Increased for better title generation
+          temperature: 0.8, // Slightly lower for more focused titles
         }
       });
 

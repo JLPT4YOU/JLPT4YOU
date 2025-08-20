@@ -1,0 +1,25 @@
+[
+  {
+    "url": "http://localhost:3000/test-optimized",
+    "timestamp": "2025-08-18T01:11:34.562Z",
+    "scores": {
+      "performance": 0,
+      "accessibility": 94,
+      "best-practices": 96,
+      "seo": 66
+    },
+    "metrics": {},
+    "coreWebVitals": {
+      "fid": 54,
+      "cls": 0,
+      "fcp": 2110.29765
+    },
+    "status": "FAILED",
+    "issues": [
+      "performance: 0/100 (threshold: 85)",
+      "seo: 66/100 (threshold: 80)",
+      "FCP: 2110.29765ms (threshold: 1800ms)"
+    ],
+    "improvements": []
+  }
+]

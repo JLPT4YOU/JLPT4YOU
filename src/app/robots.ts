@@ -15,11 +15,11 @@ export default function robots(): MetadataRoute.Robots {
         allow: [
           '/',
           '/auth/vn/',
-          '/auth/jp/', 
+          '/auth/jp/',
           '/auth/en/',
-          '/jlpt/',
-          '/challenge/',
-          '/driving/',
+          '/vn/landing',
+          '/jp/landing',
+          '/en/landing',
           '/sitemap.xml'
         ],
         disallow: [
@@ -28,12 +28,15 @@ export default function robots(): MetadataRoute.Robots {
           '/_next/',
           '/static/',
           '*.json',
-          '/auth/*/test',
-          '/jlpt/*/test',
-          '/challenge/*/test',
-          '/driving/*/test',
+          '/home',
+          '/jlpt/',
+          '/challenge/',
+          '/driving/',
+          '/study/',
+          '/library/',
           '/exam-results',
-          '/review-answers'
+          '/review-answers',
+          '/settings'
         ],
         crawlDelay: 1
       },
@@ -44,9 +47,9 @@ export default function robots(): MetadataRoute.Robots {
           '/auth/vn/',
           '/auth/jp/',
           '/auth/en/',
-          '/jlpt/',
-          '/challenge/',
-          '/driving/',
+          '/vn/landing',
+          '/jp/landing',
+          '/en/landing',
           '/sitemap.xml'
         ],
         disallow: [
@@ -55,10 +58,15 @@ export default function robots(): MetadataRoute.Robots {
           '/_next/',
           '/static/',
           '*.json',
-          '/auth/*/test',
-          '/jlpt/*/test', 
-          '/challenge/*/test',
-          '/driving/*/test'
+          '/home',
+          '/jlpt/',
+          '/challenge/',
+          '/driving/',
+          '/study/',
+          '/library/',
+          '/exam-results',
+          '/review-answers',
+          '/settings'
         ]
       },
       {
@@ -68,9 +76,9 @@ export default function robots(): MetadataRoute.Robots {
           '/auth/vn/',
           '/auth/jp/',
           '/auth/en/',
-          '/jlpt/',
-          '/challenge/',
-          '/driving/',
+          '/vn/landing',
+          '/jp/landing',
+          '/en/landing',
           '/sitemap.xml'
         ],
         disallow: [
@@ -79,10 +87,15 @@ export default function robots(): MetadataRoute.Robots {
           '/_next/',
           '/static/',
           '*.json',
-          '/auth/*/test',
-          '/jlpt/*/test',
-          '/challenge/*/test', 
-          '/driving/*/test'
+          '/home',
+          '/jlpt/',
+          '/challenge/',
+          '/driving/',
+          '/study/',
+          '/library/',
+          '/exam-results',
+          '/review-answers',
+          '/settings'
         ]
       }
     ],

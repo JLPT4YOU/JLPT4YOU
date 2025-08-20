@@ -1,7 +1,8 @@
 import { Suspense } from "react"
 import { notFound } from "next/navigation"
-import { loadTranslation, Language } from "@/lib/i18n"
+import { loadTranslation, Language } from '@/lib/i18n'
 import { AuthPageContent } from "@/components/auth/auth-page-content"
+import { getLanguageFromCode } from '@/lib/page-utils-core'
 
 interface RegisterPageProps {
   params: Promise<{
@@ -9,22 +10,7 @@ interface RegisterPageProps {
   }>
 }
 
-// Map language codes to Language type
-const getLanguageFromCode = (code: string): Language | null => {
-  switch (code) {
-    case '1':
-    case 'vn':
-      return 'vn'
-    case '2':
-    case 'jp':
-      return 'jp'
-    case '3':
-    case 'en':
-      return 'en'
-    default:
-      return null
-  }
-}
+
 
 export default async function RegisterPage({ params }: RegisterPageProps) {
   const { lang } = await params

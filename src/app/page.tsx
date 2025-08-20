@@ -1,37 +1,22 @@
-"use client"
+import { headers } from 'next/headers'
+import { detectUserLanguage } from '@/lib/language-detection'
+import { LandingPageContent } from '@/components/landing/landing-page-content'
 
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { useAuth } from "@/contexts/auth-context";
-import { detectClientLanguage } from "@/lib/language-detection";
+// Root page - serve landing content directly to avoid redirects
+export default async function RootPage() {
+  const headersList = await headers()
+  const acceptLanguage = headersList.get('accept-language')
 
-export default function RootPage() {
-  const router = useRouter();
-  const { isAuthenticated, isLoading } = useAuth();
+  // Detect user's preferred language
+  const preferredLanguage = detectUserLanguage({
+    acceptLanguageHeader: acceptLanguage || undefined
+  })
 
-  useEffect(() => {
-    if (!isLoading) {
-      if (isAuthenticated) {
-        // If user is authenticated, redirect to home
-        router.replace('/home');
-      } else {
-        // Detect user's preferred language and redirect to landing page
-        const preferredLanguage = detectClientLanguage();
-        const redirectUrl = `/${preferredLanguage}/landing`;
-        router.replace(redirectUrl);
-      }
-    }
-  }, [isAuthenticated, isLoading, router]);
-
-  // Show loading while checking auth state
-  return (
-    <div className="min-h-screen bg-background flex items-center justify-center">
-      <div className="text-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-        <p className="text-muted-foreground">Đang chuyển hướng...</p>
-      </div>
-    </div>
-  );
+  // Serve landing content directly instead of redirecting
+  return <LandingPageContent language={preferredLanguage} />
 }
+
+// Enable static generation for better performance
+export const dynamic = 'force-static'
 
 

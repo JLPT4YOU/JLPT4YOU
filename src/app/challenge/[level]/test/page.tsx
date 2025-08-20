@@ -131,7 +131,7 @@ function ChallengeTestContent({ params, translations }: ChallengeTestContentProp
     console.log('Max violations reached - ending exam')
     // Removed browser alert popup - user will see custom modal instead
     setTimeout(() => {
-      router.push('/')
+      router.push('/home')
     }, 2000) // Give time for user to see the final violation warning
   }
 

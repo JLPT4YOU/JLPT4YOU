@@ -11,7 +11,7 @@ import { TranslationData, Language } from "@/lib/i18n"
 import { useTranslation } from "@/lib/use-translation"
 import { cn } from "@/lib/utils"
 import { useSearchParams } from "next/navigation"
-import { useState, useEffect } from "react"
+import { useState, useEffect, Suspense } from "react"
 
 interface LoginFormProps {
   className?: string
@@ -20,12 +20,19 @@ interface LoginFormProps {
   language?: Language
 }
 
-export function LoginForm({
+// Component that uses useSearchParams - must be wrapped in Suspense
+function LoginFormWithSearchParams(props: LoginFormProps) {
+  const searchParams = useSearchParams()
+  return <LoginFormContent {...props} searchParams={searchParams} />
+}
+
+function LoginFormContent({
   className,
   onSwitchToRegister,
   translations,
-  language
-}: LoginFormProps) {
+  language,
+  searchParams
+}: LoginFormProps & { searchParams: URLSearchParams }) {
   const initialData: LoginFormData = {
     email: "",
     password: "",
@@ -53,7 +60,6 @@ export function LoginForm({
   const t = translations ? translationHook.t : null
   const getText = (key: string, fallback: string) => t ? t(key) : fallback
   
-  const searchParams = useSearchParams()
   const [showRegistrationSuccess, setShowRegistrationSuccess] = useState(false)
 
   // Check if user just registered
@@ -184,5 +190,14 @@ export function LoginForm({
         </p>
       </div>
     </div>
+  )
+}
+
+// Main export with Suspense wrapper
+export function LoginForm(props: LoginFormProps) {
+  return (
+    <Suspense fallback={<div className="min-h-[400px] animate-pulse bg-muted/20 rounded-lg" />}>
+      <LoginFormWithSearchParams {...props} />
+    </Suspense>
   )
 }

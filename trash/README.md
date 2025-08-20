@@ -1,56 +1,24 @@
-# 🗑️ Trash - Removed Files Log
+# 🗑️ Trash Folder
 
-This directory contains files that were removed during refactoring for backup purposes.
+## Mục đích
+Thư mục này chứa các file đã được di chuyển khỏi production code để dọn dẹp dự án.
 
-## 2025-07-11 - JLPT Routing Refactor
+## Nội dung
 
-**Reason**: Consolidated 10 duplicate JLPT level pages into 1 dynamic route
+### Test Pages (`test-pages/`)
+- `test-balance/` - Trang test balance functionality (có hardcode colors)
+- `test-topup/` - Trang test topup functionality (có hardcode colors)
 
-**Files Removed**:
-- `src/app/jlpt/official/n1/page.tsx` → Replaced by `src/app/jlpt/[type]/[level]/page.tsx`
-- `src/app/jlpt/official/n2/page.tsx` → Replaced by `src/app/jlpt/[type]/[level]/page.tsx`
-- `src/app/jlpt/official/n3/page.tsx` → Replaced by `src/app/jlpt/[type]/[level]/page.tsx`
-- `src/app/jlpt/official/n4/page.tsx` → Replaced by `src/app/jlpt/[type]/[level]/page.tsx`
-- `src/app/jlpt/official/n5/page.tsx` → Replaced by `src/app/jlpt/[type]/[level]/page.tsx`
-- `src/app/jlpt/custom/n1/page.tsx` → Replaced by `src/app/jlpt/[type]/[level]/page.tsx`
-- `src/app/jlpt/custom/n2/page.tsx` → Replaced by `src/app/jlpt/[type]/[level]/page.tsx`
-- `src/app/jlpt/custom/n3/page.tsx` → Replaced by `src/app/jlpt/[type]/[level]/page.tsx`
-- `src/app/jlpt/custom/n4/page.tsx` → Replaced by `src/app/jlpt/[type]/[level]/page.tsx`
-- `src/app/jlpt/custom/n5/page.tsx` → Replaced by `src/app/jlpt/[type]/[level]/page.tsx`
+### Auth Pages (`auth-pages/`)
+- `page-simple.tsx` - Simple login page (có hardcode colors, không sử dụng)
 
-**Impact**: 
-- ✅ All URLs still work: `/jlpt/official/n1`, `/jlpt/custom/n3`, etc.
-- ✅ Reduced code duplication from 120 lines to 40 lines (67% reduction)
-- ✅ Easier maintenance - only 1 file to update instead of 10
-- ✅ Better scalability - adding new levels doesn't require new files
+## Lý do di chuyển
+1. **Hardcode Colors**: Các trang này sử dụng hardcode màu sắc không tương thích với design system
+2. **Demo/Test Code**: Không phải production code, chỉ dùng để test
+3. **Code Quality**: Không tuân thủ coding standards của dự án
 
-**Testing**: All routes tested and confirmed working on http://localhost:3005
+## Có thể khôi phục
+Nếu cần thiết, các file này có thể được khôi phục và refactor để tuân thủ design system.
 
-## 2025-07-11 - Demo & Test Pages Cleanup
-
-**Reason**: Clean up codebase by removing unnecessary demo and test pages
-
-**Files Removed**:
-- `src/app/auth-demo/` → Authentication demo page
-- `src/app/pattern-demo/` → Background pattern showcase
-- `src/app/driving-demo/` → Driving test demo
-- `src/app/results-demo/` → Exam results demo scenarios
-- `src/app/review-demo/` → Review answers demo
-- `src/app/test-demo/` → General test demo
-- `src/app/submission-demo/` → Submission flow demo
-- `src/app/submission-challenge-demo/` → Challenge submission demo
-- `src/app/header-test-*` → Header testing pages
-- `src/app/modals-test-*` → Modal testing pages
-- `src/app/question-test-*` → Question testing pages
-- `src/app/sidebar-test-*` → Sidebar testing pages
-- `src/app/state-test-*` → State testing pages
-- `src/app/test-pause/` → Test pause functionality
-- `src/app/test-popup/` → Test popup functionality
-
-**Impact**:
-- ✅ Cleaner codebase with 16+ demo/test pages removed
-- ✅ Better organization focusing on production features
-- ✅ Faster builds and easier maintenance
-- ✅ Core features preserved: auth, JLPT, challenge, driving, exam results
-
-**Testing**: All core routes tested and confirmed working on http://localhost:3004
+## Ngày di chuyển
+2025-01-16 - Trong quá trình cleanup hardcode colors

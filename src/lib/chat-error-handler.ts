@@ -69,7 +69,9 @@ export class SafeLocalStorage {
     try {
       return localStorage.getItem(key);
     } catch (error) {
-      console.error(`Failed to read from localStorage (${key}):`, error);
+      if (process.env.NODE_ENV === 'development') {
+        console.error(`Failed to read from localStorage (${key}):`, error);
+      }
       return null;
     }
   }
@@ -79,10 +81,14 @@ export class SafeLocalStorage {
       localStorage.setItem(key, value);
       return true;
     } catch (error) {
-      console.error(`Failed to write to localStorage (${key}):`, error);
+      if (process.env.NODE_ENV === 'development') {
+        console.error(`Failed to write to localStorage (${key}):`, error);
+      }
       // Handle quota exceeded
       if (error instanceof Error && error.name === 'QuotaExceededError') {
-        console.warn('localStorage quota exceeded, attempting cleanup...');
+        if (process.env.NODE_ENV === 'development') {
+          console.warn('localStorage quota exceeded, attempting cleanup...');
+        }
         // Could implement cleanup logic here
       }
       return false;
@@ -94,7 +100,9 @@ export class SafeLocalStorage {
       localStorage.removeItem(key);
       return true;
     } catch (error) {
-      console.error(`Failed to remove from localStorage (${key}):`, error);
+      if (process.env.NODE_ENV === 'development') {
+        console.error(`Failed to remove from localStorage (${key}):`, error);
+      }
       return false;
     }
   }
@@ -180,9 +188,11 @@ export function handleComponentError(
   error: Error,
   errorInfo: { componentStack: string }
 ): void {
-  console.error('Component error:', error);
-  console.error('Component stack:', errorInfo.componentStack);
-  
+  if (process.env.NODE_ENV === 'development') {
+    console.error('Component error:', error);
+    console.error('Component stack:', errorInfo.componentStack);
+  }
+
   // Could send to error reporting service here
   // reportError(error, { context: 'component', ...errorInfo });
 }

@@ -34,9 +34,31 @@
     "save": "保存",
     "cancel": "キャンセル",
     "confirm": "確認",
+    "continue": "続行",
     "instruction": "上記のオプションから選択して開始してください",
     "preview": "プレビュー",
     "hide": "非表示"
+  },
+  "landingChat": {
+    "bubble": {
+      "openLabel": "サポートチャットを開く",
+      "closeLabel": "チャットを閉じる"
+    },
+    "interface": {
+      "title": "iRIN Sensei",
+      "subtitle": "オンラインサポート",
+      "placeholder": "質問を入力してください...",
+      "typing": "iRINが回答中...",
+      "welcomeMessage": "こんにちは！私はiRIN、JLPT4YOUプラットフォームの先生です。\nJLPT4YOUにお越しいただき、ありがとうございます！\nご質問がございましたら、お気軽にお聞きください！",
+      "responses": {
+        "default": "ご質問ありがとうございます！今後より良いサポートをするために、知識をアップデートされます。現在はJLPT4YOUの機能をお試しください！"
+      },
+      "errorMessage": "申し訳ございません、現在返信できません。後でもう一度お試しください！",
+      "rateLimitError": "メッセージの送信が早すぎます。{time}後に再度お試しください。",
+      "spamBlockError": "スパムのため一時的にブロックされました。{minutes}分後に再度お試しください。",
+      "inputDisabled": "メッセージ送信が早すぎるため一時的にロックされました",
+      "retryIn": "{time}後に再試行"
+    }
   },
   "header": {
     "logo": "JLPT4YOU",
@@ -49,7 +71,14 @@
       "settings": "設定",
       "statistics": "学習統計",
       "logout": "ログアウト",
-      "expiryDate": "まで"
+      "expiryDate": "有効期限",
+      "screenReader": "ユーザーメニュー",
+      "home": "ホーム",
+      "unlimited": "無制限"
+    },
+    "comments": {
+      "logoAndName": "ロゴとアプリ名",
+      "languageThemeUser": "言語切り替え、テーマ切り替え、ユーザーメニュー"
     }
   },
   "hero": {
@@ -322,7 +351,8 @@
       "loginNow": "今すぐログイン",
       "forgotPasswordText": "パスワードを忘れた場合",
       "resetPasswordSent": "パスワードリセットメールが送信されました",
-      "resetPasswordInstructions": "メールを確認し、指示に従ってパスワードをリセットしてください"
+      "resetPasswordInstructions": "メールを確認し、指示に従ってパスワードをリセットしてください",
+      "registrationSuccess": "登録が完了しました！アカウントを確認するためにメールをご確認ください。"
     },
     "social": {
       "googleLogin": "Googleでログイン",
@@ -341,6 +371,30 @@
       "clickLink": "メール内のリンクをクリックしてパスワードをリセットしてください",
       "linkExpiry": "リンクの有効期限は15分です",
       "checkSpam": "メールが見つからない場合は迷惑メールフォルダもご確認ください"
+    },
+    "errors": {
+      "general": "エラーが発生しました。もう一度お試しください。",
+      "loginFailed": "ユーザー名またはパスワードが正しくありません",
+      "emailExists": "このメールアドレスは既に使用されています",
+      "resendFailed": "メールの再送信に失敗しました。もう一度お試しください。",
+      "registrationError": "登録中にエラーが発生しました。もう一度お試しください。",
+      "loginError": "ログイン中にエラーが発生しました。もう一度お試しください。",
+      "logoutError": "ログアウト中にエラーが発生しました。",
+      "resetPasswordError": "パスワードリセットメールの送信中にエラーが発生しました。",
+      "socialLoginError": "ソーシャルログイン中にエラーが発生しました。",
+      "invalidCredentials": "ユーザー名またはパスワードが正しくありません",
+      "emailAlreadyRegistered": "このメールアドレスは既に登録されています。別のメールアドレスを使用するかログインしてください。",
+      "passwordTooShort": "パスワードは6文字以上である必要があります。",
+      "invalidEmailFormat": "メールアドレスの形式が正しくありません。",
+      "accountNotFound": "このメールアドレスのアカウントが見つかりません。",
+      "emailNotConfirmed": "ログインする前にメールアドレスを確認してください。",
+      "registrationDisabled": "現在、登録機能は無効になっています。",
+      "unknownError": "不明なエラーが発生しました。もう一度お試しください。",
+      "googleLoginError": "Googleログイン中にエラーが発生しました。もう一度お試しください。"
+    },
+    "success": {
+      "registrationSuccess": "登録が完了しました！アカウントを確認するためにメールをご確認ください。",
+      "emailConfirmationRequired": "ログインする前にメールでアカウントを確認してください。"
     }
   },
   "home": {
@@ -359,7 +413,11 @@
       },
       "driving": {
         "title": "運転免許試験",
-        "description": "自動車運転免許"
+        "description": "運転免許の練習"
+      },
+      "dict": {
+        "title": "辞書",
+        "description": "単語・漢字・文法を検索"
       },
       "study": {
         "title": "学習",
@@ -367,7 +425,7 @@
       },
       "library": {
         "title": "ライブラリ",
-        "description": "学習教材"
+        "description": "書籍と学習教材"
       },
       "irin": {
         "title": "iRIN先生",
@@ -375,11 +433,11 @@
       },
       "upgrade": {
         "title": "アップグレード",
-        "description": "アカウント升級"
+        "description": "アカウントをアップグレード"
       },
-      "payment": {
-        "title": "支払い",
-        "description": "サービス料金"
+      "topup": {
+        "title": "チャージ",
+        "description": "アカウントにチャージ"
       },
       "settings": {
         "title": "設定",
@@ -491,6 +549,7 @@
       "title": "JLPTテストタイプを選択",
       "subtitle": "学習ニーズに合ったテストタイプを選択してください"
     },
+    "selectLevel": "JLPTレベルを選択",
     "testTypes": {
       "official": {
         "title": "JLPT",
@@ -672,6 +731,90 @@
       "passingScore": "合格点"
     }
   },
+  "dict": {
+    "page": {
+      "title": "J4YDict - 日本語ベトナム語辞書",
+      "subtitle": "単語、漢字、文法、翻訳を検索"
+    },
+    "tabs": {
+      "word": "語彙",
+      "kanji": "漢字",
+      "kanjiWriting": "漢字の書き方",
+      "grammar": "文法",
+      "examples": "例文",
+      "translate": "翻訳"
+    },
+    "search": {
+      "placeholder": "検索キーワードを入力...",
+      "button": "検索",
+      "clear": "クリア",
+      "positions": {
+        "start": "開始",
+        "middle": "中間",
+        "end": "終了"
+      },
+      "types": {
+        "word": "語彙",
+        "grammar": "文法"
+      }
+    },
+    "wordDetail": {
+      "level": "JLPT {level}",
+      "relatedWords": "関連語",
+      "moreWords": "他{count}語...",
+      "noRelatedWords": "関連語なし"
+    },
+    "kanjiDetail": {
+      "strokes": "{count}画",
+      "radical": "部首",
+      "meaning": "意味",
+      "readings": {
+        "on": "音読み",
+        "kun": "訓読み"
+      }
+    },
+    "grammarDetail": {
+      "definition": "定義",
+      "usage": "使用法",
+      "examples": "例文"
+    },
+    "examplesList": {
+      "title": "例文",
+      "found": "{count}件の例文が見つかりました",
+      "noExamples": "例文なし"
+    },
+    "translate": {
+      "sourceLanguage": "翻訳元言語",
+      "targetLanguage": "翻訳先言語",
+      "auto": "自動",
+      "vietnamese": "ベトナム語",
+      "japanese": "日本語",
+      "english": "英語",
+      "translateButton": "翻訳",
+      "swap": "入れ替え",
+      "copy": "コピー",
+      "clear": "クリア"
+    },
+    "kanjiWriting": {
+      "title": "漢字の書き方",
+      "strokeOrder": "筆順",
+      "practice": "書字練習",
+      "noData": "この単語の漢字書字情報が見つかりません"
+    },
+    "errors": {
+      "loadFailed": "語彙情報を読み込めません",
+      "searchFailed": "検索エラー",
+      "translateFailed": "翻訳エラー",
+      "kanjiSearchFailed": "漢字検索エラー",
+      "networkError": "ネットワーク接続エラー",
+      "noResults": "結果が見つかりません"
+    },
+    "loading": {
+      "searching": "検索中...",
+      "translating": "翻訳中...",
+      "loading": "読み込み中..."
+    }
+  },
   "exam": {
     "interface": {
       "pause": "一時停止",
@@ -721,18 +864,25 @@
       "listening": "聴解"
     },
     "submission": {
-      "confirmTitle": "提出確認",
+      "confirmTitle": "提出を確認",
+      "confirmMessage": "提出前に確認してください",
+      "stats": {
+        "total": "合計問題数",
+        "answered": "回答済み",
+        "unanswered": "未回答",
+        "flagged": "フラグ付き",
+        "timeLeft": "残り時間"
+      },
       "readyTitle": "提出準備完了",
-      "confirmMessage": "提出前に再度確認してください",
       "readyMessage": "すべての問題に回答しました",
       "progressLabel": "進捗状況",
       "timeRemainingLabel": "残り時間",
       "unansweredWarning": "{count}問未回答があります",
       "flaggedWarning": "{count}問にフラグが付いています",
-      "confirm": "提出",
-      "cancel": "続行",
-      "challengeNotice": "チャレンジモード - 提出後は戻れません"
+      "confirm": "提出する",
+      "cancel": "続行"
     },
+
     "timer": {
       "timeUp": "時間切れ",
       "autoSubmit": "自動提出"
@@ -804,23 +954,152 @@
   "pageTitle": {
     "home": "ホーム",
     "examResults": "試験結果",
-    "reviewAnswers": "解答確認"
+    "reviewAnswers": "解答確認",
+    "study": "学習",
+    "studyTheory": "理論",
+    "studyPractice": "実践"
   },
   "pageDescription": {
     "home": "ホーム - オンラインJLPT対策と運転免許試験",
     "examResults": "試験結果と詳細分析を確認",
-    "reviewAnswers": "詳細な解答と各問題の分析を確認"
+    "reviewAnswers": "詳細な解答と各問題の分析を確認",
+    "study": "学習 - 日本語の理論と実践",
+    "studyTheory": "理論 - 基本的な日本語知識",
+    "studyPractice": "実践 - 応用日本語練習"
   },
   "examTitle": {
     "challenge": "JLPT チャレンジ {level}",
     "honmen": "本免 - 公式学科試験",
     "karimen": "仮免 - 基本学科試験"
   },
+  "topup": {
+    "steps": {
+      "amount": "金額選択",
+      "payment": "支払い方法",
+      "confirm": "確認"
+    },
+    "selectAmount": "チャージ金額を選択",
+    "selectPayment": "支払い方法を選択",
+    "total": "合計金額:",
+    "amount": "金額",
+    "method": "方法",
+    "custom": "カスタム",
+    "enterAmount": "カスタム金額を入力",
+    "minAmount": "最小: $1.00",
+    "maxAmount": "最大: $1,000.00",
+    "quickSuggestions": "クイック提案:",
+    "validAmount": "有効な金額",
+    "processing": "決済処理中...",
+    "processingDesc": "決済処理をお待ちください",
+    "payNow": "今すぐ支払う",
+    "popular": "人気",
+    "instant": "即時",
+    "businessDays": "1-3日",
+    "paymentInfo": "支払い情報",
+    "errors": {
+      "tooLow": "金額は最低$1.00である必要があります",
+      "tooHigh": "金額は$1,000.00を超えることはできません"
+    },
+    "methods": {
+      "qrVietnam": "QRベトナム",
+      "qrVietnameDesc": "VietQR, VNPAY, ZaloPay, MoMo",
+      "paypalDesc": "安全な国際決済",
+      "paypayDesc": "日本のモバイル決済",
+      "stripeDesc": "世界中のクレジット/デビットカード",
+      "bankTransfer": "銀行振込",
+      "bankTransferDesc": "銀行口座からの直接振込"
+    },
+    "info": {
+      "qrVietnam1": "銀行アプリでQRコードをスキャン",
+      "qrVietnam2": "ベトナムの主要銀行をサポート",
+      "qrVietnam3": "即時処理、手数料なし",
+      "paypal1": "PayPalアカウントにログイン",
+      "paypal2": "安全な国際決済",
+      "paypal3": "小額の処理手数料が適用される場合があります",
+      "paypay1": "PayPayモバイルアプリを使用",
+      "paypay2": "日本で人気",
+      "paypay3": "即時処理",
+      "stripe1": "Visa、Mastercard、American Express",
+      "stripe2": "安全なSSL暗号化",
+      "stripe3": "即時処理",
+      "bank1": "当社の銀行口座に振込",
+      "bank2": "参照番号を含める",
+      "bank3": "処理: 1-3営業日"
+    }
+  },
   "pages": {
-    "payment": {
-      "title": "支払い",
-      "description": "決済サービス - 機能開発中",
+    "topup": {
+      "title": "チャージ",
+      "description": "チャージサービス - 機能開発中",
       "comingSoon": "このページは構築中です。後でお戻りください！"
+    },
+    "payment": {
+      "title": "アカウントをアップグレード",
+      "description": "スマートAIと独占教材で日本語学習の可能性を最大限に引き出しましょう",
+      "freePlan": "無料プラン",
+      "freeDescription": "開始に最適",
+      "premiumPlan": "プレミアムプラン",
+      "premiumDescription": "すべての機能を解放",
+      "foreverFree": "永久に無料",
+      "oneTimePayment": "一括払い",
+      "upgradeNow": "今すぐアップグレード",
+      "currentPlan": "現在のプラン",
+      "popular": "人気",
+      "whyUpgrade": "なぜプレミアムにアップグレードするのか？",
+      "benefit1Title": "包括的な学習",
+      "benefit1Description": "すべてのJLPTレベルと豊富な学習資料にアクセス",
+      "benefit2Title": "AI支援",
+      "benefit2Description": "すべての質問の詳細な解説を取得",
+      "benefit3Title": "進捗追跡",
+      "benefit3Description": "詳細な分析で改善を監視",
+      "freeFeature1": "練習テストの制限",
+      "freeFeature2": "基本的な語彙リスト",
+      "freeFeature3": "コミュニティサポート",
+      "premiumFeature1": "無制限の練習テスト",
+      "premiumFeature2": "完全な語彙・文法データベース",
+      "premiumFeature3": "AIによる解説",
+      "premiumFeature4": "進捗追跡と分析",
+      "premiumFeature5": "優先カスタマーサポート",
+      "premiumFeature6": "オフラインでの資料アクセス",
+      "thankYou": {
+        "title": "🎉 おめでとうございます！",
+        "subtitle": "プレミアムにアップグレードしました",
+        "accountTitle": "プレミアムアカウント",
+        "duration": "期間",
+        "months": "ヶ月",
+        "expires": "有効期限",
+        "amount": "金額",
+        "transaction": "取引ID",
+        "couponApplied": "適用されたクーポン",
+        "featuresTitle": "✨ プレミアム機能が有効になりました",
+        "action": "プレミアムを使い始める",
+        "emailSent": "📧 確認メールを送信しました"
+      },
+      "checkout": {
+        "save5": "5%節約",
+        "popular": "人気",
+        "best": "最もお得",
+        "payment": "支払い",
+        "premiumPlan": "プレミアムプラン",
+        "yearlyBilling": "年間請求",
+        "monthlyBilling": "月間請求",
+        "selectDuration": "利用期間を選択",
+        "savePercent": "{percent}%節約",
+        "balancePayment": "アカウント残高で支払い",
+        "balanceDescription": "現在の残高から金額が差し引かれます",
+        "apply": "適用",
+        "enterCoupon": "クーポンコードを入力してください",
+        "invalidCoupon": "無効なクーポンコード",
+        "couponError": "クーポン検証中にエラーが発生しました",
+        "paymentError": "支払いエラーが発生しました",
+        "paymentRetry": "支払いエラーが発生しました。もう一度お試しください。",
+        "insufficientBalance": "残高不足です。追加で${amount}必要です",
+        "processing": "処理中...",
+        "payNow": "今すぐ支払う",
+        "termsAgreement": "支払いを進めることで、以下に同意したものとみなされます",
+        "termsOfService": "利用規約",
+        "orderSummary": "注文概要"
+      }
     },
     "settings": {
       "title": "アカウント設定",
@@ -833,30 +1112,59 @@
         "description": "表示情報とアバターを管理",
         "avatar": "アバターアイコン",
         "avatarDescription": "表示アバター用のアイコンを選択",
-"name": "名前",
+        "name": "名前",
+        "namePlaceholder": "名前を入力",
+        "nameDescription": "この名前がアプリに表示されます",
         "email": "メールアドレス",
         "emailReadonly": "メールアドレスは変更できません",
         "accountType": "アカウントタイプ",
+        "accountTypeFree": "無料アカウント",
+        "accountTypePremium": "プレミアムアカウント",
+        "premiumStatus": "プレミアムステータス",
+        "expiryDate": "有効期限",
         "createdDate": "作成日",
         "saveChanges": "変更を保存",
         "saving": "保存中...",
         "updateSuccess": "プロフィールが正常に更新されました！",
-        "updateError": "更新中にエラーが発生しました"
+        "updateError": "更新中にエラーが発生しました",
+        "unexpectedError": "予期しないエラーが発生しました",
+        "redeemCode": {
+          "title": "プレミアム有効化",
+          "description": "コードを入力してアカウントをプレミアムにアップグレード",
+          "codeLabel": "プレミアムコード",
+          "placeholder": "コードを入力...",
+          "redeemButton": "有効化",
+          "redeeming": "処理中...",
+          "accountType": "アカウントタイプ",
+          "expiryDate": "プレミアム有効期限",
+          "thankYou": "プレミアムサービスをご利用いただき、ありがとうございます！🎉"
+        }
       },
       "security": {
-        "title": "アカウントセキュリティ",
-        "description": "パスワードとセキュリティを管理",
+        "title": "セキュリティ",
+        "description": "パスワードとアカウントセキュリティを管理",
         "password": "パスワード",
         "lastChanged": "最終変更",
-        "neverChanged": "パスワードを変更したことがありません",
+        "neverChanged": "変更されていません",
         "changePassword": "パスワード変更",
+        "changing": "変更中...",
         "currentPassword": "現在のパスワード",
+        "currentPasswordPlaceholder": "現在のパスワードを入力",
         "newPassword": "新しいパスワード",
+        "newPasswordPlaceholder": "新しいパスワードを入力",
         "confirmPassword": "新しいパスワードの確認",
+        "confirmPasswordPlaceholder": "新しいパスワードを再入力",
+        "passwordRequirements": "パスワードは8文字以上である必要があります",
         "passwordLength": "パスワードは6-8文字である必要があります",
         "passwordMismatch": "パスワード確認が一致しません",
+        "changeSuccess": "パスワードが正常に変更されました！",
+        "changeError": "パスワード変更中にエラーが発生しました",
         "changePasswordSuccess": "パスワードが正常に変更されました！",
-        "changePasswordError": "パスワード変更中にエラーが発生しました"
+        "changePasswordError": "パスワード変更中にエラーが発生しました",
+        "currentPasswordRequired": "現在のパスワードを入力してください",
+        "newPasswordRequired": "新しいパスワードを入力してください",
+        "passwordTooShort": "パスワードは8文字以上である必要があります",
+        "invalidCurrentPassword": "現在のパスワードが正しくありません"
       },
       "iconSelector": {
         "title": "アバターアイコンを選択",
@@ -869,6 +1177,50 @@
       "title": "アップグレード",
       "description": "アカウントアップグレード - 機能開発中",
       "comingSoon": "このページは構築中です。後でお戻りください！"
+    }
+  },
+  "premium": {
+    "noSubscription": "プレミアムサブスクリプションなし",
+    "daysLeft": "プレミアム残り{days}日",
+    "expired": "プレミアムの有効期限が切れました",
+    "undefinedExpiry": "プレミアム有効期限未定義",
+    "expiryLabel": "有効期限",
+    "invalidDate": "無効",
+    "undefinedDate": "未定義",
+    "errors": {
+      "invalidData": "無効なデータ",
+      "insufficientBalance": "残高不足。${amount}必要ですが、${balance}しかありません",
+      "deductFailed": "アカウントから引き落としできません",
+      "updateFailed": "プレミアム情報の更新エラー",
+      "paymentError": "支払いエラーが発生しました",
+      "paymentRetry": "支払いエラーが発生しました。もう一度お試しください。"
+    }
+  },
+  "balance": {
+    "label": "残高",
+    "insufficient": "残高不足",
+    "fetchError": "残高情報を取得できません",
+    "updateError": "残高を更新できません",
+    "internalError": "内部システムエラー"
+  },
+  "time": {
+    "units": {
+      "day": "日",
+      "days": "日",
+      "week": "週",
+      "weeks": "週",
+      "month": "月",
+      "months": "月",
+      "year": "年",
+      "years": "年"
+    },
+    "durations": {
+      "oneDay": "1日",
+      "oneWeek": "1週間",
+      "oneMonth": "1ヶ月",
+      "threeMonths": "3ヶ月",
+      "sixMonths": "6ヶ月",
+      "oneYear": "1年"
     }
   },
   "chat": {
@@ -918,6 +1270,8 @@
 
     "newChatTitle": "新しいチャット",
     "generatingTitle": "タイトルを生成中...",
+    "editTitle": "タイトルを編集",
+    "deleteChat": "チャットを削除",
     "retry": "再試行",
     "stopGeneration": "生成を停止",
     "scrollToBottom": "最下部にスクロール",
@@ -941,6 +1295,289 @@
     "correctAnswers": "正解数",
     "incorrectAnswers": "不正解数",
     "flaggedAnswers": "フラグ付き問題"
+  },
+  "study": {
+    "page": {
+      "title": "学習",
+      "subtitle": "あなたに適した学習方法を選択してください"
+    },
+    "selectType": "学習タイプを選択",
+    "types": {
+      "theory": {
+        "title": "理論",
+        "description": "基礎知識を学ぶ",
+        "subtitle": "文法と語彙の基礎をマスター"
+      },
+      "practice": {
+        "title": "実践",
+        "description": "応用練習",
+        "subtitle": "実践的な練習でスキルを向上"
+      }
+    },
+    "theory": {
+      "page": {
+        "title": "日本語理論",
+        "subtitle": "基礎知識と基本"
+      },
+      "comingSoon": "機能開発中です。後でお戻りください！"
+    },
+    "practice": {
+      "page": {
+        "title": "日本語実践",
+        "subtitle": "応用練習とトレーニング"
+      },
+      "comingSoon": "機能開発中です。後でお戻りください！",
+      "levelTitle": "{level}練習",
+      "selectType": "練習したい練習タイプを選択してください",
+      "breadcrumbs": {
+        "study": "学習",
+        "practice": "実践"
+      },
+      "pageTitle": "JLPT {level} {type} 実践",
+      "pageDescription": "AI搭載の実践練習で知識をテストしましょう",
+      "types": {
+        "vocabulary": "語彙",
+        "grammar": "文法",
+        "reading": "読解",
+        "kanji": "漢字",
+        "listening": "聴解"
+      },
+      "reading": {
+        "title": "読解",
+        "description": "読解練習と問題",
+        "passageLength": "文章の長さ",
+        "passageLengths": {
+          "short": "短文 (50-150語)",
+          "medium": "中文 (150-300語)",
+          "long": "長文 (300-500語)"
+        },
+        "numberOfPassages": "文章数",
+        "maxPassages": "最大5つの文章",
+        "questionsPerPassage": "各文章に3つの問題",
+        "instructions": "文章をよく読んで、下の問題に答えてください",
+        "passage": "文章",
+        "questions": "問題",
+        "generator": {
+          "title": "AI読解問題生成",
+          "description": "AIがレベルに適した語彙と文法を組み合わせて読解問題を作成します",
+          "selectLength": "文章の長さを選択",
+          "selectCount": "文章数を選択 (1-5)"
+        }
+      },
+      "generator": {
+        "title": "AI搭載練習問題生成",
+        "description": "AI生成問題で練習セッションをカスタマイズ",
+        "questionSelectionMode": "問題選択モード",
+        "numberOfQuestions": "問題数",
+        "difficultyLevel": "難易度レベル",
+        "aiModel": "AIモデル",
+        "thinkingMode": "思考モード",
+        "lesson": "レッスン",
+        "materialLimit": "教材制限",
+        "grammarCount": "文法数",
+        "vocabularyCount": "語彙数",
+        "modes": {
+          "random": "ランダム",
+          "sequential": "順次"
+        },
+        "difficulty": {
+          "easy": "易しい",
+          "medium": "普通",
+          "hard": "難しい",
+          "extremely_hard": "超難問"
+        },
+        "thinking": {
+          "off": "オフ",
+          "on": "オン",
+          "proDefault": "Proモデルは思考モードがデフォルトで有効",
+          "description": "思考モード：生成は遅いが、高品質な問題"
+        },
+        "sequentialOptions": {
+          "lessonLabel": "レッスン {lesson} (オフセット: {offset})",
+          "defaultGrammar": "デフォルト: 3",
+          "defaultVocabulary": "デフォルト: 5"
+        },
+        "summary": {
+          "type": "タイプ",
+          "level": "レベル",
+          "questions": "問題",
+          "difficulty": "難易度",
+          "estimatedTime": "推定時間"
+        },
+        "generateButton": "練習問題生成",
+        "generating": "問題生成中...",
+        "loadingMessages": {
+          "analyzing": "{count}問題を分析中",
+          "thinking": "深く思考中...",
+          "generating": "高速生成中...",
+          "timeEstimate": "~{time}"
+        },
+        "tips": {
+          "title": "練習のコツ",
+          "tip1": "初心者の方は少ない問題数から始めましょう",
+          "tip2": "解説をよく確認しましょう",
+          "tip3": "セッション間に休憩を取りましょう",
+          "tip4": "時間をかけて進歩を追跡しましょう"
+        }
+      },
+      "exercise": {
+        "questionProgress": "問題 {current} / {total}",
+        "multipleChoice": "多肢選択",
+        "submitAnswer": "解答提出",
+        "skip": "スキップ",
+        "previous": "前へ",
+        "next": "次へ",
+        "complete": "完了",
+        "correct": "正解！",
+        "incorrect": "不正解",
+        "explanation": {
+          "correctAnswer": "正解：",
+          "whyCorrect": "なぜ正解か：",
+          "wrongAnswers": "他の選択肢が間違っている理由：",
+          "additionalNotes": "追加メモ：",
+          "exampleUsage": "使用例：",
+          "toggle": "解説表示/非表示"
+        },
+        "noQuestion": "問題がありません"
+      },
+      "results": {
+        "title": "練習結果",
+        "performance": {
+          "excellent": "素晴らしい！",
+          "good": "よくできました！",
+          "keepPracticing": "練習を続けましょう！",
+          "needMorePractice": "もっと練習が必要です"
+        },
+        "questionsCorrect": "正解問題",
+        "accuracy": "正答率",
+        "time": "時間",
+        "breakdown": {
+          "title": "成績詳細",
+          "correctAnswers": "正解数",
+          "incorrectAnswers": "不正解数",
+          "timePerQuestion": "問題あたりの時間",
+          "exerciseSetId": "練習セットID"
+        },
+        "answerReview": "解答確認",
+        "fullReview": "全体確認",
+        "questionNumber": "問題 {number}",
+        "correctAnswer": "正解",
+        "yourAnswer": "あなたの解答",
+        "explanation": "解説",
+        "whyCorrect": "正解の理由：",
+        "whyWrong": "他が間違っている理由：",
+        "notes": "メモ：",
+        "noExplanation": "解説がありません",
+        "actions": {
+          "retry": "同じ問題をやり直し",
+          "newExercise": "新しい練習",
+          "exportResults": "結果をエクスポート",
+          "backToStudy": "学習に戻る"
+        },
+        "confirmExit": {
+          "title": "練習を終了",
+          "message": "この練習を終了してもよろしいですか？",
+          "warning": "終了すると、問題が削除され、やり直すことができなくなります。",
+          "cancel": "キャンセル",
+          "confirm": "終了"
+        },
+        "encouragement": {
+          "lowScore": "学習のコツ：間違った問題の解説を確認してもう一度挑戦しましょう。練習が完璧を作ります！より多くの練習問題に挑戦する前に理論セクションを確認することをお勧めします。",
+          "highScore": "素晴らしい！このトピックをマスターしています！難易度を上げるか、次のレベルに進んでより大きな挑戦をしてみましょう。"
+        }
+      }
+    },
+    "flashcard": {
+      "title": "フラッシュカード",
+      "vocabularyTitle": "語彙フラッシュカード {level}",
+      "grammarTitle": "文法フラッシュカード {level}",
+      "description": {
+        "vocabulary": "インタラクティブなフラッシュカードで語彙を学習",
+        "grammar": "インタラクティブなフラッシュカードで文法を学習"
+      },
+      "status": {
+        "available": "利用可能",
+        "comingSoon": "近日公開"
+      },
+      "errors": {
+        "noVocabulary": "語彙がありません",
+        "noVocabularyFound": "{level}レベルの語彙が見つかりません",
+        "noGrammar": "文法がありません",
+        "noGrammarFound": "{level}レベルの文法が見つかりません"
+      },
+      "actions": {
+        "goBack": "戻る"
+      }
+    },
+    "vocabulary": {
+      "title": "語彙",
+      "description": "レベル別語彙学習",
+      "pageTitle": "{level}学習 - 語彙",
+      "pageSubtitle": "レベル別JLPT語彙を学習。検索を使用して特定の単語を見つけてください。",
+      "search": {
+        "placeholder": "単語を検索（漢字/ひらがな/意味）",
+        "clear": "クリア",
+        "noResults": "単語が見つかりません"
+      }
+    },
+    "grammar": {
+      "title": "文法",
+      "description": "レベル別文法学習",
+      "pageTitle": "{level}学習 - 文法",
+      "pageSubtitle": "レベル別JLPT文法を学習。検索を使用して特定のパターンや意味を見つけてください。",
+      "search": {
+        "placeholder": "文法や意味を検索（JP/EN/VN）",
+        "clear": "クリア",
+        "noResults": "文法が見つかりません"
+      }
+    },
+    "history": {
+      "title": "テスト履歴",
+      "viewHistory": "テスト履歴を見る",
+      "levelTitle": "{level}テスト履歴",
+      "selectType": "履歴を見るテストタイプを選択",
+      "description": "完了したテストを確認して再受験",
+      "pageDescription": "過去のテスト結果を確認し、スコア向上のために再受験",
+      "vocabulary": {
+        "description": "完了した語彙テストの履歴"
+      },
+      "grammar": {
+        "description": "完了した文法テストの履歴"
+      },
+      "reading": {
+        "description": "完了した読解テストの履歴"
+      },
+      "empty": {
+        "title": "まだテストが完了していません",
+        "description": "まだテストを完了していません。今すぐ練習を始めましょう！",
+        "startPractice": "練習開始"
+      },
+      "card": {
+        "correct": "正解",
+        "retry": "再受験",
+        "delete": "削除",
+        "confirmDelete": "削除確認",
+        "deleteConfirmText": "削除を確認するためもう一度クリック",
+        "timeUnknown": "不明",
+        "timeMinutes": "分",
+        "timeSeconds": "秒",
+        "testResult": "テスト結果"
+      },
+      "errors": {
+        "retryFailed": "このテストを再受験できません",
+        "deleteFailed": "このテストを削除できません"
+      }
+    },
+    "exam": {
+      "title": "試験受験",
+      "pageDescription": "事前生成された問題で試験を受験",
+      "noSession": {
+        "title": "受験可能な試験がありません",
+        "description": "受験する試験が見つかりません。新しい試験を作成するか履歴を確認してください。",
+        "createNew": "新しい試験を作成",
+        "viewHistory": "履歴を見る"
+      }
+    }
   },
   "settings": {
     "tabs": {
@@ -1063,5 +1700,178 @@
     },
     "saving": "保存中...",
     "saveSettings": "設定を保存"
+  },
+  "modals": {
+    "confirmation": {
+      "title": "確認",
+      "defaultMessage": "この操作を実行してもよろしいですか？",
+      "confirm": "確認",
+      "cancel": "キャンセル",
+      "close": "閉じる"
+    },
+    "apiKey": {
+      "title": "APIキー設定",
+      "description": "AIチャット機能を使用するには、Google Gemini APIキーを提供する必要があります",
+      "label": "Google Gemini APIキー",
+      "placeholder": "AIzaSy...",
+      "required": "APIキーは必須です",
+      "invalidFormat": "APIキーは次で始まる必要があります",
+      "invalid": "APIキーが無効または期限切れです",
+      "connectionError": "接続エラー。再試行してください。",
+      "saveError": "APIキーを保存できません。再試行してください。",
+      "noAccess": "APIキーが無効またはアクセス権限がありません",
+      "getKey": "無料APIキーを取得",
+      "openStudio": "Google AI Studioを開く",
+      "skip": "スキップ",
+      "validate": "検証",
+      "validating": "検証中...",
+      "geminiFormat": "Gemini APIキーは次で始まる必要があります",
+      "groqFormat": "Groq APIキーは次で始まる必要があります",
+      "instructions": {
+        "title": "APIキーの取得方法",
+        "step1": "Google AI Studioにアクセス",
+        "step2": "Googleアカウントでサインイン",
+        "step3": "\"Get API Key\" → \"Create API Key\"をクリック",
+        "step4": "APIキーをコピーして下のフィールドに貼り付け"
+      },
+      "security": {
+        "note": "APIキーはお使いのデバイスに安全に保存され、第三者と共有されることはありません。"
+      }
+    },
+    "settings": {
+      "language": {
+        "title": "iRINはどの言語であなたとコミュニケーションを取るべきですか？",
+        "selectLanguage": "言語を選択",
+        "autoDetect": "言語を自動検出",
+        "vietnamese": "Tiếng Việt",
+        "english": "English",
+        "japanese": "日本語",
+        "custom": "カスタム",
+        "customPlaceholder": "希望の言語を入力（例：韓国語、Français、Español...）"
+      },
+      "profile": {
+        "title": "個人情報",
+        "subtitle": "表示情報とアバターを管理",
+        "displayName": "表示名",
+        "displayNamePlaceholder": "表示名を入力",
+        "avatar": "アバター",
+        "changeAvatar": "アバターを変更",
+        "removeAvatar": "アバターを削除",
+        "save": "変更を保存",
+        "saving": "保存中...",
+        "updateSuccess": "情報が正常に更新されました！",
+        "updateError": "更新中にエラーが発生しました",
+        "unexpectedError": "予期しないエラーが発生しました"
+      },
+      "security": {
+        "title": "セキュリティ",
+        "subtitle": "パスワードとアカウントセキュリティを管理",
+        "currentPassword": "現在のパスワード",
+        "newPassword": "新しいパスワード",
+        "confirmPassword": "新しいパスワードを確認",
+        "changePassword": "パスワードを変更",
+        "changing": "変更中...",
+        "changeSuccess": "パスワードが正常に変更されました！",
+        "changeError": "パスワード変更中にエラーが発生しました",
+        "unexpectedError": "予期しないエラーが発生しました"
+      }
+    },
+    "common": {
+      "save": "保存",
+      "saving": "保存中...",
+      "saved": "保存済み",
+      "cancel": "キャンセル",
+      "close": "閉じる",
+      "confirm": "確認",
+      "delete": "削除",
+      "edit": "編集",
+      "loading": "読み込み中...",
+      "success": "成功",
+      "error": "エラー",
+      "retry": "再試行"
+    }
+  },
+  "library": {
+    "page": {
+      "title": "ライブラリ",
+      "subtitle": "学習教材と参考書"
+    },
+    "categories": {
+      "jlpt": {
+        "title": "JLPT",
+        "description": "JLPT N1-N5学習教材",
+        "subtitle": "公式JLPT教材ライブラリ"
+      },
+      "other": {
+        "title": "その他",
+        "description": "JLPT以外の書籍と教材",
+        "subtitle": "多様な日本語学習リソース"
+      }
+    },
+    "jlpt": {
+      "page": {
+        "title": "JLPTライブラリ",
+        "subtitle": "JLPTレベルを選択して教材を表示"
+      },
+      "books": {
+        "title": "JLPT書籍",
+        "subtitle": "JLPTレベル別試験対策教材"
+      },
+      "levels": {
+        "n1": {
+          "title": "JLPT N1",
+          "description": "最高レベル - 上級",
+          "subtitle": "N1教材と試験"
+        },
+        "n2": {
+          "title": "JLPT N2",
+          "description": "中上級 - 良好な習熟度",
+          "subtitle": "N2教材と試験"
+        },
+        "n3": {
+          "title": "JLPT N3",
+          "description": "中級 - 基本的なコミュニケーション",
+          "subtitle": "N3教材と試験"
+        },
+        "n4": {
+          "title": "JLPT N4",
+          "description": "初中級 - 基本的な理解",
+          "subtitle": "N4教材と試験"
+        },
+        "n5": {
+          "title": "JLPT N5",
+          "description": "初級 - 学習開始",
+          "subtitle": "N5教材と試験"
+        }
+      }
+    },
+    "other": {
+      "page": {
+        "title": "その他ライブラリ",
+        "subtitle": "多様な日本語学習書籍と教材"
+      },
+      "books": {
+        "title": "その他の書籍・教材",
+        "subtitle": "JLPT以外の多様な日本語学習リソース"
+      },
+      "upload": {
+        "title": "教材アップロード",
+        "description": "書籍と教材を追加",
+        "subtitle": "機能は近日公開予定"
+      }
+    },
+    "books": {
+      "title": "書籍ライブラリ",
+      "subtitle": "書籍と学習教材を選択",
+      "search": {
+        "placeholder": "書籍、著者を検索..."
+      },
+
+      "noResults": {
+        "title": "書籍が見つかりません",
+        "description": "検索キーワードやフィルターを変更してください"
+      },
+      "pages": "ページ"
+    }
   }
 }

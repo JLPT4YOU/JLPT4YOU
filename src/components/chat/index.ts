@@ -121,7 +121,11 @@ export const chatUtils = {
             isPersistent: false // Initially not persistent, will be updated after storage
           };
         } catch (error) {
-          console.error('Error creating object URL:', error);
+          if (process.env.NODE_ENV === 'development') {
+            if (process.env.NODE_ENV === 'development') {
+              console.error('Error creating object URL:', error);
+            }
+          }
           return {
             name: file.name,
             type: file.type,
@@ -173,7 +177,7 @@ export const chatUtils = {
     return { ...message, status };
   },
 
-  // Store images persistently and update file attachments
+  // Store files persistently and update file attachments (images + other files)
   storeImagesPersistently: async (
     message: Message,
     chatId: string
@@ -182,18 +186,13 @@ export const chatUtils = {
       return message;
     }
 
-    const { imageStorage } = await import('@/lib/image-storage');
     const updatedFiles: FileAttachment[] = [];
 
     for (const file of message.files) {
-      if (file.type && file.type.startsWith('image/') && !file.isPersistent) {
+      // Handle blob URLs for any file type
+      if (file.url && file.url.startsWith('blob:') && !file.isPersistent) {
         try {
-          // Convert blob URL back to File object for storage
-          if (!file.url || !file.url.startsWith('blob:')) {
-            updatedFiles.push(file);
-            continue;
-          }
-
+          // Convert blob URL back to File object
           const response = await fetch(file.url);
           if (!response.ok) {
             throw new Error(`Failed to fetch blob: ${response.status}`);
@@ -202,24 +201,49 @@ export const chatUtils = {
           const blob = await response.blob();
           const fileObj = new File([blob], file.name, { type: file.type });
 
-          // Store in IndexedDB
-          const storageId = await imageStorage.storeImage(fileObj, chatId);
-          const dataUrl = await imageStorage.getImageDataUrl(storageId);
+          // For images, store in IndexedDB
+          if (file.type && file.type.startsWith('image/')) {
+            const { imageStorage } = await import('@/lib/image-storage');
+            const storageId = await imageStorage.storeImage(fileObj, chatId);
+            const dataUrl = await imageStorage.getImageDataUrl(storageId);
 
-          if (!dataUrl) {
-            throw new Error('Failed to retrieve stored image data URL');
+            if (!dataUrl) {
+              throw new Error('Failed to retrieve stored image data URL');
+            }
+
+            // Clean up temporary blob URL
+            URL.revokeObjectURL(file.url);
+
+            updatedFiles.push({
+              ...file,
+              url: dataUrl,
+              storageId,
+              isPersistent: true
+            });
+          } else {
+            // For non-image files (PDFs, etc.), convert to data URL
+            const reader = new FileReader();
+            const dataUrl = await new Promise<string>((resolve, reject) => {
+              reader.onload = () => resolve(reader.result as string);
+              reader.onerror = () => reject(reader.error);
+              reader.readAsDataURL(fileObj);
+            });
+
+            // Clean up temporary blob URL
+            URL.revokeObjectURL(file.url);
+
+            updatedFiles.push({
+              ...file,
+              url: dataUrl,
+              isPersistent: true // Mark as persistent (data URL)
+            });
           }
-
-          // Clean up temporary blob URL
-          URL.revokeObjectURL(file.url);
-
-          updatedFiles.push({
-            ...file,
-            url: dataUrl,
-            storageId,
-            isPersistent: true
-          });
         } catch (error) {
+          if (process.env.NODE_ENV === 'development') {
+            if (process.env.NODE_ENV === 'development') {
+              console.warn(`Failed to store file ${file.name}:`, error);
+            }
+          }
           // Keep original file attachment if storage fails
           updatedFiles.push({
             ...file,
@@ -228,7 +252,7 @@ export const chatUtils = {
           });
         }
       } else {
-        // Non-image files or already persistent files
+        // Already persistent files or non-blob URLs
         updatedFiles.push(file);
       }
     }
@@ -245,40 +269,97 @@ export const chatUtils = {
       return message;
     }
 
-    const { imageStorage } = await import('@/lib/image-storage');
-    const updatedFiles: FileAttachment[] = [];
+    try {
+      const { imageStorage } = await import('@/lib/image-storage');
+      const updatedFiles: FileAttachment[] = [];
 
-    for (const file of message.files) {
-      if (file.storageId && file.isPersistent) {
-        try {
-          const dataUrl = await imageStorage.getImageDataUrl(file.storageId);
-          updatedFiles.push({
-            ...file,
-            url: dataUrl || file.url
-          });
-        } catch (error) {
-          // Keep original file attachment if restoration fails
+      for (const file of message.files) {
+        if (file.storageId && file.isPersistent) {
+          try {
+            const dataUrl = await imageStorage.getImageDataUrl(file.storageId);
+            if (dataUrl) {
+              updatedFiles.push({
+                ...file,
+                url: dataUrl
+              });
+            } else {
+              // If persistent image not found, mark as unavailable but keep file info
+              if (process.env.NODE_ENV === 'development') {
+                if (process.env.NODE_ENV === 'development') {
+                  console.warn(`Persistent image not found for storageId: ${file.storageId}`);
+                }
+              }
+              updatedFiles.push({
+                ...file,
+                url: '', // Clear invalid URL
+                isPersistent: false // Mark as no longer persistent
+              });
+            }
+          } catch (error) {
+            if (process.env.NODE_ENV === 'development') {
+              if (process.env.NODE_ENV === 'development') {
+                console.warn(`Failed to restore persistent image ${file.storageId}:`, error);
+              }
+            }
+            // Keep file info but clear invalid URL
+            updatedFiles.push({
+              ...file,
+              url: '',
+              isPersistent: false
+            });
+          }
+        } else if (file.url && file.url.startsWith('blob:')) {
+          // Handle blob URLs that might be invalid after page reload
+          try {
+            // Test if blob URL is still valid
+            const response = await fetch(file.url);
+            if (response.ok) {
+              updatedFiles.push(file);
+            } else {
+              throw new Error('Blob URL no longer valid');
+            }
+          } catch {
+            // Blob URL is invalid, clear it
+            if (process.env.NODE_ENV === 'development') {
+              if (process.env.NODE_ENV === 'development') {
+                console.warn(`Invalid blob URL detected: ${file.url}`);
+              }
+            }
+            updatedFiles.push({
+              ...file,
+              url: ''
+            });
+          }
+        } else {
+          // Regular files or data URLs
           updatedFiles.push(file);
         }
-      } else {
-        updatedFiles.push(file);
       }
-    }
 
-    return {
-      ...message,
-      files: updatedFiles
-    };
+      return {
+        ...message,
+        files: updatedFiles
+      };
+    } catch (error) {
+      if (process.env.NODE_ENV === 'development') {
+        if (process.env.NODE_ENV === 'development') {
+          console.error('Failed to restore persistent images:', error);
+        }
+      }
+      // Return original message if restoration completely fails
+      return message;
+    }
   }
 };
 
-// localStorage persistence helpers
+// User-scoped storage persistence helpers
 export const chatStorage = {
-  STORAGE_KEY: 'irin-chat-sessions',
+  STORAGE_KEY: 'irin-chat-sessions', // Legacy key for backward compatibility
 
-  // Save chats to localStorage
-  saveChats: (chats: Chat[]): void => {
+  // Save chats to user-scoped storage
+  saveChats: async (chats: Chat[]): Promise<void> => {
     try {
+      const { UserStorage } = await import('@/lib/user-storage');
       const serializedChats = JSON.stringify(chats.map(chat => ({
         ...chat,
         timestamp: chat.timestamp.toISOString(),
@@ -287,16 +368,21 @@ export const chatStorage = {
           timestamp: msg.timestamp.toISOString()
         }))
       })));
-      localStorage.setItem(chatStorage.STORAGE_KEY, serializedChats);
+      UserStorage.setItem('chat_history', serializedChats);
     } catch (error) {
-      console.error('Failed to save chats to localStorage:', error);
+      if (process.env.NODE_ENV === 'development') {
+        if (process.env.NODE_ENV === 'development') {
+          console.error('Failed to save chats to user storage:', error);
+        }
+      }
     }
   },
 
-  // Load chats from localStorage
-  loadChats: (): Chat[] => {
+  // Load chats from user-scoped storage
+  loadChats: async (): Promise<Chat[]> => {
     try {
-      const stored = localStorage.getItem(chatStorage.STORAGE_KEY);
+      const { UserStorage } = await import('@/lib/user-storage');
+      const stored = UserStorage.getItem('chat_history');
       if (!stored) return [];
 
       const parsed = JSON.parse(stored);
@@ -309,17 +395,26 @@ export const chatStorage = {
         }))
       }));
     } catch (error) {
-      console.error('Failed to load chats from localStorage:', error);
+      if (process.env.NODE_ENV === 'development') {
+        if (process.env.NODE_ENV === 'development') {
+          console.error('Failed to load chats from user storage:', error);
+        }
+      }
       return [];
     }
   },
 
-  // Clear all chats from localStorage
-  clearChats: (): void => {
+  // Clear all chats from user-scoped storage
+  clearChats: async (): Promise<void> => {
     try {
-      localStorage.removeItem(chatStorage.STORAGE_KEY);
+      const { UserStorage } = await import('@/lib/user-storage');
+      UserStorage.removeItem('chat_history');
     } catch (error) {
-      console.error('Failed to clear chats from localStorage:', error);
+      if (process.env.NODE_ENV === 'development') {
+        if (process.env.NODE_ENV === 'development') {
+          console.error('Failed to clear chats from user storage:', error);
+        }
+      }
     }
   },
 
@@ -348,6 +443,13 @@ export const chatStorage = {
   // Clear all chats and their associated images
   clearAllChats: async (): Promise<void> => {
     try {
+      const { UserStorage } = await import('@/lib/user-storage');
+
+      // Clear user-scoped storage
+      UserStorage.removeItem('chat_history');
+      UserStorage.removeItem('current_chat_id');
+
+      // Also clear legacy storage for backward compatibility
       localStorage.removeItem(chatStorage.STORAGE_KEY);
 
       // Clean up all persistent images
@@ -358,7 +460,11 @@ export const chatStorage = {
         await imageStorage.cleanupOldImages(0);
       }
     } catch (error) {
-      console.error('Failed to clear chats and images:', error);
+      if (process.env.NODE_ENV === 'development') {
+        if (process.env.NODE_ENV === 'development') {
+          console.error('Failed to clear chats and images:', error);
+        }
+      }
     }
   }
 }; 

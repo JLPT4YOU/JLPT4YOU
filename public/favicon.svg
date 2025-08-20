@@ -1,11 +1,31 @@
 <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <!-- Background with rounded corners -->
-  <rect width="32" height="32" rx="6" fill="#000000"/>
+  <style>
+    /* Tự động điều chỉnh màu theo giao diện sáng/tối của trình duyệt */
+    .favicon-bg {
+      fill: light-dark(#000000, #ffffff);
+    }
+    .favicon-icon {
+      stroke: light-dark(#ffffff, #000000);
+    }
 
-  <!-- Graduation cap icon from Lucide (scaled and positioned) -->
+    /* Fallback cho trình duyệt không hỗ trợ light-dark() */
+    @media (prefers-color-scheme: light) {
+      .favicon-bg { fill: #000000; }
+      .favicon-icon { stroke: #ffffff; }
+    }
+    @media (prefers-color-scheme: dark) {
+      .favicon-bg { fill: #ffffff; }
+      .favicon-icon { stroke: #000000; }
+    }
+  </style>
+
+  <!-- Background với góc bo tròn -->
+  <rect width="32" height="32" rx="6" class="favicon-bg"/>
+
+  <!-- Icon mũ tốt nghiệp từ Lucide (đã scale và định vị) -->
   <g transform="translate(4, 4)">
-    <path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M22 10v6" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0" fill="none" class="favicon-icon" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M22 10v6" fill="none" class="favicon-icon" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5" fill="none" class="favicon-icon" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
   </g>
 </svg>

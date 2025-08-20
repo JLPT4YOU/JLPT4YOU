@@ -19,13 +19,18 @@ import { ReviewData } from '@/types'
 const QUESTIONS_PER_PAGE = 5
 
 interface ReviewAnswersContentProps {
-  t: (key: string) => any
-  language: string
+  t: (key: string) => string
+  searchParams: URLSearchParams
 }
 
-function ReviewAnswersContent({ t, language }: ReviewAnswersContentProps) {
-  const router = useRouter()
+// Component that uses useSearchParams - must be wrapped in Suspense
+function ReviewAnswersWithSearchParams({ t }: { t: (key: string) => string }) {
   const searchParams = useSearchParams()
+  return <ReviewAnswersContent t={t} searchParams={searchParams} />
+}
+
+function ReviewAnswersContent({ t, searchParams }: ReviewAnswersContentProps) {
+  const router = useRouter()
   
   // State
   const [reviewData, setReviewData] = useState<ReviewData | null>(null)
@@ -95,7 +100,7 @@ function ReviewAnswersContent({ t, language }: ReviewAnswersContentProps) {
               <p className="text-muted-foreground mb-4">
                 {t('reviewAnswers.noData')}
               </p>
-              <Button onClick={() => router.push('/')} className="rounded-xl bg-primary/90 hover:bg-primary">
+              <Button onClick={() => router.push('/')} className="rounded-xl bg-primary/90 text-primary-foreground hover-primary">
                 {t('common.back')}
               </Button>
             </div>
@@ -173,9 +178,9 @@ function ReviewAnswersContent({ t, language }: ReviewAnswersContentProps) {
 export default function ReviewAnswersPage() {
   return (
     <LanguagePageWrapper>
-      {({ language, translations, t, isLoading, isAuthenticated }) => (
+      {({ t }) => (
         <Suspense fallback={<div>{t('common.loading')}</div>}>
-          <ReviewAnswersContent t={t} language={language} />
+          <ReviewAnswersWithSearchParams t={t} />
         </Suspense>
       )}
     </LanguagePageWrapper>

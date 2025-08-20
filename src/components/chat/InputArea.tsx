@@ -5,7 +5,8 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { useTranslations } from '@/hooks/use-translations';
 import { Paperclip, ArrowUp, Lightbulb, Loader2, Square } from 'lucide-react';
-import { supportsThinking, GEMINI_MODELS } from '@/lib/gemini-config';
+import { GEMINI_MODELS } from '@/lib/gemini-config';
+import { supportsThinking } from '@/lib/model-utils';
 import { supportsFileUploads } from '@/lib/chat-utils';
 import {
   DropdownMenu,
@@ -13,6 +14,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 interface InputAreaProps {
   onSendMessage?: (message: string, files?: File[]) => void;
@@ -24,6 +26,9 @@ interface InputAreaProps {
   onToggleThinking?: () => void;
   selectedModel?: string;
   currentProvider?: 'gemini' | 'groq';
+  // Advanced features for GPT-OSS models
+  reasoningEffort?: 'low' | 'medium' | 'high';
+  onReasoningEffortChange?: (effort: 'low' | 'medium' | 'high') => void;
 }
 
 export const InputArea: React.FC<InputAreaProps> = ({
@@ -35,12 +40,15 @@ export const InputArea: React.FC<InputAreaProps> = ({
   enableThinking = false,
   onToggleThinking,
   selectedModel,
-  currentProvider = 'gemini'
+  currentProvider = 'gemini',
+  reasoningEffort = 'medium',
+  onReasoningEffortChange
 }) => {
   const { t } = useTranslations();
   const [input, setInput] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const [shouldFocusAfterResponse, setShouldFocusAfterResponse] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -49,6 +57,7 @@ export const InputArea: React.FC<InputAreaProps> = ({
     const trimmedInput = input.trim();
     if (trimmedInput && !isSubmitting && onSendMessage) {
       setIsSubmitting(true);
+      setShouldFocusAfterResponse(true); // Set flag to focus after AI responds
       onSendMessage(trimmedInput, selectedFiles.length > 0 ? selectedFiles : undefined);
       setInput('');
       setSelectedFiles([]);
@@ -82,6 +91,17 @@ export const InputArea: React.FC<InputAreaProps> = ({
   const removeFile = (index: number) => {
     setSelectedFiles(prev => prev.filter((_, i) => i !== index));
   };
+
+  // Auto-focus textarea after AI finishes responding
+  useEffect(() => {
+    if (!isGenerating && shouldFocusAfterResponse && textareaRef.current) {
+      // Small delay to ensure DOM updates are complete
+      setTimeout(() => {
+        textareaRef.current?.focus();
+        setShouldFocusAfterResponse(false); // Reset flag after focusing
+      }, 100);
+    }
+  }, [isGenerating, shouldFocusAfterResponse]);
 
   // Enhanced auto-resize textarea with better UX
   useEffect(() => {
@@ -118,7 +138,7 @@ export const InputArea: React.FC<InputAreaProps> = ({
                     <img
                       src={URL.createObjectURL(file)}
                       alt={file.name}
-                      className="w-16 h-16 object-cover rounded-lg border shadow-sm"
+                      className="w-16 h-16 object-cover rounded-lg shadow-sm"
                     />
                     {/* Remove Button */}
                     <button
@@ -131,7 +151,7 @@ export const InputArea: React.FC<InputAreaProps> = ({
                   </div>
                 ) : (
                   <div className="relative">
-                    <div className="w-20 h-16 bg-muted rounded-lg border flex flex-col items-center justify-center p-1">
+                    <div className="w-20 h-16 bg-muted rounded-lg flex flex-col items-center justify-center p-1">
                       <Paperclip className="w-4 h-4 text-muted-foreground mb-1" />
                       <span className="text-xs text-muted-foreground text-center truncate w-full">
                         {file.name.length > 12 ? file.name.slice(0, 12) + '...' : file.name}
@@ -231,13 +251,17 @@ export const InputArea: React.FC<InputAreaProps> = ({
                     </Button>
                   )}
 
-                  {/* Thinking Mode Button - Only show for 2.5 models except Pro (always on) */}
+                  {/* Thinking Mode Button - Show for all thinking-capable models except Gemini Pro 2.5 (always on) */}
                   {selectedModel && supportsThinking(selectedModel) && selectedModel !== GEMINI_MODELS.PRO_2_5 && (
                     <Button
                       type="button"
                       variant="ghost"
                       size="sm"
-                      onClick={onToggleThinking}
+                      onClick={(e) => {
+                        onToggleThinking?.();
+                        // Remove focus to update visual state immediately
+                        (e.currentTarget as HTMLElement).blur();
+                      }}
                       className={cn(
                         "h-7 w-7 rounded-lg hover:bg-accent/50 border-0 transition-colors",
                         "flex items-center justify-center",
@@ -250,6 +274,37 @@ export const InputArea: React.FC<InputAreaProps> = ({
                     >
                       <Lightbulb className="w-4 h-4 flex-shrink-0" />
                     </Button>
+                  )}
+
+                  {/* Reasoning Effort Dropdown - Only show for OpenAI GPT-OSS models when thinking is enabled */}
+                  {selectedModel && selectedModel.includes('openai/gpt-oss') && enableThinking && onReasoningEffortChange && (
+                    <div className="flex items-center">
+                      <Select value={reasoningEffort} onValueChange={onReasoningEffortChange}>
+                        <SelectTrigger className="h-7 w-28 text-xs bg-muted/50 hover:bg-muted transition-colors border-0 focus:ring-0 focus:ring-offset-0 [&>svg]:hidden">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent className="min-w-[100px]">
+                          <SelectItem value="low" className="text-xs">
+                            <div className="flex items-center gap-2">
+                              <div className="w-2 h-2 rounded-full bg-green-500"></div>
+                              Low
+                            </div>
+                          </SelectItem>
+                          <SelectItem value="medium" className="text-xs">
+                            <div className="flex items-center gap-2">
+                              <div className="w-2 h-2 rounded-full bg-yellow-500"></div>
+                              Medium
+                            </div>
+                          </SelectItem>
+                          <SelectItem value="high" className="text-xs">
+                            <div className="flex items-center gap-2">
+                              <div className="w-2 h-2 rounded-full bg-red-500"></div>
+                              High
+                            </div>
+                          </SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
                   )}
                 </div>
 

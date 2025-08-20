@@ -1,25 +1,19 @@
 "use client"
 
 import { GraduationCap, BookOpen } from "lucide-react";
-import { TranslationData, Language } from "@/lib/i18n";
+import { TranslationData, Language, createTranslationFunction } from "@/lib/i18n";
 import { BasePageTemplate } from "@/components/layout/base-page-template";
+import { createPageContent, type BasePageContentProps } from "@/components/shared/component-utils";
 
-interface JLPTPageContentProps {
-  translations: TranslationData;
-  language: Language;
-  t: (key: string) => any;
+interface JLPTPageContentProps extends BasePageContentProps {
   isAuthenticated: boolean;
 }
 
-export function JLPTPageContent({ translations, language, t, isAuthenticated }: JLPTPageContentProps) {
-  return (
-    <JLPTPageContentInner translations={translations} language={language} t={t} isAuthenticated={isAuthenticated} />
-  );
-}
-
-function JLPTPageContentInner({ translations, language, t, isAuthenticated }: JLPTPageContentProps) {
+export const JLPTPageContent = createPageContent<{ isAuthenticated: boolean }>(
+  function JLPTPageContentInner({ translations, language, isAuthenticated }: JLPTPageContentProps) {
+  const t = createTranslationFunction(translations);
   
-  console.log('JLPTPageContent render with language:', language, 'title:', t('jlpt.page.title'));
+
   
   const testTypes = [
     {
@@ -29,7 +23,7 @@ function JLPTPageContentInner({ translations, language, t, isAuthenticated }: JL
       subtitle: t('jlpt.testTypes.official.subtitle'),
       icon: GraduationCap,
       href: "/jlpt/official",
-      bgColor: "bg-muted",
+      bgColor: "bg-card",
       textColor: "text-foreground"
     },
     {
@@ -39,7 +33,7 @@ function JLPTPageContentInner({ translations, language, t, isAuthenticated }: JL
       subtitle: t('jlpt.testTypes.custom.subtitle'),
       icon: BookOpen,
       href: "/jlpt/custom",
-      bgColor: "bg-muted",
+      bgColor: "bg-card",
       textColor: "text-foreground"
     }
   ];
@@ -54,4 +48,5 @@ function JLPTPageContentInner({ translations, language, t, isAuthenticated }: JL
       t={t}
     />
   );
-}
+  }
+);

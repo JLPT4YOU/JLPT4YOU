@@ -28,6 +28,8 @@ import {
   resetToDefaultPrompt,
   type CustomPromptConfig
 } from '@/lib/prompt-storage';
+import { UserStorage } from '@/lib/user-storage';
+import { useAuth } from '@/contexts/auth-context-simple';
 import { generateUserPrompt, clearUserPromptConfig } from '@/lib/user-prompt-generator';
 
 interface PromptSettingsProps {
@@ -50,6 +52,7 @@ export const PromptSettings: React.FC<PromptSettingsProps> = ({
   className
 }) => {
   const { t } = useTranslations();
+  const { user } = useAuth();
   const [config, setConfig] = useState<CustomPromptConfig>(DEFAULT_CONFIG);
   const [isSaving, setIsSaving] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
@@ -60,19 +63,25 @@ export const PromptSettings: React.FC<PromptSettingsProps> = ({
   const [customLanguage, setCustomLanguage] = useState('');
   const [showResetDialog, setShowResetDialog] = useState(false);
 
-  // Load saved configuration on mount
+  // Load saved configuration on mount and when user changes
   useEffect(() => {
     const savedConfig = getCustomPromptConfig();
     if (savedConfig) {
       setConfig(savedConfig);
     }
 
-    // Load AI language settings
-    const savedLanguage = localStorage.getItem('ai_language') || 'auto';
-    const savedCustomLanguage = localStorage.getItem('ai_custom_language') || '';
-    setAiLanguage(savedLanguage);
-    setCustomLanguage(savedCustomLanguage);
-  }, []);
+    if (user?.id) {
+      // Load user-scoped AI language settings
+      const savedLanguage = UserStorage.getItem('ai_language') || 'auto';
+      const savedCustomLanguage = UserStorage.getItem('ai_custom_language') || '';
+      setAiLanguage(savedLanguage);
+      setCustomLanguage(savedCustomLanguage);
+    } else {
+      // Reset to defaults when no user
+      setAiLanguage('auto');
+      setCustomLanguage('');
+    }
+  }, [user?.id]);
 
   const handleGeneratePrompt = async () => {
     setIsGenerating(true);
@@ -97,14 +106,16 @@ export const PromptSettings: React.FC<PromptSettingsProps> = ({
   };
 
   const handleSave = async () => {
+    if (!user?.id) return;
+
     setIsSaving(true);
     setIsSaved(false);
     try {
       await saveCustomPromptConfig(config);
 
-      // Save AI language settings
-      localStorage.setItem('ai_language', aiLanguage);
-      localStorage.setItem('ai_custom_language', customLanguage);
+      // Save AI language settings to user-scoped storage
+      UserStorage.setItem('ai_language', aiLanguage);
+      UserStorage.setItem('ai_custom_language', customLanguage);
 
       // Show success feedback
       setIsSaving(false);
@@ -136,8 +147,10 @@ export const PromptSettings: React.FC<PromptSettingsProps> = ({
     // Reset AI language settings
     setAiLanguage('auto');
     setCustomLanguage('');
-    localStorage.removeItem('ai_language');
-    localStorage.removeItem('ai_custom_language');
+    if (user?.id) {
+      UserStorage.removeItem('ai_language');
+      UserStorage.removeItem('ai_custom_language');
+    }
 
     // Show success message (có thể thay bằng toast notification sau)
     setTimeout(() => {
@@ -172,23 +185,23 @@ export const PromptSettings: React.FC<PromptSettingsProps> = ({
         <CardContent className="space-y-3">
           <Select value={aiLanguage} onValueChange={handleLanguageChange}>
             <SelectTrigger className="rounded-2xl border-0">
-              <SelectValue placeholder={t?.prompts?.aiLanguage?.placeholder || 'Chọn ngôn ngữ'} />
+              <SelectValue placeholder={t('prompts.aiLanguage.placeholder') || 'Chọn ngôn ngữ'} />
             </SelectTrigger>
             <SelectContent className="rounded-2xl border-0">
               <SelectItem value="auto">
-                {t?.prompts?.aiLanguage?.options?.auto || 'Tự động dò ngôn ngữ (Auto Detect)'}
+                {t('prompts.aiLanguage.options.auto') || 'Tự động dò ngôn ngữ (Auto Detect)'}
               </SelectItem>
               <SelectItem value="vietnamese">
-                {t?.prompts?.aiLanguage?.options?.vietnamese || 'Tiếng Việt'}
+                {t('prompts.aiLanguage.options.vietnamese') || 'Tiếng Việt'}
               </SelectItem>
               <SelectItem value="english">
-                {t?.prompts?.aiLanguage?.options?.english || 'English'}
+                {t('prompts.aiLanguage.options.english') || 'English'}
               </SelectItem>
               <SelectItem value="japanese">
-                {t?.prompts?.aiLanguage?.options?.japanese || '日本語'}
+                {t('prompts.aiLanguage.options.japanese') || '日本語'}
               </SelectItem>
               <SelectItem value="custom">
-                {t?.prompts?.aiLanguage?.options?.custom || 'Tùy chọn (Custom)'}
+                {t('prompts.aiLanguage.options.custom') || 'Tùy chọn (Custom)'}
               </SelectItem>
             </SelectContent>
           </Select>
@@ -196,7 +209,7 @@ export const PromptSettings: React.FC<PromptSettingsProps> = ({
           {/* Custom Language Input */}
           {aiLanguage === 'custom' && (
             <Input
-              placeholder={t?.prompts?.aiLanguage?.customPlaceholder || 'Nhập ngôn ngữ mong muốn (ví dụ: Tiếng Hàn, Français, Español...)'}
+              placeholder={t('prompts.aiLanguage.customPlaceholder') || 'Nhập ngôn ngữ mong muốn (ví dụ: Tiếng Hàn, Français, Español...)'}
               value={customLanguage}
               onChange={(e) => handleCustomLanguageChange(e.target.value)}
               className="mt-2"

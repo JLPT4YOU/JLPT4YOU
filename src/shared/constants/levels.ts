@@ -187,8 +187,8 @@ export function generateJLPTLevelCards(
     name: level.name,
     description: `${translationKey}.${level.id}`, // Translation key
     href: `/${language}${baseHref}/${level.id}`,
-    bgColor: `bg-[oklch(var(--${level.color}))]`,
-    textColor: `text-[oklch(var(--${level.colorForeground}))]`,
+    bgColor: "bg-card",
+    textColor: "text-foreground",
     timeLimit: level.timeLimit,
     questionCount: level.questionCount
   }))
@@ -205,8 +205,8 @@ export function generateDrivingLevelCards(
     name: level.displayName,
     description: `${translationKey}.${level.id}`, // Translation key
     href: `/${language}${baseHref}/${level.id}`,
-    bgColor: `bg-[oklch(var(--${level.color}))]`,
-    textColor: `text-[oklch(var(--${level.colorForeground}))]`,
+    bgColor: "bg-card",
+    textColor: "text-foreground",
     timeLimit: level.timeLimit,
     questionCount: level.questionCount,
     icon: 'Car'

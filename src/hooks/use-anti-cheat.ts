@@ -6,16 +6,18 @@
 "use client"
 
 import { useState, useEffect, useCallback, useRef } from 'react'
-import { EXAM_LIMITS, VIOLATION_TYPES, ANIMATION_DURATIONS } from '@/lib/constants'
-import { ERROR_CODES, getErrorMessage } from '@/lib/error-constants'
+import { VIOLATION_TYPES, ANIMATION_DURATIONS, EXAM_LIMITS } from '@/lib/constants'
+
+// Violation types
+export type ViolationType = 'TAB_SWITCH' | 'WINDOW_BLUR' | 'FULLSCREEN_EXIT' | 'COPY_PASTE' | 'RIGHT_CLICK' | 'KEYBOARD_SHORTCUT'
 
 // Anti-cheat violation interface
 export interface AntiCheatViolation {
-  type: keyof typeof VIOLATION_TYPES
+  type: ViolationType
   timestamp: Date
   message: string
   severity: 'low' | 'medium' | 'high' | 'critical'
-  details?: Record<string, any>
+  details?: Record<string, unknown>
 }
 
 // Anti-cheat configuration
@@ -59,7 +61,7 @@ const DEFAULT_CONFIG: AntiCheatConfig = {
 export interface UseAntiCheatReturn {
   state: AntiCheatState
   config: AntiCheatConfig
-  reportViolation: (type: keyof typeof VIOLATION_TYPES, details?: Record<string, any>) => void
+  reportViolation: (type: keyof typeof VIOLATION_TYPES, details?: Record<string, unknown>) => void
   dismissWarning: () => void
   requestFullscreen: () => Promise<boolean>
   exitFullscreen: () => Promise<void>
@@ -97,7 +99,7 @@ export function useAntiCheat(
   // Report violation function
   const reportViolation = useCallback((
     type: keyof typeof VIOLATION_TYPES,
-    details: Record<string, any> = {}
+    details: Record<string, unknown> = {}
   ) => {
     if (!config.isActive) return
 
@@ -169,17 +171,17 @@ export function useAntiCheat(
       
       if (element.requestFullscreen) {
         await element.requestFullscreen()
-      } else if ((element as any).webkitRequestFullscreen) {
-        await (element as any).webkitRequestFullscreen()
-      } else if ((element as any).msRequestFullscreen) {
-        await (element as any).msRequestFullscreen()
+      } else if ('webkitRequestFullscreen' in element) {
+        await (element as HTMLElement & { webkitRequestFullscreen(): Promise<void> }).webkitRequestFullscreen()
+      } else if ('msRequestFullscreen' in element) {
+        await (element as HTMLElement & { msRequestFullscreen(): Promise<void> }).msRequestFullscreen()
       }
 
       return true
     } catch (error) {
       console.error('Failed to request fullscreen:', error)
-      reportViolation(VIOLATION_TYPES.FULLSCREEN_EXIT, { 
-        error: error instanceof Error ? error.message : 'Unknown error' 
+      reportViolation('FULLSCREEN_EXIT', {
+        error: error instanceof Error ? error.message : 'Unknown error'
       })
       return false
     }
@@ -189,10 +191,10 @@ export function useAntiCheat(
     try {
       if (document.exitFullscreen) {
         await document.exitFullscreen()
-      } else if ((document as any).webkitExitFullscreen) {
-        await (document as any).webkitExitFullscreen()
-      } else if ((document as any).msExitFullscreen) {
-        await (document as any).msExitFullscreen()
+      } else if ('webkitExitFullscreen' in document) {
+        await (document as Document & { webkitExitFullscreen(): Promise<void> }).webkitExitFullscreen()
+      } else if ('msExitFullscreen' in document) {
+        await (document as Document & { msExitFullscreen(): Promise<void> }).msExitFullscreen()
       }
     } catch (error) {
       console.error('Failed to exit fullscreen:', error)
@@ -223,8 +225,8 @@ export function useAntiCheat(
     const handleFullscreenChange = () => {
       const isCurrentlyFullscreen = !!(
         document.fullscreenElement ||
-        (document as any).webkitFullscreenElement ||
-        (document as any).msFullscreenElement
+        ('webkitFullscreenElement' in document && (document as Document & { webkitFullscreenElement: Element | null }).webkitFullscreenElement) ||
+        ('msFullscreenElement' in document && (document as Document & { msFullscreenElement: Element | null }).msFullscreenElement)
       )
 
       setState(prev => ({ ...prev, isFullscreen: isCurrentlyFullscreen }))
@@ -234,7 +236,7 @@ export function useAntiCheat(
         fullscreenGracePeriodRef.current = setTimeout(() => {
           // If still not in fullscreen after grace period, report violation
           if (!document.fullscreenElement) {
-            reportViolation(VIOLATION_TYPES.FULLSCREEN_EXIT)
+            reportViolation('FULLSCREEN_EXIT')
           }
           fullscreenGracePeriodRef.current = null
         }, config.gracePeriodMs)
@@ -267,13 +269,13 @@ export function useAntiCheat(
       setState(prev => ({ ...prev, isTabActive }))
 
       if (!isTabActive) {
-        reportViolation(VIOLATION_TYPES.TAB_SWITCH)
+        reportViolation('TAB_SWITCH')
       }
     }
 
     const handleWindowBlur = () => {
       setState(prev => ({ ...prev, isTabActive: false }))
-      reportViolation(VIOLATION_TYPES.WINDOW_BLUR)
+      reportViolation('WINDOW_BLUR')
     }
 
     const handleWindowFocus = () => {
@@ -324,7 +326,7 @@ export function useAntiCheat(
       if (isBlocked) {
         event.preventDefault()
         event.stopPropagation()
-        reportViolation(VIOLATION_TYPES.KEYBOARD_SHORTCUT, {
+        reportViolation('KEYBOARD_SHORTCUT', {
           key: event.key,
           ctrlKey: event.ctrlKey,
           shiftKey: event.shiftKey,
@@ -346,12 +348,12 @@ export function useAntiCheat(
 
     const handleCopy = (event: ClipboardEvent) => {
       event.preventDefault()
-      reportViolation(VIOLATION_TYPES.COPY_PASTE, { action: 'copy' })
+      reportViolation('COPY_PASTE', { action: 'copy' })
     }
 
     const handlePaste = (event: ClipboardEvent) => {
       event.preventDefault()
-      reportViolation(VIOLATION_TYPES.COPY_PASTE, { action: 'paste' })
+      reportViolation('COPY_PASTE', { action: 'paste' })
     }
 
     document.addEventListener('copy', handleCopy)
@@ -369,7 +371,7 @@ export function useAntiCheat(
 
     const handleContextMenu = (event: MouseEvent) => {
       event.preventDefault()
-      reportViolation(VIOLATION_TYPES.RIGHT_CLICK)
+      reportViolation('RIGHT_CLICK')
     }
 
     document.addEventListener('contextmenu', handleContextMenu)
@@ -407,26 +409,26 @@ export function useAntiCheat(
 }
 
 // Helper functions
-function getViolationMessage(type: keyof typeof VIOLATION_TYPES): string {
+function getViolationMessage(type: ViolationType): string {
   const messages = {
-    [VIOLATION_TYPES.TAB_SWITCH]: 'Tab switching detected',
-    [VIOLATION_TYPES.WINDOW_BLUR]: 'Window focus lost',
-    [VIOLATION_TYPES.FULLSCREEN_EXIT]: 'Fullscreen mode exited',
-    [VIOLATION_TYPES.COPY_PASTE]: 'Copy/paste attempt detected',
-    [VIOLATION_TYPES.RIGHT_CLICK]: 'Right-click blocked',
-    [VIOLATION_TYPES.KEYBOARD_SHORTCUT]: 'Keyboard shortcut blocked'
+    'TAB_SWITCH': 'Tab switching detected',
+    'WINDOW_BLUR': 'Window focus lost',
+    'FULLSCREEN_EXIT': 'Fullscreen mode exited',
+    'COPY_PASTE': 'Copy/paste attempt detected',
+    'RIGHT_CLICK': 'Right-click blocked',
+    'KEYBOARD_SHORTCUT': 'Keyboard shortcut blocked'
   }
   return messages[type] || 'Unknown violation'
 }
 
-function getViolationSeverity(type: keyof typeof VIOLATION_TYPES): 'low' | 'medium' | 'high' | 'critical' {
+function getViolationSeverity(type: ViolationType): 'low' | 'medium' | 'high' | 'critical' {
   const severityMap = {
-    [VIOLATION_TYPES.TAB_SWITCH]: 'high' as const,
-    [VIOLATION_TYPES.WINDOW_BLUR]: 'high' as const,
-    [VIOLATION_TYPES.FULLSCREEN_EXIT]: 'critical' as const,
-    [VIOLATION_TYPES.COPY_PASTE]: 'medium' as const,
-    [VIOLATION_TYPES.RIGHT_CLICK]: 'low' as const,
-    [VIOLATION_TYPES.KEYBOARD_SHORTCUT]: 'medium' as const
+    'TAB_SWITCH': 'high' as const,
+    'WINDOW_BLUR': 'high' as const,
+    'FULLSCREEN_EXIT': 'critical' as const,
+    'COPY_PASTE': 'medium' as const,
+    'RIGHT_CLICK': 'low' as const,
+    'KEYBOARD_SHORTCUT': 'medium' as const
   }
   return severityMap[type] || 'medium'
 }

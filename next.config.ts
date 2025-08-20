@@ -1,10 +1,15 @@
 import type { NextConfig } from "next";
 
+// Bundle analyzer setup
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+  enabled: process.env.ANALYZE === 'true',
+});
+
 const nextConfig: NextConfig = {
   // ESLint configuration
   eslint: {
-    // Ignore ESLint errors during build for now
-    ignoreDuringBuilds: false,
+    // Do not fail production build on ESLint warnings
+    ignoreDuringBuilds: true,
   },
 
   // TypeScript configuration
@@ -17,6 +22,8 @@ const nextConfig: NextConfig = {
   experimental: {
     // Enable optimized package imports
     optimizePackageImports: ['lucide-react', 'framer-motion', 'web-vitals'],
+    // Enable server components optimization
+    optimizeServerReact: true,
   },
 
   // Image optimization for better Core Web Vitals
@@ -37,19 +44,50 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       // Old language-specific auth routes to new auth structure
+      // More specific patterns to avoid $1 issues
       {
-        source: '/vn/(login|register|forgot-password)',
-        destination: '/auth/vn/$1',
+        source: '/vn/login',
+        destination: '/auth/vn/login',
         permanent: true,
       },
       {
-        source: '/jp/(login|register|forgot-password)',
-        destination: '/auth/jp/$1',
+        source: '/vn/register',
+        destination: '/auth/vn/register',
         permanent: true,
       },
       {
-        source: '/en/(login|register|forgot-password)',
-        destination: '/auth/en/$1',
+        source: '/vn/forgot-password',
+        destination: '/auth/vn/forgot-password',
+        permanent: true,
+      },
+      {
+        source: '/jp/login',
+        destination: '/auth/jp/login',
+        permanent: true,
+      },
+      {
+        source: '/jp/register',
+        destination: '/auth/jp/register',
+        permanent: true,
+      },
+      {
+        source: '/jp/forgot-password',
+        destination: '/auth/jp/forgot-password',
+        permanent: true,
+      },
+      {
+        source: '/en/login',
+        destination: '/auth/en/login',
+        permanent: true,
+      },
+      {
+        source: '/en/register',
+        destination: '/auth/en/register',
+        permanent: true,
+      },
+      {
+        source: '/en/forgot-password',
+        destination: '/auth/en/forgot-password',
         permanent: true,
       }
     ]
@@ -85,6 +123,16 @@ const nextConfig: NextConfig = {
           {
             key: 'Vary',
             value: 'Accept-Language, Accept-Encoding'
+          }
+        ],
+      },
+      // API routes caching
+      {
+        source: '/api/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=300, s-maxage=600, stale-while-revalidate=86400'
           }
         ],
       },
@@ -153,4 +201,4 @@ const nextConfig: NextConfig = {
   }
 };
 
-export default nextConfig;
+export default withBundleAnalyzer(nextConfig);

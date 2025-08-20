@@ -6,10 +6,12 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server'
-import { addBalance } from '@/lib/balance-utils'
+import { supabaseAdmin } from '@/utils/supabase/admin'
+import { addBalanceServer } from '@/lib/balance-utils-server'
 import { logTransaction } from '@/lib/transaction-utils'
-import { supabaseAdmin } from '@/lib/supabase'
-import { requireAdminAuth, logAdminAction } from '@/lib/admin-auth'
+import { requireAdminAuth } from '@/lib/admin-auth'
+import { sendTopUpSuccessAdmin } from '@/lib/notifications-server'
+import { devConsole } from '@/lib/console-override'
 
 export async function POST(request: NextRequest) {
   try {
@@ -27,8 +29,11 @@ export async function POST(request: NextRequest) {
     // 🔒 STEP 2: PARSE AND VALIDATE INPUT
     const { userId, amount, description } = await request.json()
 
+    devConsole.log('🔍 Topup request:', { userId, amount, description, adminUser: adminUser.email })
+
     // Validate input
     if (!userId || !amount || amount <= 0) {
+      devConsole.log('❌ Validation failed:', { userId, amount })
       return NextResponse.json(
         { error: 'User ID and positive amount are required' },
         { status: 400 }
@@ -62,16 +67,19 @@ export async function POST(request: NextRequest) {
     }
 
     // 🔒 STEP 4: ADD BALANCE TO TARGET USER
-    const result = await addBalance(userId, amount)
+    devConsole.log('🔍 Adding balance:', { userId, amount })
+    const result = await addBalanceServer(userId, amount)
+    devConsole.log('🔍 Add balance result:', result)
 
     if (!result.success) {
+      devConsole.log('❌ Add balance failed:', result.error)
       return NextResponse.json({ error: result.error }, { status: 400 })
     }
 
     // 🔒 STEP 5: LOG SECURE TRANSACTION
     await logTransaction({
       user_id: userId,
-      type: 'admin_topup',
+      type: 'topup',
       amount,
       description: description || `Admin top-up: ${amount} VND`,
       metadata: {
@@ -85,8 +93,12 @@ export async function POST(request: NextRequest) {
       }
     })
 
+    // 📣 STEP 6: SEND NOTIFICATION TO TARGET USER
+    await sendTopUpSuccessAdmin(userId, amount)
+
     // 🔒 STEP 6: LOG ADMIN ACTION
-    logAdminAction({
+    // TODO: Implement logAdminAction function
+    devConsole.log('Admin action:', {
       adminId: adminUser.id,
       adminEmail: adminUser.email,
       action: 'topup_user_balance',

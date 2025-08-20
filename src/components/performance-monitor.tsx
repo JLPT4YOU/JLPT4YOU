@@ -43,7 +43,7 @@ export function PerformanceMonitor({
           }
 
           if (enableConsoleLogging) {
-            console.log('Page Load Metrics:', metrics)
+
           }
 
           if (enableAnalytics && isWindowWithAnalytics(window)) {

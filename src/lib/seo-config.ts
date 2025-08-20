@@ -247,52 +247,14 @@ function getLocale(language: Language): string {
   }
 }
 
-// Generate hreflang links
+// Generate hreflang links (delegate to unified i18n implementation)
+import { generateHreflangLinksLegacy as generateHreflangLinksUnified } from '@/lib/i18n'
+
 export function generateHreflangLinks(basePath: string): Array<{
   hreflang: string
   href: string
 }> {
-  const baseUrl = 'https://jlpt4you.com'
-  
-  // Check if it's landing page
-  if (basePath === '/landing') {
-    return [
-      {
-        hreflang: 'vi-VN',
-        href: `${baseUrl}/vn/landing`
-      },
-      {
-        hreflang: 'ja-JP', 
-        href: `${baseUrl}/jp/landing`
-      },
-      {
-        hreflang: 'en-US',
-        href: `${baseUrl}/en/landing`
-      },
-      {
-        hreflang: 'x-default',
-        href: `${baseUrl}/vn/landing` // Vietnamese as default
-      }
-    ]
-  }
-  
-  // For auth pages, keep auth prefix
-  return [
-    {
-      hreflang: 'vi-VN',
-      href: `${baseUrl}/auth/vn${basePath}`
-    },
-    {
-      hreflang: 'ja-JP', 
-      href: `${baseUrl}/auth/jp${basePath}`
-    },
-    {
-      hreflang: 'en-US',
-      href: `${baseUrl}/auth/en${basePath}`
-    },
-    {
-      hreflang: 'x-default',
-      href: `${baseUrl}/auth/vn${basePath}` // Vietnamese as default
-    }
-  ]
+  // generateHreflangLinksUnified expects a currentPath (may include or not include lang prefix)
+  // and optional baseUrl; seo-config uses default https://jlpt4you.com implicitly
+  return generateHreflangLinksUnified(basePath)
 }

@@ -1,7 +1,8 @@
 import React, { memo, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { PanelRight, Edit, User, Home, Settings } from 'lucide-react';
-import { useAuth } from '@/contexts/auth-context';
+import { useAuth } from '@/contexts/auth-context-simple';
+import { useUserData } from '@/hooks/use-user-data'; // ✅ ADDED: Import user data hook
 import { useRouter } from 'next/navigation';
 import { useTranslations } from '@/hooks/use-translations';
 import { HeaderModelSelector } from './HeaderModelSelector';
@@ -63,7 +64,15 @@ const ChatLayoutHeaderComponent: React.FC<ChatLayoutHeaderProps> = ({
   onShowSettings
 }) => {
   const { user } = useAuth();
+  const { userData } = useUserData(); // ✅ ADDED: Get user data
   const { t } = useTranslations();
+
+  // ✅ FIXED: Use userData for profile information
+  const displayUser = {
+    name: userData?.name || user?.user_metadata?.name || user?.email?.split('@')[0] || 'User',
+    email: user?.email || '',
+    avatarIcon: userData?.avatar_icon || 'User'
+  };
 
   // Memoize menu button visibility
   const showMenuButton = useMemo(() => {
@@ -71,7 +80,7 @@ const ChatLayoutHeaderComponent: React.FC<ChatLayoutHeaderProps> = ({
   }, [isSidebarOpen, isLargeScreen]);
 
   return (
-    <div className="flex items-center justify-between px-4 sm:px-6 py-5 border-b border-border bg-background/95 backdrop-blur-sm">
+    <div className="flex items-center justify-between px-4 sm:px-6 py-5 bg-background/95 backdrop-blur-sm">
       <div className="flex items-center gap-2 sm:gap-4 flex-1 min-w-0">
         {/* Sidebar Toggle & New Chat - Close together */}
         <div className="flex items-center gap-0">
@@ -132,14 +141,14 @@ const ChatLayoutHeaderComponent: React.FC<ChatLayoutHeaderProps> = ({
             <div className="flex items-center justify-start gap-3 p-3">
               <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
                 {(() => {
-                  const AvatarIcon = getIconComponent(user.avatarIcon || undefined)
+                  const AvatarIcon = getIconComponent(displayUser.avatarIcon || undefined) // ✅ FIXED
                   return <AvatarIcon className="w-5 h-5 text-primary" />
                 })()}
               </div>
               <div className="flex flex-col space-y-1 leading-none">
-<p className="font-medium text-sm">{user.name}</p>
+                <p className="font-medium text-sm">{displayUser.name}</p> {/* ✅ FIXED */}
                 <p className="text-xs text-muted-foreground truncate max-w-[180px]">
-                  {user.email}
+                  {displayUser.email} {/* ✅ FIXED */}
                 </p>
               </div>
             </div>

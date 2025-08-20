@@ -58,6 +58,7 @@ CORE LAYOUT CLASSES:
 .app-space-md > * + * { margin-top: var(--spacing-md); }
 .app-space-lg > * + * { margin-top: var(--spacing-lg); }
 .app-space-xl > * + * { margin-top: var(--spacing-xl); }
+.app-space-2xl > * + * { margin-top: var(--spacing-2xl); }
 
 /* 5. Padding Utilities */
 .app-p-xs { padding: var(--spacing-xs); }

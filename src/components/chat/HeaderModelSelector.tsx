@@ -21,6 +21,12 @@ export interface ModelInfo {
   supportsStreaming: boolean;
   supportsFiles: boolean;
   supportsTTS: boolean;
+  supportsThinking?: boolean;
+  supportsGoogleSearch?: boolean;
+  supportsCodeExecution?: boolean;
+  // New advanced features for GPT-OSS models
+  supportsReasoning?: boolean;
+  supportsTools?: boolean;
 }
 
 export interface HeaderModelSelectorProps {

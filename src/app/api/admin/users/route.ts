@@ -6,7 +6,7 @@
  */
 
 import { NextResponse, NextRequest } from 'next/server'
-import { supabaseAdmin } from '@/lib/supabase'
+import { supabaseAdmin } from '@/utils/supabase/admin'
 import { requireAdminAuth } from '@/lib/admin-auth'
 
 

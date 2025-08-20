@@ -1,16 +1,16 @@
 import React from 'react'
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { loadTranslation, getLanguageFromCode, generateHreflangLinks, Language, TranslationData } from '@/lib/i18n'
+import { loadTranslation, getLanguageFromCode, generateHreflangLinksLegacy as generateHreflangLinks, Language, TranslationData } from '@/lib/i18n'
 
-// Standard interface for page props
+// Standard interface for page props (Next.js 15 compatible)
 export interface ProtectedPageProps {
-  params: { lang: string }
+  params: Promise<{ lang: string }>
 }
 
-// Standard interface for dynamic pages
+// Standard interface for dynamic pages (Next.js 15 compatible)
 export interface DynamicProtectedPageProps {
-  params: { lang: string; [key: string]: string }
+  params: Promise<{ lang: string; [key: string]: string }>
 }
 
 // Generate static params for all languages
@@ -29,7 +29,8 @@ export function createMetadataGenerator(
   route: string
 ) {
   return async function generateMetadata({ params }: ProtectedPageProps): Promise<Metadata> {
-    const language = getLanguageFromCode(params.lang)
+    const resolvedParams = await params
+    const language = getLanguageFromCode(resolvedParams.lang)
     if (!language) {
       return {
         title: 'Page Not Found',
@@ -81,12 +82,13 @@ export function createProtectedPageComponent<T extends Record<string, any> = {}>
   additionalPropsExtractor?: (params: any) => T
 ) {
   return async function ProtectedPage({ params }: DynamicProtectedPageProps) {
-    const language = getLanguageFromCode(params.lang)
+    const resolvedParams = await params
+    const language = getLanguageFromCode(resolvedParams.lang)
     if (!language) notFound()
     
     try {
       const translations = await loadTranslation(language)
-      const additionalProps = additionalPropsExtractor ? additionalPropsExtractor(params) : {} as T
+      const additionalProps = additionalPropsExtractor ? additionalPropsExtractor(resolvedParams) : {} as T
       
       return (
         <ContentComponent 
@@ -207,7 +209,7 @@ export function measureTranslationPerformance<T>(
     const endTime = performance.now()
     const duration = endTime - startTime
     
-    if (duration > 100) {
+    if (duration > 100 && process.env.NODE_ENV === 'development') {
       console.warn(`Slow translation operation: ${operationName} took ${duration.toFixed(2)}ms`)
     }
     
@@ -215,7 +217,9 @@ export function measureTranslationPerformance<T>(
   }).catch(error => {
     const endTime = performance.now()
     const duration = endTime - startTime
-    console.error(`Translation operation failed: ${operationName} after ${duration.toFixed(2)}ms`, error)
+    if (process.env.NODE_ENV === 'development') {
+      console.error(`Translation operation failed: ${operationName} after ${duration.toFixed(2)}ms`, error)
+    }
     throw error
   })
 }

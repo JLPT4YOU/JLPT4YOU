@@ -23,6 +23,9 @@ interface ChatInterfaceProps {
   onToggleThinking?: () => void;
   currentProvider?: 'gemini' | 'groq';
   onEditMessage?: (messageId: string, newContent: string, files?: File[]) => void;
+  // Advanced features for GPT-OSS models
+  reasoningEffort?: 'low' | 'medium' | 'high';
+  onReasoningEffortChange?: (effort: 'low' | 'medium' | 'high') => void;
 }
 
 export const ChatInterface: React.FC<ChatInterfaceProps> = ({
@@ -36,7 +39,9 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
   enableThinking = false,
   onToggleThinking,
   currentProvider = 'gemini',
-  onEditMessage
+  onEditMessage,
+  reasoningEffort = 'medium',
+  onReasoningEffortChange
 }) => {
   const { t } = useTranslations();
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -122,6 +127,8 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
               onToggleThinking={onToggleThinking}
               selectedModel={selectedModel}
               currentProvider={currentProvider}
+              reasoningEffort={reasoningEffort}
+              onReasoningEffortChange={onReasoningEffortChange}
             />
           </div>
         </div>
@@ -209,6 +216,8 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
           onToggleThinking={onToggleThinking}
           selectedModel={selectedModel}
           currentProvider={currentProvider}
+          reasoningEffort={reasoningEffort}
+          onReasoningEffortChange={onReasoningEffortChange}
         />
       </div>
     </div>

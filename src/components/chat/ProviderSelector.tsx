@@ -54,6 +54,12 @@ export const ProviderSelector: React.FC<ProviderSelectorProps> = ({
     };
 
     loadProviderData();
+
+    // Re-load configs whenever a provider gets configured from settings
+    window.addEventListener('ai-provider-config-changed', loadProviderData);
+    return () => {
+      window.removeEventListener('ai-provider-config-changed', loadProviderData);
+    };
   }, []);
 
   const handleProviderSwitch = (provider: ProviderType) => {
@@ -62,6 +68,10 @@ export const ProviderSelector: React.FC<ProviderSelectorProps> = ({
       setCurrentProvider(provider);
       onProviderChange?.(provider);
       setIsOpen(false);
+      // Remove focus from button after selection
+      if (document.activeElement instanceof HTMLElement) {
+        document.activeElement.blur();
+      }
     } catch (error) {
       console.error('Failed to switch provider:', error);
     }
@@ -135,7 +145,7 @@ export const ProviderSelector: React.FC<ProviderSelectorProps> = ({
           <Button
             variant="outline"
             size="sm"
-            className="h-8 gap-2 px-3 text-xs font-medium"
+            className="h-8 gap-2 px-3 text-xs font-medium text-foreground"
           >
             {getProviderIcon(currentProvider)}
             <span className="sm:hidden truncate">

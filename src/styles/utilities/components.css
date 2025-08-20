@@ -7,14 +7,14 @@
   @apply bg-background rounded-2xl border border-border;
 }
 
-/* Interactive card - adds hover effects safely */
+/* Interactive card - uses centralized hover system */
 .card-interactive {
-  @apply card-base hover-card focus-ring cursor-pointer transition-all duration-200;
+  @apply card-base hover-card cursor-pointer;
 }
 
-/* Elevated card - adds subtle shadow */
+/* Elevated card - uses centralized hover-brightness for subtle effect */
 .card-elevated {
-  @apply card-base shadow-sm hover:shadow-md transition-shadow duration-200;
+  @apply card-base shadow-sm hover-brightness-subtle;
 }
 
 /* Status cards - use existing status system */
@@ -50,11 +50,11 @@
 
 /* Grid patterns - responsive by default */
 .grid-responsive {
-  @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4;
+  @apply grid grid-cols-2 lg:grid-cols-3 gap-4;
 }
 
 .grid-auto {
-  @apply grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4;
+  @apply grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4;
 }
 
 /* === TEXT HIERARCHY === */
@@ -155,21 +155,21 @@
 }
 
 /* === INTERACTIVE STATES === */
-/* Safe interactive utilities */
+/* Use centralized hover system instead of inline classes */
 .interactive-base {
-  @apply transition-all duration-200 cursor-pointer;
+  @apply cursor-pointer;
 }
 
 .interactive-hover {
-  @apply interactive-base hover:bg-muted/50;
+  @apply interactive-base hover-ghost;
 }
 
 .interactive-press {
-  @apply interactive-base active:scale-95;
+  @apply interactive-base active-scale;
 }
 
 .interactive-lift {
-  @apply interactive-base hover:-translate-y-1 hover:shadow-md;
+  @apply interactive-base hover-card;
 }
 
 /* === BORDER UTILITIES === */

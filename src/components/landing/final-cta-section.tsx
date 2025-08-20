@@ -7,6 +7,7 @@ import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { TranslationData, getLocalizedPath } from "@/lib/i18n"
 import { useTranslation } from "@/lib/use-translation"
+import { setLanguagePreferenceFromPath } from "@/lib/auth-utils"
 
 interface FinalCTASectionProps {
   translations: TranslationData
@@ -40,9 +41,9 @@ export const FinalCTASection = ({ translations }: FinalCTASectionProps) => {
   }, [])
 
   return (
-    <section className="relative bg-foreground py-16 md:py-20 lg:py-24 overflow-hidden">
+    <section className="relative bg-foreground py-12 md:py-20 lg:py-24 overflow-hidden">
       <div className="app-container app-section">
-        <div className="app-content">
+        <div className="app-content px-4">
           {/* Background Pattern */}
           <div className="absolute inset-0 opacity-10">
             {/* Subtle star pattern */}
@@ -78,10 +79,10 @@ export const FinalCTASection = ({ translations }: FinalCTASectionProps) => {
               transition={{ duration: 0.6 }}
               className="mb-6 md:mb-8"
             >
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-background mb-4">
+              <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold text-background mb-4">
                 {t('finalCta.title')}
               </h2>
-              <p className="text-lg md:text-xl text-background/80 max-w-2xl mx-auto leading-relaxed">
+              <p className="text-base md:text-xl text-background/80 max-w-2xl mx-auto leading-relaxed">
                 {t('finalCta.subtitle')}
               </p>
             </motion.div>
@@ -108,21 +109,26 @@ export const FinalCTASection = ({ translations }: FinalCTASectionProps) => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
               transition={{ duration: 0.6, delay: 0.4 }}
-              className="flex flex-col sm:flex-row items-center justify-center gap-4"
+              className="flex flex-col sm:flex-row items-center justify-center gap-3 md:gap-4"
             >
               <Button
                 size="lg"
-                onClick={() => router.push(getLocalizedPath('register', currentLanguage))}
-                className="w-full sm:w-auto bg-background text-foreground px-8 py-4 text-base md:text-lg font-semibold shadow-lg group hover-brightness-light"
+                onClick={() => {
+                  // Set language preference before redirecting to auth
+                  setLanguagePreferenceFromPath(window.location.pathname)
+                  router.push(`/auth/${currentLanguage}/register`)
+                }}
+                className="w-full sm:w-auto bg-background text-foreground px-6 md:px-8 py-3 md:py-4 text-sm md:text-lg font-semibold shadow-lg group hover:bg-background/90 hover:text-foreground transition-all duration-200"
               >
                 {t('finalCta.button')}
-                <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform text-foreground" />
+                <ArrowRight className="w-4 md:w-5 h-4 md:h-5 ml-2 group-hover:translate-x-1 transition-transform" />
               </Button>
 
               <Button
                 variant="outline"
                 size="lg"
-                className="w-full sm:w-auto border-2 border-background text-background px-8 py-4 text-base md:text-lg font-semibold hover:!border-background hover:!text-background hover:!bg-transparent"
+                onClick={() => router.push(`/premium`)}
+                className="w-full sm:w-auto border-2 border-background text-background px-6 md:px-8 py-3 md:py-4 text-sm md:text-lg font-semibold hover:bg-background hover:text-foreground transition-all duration-200"
               >
                 {t('finalCta.upgradeButton')}
               </Button>

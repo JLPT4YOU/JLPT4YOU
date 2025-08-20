@@ -1,33 +1,94 @@
 // Provider-specific streaming handlers
-import { Message } from '../index';
 import { getGeminiService } from '@/lib/gemini-service';
 import { ChatStateManager } from './useChatStateManager';
+
+// Type definitions for better type safety
+interface ChatMessage {
+  role: 'user' | 'assistant';
+  content: string;
+  files?: FileAttachment[];
+}
+
+interface FileAttachment {
+  name: string;
+  type: string;
+  size: number;
+  url: string;
+  storageId?: string;
+  isPersistent?: boolean;
+}
+
+interface FileData {
+  data?: string; // base64 for inline
+  uri?: string; // URI for uploaded files
+  mimeType: string;
+  name?: string;
+}
+
+interface ProviderOptions {
+  model: string;
+  temperature: number;
+  maxTokens?: number;
+  topP?: number;
+  enableThinking?: boolean;
+  enableGoogleSearch?: boolean;
+  enableUrlContext?: boolean;
+  enableCodeExecution?: boolean;
+  enableTools?: boolean;
+}
+
+interface AIService {
+  streamMessageWithFilesAndThinking: (
+    chatHistory: ChatMessage[],
+    fileData: FileData[],
+    onThoughtChunk: (chunk: string) => void,
+    onAnswerChunk: (chunk: string) => void,
+    options?: ProviderOptions
+  ) => Promise<{ thoughtsTokenCount?: number; outputTokenCount?: number }>;
+  streamMessageWithFiles: (
+    chatHistory: ChatMessage[],
+    fileData: FileData[],
+    onChunk: (chunk: string) => void,
+    options?: ProviderOptions
+  ) => Promise<void>;
+  streamMessage: (
+    chatHistory: ChatMessage[],
+    onChunk: (chunk: string) => void,
+    options?: ProviderOptions
+  ) => Promise<void>;
+  streamMessageWithThinking?: (
+    chatHistory: ChatMessage[],
+    onThoughtChunk: (chunk: string) => void,
+    onAnswerChunk: (chunk: string) => void,
+    options?: ProviderOptions
+  ) => Promise<{ thoughtsTokenCount?: number; outputTokenCount?: number }>;
+}
 
 export interface StreamingHandlers {
   handleGeminiWithFiles: (
     chatId: string,
     messageId: string,
-    chatHistory: any[],
-    fileData: any[],
-    options: any,
+    chatHistory: ChatMessage[],
+    fileData: FileData[],
+    options: ProviderOptions,
     supportsThinking: boolean,
     stateManager: ChatStateManager
   ) => Promise<void>;
-  
+
   handleGeminiThinking: (
     chatId: string,
     messageId: string,
-    chatHistory: any[],
-    options: any,
+    chatHistory: ChatMessage[],
+    options: ProviderOptions,
     stateManager: ChatStateManager
   ) => Promise<void>;
-  
+
   handleRegularStreaming: (
     chatId: string,
     messageId: string,
-    chatHistory: any[],
-    options: any,
-    currentService: any,
+    chatHistory: ChatMessage[],
+    options: ProviderOptions,
+    currentService: AIService,
     stateManager: ChatStateManager
   ) => Promise<void>;
 }
@@ -37,9 +98,9 @@ export const createProviderHandlers = (): StreamingHandlers => {
   const handleGeminiWithFiles = async (
     chatId: string,
     messageId: string,
-    chatHistory: any[],
-    fileData: any[],
-    options: any,
+    chatHistory: ChatMessage[],
+    fileData: FileData[],
+    options: ProviderOptions,
     supportsThinking: boolean,
     stateManager: ChatStateManager
   ) => {
@@ -110,8 +171,8 @@ export const createProviderHandlers = (): StreamingHandlers => {
   const handleGeminiThinking = async (
     chatId: string,
     messageId: string,
-    chatHistory: any[],
-    options: any,
+    chatHistory: ChatMessage[],
+    options: ProviderOptions,
     stateManager: ChatStateManager
   ) => {
     const geminiService = getGeminiService();
@@ -167,9 +228,9 @@ export const createProviderHandlers = (): StreamingHandlers => {
   const handleRegularStreaming = async (
     chatId: string,
     messageId: string,
-    chatHistory: any[],
-    options: any,
-    currentService: any,
+    chatHistory: ChatMessage[],
+    options: ProviderOptions,
+    currentService: AIService,
     stateManager: ChatStateManager
   ) => {
     let fullResponse = '';

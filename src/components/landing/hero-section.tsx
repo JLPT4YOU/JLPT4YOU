@@ -1,163 +1,83 @@
 "use client"
 
-import { motion } from "framer-motion"
+import { useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
-import { SimpleTetrisAnimation } from "./simple-tetris-animation"
-import { useEffect, useState } from "react"
-import { TranslationData, getLocalizedPath } from "@/lib/i18n"
+import { TranslationData } from "@/lib/i18n"
 import { useTranslation } from "@/lib/use-translation"
-// No learning icons needed - only stars background
+import { setLanguagePreferenceFromPath } from "@/lib/auth-utils"
+import { GraduationCap } from "lucide-react"
 
-// Star type definition
-interface Star {
-  id: string
-  x: number
-  y: number
-  size: number
-  delay: number
-  duration: number
-  type: 'large' | 'medium' | 'small'
-}
-
-// Sparkling Stars Background Component
-const SparklingStarsBackground = () => {
-  const [stars, setStars] = useState<Star[]>([])
-  const [isClient, setIsClient] = useState(false)
-
-  // Only generate stars on client-side to avoid hydration mismatch
-  useEffect(() => {
-    setIsClient(true)
-
-    const generateStars = (): Star[] => {
-    const stars: Star[] = []
-    const minDistance = 8 // Minimum distance between stars (in percentage)
-
-    // Helper function to check if position is too close to existing stars
-    const isTooClose = (newX: number, newY: number, existingStars: Star[]) => {
-      return existingStars.some(star => {
-        const distance = Math.sqrt(
-          Math.pow(newX - star.x, 2) + Math.pow(newY - star.y, 2)
-        )
-        return distance < minDistance
-      })
-    }
-
-    // Helper function to generate safe position
-    const generateSafePosition = (existingStars: Star[], maxAttempts = 50) => {
-      for (let attempt = 0; attempt < maxAttempts; attempt++) {
-        const x = Math.random() * 100
-        const y = Math.random() * 100
-
-        if (!isTooClose(x, y, existingStars)) {
-          return { x, y }
-        }
-      }
-      // Fallback: return random position if can't find safe spot
-      return { x: Math.random() * 100, y: Math.random() * 100 }
-    }
-
-    // Large bright stars first (need most space)
-    for (let i = 0; i < 5; i++) {
-      const position = generateSafePosition(stars)
-      stars.push({
-        id: `large-${i}`,
-        x: position.x,
-        y: position.y,
-        size: Math.random() * 3 + 5, // 5-8px
-        delay: Math.random() * 8,
-        duration: Math.random() * 5 + 4, // 4-9s
-        type: 'large'
-      })
-    }
-
-    // Medium stars (less common)
-    for (let i = 0; i < 12; i++) {
-      const position = generateSafePosition(stars)
-      stars.push({
-        id: `medium-${i}`,
-        x: position.x,
-        y: position.y,
-        size: Math.random() * 2 + 3, // 3-5px
-        delay: Math.random() * 6,
-        duration: Math.random() * 4 + 3, // 3-7s
-        type: 'medium'
-      })
-    }
-
-    // Small twinkling stars (most common)
-    for (let i = 0; i < 30; i++) { // Reduced from 35 to 30 for better spacing
-      const position = generateSafePosition(stars)
-      stars.push({
-        id: `small-${i}`,
-        x: position.x,
-        y: position.y,
-        size: Math.random() * 2 + 1, // 1-3px
-        delay: Math.random() * 5,
-        duration: Math.random() * 3 + 2, // 2-5s
-        type: 'small'
-      })
-    }
-
-      return stars
-    }
-
-    setStars(generateStars())
-  }, [])
-
-  // Don't render anything on server-side to avoid hydration mismatch
-  if (!isClient) {
-    return <div className="absolute inset-0 overflow-hidden opacity-60" />
-  }
-
+// Simple static background for better LCP performance
+const SimpleBackground = () => {
   return (
-    <div className="absolute inset-0 overflow-hidden opacity-60">
-      {stars.map((star) => (
-        <motion.div
-          key={star.id}
-          className={`absolute rounded-full ${
-            star.type === 'large'
-              ? 'bg-primary shadow-lg'
-              : star.type === 'medium'
-              ? 'bg-foreground shadow-md'
-              : 'bg-foreground/80'
-          }`}
-          style={{
-            left: `${star.x}%`,
-            top: `${star.y}%`,
-            width: `${star.size}px`,
-            height: `${star.size}px`,
-            boxShadow: star.type === 'large'
-              ? '0 0 10px rgba(255,255,255,0.3)'
-              : star.type === 'medium'
-              ? '0 0 6px rgba(255,255,255,0.2)'
-              : 'none'
-          }}
-          animate={{
-            opacity: star.type === 'large'
-              ? [0.3, 1, 0.3]
-              : star.type === 'medium'
-              ? [0.2, 0.8, 0.2]
-              : [0.1, 0.6, 0.1],
-            scale: star.type === 'large'
-              ? [0.8, 1.3, 0.8]
-              : star.type === 'medium'
-              ? [0.9, 1.2, 0.9]
-              : [0.8, 1.1, 0.8],
-          }}
-          transition={{
-            duration: star.duration,
-            delay: star.delay,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        />
-      ))}
-    </div>
+    <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-secondary/5" />
   )
 }
 
-// Clean background - only sparkling stars, no learning icons
+// CSS Animation styles for better performance than Framer Motion
+const animationStyles = `
+  /* Use transform-only animations to keep element visible for LCP */
+  @keyframes slideUpFade {
+    from {
+      transform: translateY(16px);
+    }
+    to {
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes scaleIn {
+    from {
+      transform: scale(0.92);
+    }
+    to {
+      transform: scale(1);
+    }
+  }
+
+  @keyframes slideUpSmall {
+    from {
+      transform: translateY(12px);
+    }
+    to {
+      transform: translateY(0);
+    }
+  }
+
+  .animate-slide-up-fade {
+    animation: slideUpFade 0.35s ease-out forwards;
+    will-change: transform;
+  }
+
+  /* Only run animations when parent container has .is-anim-ready */
+  .hero-anim :is(.animate-slide-up-fade, .animate-scale-in, .animate-slide-up-title, .animate-slide-up-subtitle, .animate-slide-up-buttons) {
+    animation-play-state: paused;
+  }
+  .hero-anim.is-anim-ready :is(.animate-slide-up-fade, .animate-scale-in, .animate-slide-up-title, .animate-slide-up-subtitle, .animate-slide-up-buttons) {
+    animation-play-state: running;
+  }
+
+  .animate-scale-in {
+    animation: scaleIn 0.4s ease-out 0.05s forwards;
+    will-change: transform;
+  }
+
+  .animate-slide-up-title {
+    animation: slideUpSmall 0.35s ease-out 0s forwards;
+    will-change: transform;
+  }
+
+  .animate-slide-up-subtitle {
+    animation: slideUpFade 0.4s ease-out 0.05s forwards;
+    will-change: transform;
+  }
+
+  .animate-slide-up-buttons {
+    animation: slideUpSmall 0.45s ease-out 0.1s forwards;
+    will-change: transform;
+  }
+`
 
 interface HeroSectionProps {
   translations: TranslationData
@@ -165,62 +85,79 @@ interface HeroSectionProps {
 
 export function HeroSection({ translations }: HeroSectionProps) {
   const router = useRouter()
-  const [isVisible, setIsVisible] = useState(false)
   const { t, currentLanguage } = useTranslation(translations)
 
+  // Delay animations until after first frame for better LCP
   useEffect(() => {
-    // Start animation after component mounts
-    const timer = setTimeout(() => {
-      setIsVisible(true)
-    }, 800) // Longer delay for better UX
-
-    return () => clearTimeout(timer)
+    const root = document.getElementById('hero-anim-root')
+    if (!root) return
+    const raf = requestAnimationFrame(() => {
+      root.classList.add('is-anim-ready')
+    })
+    return () => cancelAnimationFrame(raf)
   }, [])
 
   return (
-    <section className="relative py-16 md:py-20 lg:py-24 bg-background overflow-hidden">
-      {/* Clean Sparkling Stars Background Only */}
-      <SparklingStarsBackground />
-      
-      <div className="app-container app-section">
-        <div className="app-content">
-          <div className="text-center space-y-8 max-w-4xl mx-auto">
-            
-            {/* Tetris Animation Title */}
-            <div className="space-y-4">
-              <SimpleTetrisAnimation isVisible={isVisible} />
-            </div>
+    <>
+      {/* Inject CSS animations */}
+      <style dangerouslySetInnerHTML={{ __html: animationStyles }} />
 
-            {/* Subheading */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 2.8 }} // Wait for simple animation to complete (8 letters * 0.25 + 0.8)
-              className="space-y-6"
-            >
-              <h2 className="text-xl md:text-2xl lg:text-3xl font-semibold text-foreground">
+      <section className="relative py-12 md:py-20 lg:py-24 bg-background overflow-hidden">
+        {/* Simple static background for better LCP */}
+        <SimpleBackground />
+
+        <div className="app-container app-section relative z-10">
+          <div className="app-content hero-anim" id="hero-anim-root">
+            <div className="text-center space-y-6 md:space-y-8 max-w-4xl mx-auto">
+
+              {/* Animated Title with Icon - CSS animations for better performance */}
+              <div className="space-y-4 animate-slide-up-fade">
+                <div className="flex items-center justify-center space-x-2 mb-6">
+                  <div className="animate-scale-in">
+                    <GraduationCap className="h-8 w-8 md:h-12 md:w-12 text-primary" />
+                  </div>
+                  <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-foreground">
+                    JLPT4YOU
+                  </h1>
+                </div>
+              </div>
+
+            {/* Subheading - keep static to be good LCP text */}
+            <div className="space-y-4 md:space-y-6">
+              <h2 className="text-lg md:text-2xl lg:text-3xl font-semibold text-foreground px-2">
                 {t('hero.subtitle')}
               </h2>
-              <p className="text-base md:text-lg lg:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed px-4">
+              <p className="text-sm md:text-lg lg:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed px-4">
                 {t('hero.description')}
               </p>
-            </motion.div>
+            </div>
 
-            {/* CTA Button */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 3.4 }}
-              className="flex items-center justify-center pt-6"
-            >
+            {/* CTA Buttons - animate after first frame */}
+            <div className="flex items-center justify-center gap-3 md:gap-4 pt-4 md:pt-6 px-4 animate-slide-up-buttons">
               <Button
-                size="lg"
-                onClick={() => router.push(getLocalizedPath('register', currentLanguage))}
-                className="bg-primary text-primary-foreground px-8 py-3 text-base md:text-lg font-medium min-w-[180px] md:min-w-[200px]"
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  // Set language preference before redirecting to auth
+                  setLanguagePreferenceFromPath(window.location.pathname)
+                  router.push(`/auth/${currentLanguage}/login`)
+                }}
+                className="bg-background border-border text-foreground px-4 md:px-6 py-2 md:py-3 text-sm font-medium hover-muted"
+              >
+                {t('header.login')}
+              </Button>
+              <Button
+                size="sm"
+                onClick={() => {
+                  // Set language preference before redirecting to auth
+                  setLanguagePreferenceFromPath(window.location.pathname)
+                  router.push(`/auth/${currentLanguage}/register`)
+                }}
+                className="bg-primary text-primary-foreground px-4 md:px-6 py-2 md:py-3 text-sm font-medium"
               >
                 {t('hero.ctaButton')}
               </Button>
-            </motion.div>
+            </div>
 
             {/* Social Proof section removed */}
 
@@ -228,5 +165,6 @@ export function HeroSection({ translations }: HeroSectionProps) {
         </div>
       </div>
     </section>
+    </>
   )
 }

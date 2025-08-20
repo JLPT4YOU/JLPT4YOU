@@ -32,23 +32,41 @@ import { createFileProcessor } from './useFileProcessor';
 import { createStreamingHandlers } from './useStreamingHandlers';
 import { useMessageOperations } from './useMessageOperations';
 
+// Type definitions
+interface AIProviderManager {
+  getCurrentService: () => any;
+  getCurrentProvider: () => string;
+  getProviderModels: (provider: string) => Array<{ id: string; name: string }>;
+  supportsFeature: (feature: string) => boolean;
+}
+
 interface UseMessageHandlerProps {
   // Dependencies
-  aiProviderManager: React.RefObject<any>;
+  aiProviderManager: React.RefObject<AIProviderManager>;
   selectedModel: string;
   enableThinking: boolean;
   currentProvider: string;
-  
+
   // State setters
   setIsLoading: (loading: boolean) => void;
   setLastFailedMessage: (message: string | null) => void;
   setChats: React.Dispatch<React.SetStateAction<Chat[]>>;
   setCurrentChatId: React.Dispatch<React.SetStateAction<string | undefined>>;
   setIsSidebarOpen: (open: boolean) => void;
-  
+
   // Chat data
   chats: Chat[];
   currentChatId: string | undefined;
+
+  // Advanced features for Groq
+  advancedFeatures?: {
+    reasoningEffort: 'low' | 'medium' | 'high';
+    enableCodeInterpreter: boolean;
+    enableBrowserSearch: boolean;
+    supportsAdvancedFeatures: boolean;
+    supportsReasoning: boolean;
+    supportsTools: boolean;
+  };
 }
 
 interface UseMessageHandlerReturn {
@@ -71,7 +89,8 @@ export const useMessageHandler = (props: UseMessageHandlerProps): UseMessageHand
     setCurrentChatId,
     setIsSidebarOpen,
     chats,
-    currentChatId
+    currentChatId,
+    advancedFeatures
   } = props;
 
   const { t } = useTranslations();
@@ -89,7 +108,9 @@ export const useMessageHandler = (props: UseMessageHandlerProps): UseMessageHand
 
   // Get localized programming keywords for code detection
   const getLocalizedKeywords = (): string[] => {
-    return t ? (t('chat.keywords.programming') as string[]) || [] : [];
+    if (!t) return [];
+    const keywords = t('chat.keywords.programming');
+    return Array.isArray(keywords) ? keywords : [];
   };
 
   // Helper: Create AI message placeholder
@@ -106,7 +127,7 @@ export const useMessageHandler = (props: UseMessageHandlerProps): UseMessageHand
     const currentService = aiProviderManager.current.getCurrentService();
     const currentProviderType = aiProviderManager.current.getCurrentProvider();
     const currentProviderModels = aiProviderManager.current.getProviderModels(currentProviderType);
-    const isValidModel = currentProviderModels.some((model: any) => model.id === selectedModel);
+    const isValidModel = currentProviderModels.some((model) => model.id === selectedModel);
     const modelToUse = isValidModel ? selectedModel : (currentProviderModels[0]?.id || selectedModel);
 
     return {
@@ -129,17 +150,13 @@ export const useMessageHandler = (props: UseMessageHandlerProps): UseMessageHand
       }));
 
     if (chatHistory.length === 0) {
-      console.error('prepareChatHistory: No valid messages found', {
-        originalMessages: messages.map(m => ({ role: m.role, contentLength: m.content?.length || 0 }))
-      });
+      if (process.env.NODE_ENV === 'development') {
+        console.error('prepareChatHistory: No valid messages found', {
+          originalMessages: messages.map(m => ({ role: m.role, contentLength: m.content?.length || 0 }))
+        });
+      }
       throw new Error('No valid messages found to send to AI');
     }
-
-    console.log('prepareChatHistory: Prepared chat history', {
-      historyLength: chatHistory.length,
-      lastMessage: chatHistory[chatHistory.length - 1]?.content?.slice(0, 50),
-      hasFiles: fileProcessor.hasFiles(messages)
-    });
 
     return chatHistory;
   };
@@ -175,13 +192,34 @@ export const useMessageHandler = (props: UseMessageHandlerProps): UseMessageHand
 
       options = geminiOptions;
     } else if (currentProviderType === 'groq') {
-      // Groq-specific options
-      options = {
+      // Groq-specific options with advanced features
+      const groqOptions: any = {
         model: modelToUse,
         temperature: 0.8,
         maxTokens: 8192,
         topP: 1
       };
+
+      // Auto-enable advanced features for GPT-OSS models
+      const isGPTOSS = modelToUse.includes('openai/gpt-oss');
+
+      if (isGPTOSS) {
+        // Always enable tools for GPT-OSS models
+        groqOptions.enable_code_interpreter = true;
+        groqOptions.enable_browser_search = true;
+
+        // Add reasoning effort if thinking is enabled
+        if (enableThinking) {
+          groqOptions.reasoning_effort = advancedFeatures?.reasoningEffort || 'medium';
+          // Note: reasoning_format is NOT supported by OpenAI GPT-OSS models
+          // Only add for other models that support it
+          if (!modelToUse.includes('openai/gpt-oss')) {
+            groqOptions.reasoning_format = 'raw';
+          }
+        }
+      }
+
+      options = groqOptions;
     }
 
     return options;
@@ -204,12 +242,14 @@ export const useMessageHandler = (props: UseMessageHandlerProps): UseMessageHand
     // Reset loading state
     setIsLoading(false);
 
-    console.log('Generation stopped by user');
+    if (process.env.NODE_ENV === 'development') {
+
+    }
   };
 
   // Generate AI response (extracted from handleSendMessage for reuse)
   const generateAIResponse = async (chatId: string, messages: Message[]) => {
-    console.log('generateAIResponse: Starting', { chatId, messageCount: messages.length });
+
 
     // Validate messages
     if (!messages || messages.length === 0) {
@@ -226,7 +266,7 @@ export const useMessageHandler = (props: UseMessageHandlerProps): UseMessageHand
 
       // Check if any message has files
       const hasFiles = fileProcessor.hasFiles(messages);
-      console.log('generateAIResponse: Has files?', hasFiles);
+
 
       // Prepare chat history for AI
       const chatHistory = prepareChatHistory(messages);
@@ -237,11 +277,16 @@ export const useMessageHandler = (props: UseMessageHandlerProps): UseMessageHand
       // Check if current provider and model supports thinking
       const supportsThinkingFeature = aiProviderManager.current.supportsFeature('thinking');
       const modelInfo = currentProviderType === 'gemini' ? getModelInfo(selectedModel) : null;
-      const supportsThinkingMode = supportsThinkingFeature && modelInfo?.supportsThinking && enableThinking;
+      const supportsThinkingMode = Boolean(supportsThinkingFeature && modelInfo?.supportsThinking && enableThinking);
 
       // Handle files if present (only for Gemini)
       if (hasFiles && currentProviderType === 'gemini') {
-        console.log('generateAIResponse: Processing files with Gemini');
+        if (process.env.NODE_ENV === 'development') {
+
+        }
+        if (!modelInfo) {
+          throw new Error(`Model info not found for ${selectedModel}`);
+        }
         const fileData = await fileProcessor.processFilesForGemini(messages, modelInfo, modelToUse);
         await streamingHandlers.handleGeminiWithFiles(chatId, aiMessage, chatHistory, fileData, options, supportsThinkingMode, chatStateManager);
         return; // Exit early after handling files
@@ -254,7 +299,9 @@ export const useMessageHandler = (props: UseMessageHandlerProps): UseMessageHand
       } // End of else block for regular streaming
 
     } catch (error) {
-      console.error('Error generating AI response:', error);
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Error generating AI response:', error);
+      }
       handleError(error instanceof Error ? error : new Error('Failed to generate AI response'));
     }
   };

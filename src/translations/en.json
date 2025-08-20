@@ -34,9 +34,31 @@
     "save": "Save",
     "cancel": "Cancel",
     "confirm": "Confirm",
+    "continue": "Continue",
     "instruction": "Choose an option above to get started",
     "preview": "Preview",
     "hide": "Hide"
+  },
+  "landingChat": {
+    "bubble": {
+      "openLabel": "Open support chat",
+      "closeLabel": "Close chat"
+    },
+    "interface": {
+      "title": "iRIN Sensei",
+      "subtitle": "Online Support",
+      "placeholder": "Type your question...",
+      "typing": "iRIN is responding...",
+      "welcomeMessage": "Hello! I'm iRIN, teacher of JLPT4YOU platform.\nThank you for visiting JLPT4YOU!\nIf you have any questions, feel free to ask me!",
+      "responses": {
+        "default": "Thank you for your question! I'll be updated with more knowledge to support you better in the future. For now, feel free to explore JLPT4YOU's features!"
+      },
+      "errorMessage": "Sorry, I can't respond right now. Please try again later!",
+      "rateLimitError": "You're sending messages too quickly. Please wait {time} before sending again.",
+      "spamBlockError": "Account temporarily blocked due to spam. Try again in {minutes} minutes.",
+      "inputDisabled": "Temporarily locked due to sending messages too quickly",
+      "retryIn": "Try again in {time}"
+    }
   },
   "header": {
     "logo": "JLPT4YOU",
@@ -49,7 +71,14 @@
       "settings": "Settings",
       "statistics": "Learning Statistics",
       "logout": "Logout",
-      "expiryDate": "until"
+      "expiryDate": "Expires",
+      "screenReader": "User menu",
+      "home": "Home",
+      "unlimited": "Unlimited"
+    },
+    "comments": {
+      "logoAndName": "Logo and app name",
+      "languageThemeUser": "Language Switcher, Theme toggle and User menu"
     }
   },
   "hero": {
@@ -322,7 +351,8 @@
       "loginNow": "Login now",
       "forgotPasswordText": "Forgot password?",
       "resetPasswordSent": "Password reset email has been sent",
-      "resetPasswordInstructions": "Please check your email and follow the instructions to reset your password"
+      "resetPasswordInstructions": "Please check your email and follow the instructions to reset your password",
+      "registrationSuccess": "Registration successful! Please check your email to confirm your account."
     },
     "social": {
       "googleLogin": "Login with Google",
@@ -341,6 +371,30 @@
       "clickLink": "Click the link in the email to reset your password",
       "linkExpiry": "Link expires in 15 minutes",
       "checkSpam": "Check your spam folder if you don't see the email"
+    },
+    "errors": {
+      "general": "An error occurred. Please try again.",
+      "loginFailed": "Incorrect username or password",
+      "emailExists": "This email is already in use",
+      "resendFailed": "Failed to resend email. Please try again.",
+      "registrationError": "An error occurred during registration. Please try again.",
+      "loginError": "An error occurred during login. Please try again.",
+      "logoutError": "An error occurred during logout.",
+      "resetPasswordError": "An error occurred while sending password reset email.",
+      "socialLoginError": "An error occurred during social login.",
+      "invalidCredentials": "Incorrect username or password",
+      "emailAlreadyRegistered": "This email is already registered. Please use a different email or login.",
+      "passwordTooShort": "Password must be at least 6 characters long.",
+      "invalidEmailFormat": "Invalid email format.",
+      "accountNotFound": "No account found with this email.",
+      "emailNotConfirmed": "Please confirm your email before logging in.",
+      "registrationDisabled": "Registration is currently disabled.",
+      "unknownError": "An unknown error occurred. Please try again.",
+      "googleLoginError": "An error occurred while logging in with Google. Please try again."
+    },
+    "success": {
+      "registrationSuccess": "Registration successful! Please check your email to confirm your account.",
+      "emailConfirmationRequired": "Please check your email to confirm your account before logging in."
     }
   },
   "home": {
@@ -359,7 +413,11 @@
       },
       "driving": {
         "title": "Driving Test",
-        "description": "Driver's license exam"
+        "description": "Practice driving license exam"
+      },
+      "dict": {
+        "title": "Dictionary",
+        "description": "Look up words, kanji, grammar"
       },
       "study": {
         "title": "Study",
@@ -367,7 +425,7 @@
       },
       "library": {
         "title": "Library",
-        "description": "Learning materials"
+        "description": "Books and learning materials"
       },
       "irin": {
         "title": "iRIN",
@@ -377,9 +435,9 @@
         "title": "Upgrade",
         "description": "Upgrade account"
       },
-      "payment": {
-        "title": "Payment",
-        "description": "Service payment"
+      "topup": {
+        "title": "Top Up",
+        "description": "Add credits to account"
       },
       "settings": {
         "title": "Settings",
@@ -491,6 +549,7 @@
       "title": "Choose JLPT Test Type",
       "subtitle": "Select the test type that suits your learning needs"
     },
+    "selectLevel": "Select JLPT Level",
     "testTypes": {
       "official": {
         "title": "JLPT",
@@ -672,6 +731,90 @@
       "passingScore": "Passing Score"
     }
   },
+  "dict": {
+    "page": {
+      "title": "J4YDict - Japanese Vietnamese Dictionary",
+      "subtitle": "Look up words, kanji, grammar and translation"
+    },
+    "tabs": {
+      "word": "Vocabulary",
+      "kanji": "Kanji",
+      "kanjiWriting": "Kanji Writing",
+      "grammar": "Grammar",
+      "examples": "Examples",
+      "translate": "Translate"
+    },
+    "search": {
+      "placeholder": "Enter search keyword...",
+      "button": "Search",
+      "clear": "Clear",
+      "positions": {
+        "start": "Start",
+        "middle": "Middle",
+        "end": "End"
+      },
+      "types": {
+        "word": "Vocabulary",
+        "grammar": "Grammar"
+      }
+    },
+    "wordDetail": {
+      "level": "JLPT {level}",
+      "relatedWords": "Related Words",
+      "moreWords": "and {count} more words...",
+      "noRelatedWords": "No related words"
+    },
+    "kanjiDetail": {
+      "strokes": "{count} strokes",
+      "radical": "Radical",
+      "meaning": "Meaning",
+      "readings": {
+        "on": "On reading",
+        "kun": "Kun reading"
+      }
+    },
+    "grammarDetail": {
+      "definition": "Definition",
+      "usage": "Usage",
+      "examples": "Examples"
+    },
+    "examplesList": {
+      "title": "Example sentences",
+      "found": "Found {count} examples",
+      "noExamples": "No examples"
+    },
+    "translate": {
+      "sourceLanguage": "Source Language",
+      "targetLanguage": "Target Language",
+      "auto": "Auto",
+      "vietnamese": "Vietnamese",
+      "japanese": "Japanese",
+      "english": "English",
+      "translateButton": "Translate",
+      "swap": "Swap",
+      "copy": "Copy",
+      "clear": "Clear"
+    },
+    "kanjiWriting": {
+      "title": "Kanji Writing",
+      "strokeOrder": "Stroke Order",
+      "practice": "Practice Writing",
+      "noData": "No kanji writing information found for this word"
+    },
+    "errors": {
+      "loadFailed": "Unable to load vocabulary information",
+      "searchFailed": "Search error",
+      "translateFailed": "Translation error",
+      "kanjiSearchFailed": "Kanji search error",
+      "networkError": "Network connection error",
+      "noResults": "No results found"
+    },
+    "loading": {
+      "searching": "Searching...",
+      "translating": "Translating...",
+      "loading": "Loading..."
+    }
+  },
   "exam": {
     "interface": {
       "pause": "Pause",
@@ -722,16 +865,22 @@
     },
     "submission": {
       "confirmTitle": "Confirm Submission",
-      "readyTitle": "Ready to Submit",
       "confirmMessage": "Please review before submitting",
-      "readyMessage": "You have completed all questions",
-      "progressLabel": "Completion Progress",
+      "stats": {
+        "total": "Total Questions",
+        "answered": "Answered",
+        "unanswered": "Unanswered",
+        "flagged": "Flagged",
+        "timeLeft": "Time Left"
+      },
+      "readyTitle": "Ready to Submit",
+      "readyMessage": "All questions answered.",
+      "progressLabel": "Progress",
       "timeRemainingLabel": "Time Remaining",
-      "unansweredWarning": "You have {count} unanswered questions",
-      "flaggedWarning": "You have {count} flagged questions to review",
+      "unansweredWarning": "{count} unanswered question(s) remaining",
+      "flaggedWarning": "{count} flagged question(s)",
       "confirm": "Submit",
-      "cancel": "Continue",
-      "challengeNotice": "Challenge Mode - Cannot return after submission"
+      "cancel": "Continue"
     },
     "timer": {
       "timeUp": "Time's Up",
@@ -804,23 +953,152 @@
   "pageTitle": {
     "home": "Home",
     "examResults": "Exam Results",
-    "reviewAnswers": "Review Answers"
+    "reviewAnswers": "Review Answers",
+    "study": "Study",
+    "studyTheory": "Theory",
+    "studyPractice": "Practice"
   },
   "pageDescription": {
     "home": "Home - Online JLPT practice and driving license test",
     "examResults": "View exam results and detailed analysis",
-    "reviewAnswers": "Review detailed answers and analyze each question"
+    "reviewAnswers": "Review detailed answers and analyze each question",
+    "study": "Study - Japanese theory and practice",
+    "studyTheory": "Theory - Basic Japanese knowledge",
+    "studyPractice": "Practice - Applied Japanese exercises"
   },
   "examTitle": {
     "challenge": "JLPT Challenge {level}",
     "honmen": "Honmen - Official Theory Test",
     "karimen": "Karimen - Basic Theory Test"
   },
+  "topup": {
+    "steps": {
+      "amount": "Select Amount",
+      "payment": "Payment Method",
+      "confirm": "Confirm"
+    },
+    "selectAmount": "Select Top-up Amount",
+    "selectPayment": "Select Payment Method",
+    "total": "Total Amount:",
+    "amount": "Amount",
+    "method": "Method",
+    "custom": "Custom",
+    "enterAmount": "Enter Custom Amount",
+    "minAmount": "Minimum: $1.00",
+    "maxAmount": "Maximum: $1,000.00",
+    "quickSuggestions": "Quick suggestions:",
+    "validAmount": "Valid amount",
+    "processing": "Processing Payment...",
+    "processingDesc": "Please wait while we process your payment",
+    "payNow": "Pay Now",
+    "popular": "Popular",
+    "instant": "Instant",
+    "businessDays": "1-3 days",
+    "paymentInfo": "Payment Information",
+    "errors": {
+      "tooLow": "Amount must be at least $1.00",
+      "tooHigh": "Amount cannot exceed $1,000.00"
+    },
+    "methods": {
+      "qrVietnam": "QR Việt Nam",
+      "qrVietnameDesc": "VietQR, VNPAY, ZaloPay, MoMo",
+      "paypalDesc": "Secure international payments",
+      "paypayDesc": "Japanese mobile payment",
+      "stripeDesc": "Credit/Debit cards worldwide",
+      "bankTransfer": "Bank Transfer",
+      "bankTransferDesc": "Direct bank account transfer"
+    },
+    "info": {
+      "qrVietnam1": "Scan QR code with your banking app",
+      "qrVietnam2": "Supports all major Vietnamese banks",
+      "qrVietnam3": "Instant processing, no fees",
+      "paypal1": "Login to your PayPal account",
+      "paypal2": "Secure international payments",
+      "paypal3": "Small processing fee may apply",
+      "paypay1": "Use PayPay mobile app",
+      "paypay2": "Popular in Japan",
+      "paypay3": "Instant processing",
+      "stripe1": "Visa, Mastercard, American Express",
+      "stripe2": "Secure SSL encryption",
+      "stripe3": "Instant processing",
+      "bank1": "Transfer to our bank account",
+      "bank2": "Include reference number",
+      "bank3": "Processing: 1-3 business days"
+    }
+  },
   "pages": {
-    "payment": {
-      "title": "Payment",
-      "description": "Payment service - Feature under development",
+    "topup": {
+      "title": "Top Up",
+      "description": "Top up service - Feature under development",
       "comingSoon": "This page is under construction. Please come back later!"
+    },
+    "payment": {
+      "title": "Upgrade Your Account",
+      "description": "Unlock your full Japanese learning potential with smart AI and exclusive materials",
+      "freePlan": "Free Plan",
+      "freeDescription": "Perfect for getting started",
+      "premiumPlan": "Premium Plan",
+      "premiumDescription": "Unlock all features",
+      "foreverFree": "Forever free",
+      "oneTimePayment": "One-time payment",
+      "upgradeNow": "Upgrade Now",
+      "currentPlan": "Current Plan",
+      "popular": "Popular",
+      "whyUpgrade": "Why Upgrade to Premium?",
+      "benefit1Title": "Comprehensive Learning",
+      "benefit1Description": "Access to all JLPT levels and extensive study materials",
+      "benefit2Title": "AI-Powered Assistance",
+      "benefit2Description": "Get detailed explanations for every question",
+      "benefit3Title": "Progress Tracking",
+      "benefit3Description": "Monitor your improvement with detailed analytics",
+      "freeFeature1": "Limited practice tests",
+      "freeFeature2": "Basic vocabulary lists",
+      "freeFeature3": "Community support",
+      "premiumFeature1": "Unlimited practice tests",
+      "premiumFeature2": "Full vocabulary & grammar database",
+      "premiumFeature3": "AI-powered explanations",
+      "premiumFeature4": "Progress tracking & analytics",
+      "premiumFeature5": "Priority customer support",
+      "premiumFeature6": "Offline access to materials",
+      "thankYou": {
+        "title": "🎉 Congratulations!",
+        "subtitle": "You have successfully upgraded to Premium",
+        "accountTitle": "Premium Account",
+        "duration": "Duration",
+        "months": "months",
+        "expires": "Expires",
+        "amount": "Amount",
+        "transaction": "Transaction ID",
+        "couponApplied": "Coupon applied",
+        "featuresTitle": "✨ Premium features activated",
+        "action": "Start using Premium",
+        "emailSent": "📧 A confirmation email has been sent to"
+      },
+      "checkout": {
+        "save5": "Save 5%",
+        "popular": "Popular",
+        "best": "Best Value",
+        "payment": "Payment",
+        "premiumPlan": "Premium Plan",
+        "yearlyBilling": "Annual billing",
+        "monthlyBilling": "Monthly billing",
+        "selectDuration": "Select usage duration",
+        "savePercent": "Save {percent}%",
+        "balancePayment": "Pay with account balance",
+        "balanceDescription": "Amount will be deducted from your current balance",
+        "apply": "Apply",
+        "enterCoupon": "Please enter coupon code",
+        "invalidCoupon": "Invalid coupon code",
+        "couponError": "Error occurred while validating coupon",
+        "paymentError": "Payment error occurred",
+        "paymentRetry": "Payment error occurred. Please try again.",
+        "insufficientBalance": "Insufficient balance. Need additional ${amount}",
+        "processing": "Processing...",
+        "payNow": "Pay Now",
+        "termsAgreement": "By proceeding with payment, you agree to our",
+        "termsOfService": "Terms of Service",
+        "orderSummary": "Order Summary"
+      }
     },
     "settings": {
       "title": "Account Settings",
@@ -833,30 +1111,59 @@
         "description": "Manage your display information and avatar",
         "avatar": "Avatar Icon",
         "avatarDescription": "Choose an icon for your display avatar",
-"name": "Name",
+        "name": "Name",
+        "namePlaceholder": "Enter your name",
+        "nameDescription": "This name will be displayed in the app",
         "email": "Email",
         "emailReadonly": "Email cannot be changed",
         "accountType": "Account Type",
+        "accountTypeFree": "Free Account",
+        "accountTypePremium": "Premium Account",
+        "premiumStatus": "Premium Status",
+        "expiryDate": "Expires",
         "createdDate": "Created Date",
         "saveChanges": "Save Changes",
         "saving": "Saving...",
         "updateSuccess": "Profile updated successfully!",
-        "updateError": "An error occurred while updating"
+        "updateError": "An error occurred while updating",
+        "unexpectedError": "An unexpected error occurred",
+        "redeemCode": {
+          "title": "Activate Premium",
+          "description": "Enter code to upgrade your account to Premium",
+          "codeLabel": "Premium Code",
+          "placeholder": "Enter code...",
+          "redeemButton": "Activate",
+          "redeeming": "Processing...",
+          "accountType": "Account Type",
+          "expiryDate": "Premium Expires",
+          "thankYou": "Thank you for using our Premium service! 🎉"
+        }
       },
       "security": {
-        "title": "Account Security",
-        "description": "Manage your password and security",
+        "title": "Security",
+        "description": "Manage your password and account security",
         "password": "Password",
         "lastChanged": "Last changed",
-        "neverChanged": "Never changed password",
+        "neverChanged": "Never changed",
         "changePassword": "Change Password",
+        "changing": "Changing...",
         "currentPassword": "Current Password",
+        "currentPasswordPlaceholder": "Enter current password",
         "newPassword": "New Password",
+        "newPasswordPlaceholder": "Enter new password",
         "confirmPassword": "Confirm New Password",
+        "confirmPasswordPlaceholder": "Re-enter new password",
+        "passwordRequirements": "Password must be at least 8 characters",
         "passwordLength": "Password must be 6-8 characters",
         "passwordMismatch": "Password confirmation does not match",
+        "changeSuccess": "Password changed successfully!",
+        "changeError": "An error occurred while changing password",
         "changePasswordSuccess": "Password changed successfully!",
-        "changePasswordError": "An error occurred while changing password"
+        "changePasswordError": "An error occurred while changing password",
+        "currentPasswordRequired": "Please enter current password",
+        "newPasswordRequired": "Please enter new password",
+        "passwordTooShort": "Password must be at least 8 characters",
+        "invalidCurrentPassword": "Current password is incorrect"
       },
       "iconSelector": {
         "title": "Choose Avatar Icon",
@@ -869,6 +1176,50 @@
       "title": "Upgrade",
       "description": "Account upgrade - Feature under development",
       "comingSoon": "This page is under construction. Please come back later!"
+    }
+  },
+  "premium": {
+    "noSubscription": "No Premium subscription",
+    "daysLeft": "{days} days of Premium left",
+    "expired": "Premium has expired",
+    "undefinedExpiry": "Premium expiry undefined",
+    "expiryLabel": "Expiry date",
+    "invalidDate": "Invalid",
+    "undefinedDate": "Undefined",
+    "errors": {
+      "invalidData": "Invalid data",
+      "insufficientBalance": "Insufficient balance. You need ${amount} but only have ${balance}",
+      "deductFailed": "Unable to deduct from account",
+      "updateFailed": "Error updating premium information",
+      "paymentError": "Payment error occurred",
+      "paymentRetry": "Payment error occurred. Please try again."
+    }
+  },
+  "balance": {
+    "label": "Balance",
+    "insufficient": "Insufficient balance",
+    "fetchError": "Unable to fetch balance information",
+    "updateError": "Unable to update balance",
+    "internalError": "Internal system error"
+  },
+  "time": {
+    "units": {
+      "day": "day",
+      "days": "days",
+      "week": "week",
+      "weeks": "weeks",
+      "month": "month",
+      "months": "months",
+      "year": "year",
+      "years": "years"
+    },
+    "durations": {
+      "oneDay": "1 day",
+      "oneWeek": "1 week",
+      "oneMonth": "1 month",
+      "threeMonths": "3 months",
+      "sixMonths": "6 months",
+      "oneYear": "1 year"
     }
   },
   "chat": {
@@ -918,6 +1269,8 @@
 
     "newChatTitle": "New Chat",
     "generatingTitle": "Generating title...",
+    "editTitle": "Edit title",
+    "deleteChat": "Delete chat",
     "retry": "Retry",
     "stopGeneration": "Stop generation",
     "scrollToBottom": "Scroll to bottom",
@@ -941,6 +1294,289 @@
     "correctAnswers": "Correct Answers",
     "incorrectAnswers": "Incorrect Answers",
     "flaggedAnswers": "Flagged Answers"
+  },
+  "study": {
+    "page": {
+      "title": "Study",
+      "subtitle": "Choose the learning method that suits you"
+    },
+    "selectType": "Select study type",
+    "types": {
+      "theory": {
+        "title": "Theory",
+        "description": "Learn basic knowledge",
+        "subtitle": "Master fundamental grammar and vocabulary"
+      },
+      "practice": {
+        "title": "Practice",
+        "description": "Applied exercises",
+        "subtitle": "Improve skills through practical exercises"
+      }
+    },
+    "theory": {
+      "page": {
+        "title": "Japanese Theory",
+        "subtitle": "Basic knowledge and fundamentals"
+      },
+      "comingSoon": "Feature under development. Please come back later!"
+    },
+    "practice": {
+      "page": {
+        "title": "Japanese Practice",
+        "subtitle": "Applied exercises and training"
+      },
+      "comingSoon": "Feature under development. Please come back later!",
+      "levelTitle": "Practice {level}",
+      "selectType": "Choose the type of exercise you want to practice",
+      "breadcrumbs": {
+        "study": "Study",
+        "practice": "Practice"
+      },
+      "pageTitle": "JLPT {level} {type} Practice",
+      "pageDescription": "Test your knowledge with AI-powered practice exercises",
+      "types": {
+        "vocabulary": "Vocabulary",
+        "grammar": "Grammar",
+        "reading": "Reading Comprehension",
+        "kanji": "Kanji",
+        "listening": "Listening"
+      },
+      "reading": {
+        "title": "Reading Comprehension",
+        "description": "Practice reading comprehension with passages and questions",
+        "passageLength": "Passage Length",
+        "passageLengths": {
+          "short": "Short (50-150 words)",
+          "medium": "Medium (150-300 words)",
+          "long": "Long (300-500 words)"
+        },
+        "numberOfPassages": "Number of Passages",
+        "maxPassages": "Maximum 5 passages",
+        "questionsPerPassage": "3 questions per passage",
+        "instructions": "Read the passage carefully and answer the questions below",
+        "passage": "Passage",
+        "questions": "Questions",
+        "generator": {
+          "title": "Generate AI Reading Comprehension",
+          "description": "AI will create reading passages combining vocabulary and grammar appropriate for your level",
+          "selectLength": "Select passage length",
+          "selectCount": "Select number of passages (1-5)"
+        }
+      },
+      "generator": {
+        "title": "Generate AI-Powered Exercise",
+        "description": "Customize your practice session with AI-generated questions",
+        "questionSelectionMode": "Question Selection Mode",
+        "numberOfQuestions": "Number of Questions",
+        "difficultyLevel": "Difficulty Level",
+        "aiModel": "AI Model",
+        "thinkingMode": "Thinking Mode",
+        "lesson": "Lesson",
+        "materialLimit": "Material Limit",
+        "grammarCount": "Number of Grammar",
+        "vocabularyCount": "Number of Vocabulary",
+        "modes": {
+          "random": "Random",
+          "sequential": "Sequential"
+        },
+        "difficulty": {
+          "easy": "Easy",
+          "medium": "Medium",
+          "hard": "Hard",
+          "extremely_hard": "Extremely Hard"
+        },
+        "thinking": {
+          "off": "Off",
+          "on": "On",
+          "proDefault": "Pro model has thinking mode enabled by default",
+          "description": "Thinking mode: slower generation, higher quality questions"
+        },
+        "sequentialOptions": {
+          "lessonLabel": "Lesson {lesson} (offset: {offset})",
+          "defaultGrammar": "Default: 3",
+          "defaultVocabulary": "Default: 5"
+        },
+        "summary": {
+          "type": "Type",
+          "level": "Level",
+          "questions": "Questions",
+          "difficulty": "Difficulty",
+          "estimatedTime": "Est. Time"
+        },
+        "generateButton": "Generate Exercise",
+        "generating": "Generating Questions...",
+        "loadingMessages": {
+          "analyzing": "Analyzing {count} questions",
+          "thinking": "Deep thinking...",
+          "generating": "Quick generation...",
+          "timeEstimate": "~{time}"
+        },
+        "tips": {
+          "title": "Practice Tips",
+          "tip1": "Start with fewer questions if you're new",
+          "tip2": "Review explanations carefully",
+          "tip3": "Take breaks between sessions",
+          "tip4": "Track your progress over time"
+        }
+      },
+      "exercise": {
+        "questionProgress": "Question {current} of {total}",
+        "multipleChoice": "Multiple Choice",
+        "submitAnswer": "Submit Answer",
+        "skip": "Skip",
+        "previous": "Previous",
+        "next": "Next",
+        "complete": "Complete",
+        "correct": "Correct!",
+        "incorrect": "Incorrect",
+        "explanation": {
+          "correctAnswer": "Correct Answer:",
+          "whyCorrect": "Why This is Correct:",
+          "wrongAnswers": "Why Other Options are Wrong:",
+          "additionalNotes": "Additional Notes:",
+          "exampleUsage": "Example Usage:",
+          "toggle": "Show/Hide Explanation"
+        },
+        "noQuestion": "No question available"
+      },
+      "results": {
+        "title": "Practice Results",
+        "performance": {
+          "excellent": "Excellent!",
+          "good": "Good job!",
+          "keepPracticing": "Keep practicing!",
+          "needMorePractice": "Need more practice"
+        },
+        "questionsCorrect": "Questions Correct",
+        "accuracy": "Accuracy",
+        "time": "Time",
+        "breakdown": {
+          "title": "Performance Breakdown",
+          "correctAnswers": "Correct Answers",
+          "incorrectAnswers": "Incorrect Answers",
+          "timePerQuestion": "Time per Question",
+          "exerciseSetId": "Exercise Set ID"
+        },
+        "answerReview": "Answer Review",
+        "fullReview": "Full Review",
+        "questionNumber": "Question {number}",
+        "correctAnswer": "Correct answer",
+        "yourAnswer": "Your answer",
+        "explanation": "Explanation",
+        "whyCorrect": "Why correct:",
+        "whyWrong": "Why others are wrong:",
+        "notes": "Notes:",
+        "noExplanation": "No explanation provided",
+        "actions": {
+          "retry": "Retry Same Questions",
+          "newExercise": "New Exercise",
+          "exportResults": "Export Results",
+          "backToStudy": "Back to Study"
+        },
+        "confirmExit": {
+          "title": "Exit Exercise",
+          "message": "Are you sure you want to exit this exercise?",
+          "warning": "If you exit, the questions will be deleted and you won't be able to retry them.",
+          "cancel": "Cancel",
+          "confirm": "Exit"
+        },
+        "encouragement": {
+          "lowScore": "Study Tip: Review the explanations for incorrect answers and try again. Practice makes perfect! Consider reviewing the theory section before attempting more exercises.",
+          "highScore": "Great work! You're mastering this topic! Try increasing the difficulty or moving to the next level for a greater challenge."
+        }
+      }
+    },
+    "flashcard": {
+      "title": "Flashcard",
+      "vocabularyTitle": "Vocabulary Flashcard {level}",
+      "grammarTitle": "Grammar Flashcard {level}",
+      "description": {
+        "vocabulary": "Learn vocabulary with interactive flashcards",
+        "grammar": "Learn grammar with interactive flashcards"
+      },
+      "status": {
+        "available": "Available",
+        "comingSoon": "Coming Soon"
+      },
+      "errors": {
+        "noVocabulary": "No vocabulary",
+        "noVocabularyFound": "No vocabulary found for {level} level",
+        "noGrammar": "No grammar",
+        "noGrammarFound": "No grammar found for {level} level"
+      },
+      "actions": {
+        "goBack": "Go Back"
+      }
+    },
+    "vocabulary": {
+      "title": "Vocabulary",
+      "description": "Learn vocabulary by level",
+      "pageTitle": "Study {level} - Vocabulary",
+      "pageSubtitle": "Learn JLPT vocabulary by level. Use search to find specific words.",
+      "search": {
+        "placeholder": "Search word (kanji/hiragana/meaning)",
+        "clear": "Clear",
+        "noResults": "No words found"
+      }
+    },
+    "grammar": {
+      "title": "Grammar",
+      "description": "Learn grammar by level",
+      "pageTitle": "Study {level} - Grammar",
+      "pageSubtitle": "Learn JLPT grammar by level. Use search to find specific patterns or meanings.",
+      "search": {
+        "placeholder": "Search grammar or meaning (JP/EN/VN)",
+        "clear": "Clear",
+        "noResults": "No grammar found"
+      }
+    },
+    "history": {
+      "title": "Test History",
+      "viewHistory": "View Test History",
+      "levelTitle": "{level} Test History",
+      "selectType": "Select test type to view history",
+      "description": "Review and retake completed tests",
+      "pageDescription": "Review your past test results and retake tests to improve your scores",
+      "vocabulary": {
+        "description": "Completed vocabulary test history"
+      },
+      "grammar": {
+        "description": "Completed grammar test history"
+      },
+      "reading": {
+        "description": "Completed reading comprehension test history"
+      },
+      "empty": {
+        "title": "No tests completed yet",
+        "description": "You haven't completed any tests yet. Start practicing now!",
+        "startPractice": "Start Practice"
+      },
+      "card": {
+        "correct": "correct",
+        "retry": "Retry",
+        "delete": "Delete",
+        "confirmDelete": "Confirm Delete",
+        "deleteConfirmText": "Click again to confirm deletion",
+        "timeUnknown": "Unknown",
+        "timeMinutes": "m",
+        "timeSeconds": "s",
+        "testResult": "Test Result"
+      },
+      "errors": {
+        "retryFailed": "Cannot retry this test",
+        "deleteFailed": "Cannot delete this test"
+      }
+    },
+    "exam": {
+      "title": "Take Exam",
+      "pageDescription": "Take exam from pre-generated questions",
+      "noSession": {
+        "title": "No exam available",
+        "description": "No exam found to take. Please create a new exam or view history.",
+        "createNew": "Create New Exam",
+        "viewHistory": "View History"
+      }
+    }
   },
   "settings": {
     "tabs": {
@@ -1063,5 +1699,178 @@
     },
     "saving": "Saving...",
     "saveSettings": "Save Settings"
+  },
+  "modals": {
+    "confirmation": {
+      "title": "Confirm",
+      "defaultMessage": "Are you sure you want to perform this action?",
+      "confirm": "Confirm",
+      "cancel": "Cancel",
+      "close": "Close"
+    },
+    "apiKey": {
+      "title": "API Key Setup",
+      "description": "To use AI chat features, you need to provide a Google Gemini API key",
+      "label": "Google Gemini API Key",
+      "placeholder": "AIzaSy...",
+      "required": "API key is required",
+      "invalidFormat": "API key must start with",
+      "invalid": "API key is invalid or expired",
+      "connectionError": "Connection error. Please try again.",
+      "saveError": "Unable to save API key. Please try again.",
+      "noAccess": "API key is invalid or has no access",
+      "getKey": "Get free API key",
+      "openStudio": "Open Google AI Studio",
+      "skip": "Skip",
+      "validate": "Validate",
+      "validating": "Validating...",
+      "geminiFormat": "Gemini API key must start with",
+      "groqFormat": "Groq API key must start with",
+      "instructions": {
+        "title": "How to get API key",
+        "step1": "Visit Google AI Studio",
+        "step2": "Sign in with Google account",
+        "step3": "Click \"Get API Key\" → \"Create API Key\"",
+        "step4": "Copy and paste API key into the field below"
+      },
+      "security": {
+        "note": "API key is stored securely on your device and is not shared with third parties."
+      }
+    },
+    "settings": {
+      "language": {
+        "title": "What language should iRIN communicate with you in?",
+        "selectLanguage": "Select Language",
+        "autoDetect": "Auto-detect Language",
+        "vietnamese": "Tiếng Việt",
+        "english": "English",
+        "japanese": "日本語",
+        "custom": "Custom",
+        "customPlaceholder": "Enter desired language (e.g., Korean, Français, Español...)"
+      },
+      "profile": {
+        "title": "Personal Information",
+        "subtitle": "Manage your display information and avatar",
+        "displayName": "Display Name",
+        "displayNamePlaceholder": "Enter display name",
+        "avatar": "Avatar",
+        "changeAvatar": "Change avatar",
+        "removeAvatar": "Remove avatar",
+        "save": "Save changes",
+        "saving": "Saving...",
+        "updateSuccess": "Information updated successfully!",
+        "updateError": "Error occurred while updating",
+        "unexpectedError": "An unexpected error occurred"
+      },
+      "security": {
+        "title": "Security",
+        "subtitle": "Manage password and account security",
+        "currentPassword": "Current Password",
+        "newPassword": "New Password",
+        "confirmPassword": "Confirm New Password",
+        "changePassword": "Change Password",
+        "changing": "Changing...",
+        "changeSuccess": "Password changed successfully!",
+        "changeError": "Error occurred while changing password",
+        "unexpectedError": "An unexpected error occurred"
+      }
+    },
+    "common": {
+      "save": "Save",
+      "saving": "Saving...",
+      "saved": "Saved",
+      "cancel": "Cancel",
+      "close": "Close",
+      "confirm": "Confirm",
+      "delete": "Delete",
+      "edit": "Edit",
+      "loading": "Loading...",
+      "success": "Success",
+      "error": "Error",
+      "retry": "Retry"
+    }
+  },
+  "library": {
+    "page": {
+      "title": "Library",
+      "subtitle": "Learning materials and reference books"
+    },
+    "categories": {
+      "jlpt": {
+        "title": "JLPT",
+        "description": "JLPT N1-N5 study materials",
+        "subtitle": "Official JLPT materials library"
+      },
+      "other": {
+        "title": "Other",
+        "description": "Books and materials beyond JLPT",
+        "subtitle": "Diverse Japanese learning resources"
+      }
+    },
+    "jlpt": {
+      "page": {
+        "title": "JLPT Library",
+        "subtitle": "Select JLPT level to view materials"
+      },
+      "books": {
+        "title": "JLPT Books",
+        "subtitle": "JLPT preparation materials for level"
+      },
+      "levels": {
+        "n1": {
+          "title": "JLPT N1",
+          "description": "Highest level - Advanced proficiency",
+          "subtitle": "N1 materials and tests"
+        },
+        "n2": {
+          "title": "JLPT N2",
+          "description": "Upper intermediate - Good proficiency",
+          "subtitle": "N2 materials and tests"
+        },
+        "n3": {
+          "title": "JLPT N3",
+          "description": "Intermediate - Basic communication",
+          "subtitle": "N3 materials and tests"
+        },
+        "n4": {
+          "title": "JLPT N4",
+          "description": "Elementary - Basic understanding",
+          "subtitle": "N4 materials and tests"
+        },
+        "n5": {
+          "title": "JLPT N5",
+          "description": "Beginner - Just starting",
+          "subtitle": "N5 materials and tests"
+        }
+      }
+    },
+    "other": {
+      "page": {
+        "title": "Other Library",
+        "subtitle": "Diverse Japanese learning books and materials"
+      },
+      "books": {
+        "title": "Other Books & Materials",
+        "subtitle": "Diverse Japanese learning resources beyond JLPT"
+      },
+      "upload": {
+        "title": "Upload Materials",
+        "description": "Add your books and materials",
+        "subtitle": "Feature coming soon"
+      }
+    },
+    "books": {
+      "title": "Book Library",
+      "subtitle": "Select books and learning materials",
+      "search": {
+        "placeholder": "Search books, authors..."
+      },
+
+      "noResults": {
+        "title": "No books found",
+        "description": "Try changing search keywords or filters"
+      },
+      "pages": "pages"
+    }
   }
 }

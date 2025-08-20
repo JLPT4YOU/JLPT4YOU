@@ -83,7 +83,7 @@ export function QuestionCard({
       <div className="flex-start mb-6">
         <div className="flex items-center gap-2">
           <span className="text-sm font-semibold text-muted-foreground">
-            {t('reviewAnswers.question.number', { number: questionNumber })}
+            {t('reviewAnswers.question.number')?.replace('{number}', questionNumber.toString()) || `Câu ${questionNumber}`}
           </span>
           {getStatusIcon()}
         </div>
@@ -109,7 +109,7 @@ export function QuestionCard({
             variant="outline"
             size="sm"
             onClick={() => onToggleExpand?.(question.id)}
-            className="flex items-center gap-2 flex-shrink-0 rounded-xl bg-muted/30 hover:bg-accent/50"
+            className="flex items-center gap-2 flex-shrink-0 rounded-xl bg-muted/30 hover-muted"
           >
             <span className="text-sm">{t('reviewAnswers.question.details')}</span>
             {isExpanded ? (
@@ -159,7 +159,7 @@ export function QuestionCard({
                   variant="ghost"
                   size="sm"
                   onClick={() => setShowExplanation(!showExplanation)}
-                  className="flex items-center gap-2 h-8 p-0 text-muted-foreground hover:text-foreground bg-muted/10 hover:bg-accent/30"
+                  className="flex items-center gap-2 h-8 p-0 text-muted-foreground hover:text-foreground bg-muted/10 hover-muted"
                 >
                   <MessageSquare className="h-4 w-4" />
                   <span className="text-sm">{t('reviewAnswers.question.explanation')}</span>

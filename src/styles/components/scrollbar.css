@@ -38,7 +38,3 @@
 .scrollbar-thumb-muted:hover::-webkit-scrollbar-thumb {
   background-color: hsl(var(--muted-foreground) / 0.4);
 }
-
-.scrollbar-track-transparent::-webkit-scrollbar-track {
-  background: transparent;
-}

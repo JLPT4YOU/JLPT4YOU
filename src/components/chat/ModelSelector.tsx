@@ -25,6 +25,9 @@ export interface ModelInfo {
   supportsThinking?: boolean;
   supportsGoogleSearch?: boolean;
   supportsCodeExecution?: boolean;
+  // New advanced features for GPT-OSS models
+  supportsReasoning?: boolean;
+  supportsTools?: boolean;
 }
 
 export interface ModelSelectorProps {
@@ -34,6 +37,9 @@ export interface ModelSelectorProps {
   enableThinking: boolean;
   onToggleThinking: () => void;
   className?: string;
+  // Advanced features for GPT-OSS models
+  reasoningEffort?: 'low' | 'medium' | 'high';
+  onReasoningEffortChange?: (effort: 'low' | 'medium' | 'high') => void;
 }
 
 export const ModelSelector: React.FC<ModelSelectorProps> = ({
@@ -42,7 +48,10 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
   onModelChange,
   enableThinking,
   onToggleThinking,
-  className
+  className,
+  // Advanced features
+  reasoningEffort = 'medium',
+  onReasoningEffortChange
 }) => {
   const { t } = useTranslations();
 
@@ -51,6 +60,10 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
 
   // Check if current model supports thinking
   const supportsThinking = currentModel?.supportsThinking || false;
+
+  // Check if current model supports advanced features
+  const supportsReasoning = currentModel?.supportsReasoning || false;
+  const supportsTools = currentModel?.supportsTools || false;
 
   return (
     <div className={cn("space-y-4", className)}>
@@ -89,13 +102,13 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
             {/* Streaming */}
             <div className={cn(
               "flex items-center gap-2 p-2 rounded-md",
-              currentModel.supportsStreaming 
-                ? "bg-green-500/10 text-green-600" 
-                : "bg-gray-500/10 text-gray-500"
+              currentModel.supportsStreaming
+                ? "bg-success/10 text-success"
+                : "bg-muted/50 text-muted-foreground"
             )}>
               <div className={cn(
                 "w-2 h-2 rounded-full",
-                currentModel.supportsStreaming ? "bg-green-500" : "bg-gray-400"
+                currentModel.supportsStreaming ? "bg-success" : "bg-muted-foreground"
               )} />
               <span>Streaming</span>
             </div>
@@ -103,13 +116,13 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
             {/* File Support */}
             <div className={cn(
               "flex items-center gap-2 p-2 rounded-md",
-              currentModel.supportsFiles 
-                ? "bg-green-500/10 text-green-600" 
-                : "bg-gray-500/10 text-gray-500"
+              currentModel.supportsFiles
+                ? "bg-success/10 text-success"
+                : "bg-muted/50 text-muted-foreground"
             )}>
               <div className={cn(
                 "w-2 h-2 rounded-full",
-                currentModel.supportsFiles ? "bg-green-500" : "bg-gray-400"
+                currentModel.supportsFiles ? "bg-success" : "bg-muted-foreground"
               )} />
               <span>Files</span>
             </div>
@@ -117,13 +130,13 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
             {/* Google Search */}
             <div className={cn(
               "flex items-center gap-2 p-2 rounded-md",
-              currentModel.supportsGoogleSearch 
-                ? "bg-green-500/10 text-green-600" 
-                : "bg-gray-500/10 text-gray-500"
+              currentModel.supportsGoogleSearch
+                ? "bg-success/10 text-success"
+                : "bg-muted/50 text-muted-foreground"
             )}>
               <div className={cn(
                 "w-2 h-2 rounded-full",
-                currentModel.supportsGoogleSearch ? "bg-green-500" : "bg-gray-400"
+                currentModel.supportsGoogleSearch ? "bg-success" : "bg-muted-foreground"
               )} />
               <span>Search</span>
             </div>
@@ -131,13 +144,13 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
             {/* Code Execution */}
             <div className={cn(
               "flex items-center gap-2 p-2 rounded-md",
-              currentModel.supportsCodeExecution 
-                ? "bg-green-500/10 text-green-600" 
-                : "bg-gray-500/10 text-gray-500"
+              currentModel.supportsCodeExecution
+                ? "bg-success/10 text-success"
+                : "bg-muted/50 text-muted-foreground"
             )}>
               <div className={cn(
                 "w-2 h-2 rounded-full",
-                currentModel.supportsCodeExecution ? "bg-green-500" : "bg-gray-400"
+                currentModel.supportsCodeExecution ? "bg-success" : "bg-muted-foreground"
               )} />
               <span>Code</span>
             </div>
@@ -154,7 +167,7 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
                   onClick={onToggleThinking}
                   className={cn(
                     "relative inline-flex h-5 w-9 items-center rounded-full transition-colors",
-                    enableThinking ? "bg-blue-600" : "bg-gray-200"
+                    enableThinking ? "bg-primary" : "bg-muted"
                   )}
                 >
                   <span
@@ -168,6 +181,50 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
               <p className="text-xs text-muted-foreground">
                 {t ? t('chat.thinkingModeDescription') : 'Shows AI reasoning process'}
               </p>
+            </div>
+          )}
+
+          {/* Reasoning Effort for GPT-OSS Models (only when thinking is enabled) */}
+          {supportsReasoning && enableThinking && onReasoningEffortChange && (
+            <div className="space-y-2 pt-2 border-t border-border/50">
+              <label className="text-sm font-medium">
+                Reasoning Effort
+              </label>
+              <Select
+                value={reasoningEffort}
+                onValueChange={onReasoningEffortChange}
+              >
+                <SelectTrigger className="w-full h-8 text-sm">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="low">Low - Fast responses</SelectItem>
+                  <SelectItem value="medium">Medium - Balanced</SelectItem>
+                  <SelectItem value="high">High - Deep thinking</SelectItem>
+                </SelectContent>
+              </Select>
+              <p className="text-xs text-muted-foreground">
+                Controls how much the AI thinks before responding
+              </p>
+            </div>
+          )}
+
+          {/* Info about auto-enabled tools for GPT-OSS models */}
+          {supportsTools && (
+            <div className="space-y-2 pt-2 border-t border-border/50">
+              <div className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                Auto-enabled Features
+              </div>
+              <div className="space-y-1">
+                <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                  Code Interpreter - Execute Python code
+                </div>
+                <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                  Browser Search - Web search capabilities
+                </div>
+              </div>
             </div>
           )}
         </div>
@@ -218,13 +275,13 @@ export const CompactModelSelector: React.FC<CompactModelSelectorProps> = ({
               {/* Feature indicators */}
               <div className="flex gap-1">
                 {model.supportsFiles && (
-                  <div className="w-1.5 h-1.5 bg-blue-500 rounded-full" title="Supports files" />
+                  <div className="w-1.5 h-1.5 bg-primary rounded-full" title="Supports files" />
                 )}
                 {model.supportsGoogleSearch && (
                   <div className="w-1.5 h-1.5 bg-green-500 rounded-full" title="Google Search" />
                 )}
                 {model.supportsCodeExecution && (
-                  <div className="w-1.5 h-1.5 bg-purple-500 rounded-full" title="Code execution" />
+                  <div className="w-1.5 h-1.5 bg-secondary rounded-full" title="Code execution" />
                 )}
               </div>
             </div>

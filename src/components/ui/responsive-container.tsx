@@ -270,7 +270,7 @@ export function ResponsiveCard({
         shadowClasses[shadow],
         border && 'border border-border',
         hover && 'hover-card',
-        'focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2',
+        'focus-within:border-ring',
         className
       )}
     >

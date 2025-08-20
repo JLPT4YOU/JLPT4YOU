@@ -1,3 +1,4 @@
+export { LandingPage } from './landing-page'
 export { LandingHeader } from './landing-header'
 export { HeroSection } from './hero-section'
 export { TetrisAnimation } from './tetris-animation'

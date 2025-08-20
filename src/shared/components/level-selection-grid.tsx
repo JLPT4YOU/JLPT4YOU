@@ -37,24 +37,24 @@ export interface LevelSelectionGridProps {
 // Default grid configurations
 const GRID_LAYOUTS = {
   jlpt: {
-    className: "grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5",
+    className: "grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5",
     maxWidth: "max-w-6xl"
   },
   driving: {
-    className: "grid-cols-1 md:grid-cols-2",
+    className: "grid-cols-2",
     maxWidth: "max-w-4xl"
   },
   custom: {
-    className: "grid-cols-1 sm:grid-cols-2 md:grid-cols-3",
+    className: "grid-cols-2 md:grid-cols-3",
     maxWidth: "max-w-5xl"
   }
 } as const
 
 // Gap configurations
 const GAP_CLASSES = {
-  sm: "gap-4",
-  md: "gap-6 md:gap-8",
-  lg: "gap-8 md:gap-10"
+  sm: "gap-3 sm:gap-4",
+  md: "gap-3 sm:gap-4 md:gap-6",
+  lg: "gap-4 sm:gap-6 md:gap-8"
 } as const
 
 export function LevelSelectionGrid({
@@ -207,8 +207,8 @@ export function useLevelConfigs() {
       name: level.toUpperCase(),
       description: `${translationKey}.${level}`,
       href: `/${language}${baseHref}/${level}`,
-      bgColor: `bg-[oklch(var(--jlpt-${level}))]`,
-      textColor: `text-[oklch(var(--jlpt-${level}-foreground))]`
+      bgColor: "bg-card",
+      textColor: "text-foreground"
     }))
   }
 
@@ -227,15 +227,15 @@ export function useLevelConfigs() {
       {
         id: 'karimen',
         name: 'Karimen',
-        bgColor: 'bg-[oklch(var(--driving-karimen))]',
-        textColor: 'text-[oklch(var(--driving-karimen-foreground))]',
+        bgColor: "bg-card",
+        textColor: "text-foreground",
         icon: 'Car'
       },
       {
         id: 'honmen',
         name: 'Honmen',
-        bgColor: 'bg-[oklch(var(--driving-honmen))]',
-        textColor: 'text-[oklch(var(--driving-honmen-foreground))]',
+        bgColor: "bg-card",
+        textColor: "text-foreground",
         icon: 'Car'
       }
     ]
@@ -256,18 +256,18 @@ export function useLevelConfigs() {
 
 // Responsive grid utilities
 export const RESPONSIVE_GRIDS = {
-  // 5-4-3-2-1 scaling (JLPT standard)
-  jlpt: "grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5",
+  // 5-4-3-2 scaling (JLPT standard)
+  jlpt: "grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5",
+
+  // 4-3-2 scaling (Challenge compact)
+  challenge: "grid-cols-2 md:grid-cols-3 lg:grid-cols-4",
+
+  // 3-2 scaling (General purpose)
+  standard: "grid-cols-2 md:grid-cols-3",
   
-  // 4-3-2-1 scaling (Challenge compact)
-  challenge: "grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4",
-  
-  // 3-2-1 scaling (General purpose)
-  standard: "grid-cols-1 sm:grid-cols-2 md:grid-cols-3",
-  
-  // 2-1 scaling (Driving tests)
-  driving: "grid-cols-1 md:grid-cols-2",
-  
+  // 2 scaling (Driving tests)
+  driving: "grid-cols-2",
+
   // Single column (Mobile-first)
   single: "grid-cols-1"
 } as const

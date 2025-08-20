@@ -87,14 +87,24 @@ export const METADATA_CONFIGS = {
   }
 } as const
 
-// Generate hreflang links for international SEO
+// Generate hreflang links for international SEO (delegates to unified i18n implementation)
+import { generateHreflangLinksLegacy as generateHreflangLinksUnified } from '@/lib/i18n'
+
 export function generateHreflangLinks(path: string): Record<string, string> {
-  return {
-    'vi-VN': `${BASE_URL}/vn${path}`,
-    'ja-JP': `${BASE_URL}/jp${path}`,
-    'en-US': `${BASE_URL}/en${path}`,
-    'x-default': `${BASE_URL}/vn${path}` // Vietnamese as default
+  // Use unified implementation from i18n.ts and convert Array to Record format
+  const hreflangArray = generateHreflangLinksUnified(path, BASE_URL)
+  const record: Record<string, string> = {}
+
+  for (const { hreflang, href } of hreflangArray) {
+    record[hreflang] = href
   }
+
+  // Add x-default for backward compatibility (Vietnamese as default)
+  if (!record['x-default']) {
+    record['x-default'] = record['vi-VN'] || `${BASE_URL}/vn${path}`
+  }
+
+  return record
 }
 
 // Get content language for HTTP headers

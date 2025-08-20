@@ -42,6 +42,12 @@ jest.mock('framer-motion', () => ({
   AnimatePresence: ({ children }) => children,
 }))
 
+// Supabase mocks are handled in individual test files to avoid conflicts
+
+// AI Services mocks are handled in individual test files to avoid conflicts
+
+// Mock Next.js server components - handled by moduleNameMapper in jest.config.js
+
 // Global test utilities
 global.ResizeObserver = jest.fn().mockImplementation(() => ({
   observe: jest.fn(),
@@ -70,3 +76,14 @@ Object.defineProperty(window, 'matchMedia', {
     dispatchEvent: jest.fn(),
   })),
 })
+
+// Mock performance API for middleware tests
+global.performance = {
+  now: jest.fn(() => Date.now()),
+  mark: jest.fn(),
+  measure: jest.fn(),
+  getEntriesByName: jest.fn(() => []),
+  getEntriesByType: jest.fn(() => []),
+  clearMarks: jest.fn(),
+  clearMeasures: jest.fn()
+}

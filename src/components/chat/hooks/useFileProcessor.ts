@@ -6,12 +6,26 @@
 
 import { Message } from '../index';
 
+// Type definitions for better type safety
+interface FileData {
+  data: string; // base64 encoded data
+  mimeType: string;
+  name: string;
+}
+
+interface ModelInfo {
+  supportsFiles?: boolean;
+  supportsThinking?: boolean;
+  maxFileSize?: number;
+  supportedFileTypes?: string[];
+}
+
 export interface FileProcessor {
-  convertFilesToBase64: (messages: Message[]) => Promise<any[]>;
-  convertFileObjectsToBase64: (files: File[]) => Promise<any[]>;
+  convertFilesToBase64: (messages: Message[]) => Promise<FileData[]>;
+  convertFileObjectsToBase64: (files: File[]) => Promise<FileData[]>;
   hasFiles: (messages: Message[]) => boolean;
-  validateFileSupport: (modelInfo: any, modelToUse: string) => void;
-  processFilesForGemini: (messages: Message[], modelInfo: any, modelToUse: string) => Promise<any[]>;
+  validateFileSupport: (modelInfo: ModelInfo, modelToUse: string) => void;
+  processFilesForGemini: (messages: Message[], modelInfo: ModelInfo, modelToUse: string) => Promise<FileData[]>;
 }
 
 export const createFileProcessor = (): FileProcessor => {
@@ -20,21 +34,21 @@ export const createFileProcessor = (): FileProcessor => {
     return messages.some(msg => msg.files && msg.files.length > 0);
   };
 
-  const validateFileSupport = (modelInfo: any, modelToUse: string): void => {
+  const validateFileSupport = (modelInfo: ModelInfo, modelToUse: string): void => {
     if (!modelInfo?.supportsFiles) {
       throw new Error(`Model ${modelToUse} does not support file uploads`);
     }
   };
 
-  const convertFilesToBase64 = async (messages: Message[]): Promise<any[]> => {
-    const fileData = [];
+  const convertFilesToBase64 = async (messages: Message[]): Promise<FileData[]> => {
+    const fileData: FileData[] = [];
 
     for (const message of messages) {
       if (message.files && message.files.length > 0) {
         for (const file of message.files) {
           if (file.url && file.url.startsWith('blob:')) {
             try {
-              console.log('Converting file to base64:', { name: file.name, url: file.url });
+
               const response = await fetch(file.url);
 
               if (!response.ok) {
@@ -57,15 +71,19 @@ export const createFileProcessor = (): FileProcessor => {
                 name: file.name
               });
 
-              console.log('Successfully converted file:', file.name);
+              if (process.env.NODE_ENV === 'development') {
+
+              }
             } catch (error) {
               const errorMessage = error instanceof Error ? error.message : String(error);
-              console.error('Error converting file to base64:', {
-                fileName: file.name,
-                fileUrl: file.url,
-                error: errorMessage,
-                errorType: typeof error
-              });
+              if (process.env.NODE_ENV === 'development') {
+                console.error('Error converting file to base64:', {
+                  fileName: file.name,
+                  fileUrl: file.url,
+                  error: errorMessage,
+                  errorType: typeof error
+                });
+              }
 
               // Continue with other files instead of failing completely
               throw new Error(`Failed to process file "${file.name}": ${errorMessage}`);
@@ -79,7 +97,7 @@ export const createFileProcessor = (): FileProcessor => {
                 mimeType: file.type || 'application/octet-stream',
                 name: file.name
               });
-              console.log('Successfully processed data URL file:', file.name);
+
             } catch (error) {
               const errorMessage = error instanceof Error ? error.message : String(error);
               console.error('Error processing data URL file:', {
@@ -96,13 +114,13 @@ export const createFileProcessor = (): FileProcessor => {
       }
     }
 
-    console.log('Converted files to base64', { fileCount: fileData.length });
+
     return fileData;
   };
 
   // Alternative method to convert File objects directly to base64
-  const convertFileObjectsToBase64 = async (files: File[]): Promise<any[]> => {
-    const fileData = [];
+  const convertFileObjectsToBase64 = async (files: File[]): Promise<FileData[]> => {
+    const fileData: FileData[] = [];
 
     for (const file of files) {
       try {
@@ -122,14 +140,18 @@ export const createFileProcessor = (): FileProcessor => {
           name: file.name
         });
 
-        console.log('Successfully converted File object:', file.name);
+        if (process.env.NODE_ENV === 'development') {
+
+        }
       } catch (error) {
         const errorMessage = error instanceof Error ? error.message : String(error);
-        console.error('Error converting File object to base64:', {
-          fileName: file.name,
-          error: errorMessage,
-          errorType: typeof error
-        });
+        if (process.env.NODE_ENV === 'development') {
+          console.error('Error converting File object to base64:', {
+            fileName: file.name,
+            error: errorMessage,
+            errorType: typeof error
+          });
+        }
         throw new Error(`Failed to process file "${file.name}": ${errorMessage}`);
       }
     }
@@ -137,17 +159,21 @@ export const createFileProcessor = (): FileProcessor => {
     return fileData;
   };
 
-  const processFilesForGemini = async (messages: Message[], modelInfo: any, modelToUse: string): Promise<any[]> => {
+  const processFilesForGemini = async (messages: Message[], modelInfo: ModelInfo, modelToUse: string): Promise<FileData[]> => {
     // Validate file support first
     validateFileSupport(modelInfo, modelToUse);
 
     try {
       // Try to convert files from messages (blob URLs)
       const fileData = await convertFilesToBase64(messages);
-      console.log('processFilesForGemini: Converted files to base64', { fileCount: fileData.length });
+      if (process.env.NODE_ENV === 'development') {
+
+      }
       return fileData;
     } catch (error) {
-      console.warn('Failed to convert files from messages, trying alternative method:', error);
+      if (process.env.NODE_ENV === 'development') {
+        console.warn('Failed to convert files from messages, trying alternative method:', error);
+      }
 
       // Fallback: try to process data URLs directly
       const fileData = [];
@@ -164,24 +190,34 @@ export const createFileProcessor = (): FileProcessor => {
                     mimeType: file.type || 'application/octet-stream',
                     name: file.name
                   });
-                  console.log('Successfully processed data URL file in fallback:', file.name);
+                  if (process.env.NODE_ENV === 'development') {
+
+                  }
                 }
               } else if (file.url && file.url.startsWith('blob:')) {
                 // For blob URLs that can't be fetched due to CSP, we need to skip them
-                console.warn(`Skipping blob URL file due to CSP restrictions: ${file.name}`);
+                if (process.env.NODE_ENV === 'development') {
+                  console.warn(`Skipping blob URL file due to CSP restrictions: ${file.name}`);
+                }
                 // Could potentially show user a message about re-uploading the file
               } else {
-                console.warn(`Unsupported file URL format: ${file.url}`);
+                if (process.env.NODE_ENV === 'development') {
+                  console.warn(`Unsupported file URL format: ${file.url}`);
+                }
               }
             } catch (fileError) {
-              console.error(`Error processing file ${file.name} in fallback:`, fileError);
+              if (process.env.NODE_ENV === 'development') {
+                console.error(`Error processing file ${file.name} in fallback:`, fileError);
+              }
             }
           }
         }
       }
 
       if (fileData.length > 0) {
-        console.log('Fallback method processed some files:', { fileCount: fileData.length });
+        if (process.env.NODE_ENV === 'development') {
+
+        }
         return fileData;
       }
 

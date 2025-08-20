@@ -2,10 +2,13 @@
  * User Prompt Generator
  * Tạo prompt riêng biệt cho user không liên quan đến core iRIN
  * Sau đó kết hợp với core prompt
+ *
+ * QUAN TRỌNG: File này PHẢI sử dụng direct API call để tránh inject core iRIN identity
+ * qua systemInstruction. Không được sử dụng AI service wrapper vì nó sẽ tự động
+ * thêm getCurrentSystemPrompt() vào mọi request.
  */
 
-import { GoogleGenAI } from '@google/genai';
-import { GEMINI_MODELS } from './gemini-config';
+import { getAIProviderManager } from './ai-provider-manager';
 
 export interface UserPromptInputs {
   preferredName: string;        // Tên gọi mong muốn
@@ -26,6 +29,8 @@ const USER_PROMPT_STORAGE_KEY = 'user_custom_prompt_config';
 
 /**
  * Tạo prompt user thuần túy không có core identity
+ * HYBRID APPROACH: Sử dụng secure wrapper để lấy API key, nhưng gọi direct API
+ * để tránh inject core iRIN identity qua systemInstruction
  */
 export async function generateUserPrompt(inputs: UserPromptInputs): Promise<string> {
   try {
@@ -55,38 +60,49 @@ REQUIREMENTS:
 
 Create an optimized prompt that captures the user's identity and communication preferences.`;
 
-    // Sử dụng Gemini trực tiếp (KHÔNG qua service để tránh inject core identity)
-    const apiKey = localStorage.getItem('gemini_api_key');
-    if (!apiKey) {
-      throw new Error('Cần cấu hình Gemini API key để tạo prompt');
+    // ✅ Sử dụng secure wrapper với method đặc biệt không có system prompt
+    const aiProviderManager = getAIProviderManager();
+
+    // Ensure we're using Gemini for prompt generation
+    const currentProvider = aiProviderManager.getCurrentProvider();
+    if (currentProvider !== 'gemini') {
+      aiProviderManager.switchProvider('gemini');
     }
 
-    const client = new GoogleGenAI({ apiKey });
+    const secureService = aiProviderManager.getCurrentService();
 
-    // Gọi trực tiếp API mà KHÔNG có systemInstruction
-    const response = await client.models.generateContent({
-      model: GEMINI_MODELS.FLASH_2_0,
-      contents: [{
-        role: 'user',
-        parts: [{ text: promptInstruction }]
-      }],
-      config: {
-        temperature: 0.8,
-        maxOutputTokens: 400
-        // QUAN TRỌNG: KHÔNG có systemInstruction để tránh inject core identity
-      }
+    // Gọi method đặc biệt không có system prompt để tránh inject core identity
+    if (!secureService.sendMessageWithoutSystemPrompt) {
+      throw new Error('sendMessageWithoutSystemPrompt method not available');
+    }
+
+    const generatedPrompt = await secureService.sendMessageWithoutSystemPrompt([{
+      role: 'user',
+      content: promptInstruction
+    }], {
+      temperature: 0.8,
+      maxTokens: 400,
+      model: 'gemini-2.0-flash-exp'
     });
 
-    const generatedPrompt = response.text?.trim();
-    if (!generatedPrompt) {
+    if (!generatedPrompt?.trim()) {
       throw new Error('Không thể tạo prompt. Vui lòng thử lại.');
     }
 
-    return generatedPrompt;
+    return generatedPrompt.trim();
 
   } catch (error) {
     console.error('Error generating user prompt:', error);
-    throw new Error(`Lỗi tạo prompt: ${error instanceof Error ? error.message : 'Unknown error'}`);
+
+    // Provide more specific error messages
+    if (error instanceof Error) {
+      if (error.message.includes('API key') || error.message.includes('dummy')) {
+        throw new Error('Cần cấu hình Gemini API key trong Settings để tạo prompt');
+      }
+      throw new Error(`Lỗi tạo prompt: ${error.message}`);
+    }
+
+    throw new Error('Lỗi tạo prompt: Unknown error');
   }
 }
 
@@ -192,27 +208,9 @@ export async function createAndSaveUserPrompt(inputs: UserPromptInputs): Promise
 /**
  * Sanitize user input
  */
+import { sanitizeText } from './shared/sanitize-utils'
 function sanitizeInput(input: string): string {
-  if (!input || typeof input !== 'string') return '';
-  
-  // Remove potentially dangerous patterns
-  const forbiddenPatterns = [
-    /you are not/gi,
-    /ignore previous/gi,
-    /forget that/gi,
-    /act as if/gi,
-    /pretend to be/gi,
-    /system\s*:/gi,
-    /assistant\s*:/gi,
-    /human\s*:/gi
-  ];
-
-  let sanitized = input;
-  forbiddenPatterns.forEach(pattern => {
-    sanitized = sanitized.replace(pattern, '[FILTERED]');
-  });
-
-  return sanitized.slice(0, 300).trim();
+  return sanitizeText(input, 300)
 }
 
 /**

@@ -3,8 +3,9 @@
  * Handles real authentication operations with Supabase
  */
 
-import { supabase } from '@/lib/supabase'
-import { AuthResponse, AuthError } from '@supabase/supabase-js'
+import { createClient } from '@/utils/supabase/client'
+import { AuthError } from '@supabase/supabase-js'
+import { createTranslationFunction, loadTranslation, DEFAULT_LANGUAGE, TranslationData } from './i18n'
 
 export interface AuthResult {
   success: boolean
@@ -27,7 +28,28 @@ export interface LoginData {
 }
 
 export class AuthService {
-  private supabase = supabase
+  private get supabase() {
+    return createClient()
+  }
+  private translations: TranslationData | null = null
+  private t: ((key: string) => string) | null = null
+
+  constructor() {
+    this.initializeTranslations()
+  }
+
+  private async initializeTranslations() {
+    try {
+      this.translations = await loadTranslation(DEFAULT_LANGUAGE)
+      this.t = createTranslationFunction(this.translations)
+    } catch (error) {
+      console.warn('Failed to load translations for AuthService:', error)
+    }
+  }
+
+  private getText(key: string, fallback: string): string {
+    return this.t ? this.t(key) : fallback
+  }
 
   /**
    * Register a new user with Supabase
@@ -64,9 +86,37 @@ export class AuthService {
       }
     } catch (error) {
       console.error('Registration error:', error)
+
+      // Enhanced error logging for debugging
+      if (error instanceof Error) {
+        console.error('Registration error details:', {
+          name: error.name,
+          message: error.message,
+          stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+        })
+      }
+
+      // Check if it's a database/RLS related error
+      const errorMessage = error instanceof Error ? error.message : String(error)
+      if (errorMessage.includes('Database error') || errorMessage.includes('RLS') || errorMessage.includes('policy')) {
+        console.error('🚨 Database/RLS error detected during registration')
+        return {
+          success: false,
+          error: 'Có lỗi cấu hình hệ thống. Vui lòng thử lại sau hoặc liên hệ hỗ trợ.'
+        }
+      }
+
+      // Check for network/timeout errors
+      if (errorMessage.includes('fetch') || errorMessage.includes('network') || errorMessage.includes('timeout')) {
+        return {
+          success: false,
+          error: 'Lỗi kết nối mạng. Vui lòng kiểm tra internet và thử lại.'
+        }
+      }
+
       return {
         success: false,
-        error: 'Đã xảy ra lỗi trong quá trình đăng ký. Vui lòng thử lại.'
+        error: this.getText('auth.errors.registrationError', 'Đã xảy ra lỗi trong quá trình đăng ký. Vui lòng thử lại.')
       }
     }
   }
@@ -90,13 +140,14 @@ export class AuthService {
 
       return {
         success: true,
-        user: authData.user
+        user: authData.user,
+        session: authData.session
       }
     } catch (error) {
       console.error('Login error:', error)
       return {
         success: false,
-        error: 'Đã xảy ra lỗi trong quá trình đăng nhập. Vui lòng thử lại.'
+        error: this.getText('auth.errors.loginError', 'Đã xảy ra lỗi trong quá trình đăng nhập. Vui lòng thử lại.')
       }
     }
   }
@@ -120,7 +171,7 @@ export class AuthService {
       console.error('Logout error:', error)
       return {
         success: false,
-        error: 'Đã xảy ra lỗi trong quá trình đăng xuất.'
+        error: this.getText('auth.errors.logoutError', 'Đã xảy ra lỗi trong quá trình đăng xuất.')
       }
     }
   }
@@ -184,7 +235,7 @@ export class AuthService {
       console.error('Reset password error:', error)
       return {
         success: false,
-        error: 'Đã xảy ra lỗi khi gửi email reset mật khẩu.'
+        error: this.getText('auth.errors.resetPasswordError', 'Đã xảy ra lỗi khi gửi email reset mật khẩu.')
       }
     }
   }
@@ -213,7 +264,7 @@ export class AuthService {
       console.error('OAuth sign in error:', error)
       return {
         success: false,
-        error: 'Đã xảy ra lỗi trong quá trình đăng nhập với mạng xã hội.'
+        error: this.getText('auth.errors.socialLoginError', 'Đã xảy ra lỗi trong quá trình đăng nhập với mạng xã hội.')
       }
     }
   }
@@ -229,24 +280,46 @@ export class AuthService {
    * Convert Supabase auth errors to user-friendly messages
    */
   private getErrorMessage(error: AuthError): string {
+    // Log error for debugging
+    console.error('Auth error:', {
+      message: error.message,
+      status: error.status,
+      name: error.name
+    })
+
     switch (error.message) {
       case 'Invalid login credentials':
-        return 'Email hoặc mật khẩu không đúng. Vui lòng thử lại.'
+        return this.getText('auth.errors.invalidCredentials', 'Sai tên đăng nhập hoặc mật khẩu')
       case 'User already registered':
-        return 'Email này đã được đăng ký. Vui lòng sử dụng email khác hoặc đăng nhập.'
+        return this.getText('auth.errors.emailAlreadyRegistered', 'Email này đã được đăng ký. Vui lòng sử dụng email khác hoặc đăng nhập.')
       case 'Password should be at least 6 characters':
-        return 'Mật khẩu phải có ít nhất 6 ký tự.'
+        return this.getText('auth.errors.passwordTooShort', 'Mật khẩu phải có ít nhất 6 ký tự.')
       case 'Unable to validate email address: invalid format':
-        return 'Định dạng email không hợp lệ.'
+        return this.getText('auth.errors.invalidEmailFormat', 'Định dạng email không hợp lệ.')
       case 'User not found':
-        return 'Không tìm thấy tài khoản với email này.'
+        return this.getText('auth.errors.accountNotFound', 'Không tìm thấy tài khoản với email này.')
       case 'Email not confirmed':
-        return 'Vui lòng xác nhận email trước khi đăng nhập.'
+        return this.getText('auth.errors.emailNotConfirmed', 'Vui lòng xác nhận email trước khi đăng nhập.')
       case 'Signup disabled':
-        return 'Tính năng đăng ký hiện tại đã bị tắt.'
+        return this.getText('auth.errors.registrationDisabled', 'Tính năng đăng ký hiện tại đã bị tắt.')
+      case 'Too many requests':
+        return 'Quá nhiều yêu cầu. Vui lòng đợi một chút rồi thử lại.'
+      case 'Network request failed':
+        return 'Lỗi kết nối mạng. Vui lòng kiểm tra internet và thử lại.'
       default:
+        // Check for specific error patterns
+        if (error.message.includes('rate limit')) {
+          return 'Quá nhiều yêu cầu. Vui lòng đợi một chút rồi thử lại.'
+        }
+        if (error.message.includes('network') || error.message.includes('fetch')) {
+          return 'Lỗi kết nối mạng. Vui lòng kiểm tra internet và thử lại.'
+        }
+        if (error.message.includes('timeout')) {
+          return 'Kết nối bị timeout. Vui lòng thử lại.'
+        }
+
         console.error('Unknown auth error:', error)
-        return error.message || 'Đã xảy ra lỗi không xác định. Vui lòng thử lại.'
+        return error.message || this.getText('auth.errors.unknownError', 'Đã xảy ra lỗi không xác định. Vui lòng thử lại.')
     }
   }
 }

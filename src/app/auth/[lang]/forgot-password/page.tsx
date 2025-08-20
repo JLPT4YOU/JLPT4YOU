@@ -1,7 +1,8 @@
 import { notFound } from "next/navigation"
-import { loadTranslation, Language } from "@/lib/i18n"
+import { loadTranslation, Language } from '@/lib/i18n'
 import { AuthLayoutWithLanguage } from "@/components/auth/auth-layout-with-language"
 import { ForgotPasswordForm } from "@/components/auth/forgot-password-form"
+import { getLanguageFromCode } from '@/lib/page-utils-core'
 
 interface ForgotPasswordPageProps {
   params: Promise<{
@@ -9,22 +10,7 @@ interface ForgotPasswordPageProps {
   }>
 }
 
-// Map language codes to Language type
-const getLanguageFromCode = (code: string): Language | null => {
-  switch (code) {
-    case '1':
-    case 'vn':
-      return 'vn'
-    case '2':
-    case 'jp':
-      return 'jp'
-    case '3':
-    case 'en':
-      return 'en'
-    default:
-      return null
-  }
-}
+
 
 export default async function ForgotPasswordPage({ params }: ForgotPasswordPageProps) {
   const { lang } = await params

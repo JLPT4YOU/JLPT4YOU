@@ -57,17 +57,35 @@ async function applyMigration(migrationPath) {
 
 async function main() {
   console.log('🚀 Starting database migration...')
-  
-  const migrationsDir = path.join(__dirname, '../database/migrations')
+
+  // Ensure exec_sql function exists before running any migrations
+  await createExecSqlFunction()
+
+  // Default migrations directory now points to supabase/migrations
+  const migrationsDir = path.join(__dirname, '../supabase/migrations')
   
   if (!fs.existsSync(migrationsDir)) {
     console.error('❌ Migrations directory not found:', migrationsDir)
     process.exit(1)
   }
-  
-  const migrationFiles = fs.readdirSync(migrationsDir)
-    .filter(file => file.endsWith('.sql'))
-    .sort()
+
+  // Optional: allow passing a specific file name as the first arg
+  const specificFile = process.argv[2]
+  let migrationFiles
+  if (specificFile) {
+    const specificPath = path.isAbsolute(specificFile)
+      ? specificFile
+      : path.join(migrationsDir, specificFile)
+    if (!fs.existsSync(specificPath)) {
+      console.error('❌ Specified migration file not found:', specificPath)
+      process.exit(1)
+    }
+    migrationFiles = [path.basename(specificPath)]
+  } else {
+    migrationFiles = fs.readdirSync(migrationsDir)
+      .filter(file => file.endsWith('.sql'))
+      .sort()
+  }
   
   if (migrationFiles.length === 0) {
     console.log('📝 No migration files found')
@@ -120,10 +138,8 @@ async function createExecSqlFunction() {
   
   try {
     const { error } = await supabase.rpc('exec_sql', { sql: functionSql })
-    if (error && !error.message.includes('already exists')) {
-      // Try direct execution
-      const { error: directError } = await supabase.from('_').select('*').limit(0)
-      // This will fail, but we can use the connection to execute raw SQL
+    if (error && !/already exists/i.test(error.message)) {
+      console.log('⚠️  exec_sql creation error (may already exist):', error.message)
     }
   } catch (err) {
     // Function creation might fail, but that's okay for now

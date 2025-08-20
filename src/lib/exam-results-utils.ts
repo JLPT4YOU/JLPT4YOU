@@ -24,6 +24,7 @@ export function generateMockExamResult(
 
   const incorrectAnswers = Math.floor((totalQuestions - correctAnswers) * 0.8) // Most wrong answers are incorrect, not unanswered
   const unansweredQuestions = totalQuestions - correctAnswers - incorrectAnswers
+  const flaggedQuestions = Math.floor(totalQuestions * (0.1 + Math.random() * 0.15)) // 10-25% flagged questions
 
   const percentage = Math.round((correctAnswers / totalQuestions) * 100)
   const timeLimit = (examType === 'jlpt' || examType === 'challenge') ?
@@ -53,6 +54,7 @@ export function generateMockExamResult(
       
 return {
         name: section,
+        displayName: getSectionDisplayName(section),
         score: sectionCorrect,
         total: sectionTotal,
         percentage: sectionPercentage,
@@ -72,6 +74,7 @@ return {
     correctAnswers,
     incorrectAnswers,
     unansweredQuestions,
+    flaggedQuestions,
     timeSpent,
     timeLimit,
     percentage,

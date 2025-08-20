@@ -1,11 +1,95 @@
 @import "tailwindcss";
 @import "../styles/base/variables.css";
-@import "../styles/base/reset.css";
+@import '../styles/base/design-tokens.css';
+@import '../styles/base/reset.css';
+@import '../styles/base/animations.css';
+@import '../styles/base/focus-fix.css';
 @import "../styles/themes/tailwind-config.css";
 @import "../styles/components/animations.css";
 @import "../styles/components/hover-effects.css";
 @import "../styles/components/scrollbar.css";
 @import "../styles/components/markdown.css";
 @import "../styles/components/status.css";
+@import "../styles/components/pdf-mobile.css";
 @import "../styles/layout/spacing.css";
+@import "../components/flashcard/flashcard-animations.css";
 @import "../styles/layout/typography.css";
+
+/* PDF Security - Disable print and context menu */
+@media print {
+  .pdf-no-print, .pdf-no-print * {
+    display: none !important;
+  }
+}
+
+/* Disable text selection and drag for PDF content */
+.pdf-secure {
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+  -webkit-touch-callout: none !important;
+  -webkit-user-drag: none !important;
+  -khtml-user-drag: none !important;
+  -moz-user-drag: none !important;
+  -o-user-drag: none !important;
+  user-drag: none !important;
+}
+
+/* PDF Watermark */
+.pdf-watermark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 10;
+  overflow: hidden;
+}
+
+.pdf-watermark::before {
+  content: 'JLPT4YOU';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-45deg);
+  font-size: clamp(24px, 8vw, 48px);
+  font-weight: bold;
+  color: rgba(0, 0, 0, 0.08);
+  font-family: 'Arial', sans-serif;
+  letter-spacing: 4px;
+  white-space: nowrap;
+  text-transform: uppercase;
+}
+
+/* Multiple watermarks for better coverage */
+.pdf-watermark::after {
+  content: 'JLPT4YOU';
+  position: absolute;
+  top: 25%;
+  left: 25%;
+  transform: translate(-50%, -50%) rotate(-45deg);
+  font-size: clamp(20px, 6vw, 36px);
+  font-weight: bold;
+  color: rgba(0, 0, 0, 0.06);
+  font-family: 'Arial', sans-serif;
+  letter-spacing: 3px;
+  white-space: nowrap;
+  text-transform: uppercase;
+}
+
+/* Removed pattern backgrounds - only text watermarks */
+
+/* Responsive watermark sizing */
+@media (max-width: 768px) {
+  .pdf-watermark::before {
+    font-size: clamp(18px, 6vw, 32px);
+    letter-spacing: 2px;
+  }
+
+  .pdf-watermark::after {
+    font-size: clamp(14px, 4vw, 24px);
+    letter-spacing: 2px;
+  }
+}

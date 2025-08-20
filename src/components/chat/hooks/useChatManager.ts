@@ -1,6 +1,8 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import { Chat, StoredChat, StoredMessage, chatStorage } from '../index';
-import { SafeLocalStorage, safeJsonParse, safeJsonStringify } from '@/lib/chat-error-handler';
+import { Chat, StoredChat, StoredMessage, chatStorage, Message } from '../index';
+import { safeJsonStringify } from '@/lib/chat-error-handler';
+import { UserStorage } from '@/lib/user-storage';
+import { useAuth } from '@/contexts/auth-context-simple';
 
 /**
  * Return type for the useChatManager hook
@@ -20,7 +22,7 @@ interface UseChatManagerReturn {
   handleClearHistory: () => Promise<void>;
   
   // Utilities
-  updateChatMessages: (chatId: string, updater: (messages: any[]) => any[]) => void;
+  updateChatMessages: (chatId: string, updater: (messages: Message[]) => Message[]) => void;
   updateChatTitle: (chatId: string, title: string) => void;
   updateChatLastMessage: (chatId: string, lastMessage: string) => void;
 }
@@ -54,63 +56,80 @@ interface UseChatManagerReturn {
  * ```
  */
 export const useChatManager = (): UseChatManagerReturn => {
+  // Dependencies
+  const { user } = useAuth();
+
   // State
   const [chats, setChats] = useState<Chat[]>([]);
   const [currentChatId, setCurrentChatId] = useState<string | undefined>(undefined);
-  
+  const [isStorageLoaded, setIsStorageLoaded] = useState(false);
+
   // Computed - memoized for performance
   const currentChat = useMemo(() => {
     return chats.find(chat => chat.id === currentChatId);
   }, [chats, currentChatId]);
 
-  // Load chat history from localStorage on mount
+  // Load user-scoped chat history on mount and when user changes
   useEffect(() => {
-    const savedChats = SafeLocalStorage.get('chat_history');
-    const savedCurrentChatId = SafeLocalStorage.get('current_chat_id');
-
-    if (savedChats) {
-      const parsedChats = safeJsonParse<StoredChat[]>(savedChats);
-      if (parsedChats) {
-        // Convert timestamp strings back to Date objects
-        const chatsWithDates: Chat[] = parsedChats.map((chat: StoredChat) => ({
-          ...chat,
-          timestamp: new Date(chat.timestamp),
-          messages: chat.messages.map((msg: StoredMessage) => ({
-            ...msg,
-            timestamp: new Date(msg.timestamp)
-          }))
-        }));
-        setChats(chatsWithDates);
-
-        if (savedCurrentChatId && chatsWithDates.find((chat: Chat) => chat.id === savedCurrentChatId)) {
-          setCurrentChatId(savedCurrentChatId);
-        }
-      } else {
-        // Clear corrupted data
-        SafeLocalStorage.remove('chat_history');
-        SafeLocalStorage.remove('current_chat_id');
-      }
+    if (!user?.id) {
+      // Clear data when no user
+      setChats([]);
+      setCurrentChatId(undefined);
+      setIsStorageLoaded(true);
+      return;
     }
-  }, []);
 
-  // Save chats to localStorage whenever chats change
+    // Ensure UserStorage is set for current user (defensive programming)
+    UserStorage.setCurrentUser(user.id);
+
+    // Load user-scoped data
+    const userChats = UserStorage.getJSON('chat_history');
+    const userCurrentChatId = UserStorage.getItem('current_chat_id');
+
+    if (userChats && Array.isArray(userChats)) {
+      // Convert timestamp strings back to Date objects
+      const chatsWithDates: Chat[] = userChats.map((chat: StoredChat) => ({
+        ...chat,
+        timestamp: new Date(chat.timestamp),
+        messages: chat.messages.map((msg: StoredMessage) => ({
+          ...msg,
+          timestamp: new Date(msg.timestamp)
+        }))
+      }));
+      setChats(chatsWithDates);
+
+      if (userCurrentChatId && chatsWithDates.find((chat: Chat) => chat.id === userCurrentChatId)) {
+        setCurrentChatId(userCurrentChatId);
+      }
+    } else {
+      // No data or corrupted data
+      setChats([]);
+      setCurrentChatId(undefined);
+    }
+
+    setIsStorageLoaded(true);
+  }, [user?.id]);
+
+  // Save chats to user-scoped storage whenever chats change
   useEffect(() => {
-    if (chats.length > 0) {
+    if (chats.length > 0 && user?.id && isStorageLoaded) {
       const serialized = safeJsonStringify(chats);
       if (serialized) {
-        SafeLocalStorage.set('chat_history', serialized);
+        UserStorage.setItem('chat_history', serialized);
       }
     }
-  }, [chats]);
+  }, [chats, user?.id, isStorageLoaded]);
 
-  // Save current chat ID to localStorage whenever it changes
+  // Save current chat ID to user-scoped storage whenever it changes
   useEffect(() => {
-    if (currentChatId) {
-      SafeLocalStorage.set('current_chat_id', currentChatId);
-    } else {
-      SafeLocalStorage.remove('current_chat_id');
+    if (user?.id && isStorageLoaded) {
+      if (currentChatId) {
+        UserStorage.setItem('current_chat_id', currentChatId);
+      } else {
+        UserStorage.removeItem('current_chat_id');
+      }
     }
-  }, [currentChatId]);
+  }, [currentChatId, user?.id, isStorageLoaded]);
 
   // Handle new chat
   const handleNewChat = useCallback(() => {
@@ -131,7 +150,7 @@ export const useChatManager = (): UseChatManagerReturn => {
     try {
       const { imageStorage } = await import('@/lib/image-storage');
       await imageStorage.deleteImagesByChat(chatId);
-    } catch (error) {
+    } catch {
       // Silent error - images may remain in storage
     }
 
@@ -149,7 +168,7 @@ export const useChatManager = (): UseChatManagerReturn => {
     // Clear all chats and their associated images
     try {
       await chatStorage.clearAllChats();
-    } catch (error) {
+    } catch {
       // Silent error - some data may remain
     }
 
@@ -157,13 +176,15 @@ export const useChatManager = (): UseChatManagerReturn => {
     setChats([]);
     setCurrentChatId(undefined);
 
-    // Clear localStorage
-    SafeLocalStorage.remove('chat_history');
-    SafeLocalStorage.remove('current_chat_id');
-  }, []);
+    // Clear user-scoped storage
+    if (user?.id) {
+      UserStorage.removeItem('chat_history');
+      UserStorage.removeItem('current_chat_id');
+    }
+  }, [user?.id]);
 
   // Utility to update chat messages
-  const updateChatMessages = useCallback((chatId: string, updater: (messages: any[]) => any[]) => {
+  const updateChatMessages = useCallback((chatId: string, updater: (messages: Message[]) => Message[]) => {
     setChats(prev => prev.map(chat => {
       if (chat.id !== chatId) return chat;
       return {

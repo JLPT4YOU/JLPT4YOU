@@ -3,6 +3,9 @@
  * Ready for integration with various AI providers
  */
 
+// Type definitions
+type AIServiceOptions = Record<string, unknown>
+
 export interface AIProvider {
   name: string;
   apiKey?: string;
@@ -68,18 +71,20 @@ export interface AIStreamResponse {
 
 // Enhanced service interface for AI providers
 export interface AIService {
-  sendMessage(messages: AIMessage[], options?: any): Promise<string>;
-  streamMessage(messages: AIMessage[], onChunk: (chunk: string) => void, options?: any): Promise<void>;
+  sendMessage(messages: AIMessage[], options?: AIServiceOptions): Promise<string>;
+  streamMessage(messages: AIMessage[], onChunk: (chunk: string) => void, options?: AIServiceOptions): Promise<void>;
   validateApiKey(apiKey: string): Promise<boolean>;
   generateChatTitle?(firstMessage: string): Promise<string>;
   configure?(apiKey: string): void;
   isConfigured?: boolean;
+  // Special method for user prompt generation without system prompt injection
+  sendMessageWithoutSystemPrompt?(messages: AIMessage[], options?: AIServiceOptions): Promise<string>;
 }
 
 // Base abstract class for AI services with common functionality
 export abstract class BaseAIService implements AIService {
   protected apiKey: string | null = null;
-  protected isConfigured: boolean = false;
+  public isConfigured: boolean = false;
   protected abstract defaultModel: string;
   protected abstract storageKeyPrefix: string;
 
@@ -94,20 +99,25 @@ export abstract class BaseAIService implements AIService {
   /**
    * Get API key from localStorage with provider-specific key
    */
+  /**
+   * Previously read API key from browser localStorage. For security reasons we no
+   * longer persist API keys on the client – they live only on the server,
+   * encrypted at rest. Always return null on the client.
+   */
   protected getApiKeyFromStorage(): string | null {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem(`${this.storageKeyPrefix}_api_key`);
-    }
     return null;
   }
 
   /**
    * Save API key to localStorage with provider-specific key
    */
+  /**
+   * NO-OP – we intentionally do NOT write API keys to localStorage anymore.
+   * Keys are stored encrypted in Supabase and retrieved only on the server.
+   */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   protected saveApiKeyToStorage(apiKey: string): void {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem(`${this.storageKeyPrefix}_api_key`, apiKey);
-    }
+    /* intentionally empty */
   }
 
   /**
@@ -170,8 +180,8 @@ export abstract class BaseAIService implements AIService {
   }
 
   // Abstract methods that must be implemented by concrete services
-  abstract sendMessage(messages: AIMessage[], options?: any): Promise<string>;
-  abstract streamMessage(messages: AIMessage[], onChunk: (chunk: string) => void, options?: any): Promise<void>;
+  abstract sendMessage(messages: AIMessage[], options?: AIServiceOptions): Promise<string>;
+  abstract streamMessage(messages: AIMessage[], onChunk: (chunk: string) => void, options?: AIServiceOptions): Promise<void>;
   abstract validateApiKey(apiKey: string): Promise<boolean>;
   abstract configure(apiKey: string): void;
 }

@@ -12,10 +12,10 @@ export function generateJLPTTestUrl(
   type: 'custom' | 'official',
   level: string,
   params: URLSearchParams,
-  language?: string
+  language?: string // eslint-disable-line @typescript-eslint/no-unused-vars
 ): string {
-  const basePath = language ? `/${language}` : ''
-  return `${basePath}/jlpt/${type}/${level.toLowerCase()}/test?${params.toString()}`
+  // JLPT routes don't use language prefix - they are protected routes
+  return `/jlpt/${type}/${level.toLowerCase()}/test?${params.toString()}`
 }
 
 /**

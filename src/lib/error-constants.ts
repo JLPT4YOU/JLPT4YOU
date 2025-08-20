@@ -71,7 +71,7 @@ export const ERROR_CODES = {
 // Error messages (Vietnamese)
 export const ERROR_MESSAGES_VN = {
   // Authentication errors
-  [ERROR_CODES.AUTH.INVALID_CREDENTIALS]: 'Email hoặc mật khẩu không đúng',
+  [ERROR_CODES.AUTH.INVALID_CREDENTIALS]: 'Sai tên đăng nhập hoặc mật khẩu',
   [ERROR_CODES.AUTH.TOKEN_EXPIRED]: 'Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại',
   [ERROR_CODES.AUTH.UNAUTHORIZED]: 'Bạn không có quyền truy cập',
   [ERROR_CODES.AUTH.FORBIDDEN]: 'Truy cập bị từ chối',
@@ -128,7 +128,7 @@ export const ERROR_MESSAGES_VN = {
 // Error messages (English)
 export const ERROR_MESSAGES_EN = {
   // Authentication errors
-  [ERROR_CODES.AUTH.INVALID_CREDENTIALS]: 'Invalid email or password',
+  [ERROR_CODES.AUTH.INVALID_CREDENTIALS]: 'Incorrect username or password',
   [ERROR_CODES.AUTH.TOKEN_EXPIRED]: 'Session expired, please login again',
   [ERROR_CODES.AUTH.UNAUTHORIZED]: 'You are not authorized to access this resource',
   [ERROR_CODES.AUTH.FORBIDDEN]: 'Access denied',
@@ -185,7 +185,7 @@ export const ERROR_MESSAGES_EN = {
 // Error messages (Japanese)
 export const ERROR_MESSAGES_JP = {
   // Authentication errors
-  [ERROR_CODES.AUTH.INVALID_CREDENTIALS]: 'メールアドレスまたはパスワードが正しくありません',
+  [ERROR_CODES.AUTH.INVALID_CREDENTIALS]: 'ユーザー名またはパスワードが正しくありません',
   [ERROR_CODES.AUTH.TOKEN_EXPIRED]: 'セッションが期限切れです。再度ログインしてください',
   [ERROR_CODES.AUTH.UNAUTHORIZED]: 'このリソースにアクセスする権限がありません',
   [ERROR_CODES.AUTH.FORBIDDEN]: 'アクセスが拒否されました',

@@ -47,31 +47,27 @@ export function MultiProviderApiKeyModal({
   // Load existing API keys and check status
   useEffect(() => {
     if (isOpen) {
-      // Load existing keys from localStorage
-      const geminiKey = localStorage.getItem('gemini_api_key') || ''
-      const groqKey = localStorage.getItem('groq_api_key') || ''
-      
-      setApiKeys({
-        gemini: geminiKey,
-        groq: groqKey
-      })
-
-      // Check provider status
-      const geminiConfigured = aiProviderManager.isProviderConfigured('gemini')
-      const groqConfigured = aiProviderManager.isProviderConfigured('groq')
-      
-      setProviderStatus({
-        gemini: geminiConfigured,
-        groq: groqConfigured
-      })
+      loadKeyStatus()
     }
   }, [isOpen])
+
+  const loadKeyStatus = async () => {
+    try {
+      const res = await fetch('/api/user/keys')
+      if (res.ok) {
+        const status = await res.json()
+        setProviderStatus(status)
+      }
+    } catch (error) {
+      console.error('Failed to load key status:', error)
+    }
+  }
 
   const validateApiKey = async (provider: ProviderType, apiKey: string): Promise<boolean> => {
     if (!apiKey.trim()) {
       setValidationErrors(prev => ({
         ...prev,
-        [provider]: 'API key là bắt buộc'
+        [provider]: t('modals.apiKey.required')
       }))
       return false
     }
@@ -80,7 +76,7 @@ export function MultiProviderApiKeyModal({
     if (provider === 'gemini' && !apiKey.startsWith('AIza')) {
       setValidationErrors(prev => ({
         ...prev,
-        [provider]: 'Gemini API key phải bắt đầu bằng "AIza"'
+        [provider]: `${t('modals.apiKey.geminiFormat')} "AIza"`
       }))
       return false
     }
@@ -88,7 +84,7 @@ export function MultiProviderApiKeyModal({
     if (provider === 'groq' && !apiKey.startsWith('gsk_')) {
       setValidationErrors(prev => ({
         ...prev,
-        [provider]: 'Groq API key phải bắt đầu bằng "gsk_"'
+        [provider]: `${t('modals.apiKey.groqFormat')} "gsk_"`
       }))
       return false
     }
@@ -100,17 +96,32 @@ export function MultiProviderApiKeyModal({
       const isValid = await aiProviderManager.validateApiKey(provider, apiKey.trim())
       
       if (isValid) {
-        // Configure the provider
-        aiProviderManager.configureProvider(provider, apiKey.trim())
+        // Save to server
+        const saveRes = await fetch(`/api/user/keys/${provider}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ key: apiKey.trim() })
+        })
         
-        // Update status
-        setProviderStatus(prev => ({ ...prev, [provider]: true }))
-        
-        return true
+        if (saveRes.ok) {
+          // Configure the provider
+          aiProviderManager.configureProvider(provider, apiKey.trim())
+          
+          // Update status
+          setProviderStatus(prev => ({ ...prev, [provider]: true }))
+          
+          return true
+        } else {
+          setValidationErrors(prev => ({
+            ...prev,
+            [provider]: t('modals.apiKey.saveError')
+          }))
+          return false
+        }
       } else {
         setValidationErrors(prev => ({
           ...prev,
-          [provider]: 'API key không hợp lệ hoặc không có quyền truy cập'
+          [provider]: t('modals.apiKey.noAccess')
         }))
         return false
       }
@@ -118,7 +129,7 @@ export function MultiProviderApiKeyModal({
       console.error(`${provider} API key validation failed:`, error)
       setValidationErrors(prev => ({
         ...prev,
-        [provider]: 'Không thể xác thực API key. Vui lòng thử lại.'
+        [provider]: t('modals.apiKey.connectionError')
       }))
       return false
     } finally {
@@ -132,7 +143,7 @@ export function MultiProviderApiKeyModal({
     
     if (isValid) {
       // Show success message or close modal
-      console.log(`${provider} API key configured successfully`)
+
     }
   }
 
@@ -146,7 +157,7 @@ export function MultiProviderApiKeyModal({
           features: ['Thinking Mode', 'File Upload', 'Google Search', 'Code Execution'],
           getKeyUrl: 'https://aistudio.google.com/app/apikey',
           keyFormat: 'AIza...',
-          color: 'bg-blue-500'
+          color: 'bg-primary'
         }
       case 'groq':
         return {
@@ -156,7 +167,7 @@ export function MultiProviderApiKeyModal({
           features: ['Ultra-fast Speed', 'Cost Effective', 'Llama Models', 'High Throughput'],
           getKeyUrl: 'https://console.groq.com/keys',
           keyFormat: 'gsk_...',
-          color: 'bg-purple-500'
+          color: 'bg-secondary'
         }
       default:
         return null

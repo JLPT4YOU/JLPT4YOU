@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useCallback, useMemo, Suspense } from 'react'
+import { useState, useEffect, useCallback, useMemo } from 'react'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import {
   Language,
@@ -26,7 +26,7 @@ export interface UseTranslationsReturn {
   translations: TranslationData | null
   isLoading: boolean
   isAuthenticated: boolean
-  t: (key: string) => any
+  t: (key: string) => string
   switchLanguage: (newLanguage: Language) => void
 }
 
@@ -49,12 +49,14 @@ export function useTranslations(): UseTranslationsReturn {
   // State management
   const [translations, setTranslations] = useState<TranslationData | null>(null)
   const [isLoading, setIsLoading] = useState(true)
-  const [forceRefresh, setForceRefresh] = useState(0)
+
   
-  // Check if user is authenticated (simple check for auth token)
+  // ✅ FIXED: Authentication check now handled by Supabase auth context
+  // Note: This simple cookie check is no longer needed since we use Supabase's session management
   const isAuthenticated = useMemo(() => {
     if (typeof window === 'undefined') return false
-    return !!document.cookie.includes('jlpt4you_auth_token')
+    // This can be enhanced to check Supabase session cookies if needed
+    return !!document.cookie.includes('sb-access-token')
   }, [])
   
   // Get stored language preference
@@ -111,7 +113,7 @@ export function useTranslations(): UseTranslationsReturn {
     }
     
     return pathLanguage
-  }, [pathname, isAuthenticated, getStoredLanguagePreference, forceRefresh, isHydrated])
+  }, [pathname, isAuthenticated, getStoredLanguagePreference, isHydrated])
   
   // Store language preference
   const storeLanguagePreference = useCallback((language: Language) => {
@@ -182,10 +184,9 @@ export function useTranslations(): UseTranslationsReturn {
       // Handle URL routing
       if (isAuthenticated && !isAuthPage) {
         // Authenticated users on main pages: use clean URLs with stored preference
-        console.log(`Language switched to ${newLanguage} (authenticated user - clean URLs)`)
+
         
-        // Force refresh the language detection
-        setForceRefresh(prev => prev + 1)
+
         
         // Force re-render by dispatching custom event
         window.dispatchEvent(new CustomEvent('languageChanged', { detail: { language: newLanguage } }))
@@ -197,8 +198,7 @@ export function useTranslations(): UseTranslationsReturn {
         const params = new URLSearchParams(searchParams.toString())
         const fullPath = params.toString() ? `${newPath}?${params.toString()}` : newPath
         
-        console.log(`Switching language from ${currentLanguage} to ${newLanguage}`)
-        console.log(`Navigating from ${pathname} to ${fullPath}`)
+
         
         router.push(fullPath)
       }
@@ -261,12 +261,13 @@ export function useTranslations(): UseTranslationsReturn {
     return () => {
       isMounted = false
     }
-  }, [currentLanguage, isAuthenticated, getStoredLanguagePreference, loadTranslationsForLanguage])
+  }, [currentLanguage, isAuthenticated, getStoredLanguagePreference, loadTranslationsForLanguage, isHydrated])
   
   // Listen for language change events (for authenticated users with clean URLs)
   useEffect(() => {
-    const handleLanguageChange = async (event: CustomEvent) => {
-      const newLanguage = event.detail.language as Language
+    const handleLanguageChange = async (event: Event) => {
+      const customEvent = event as CustomEvent
+      const newLanguage = customEvent.detail.language as Language
       if (newLanguage && newLanguage !== currentLanguage) {
         try {
           setIsLoading(true)
@@ -279,11 +280,11 @@ export function useTranslations(): UseTranslationsReturn {
         }
       }
     }
-    
-    window.addEventListener('languageChanged', handleLanguageChange as EventListener)
-    
+
+    window.addEventListener('languageChanged', handleLanguageChange)
+
     return () => {
-      window.removeEventListener('languageChanged', handleLanguageChange as EventListener)
+      window.removeEventListener('languageChanged', handleLanguageChange)
     }
   }, [currentLanguage, loadTranslationsForLanguage])
   

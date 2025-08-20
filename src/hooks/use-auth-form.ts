@@ -8,8 +8,8 @@ import { useRouter } from "next/navigation"
 import { TranslationData, Language, getLocalizedPath } from "@/lib/i18n"
 import { useTranslation } from "@/lib/use-translation"
 import { baseValidationRules, defaultErrorMessages, translationKeys } from "@/lib/auth-validation"
-import { useAuth } from "@/contexts/auth-context"
-import { getLoginRedirectUrl } from "@/lib/auth-utils"
+import { useAuth } from '@/contexts/auth-context-simple'
+import { getLoginRedirectUrl, getLoginUrl, getRegisterUrl, getForgotPasswordUrl } from "@/lib/auth-utils"
 
 export interface AuthFormConfig {
   formType: 'login' | 'register' | 'forgotPassword'
@@ -161,7 +161,7 @@ export function useAuthForm<T extends AuthFormData>(
   }, [handleInputChange])
 
   // Get auth context
-  const { login, register } = useAuth()
+  const { signIn } = useAuth()
 
   // Auth actions based on form type
   const performAuthAction = useCallback(async (data: T): Promise<void> => {
@@ -170,41 +170,57 @@ export function useAuthForm<T extends AuthFormData>(
     switch (formType) {
       case 'login':
         const loginData = data as LoginFormData
-        const result = await login(loginData.email, loginData.password)
+        const result = await signIn(loginData.email, loginData.password)
 
-        if (result.success) {
+        if (!result.error) {
           // Get redirect URL or default to homepage
           const redirectUrl = getLoginRedirectUrl()
-          router.push(redirectUrl)
+
+          // Use window.location for hard refresh to ensure session cookies are properly set
+          window.location.href = redirectUrl
         } else {
-          throw new Error(result.error || getMessage('general', 'loginFailed'))
+          // Convert Supabase error messages to Vietnamese
+          let errorMessage = result.error
+          if (typeof result.error === 'string') {
+            if (result.error.includes('Invalid login credentials') ||
+                result.error.includes('invalid login credentials') ||
+                result.error.includes('Invalid credentials') ||
+                result.error.includes('AuthApiError: Invalid login credentials')) {
+              errorMessage = 'Sai tên đăng nhập hoặc mật khẩu'
+            }
+          }
+          throw new Error(errorMessage || getMessage('general', 'loginFailed'))
         }
         break
 
       case 'register':
         const registerData = data as RegisterFormData
-        const registerResult = await register(
-          registerData.email, 
-          registerData.password,
-          { name: registerData.email.split('@')[0] } // Extract name from email as default
-        )
+        const { authService } = await import('@/lib/auth-service')
+        const registerResult = await authService.register({
+          email: registerData.email,
+          password: registerData.password
+        })
 
-        if (registerResult.success) {
-          if (registerResult.error && registerResult.error.includes('xác nhận email')) {
-            // Show success message about email confirmation
-            const loginPath = language
-              ? getLocalizedPath('login?registered=true&confirm=true', language)
-              : '/auth/vn/login?registered=true&confirm=true'
-            router.push(loginPath)
-          } else {
-            // Registration successful, redirect to login
-            const loginPath = language
-              ? getLocalizedPath('login?registered=true', language)
-              : '/auth/vn/login?registered=true'
-            router.push(loginPath)
-          }
+        if (!registerResult.success) {
+          throw new Error(registerResult.error || getMessage('general', 'registerFailed'))
+        }
+
+        // If registration successful but needs email confirmation
+        if (registerResult.error === 'confirmation_required') {
+          // Redirect to login page with success message
+          const loginPath = language ? getLocalizedPath('login', language) : getLoginUrl()
+          router.push(`${loginPath}?registered=true`)
         } else {
-          throw new Error(registerResult.error || getMessage('general', 'registrationFailed'))
+          // Auto login after successful registration
+          const loginResult = await signIn(registerData.email, registerData.password)
+          if (!loginResult.error) {
+            const redirectUrl = getLoginRedirectUrl()
+            window.location.href = redirectUrl
+          } else {
+            // Registration successful but auto-login failed, redirect to login
+            const loginPath = language ? getLocalizedPath('login', language) : getLoginUrl()
+            router.push(`${loginPath}?registered=true`)
+          }
         }
         break
 
@@ -216,7 +232,7 @@ export function useAuthForm<T extends AuthFormData>(
       default:
         throw new Error(getMessage('general', 'error'))
     }
-  }, [config, router, getMessage, login, register])
+  }, [config, router, signIn, getMessage])
 
   // Handle form submission
   const handleSubmit = useCallback(async (e: React.FormEvent) => {
@@ -253,9 +269,10 @@ export function useAuthForm<T extends AuthFormData>(
     setErrors({})
 
     try {
-      // Simulate API delay
-      const delay = config.formType === 'register' ? 2000 : 1500
-      await new Promise(resolve => setTimeout(resolve, delay))
+      // Only simulate delay for registration to show form validation
+      if (config.formType === 'register') {
+        await new Promise(resolve => setTimeout(resolve, 1000))
+      }
       
       await performAuthAction(formData)
       
@@ -263,7 +280,18 @@ export function useAuthForm<T extends AuthFormData>(
         config.onSuccess(formData)
       }
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : getMessage('general', 'error')
+      let errorMessage = error instanceof Error ? error.message : getMessage('general', 'error')
+
+      // Convert Supabase error messages to Vietnamese
+      if (typeof errorMessage === 'string') {
+        if (errorMessage.includes('Invalid login credentials') ||
+            errorMessage.includes('invalid login credentials') ||
+            errorMessage.includes('Invalid credentials') ||
+            errorMessage.includes('AuthApiError: Invalid login credentials')) {
+          errorMessage = 'Sai tên đăng nhập hoặc mật khẩu'
+        }
+      }
+
       setErrors({ general: errorMessage })
 
       if (config.onError) {
@@ -276,17 +304,17 @@ export function useAuthForm<T extends AuthFormData>(
 
   // Navigation helpers
   const navigateToLogin = useCallback(() => {
-    const loginPath = config.language ? getLocalizedPath('login', config.language) : '/auth/vn/login'
+    const loginPath = config.language ? getLocalizedPath('login', config.language) : getLoginUrl()
     router.push(loginPath)
   }, [router, config.language])
 
   const navigateToRegister = useCallback(() => {
-    const registerPath = config.language ? getLocalizedPath('register', config.language) : '/auth/vn/register'
+    const registerPath = config.language ? getLocalizedPath('register', config.language) : getRegisterUrl()
     router.push(registerPath)
   }, [router, config.language])
 
   const navigateToForgotPassword = useCallback(() => {
-    const forgotPath = config.language ? getLocalizedPath('forgot-password', config.language) : '/auth/vn/forgot-password'
+    const forgotPath = config.language ? getLocalizedPath('forgot-password', config.language) : getForgotPasswordUrl()
     router.push(forgotPath)
   }, [router, config.language])
 

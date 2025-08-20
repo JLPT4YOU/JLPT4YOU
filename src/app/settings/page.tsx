@@ -1,12 +1,40 @@
 "use client"
 
-import { useState } from 'react'
+import { useState, Suspense, lazy } from 'react'
 import { ProtectedRoute } from "@/components/auth/protected-route"
-import { ProfileSection } from "@/components/settings/profile-section"
-import { SecuritySection } from "@/components/settings/security-section"
-import { Settings, User, Shield } from "lucide-react"
+import { Settings, User, Shield, Gift } from "lucide-react"
 import { useTranslations } from "@/hooks/use-translations"
 import { cn } from "@/lib/utils"
+
+// Dynamic imports for settings sections to reduce initial bundle size
+const ProfileSection = lazy(() => import("@/components/settings/profile-section").then(module => ({
+  default: module.ProfileSection
+})))
+
+const SecuritySection = lazy(() => import("@/components/settings/security-section").then(module => ({
+  default: module.SecuritySection
+})))
+
+const RedeemCodeSection = lazy(() => import("@/components/settings/redeem-code-section").then(module => ({
+  default: module.RedeemCodeSection
+})))
+
+// Loading fallback component for settings sections
+function SettingsSectionLoader() {
+  return (
+    <div className="space-y-6">
+      <div className="animate-pulse">
+        <div className="h-8 bg-muted/20 rounded-lg mb-4"></div>
+        <div className="space-y-4">
+          <div className="h-4 bg-muted/20 rounded w-3/4"></div>
+          <div className="h-4 bg-muted/20 rounded w-1/2"></div>
+          <div className="h-12 bg-muted/20 rounded"></div>
+          <div className="h-12 bg-muted/20 rounded"></div>
+        </div>
+      </div>
+    </div>
+  )
+}
 
 export default function SettingsPage() {
   const { t } = useTranslations()
@@ -24,6 +52,12 @@ export default function SettingsPage() {
       label: t ? t('pages.settings.security.title') : 'Bảo mật tài khoản',
       icon: Shield,
       description: t ? t('pages.settings.security.description') : 'Quản lý mật khẩu và bảo mật'
+    },
+    {
+      id: 'redeem',
+      label: t ? t('pages.settings.profile.redeemCode.title') : 'Kích hoạt Premium',
+      icon: Gift,
+      description: t ? t('pages.settings.profile.redeemCode.description') : 'Nhập mã code để nâng cấp tài khoản lên Premium'
     }
   ]
 
@@ -66,7 +100,7 @@ export default function SettingsPage() {
                             "w-full text-left p-4 rounded-xl transition-all duration-200 group",
                             isActive
                               ? "bg-primary text-primary-foreground shadow-sm"
-                              : "hover:bg-muted/50 text-foreground"
+                              : "text-foreground hover:bg-muted/30 hover:text-foreground"
                           )}
                         >
                           <div className="flex items-start gap-3">
@@ -98,8 +132,11 @@ export default function SettingsPage() {
 
               {/* Main Content */}
               <div className="flex-1 min-w-0">
-                {activeSection === 'profile' && <ProfileSection />}
-                {activeSection === 'security' && <SecuritySection />}
+                <Suspense fallback={<SettingsSectionLoader />}>
+                  {activeSection === 'profile' && <ProfileSection />}
+                  {activeSection === 'security' && <SecuritySection />}
+                  {activeSection === 'redeem' && <RedeemCodeSection />}
+                </Suspense>
               </div>
             </div>
           </div>

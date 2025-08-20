@@ -2,7 +2,9 @@
 
 import { ExamInterface } from "@/components/exam"
 import { generateJLPTQuestions } from "@/lib/sample-exam-data"
-import { ExamPageTemplate } from "@/components/layout/exam-page-template";
+import { ExamPageTemplate } from "@/components/layout/exam-page-template"
+import { getLanguageFromPath, DEFAULT_LANGUAGE, type Language } from "@/lib/i18n"
+import { usePathname } from "next/navigation"
 import { useExamConfig } from "@/hooks/use-exam-config";
 
 import { isValidJLPTLevel, isValidJLPTType } from "@/lib/utils";
@@ -109,9 +111,12 @@ function JLPTTestContent({ params, translations }: JLPTTestContentProps) {
 }
 
 export default function JLPTTestPage({ params }: JLPTTestPageProps) {
+  // Detect current language from the URL so the exam page can load correct translations
+  const pathname = usePathname()
+  const language: Language = getLanguageFromPath(pathname) || DEFAULT_LANGUAGE;
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <ExamPageTemplate>
+      <ExamPageTemplate language={language}>
         {(translations) => (
           <JLPTTestContent params={params} translations={translations} />
         )}

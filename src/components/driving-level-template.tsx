@@ -3,54 +3,45 @@
 import Link from "next/link";
 import { Car, Clock, FileText, Users, BookOpen, GraduationCap, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useTranslations } from "@/hooks/use-translations";
+import { WithTranslations, getLevelDisplayInfo } from "@/components/shared/component-utils";
 
 interface DrivingLevelTemplateProps {
   level: "karimen" | "honmen";
 }
 
 export function DrivingLevelTemplate({ level }: DrivingLevelTemplateProps) {
-  const { translations, t, language, isLoading } = useTranslations();
+  return (
+    <WithTranslations>
+      {({ translations, t }) => {
+        const levelInfo = getLevelDisplayInfo(level, 'driving')
 
-  if (isLoading || !translations) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-muted-foreground">Loading...</p>
-        </div>
-      </div>
-    );
-  }
+        const levelInfoMap = {
+          karimen: {
+            title: t('driving.levelInfo.karimen.title'),
+            description: t('driving.levelInfo.karimen.description'),
+            time: t('driving.levelInfo.karimen.time'),
+            questions: t('driving.levelInfo.karimen.questions'),
+            passScore: t('driving.levelInfo.karimen.passScore'),
+            icon: BookOpen,
+            bgColor: "bg-secondary",
+            textColor: "text-secondary-foreground"
+          },
+          honmen: {
+            title: t('driving.levelInfo.honmen.title'),
+            description: t('driving.levelInfo.honmen.description'),
+            time: t('driving.levelInfo.honmen.time'),
+            questions: t('driving.levelInfo.honmen.questions'),
+            passScore: t('driving.levelInfo.honmen.passScore'),
+            icon: GraduationCap,
+            bgColor: "bg-primary/10",
+            textColor: "text-primary"
+          }
+        };
 
-  const levelInfo = {
-    karimen: {
-      title: t('driving.levelInfo.karimen.title'),
-      description: t('driving.levelInfo.karimen.description'),
-      time: t('driving.levelInfo.karimen.time'),
-      questions: t('driving.levelInfo.karimen.questions'),
-      passScore: t('driving.levelInfo.karimen.passScore'),
-      icon: BookOpen,
-      bgColor: "bg-secondary",
-      textColor: "text-secondary-foreground"
-    },
-    honmen: {
-      title: t('driving.levelInfo.honmen.title'),
-      description: t('driving.levelInfo.honmen.description'),
-      time: t('driving.levelInfo.honmen.time'),
-      questions: t('driving.levelInfo.honmen.questions'),
-      passScore: t('driving.levelInfo.honmen.passScore'),
-      icon: GraduationCap,
-      bgColor: "bg-primary/10",
-      textColor: "text-primary"
-    }
-  };
+        const info = levelInfoMap[level];
 
-  const info = levelInfo[level];
-  const IconComponent = info.icon;
-
-  // Tạo href cho trang chọn thời gian
-  const testSetupHref = `/driving/${level}/test-setup`;
+        // Tạo href cho trang chọn thời gian
+        const testSetupHref = `/driving/${level}/test-setup`;
 
   return (
     <div className="min-h-screen bg-background">
@@ -79,7 +70,7 @@ export function DrivingLevelTemplate({ level }: DrivingLevelTemplateProps) {
             </div>
 
             {/* Start Test Section */}
-            <div className="bg-gradient-to-r from-muted/50 to-accent/30 rounded-2xl p-8 md:p-12 text-center">
+            <div className="bg-muted/30 rounded-2xl p-8 md:p-12 text-center">
               <div className="w-20 h-20 bg-muted/50 rounded-full flex items-center justify-center mx-auto mb-6">
                 <Car className="w-10 h-10 text-muted-foreground" />
               </div>
@@ -102,5 +93,8 @@ export function DrivingLevelTemplate({ level }: DrivingLevelTemplateProps) {
         </div>
       </div>
     </div>
+        )
+      }}
+    </WithTranslations>
   );
 }

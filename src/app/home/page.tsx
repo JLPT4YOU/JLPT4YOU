@@ -9,11 +9,10 @@ export default function HomePage() {
     <ProtectedRoute>
       <LanguagePageWrapper>
         {({ language, translations, t, isLoading, isAuthenticated }) => (
-          <HomePageContent 
-            key={language} 
-            translations={translations} 
+          <HomePageContent
+            key={language}
+            translations={translations}
             language={language}
-            t={t}
             isAuthenticated={isAuthenticated}
           />
         )}

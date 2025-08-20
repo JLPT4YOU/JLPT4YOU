@@ -5,10 +5,12 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server'
-import { supabaseAdmin } from '@/lib/supabase'
-import { addBalance } from '@/lib/balance-utils'
-import { cookies } from 'next/headers'
-import { createClient } from '@supabase/supabase-js'
+import { supabaseAdmin } from '@/utils/supabase/admin'
+import { addBalanceServer } from '@/lib/balance-utils-server'
+import { requireAdminAuth } from '@/lib/admin-auth'
+import { SessionValidator } from '@/lib/session-validator' // ✅ ADDED: Session validator
+import { sendTopUpSuccessAdmin } from '@/lib/notifications-server'
+import { devConsole } from '@/lib/console-override'
 
 // Type definitions
 interface TopUpRequestBody {
@@ -20,42 +22,51 @@ interface TopUpRequestBody {
 
 // TopUpResponse interface removed - using inline response types
 
+// Minimal internal user type for GET route (admin or regular)
+type SafeUser = { id: string; email?: string; role?: string }
+
 /**
- * 🔒 AUTHENTICATION HELPER
- * Verifies user authentication and returns authenticated user
+ * ✅ ENHANCED AUTHENTICATION HELPER
+ * Uses SessionValidator for comprehensive authentication
  */
-async function getAuthenticatedUser(_request: NextRequest) {
+async function getAuthenticatedUser(request: NextRequest) {
   try {
-    const cookieStore = await cookies()
-    const authToken = cookieStore.get('jlpt4you_auth_token')?.value
+    devConsole.log('[Topup API] Validating session...')
 
-    if (!authToken) {
-      return { error: 'Authentication required', status: 401 }
-    }
+    const validationResult = await SessionValidator.validateSession(request, {
+      enableRefresh: true,
+      refreshThreshold: 5,
+      enableUserValidation: true,
+      logValidation: process.env.NODE_ENV === 'development',
+      securityChecks: true
+    })
 
-    // Create Supabase client with auth token
-    const supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-      {
-        global: {
-          headers: {
-            Authorization: `Bearer ${authToken}`,
-          },
-        },
+    if (!validationResult.valid) {
+      devConsole.log(`[Topup API] Session validation failed: ${validationResult.error}`)
+      return {
+        user: null,
+        error: validationResult.error || 'Authentication failed'
       }
-    )
-
-    // Verify user is authenticated
-    const { data: { user }, error: authError } = await supabase.auth.getUser()
-    if (authError || !user) {
-      return { error: 'Invalid authentication', status: 401 }
     }
 
+    const user = validationResult.user || validationResult.session?.user
+    if (!user) {
+      devConsole.log('[Topup API] No user found in validation result')
+      return {
+        user: null,
+        error: 'User not found'
+      }
+    }
+
+    devConsole.log(`[Topup API] Session validation successful for user: ${user.email}`)
     return { user, error: null }
+
   } catch (error) {
-    console.error('Authentication error:', error)
-    return { error: 'Authentication failed', status: 500 }
+    console.error('[Topup API] Authentication error:', error)
+    return {
+      user: null,
+      error: error instanceof Error ? error.message : 'Authentication failed'
+    }
   }
 }
 
@@ -66,7 +77,7 @@ export async function POST(request: NextRequest) {
     if (authResult.error) {
       return NextResponse.json(
         { success: false, error: authResult.error },
-        { status: authResult.status }
+        { status: 401 } // ✅ FIXED: Use fixed status code
       )
     }
 
@@ -126,7 +137,7 @@ export async function POST(request: NextRequest) {
     }
     
     // Add balance to user account
-    const result = await addBalance(body.userId, body.amount)
+    const result = await addBalanceServer(body.userId, body.amount)
     
     if (!result.success) {
       return NextResponse.json(
@@ -139,7 +150,10 @@ export async function POST(request: NextRequest) {
     }
     
     // 🔒 STEP 3: LOG SECURE TRANSACTION
-    console.log(`🔒 SECURE Top-up: User ${authenticatedUser.id} (${authenticatedUser.email}) topped up ${body.amount} VND for user ${body.userId}`)
+    devConsole.log(`🔒 SECURE Top-up: User ${authenticatedUser.id} (${authenticatedUser.email}) topped up ${body.amount} VND for user ${body.userId}`)
+
+    // 📣 STEP 4: SEND NOTIFICATION
+    await sendTopUpSuccessAdmin(body.userId, body.amount)
 
     // Return success response
     return NextResponse.json({
@@ -163,48 +177,44 @@ export async function POST(request: NextRequest) {
 
 export async function GET(request: NextRequest) {
   try {
-    // 🔒 STEP 1: AUTHENTICATE USER
-    const authResult = await getAuthenticatedUser(request)
-    if (authResult.error) {
-      return NextResponse.json(
-        { success: false, error: authResult.error },
-        { status: authResult.status }
-      )
+    // 🔒 STEP 1: TRY ADMIN AUTHENTICATION FIRST
+    const adminAuthResult = await requireAdminAuth(request)
+
+    let authenticatedUser: SafeUser | null = null
+    let isAdmin = false
+
+    if (!adminAuthResult.error) {
+      // Admin authentication successful
+      authenticatedUser = adminAuthResult.user!
+      isAdmin = true
+    } else {
+      // Fallback to regular user authentication
+      const authResult = await getAuthenticatedUser(request)
+      if (authResult.error) {
+        return NextResponse.json(
+          { success: false, error: 'Authentication required' },
+          { status: 401 }
+        )
+      }
+      authenticatedUser = { id: authResult.user!.id, email: authResult.user!.email }
     }
 
-    const authenticatedUser = authResult.user!
     const { searchParams } = new URL(request.url)
     const userId = searchParams.get('userId')
 
     // 🔒 STEP 2: VALIDATE USER AUTHORIZATION
     // If no userId provided, return authenticated user's balance
-    const targetUserId = userId || authenticatedUser.id
+    const targetUserId = userId || authenticatedUser!.id
 
     // User can only view their own balance (unless admin)
-    if (targetUserId !== authenticatedUser.id) {
-      // Check if user is admin
-      if (!supabaseAdmin) {
-        return NextResponse.json(
-          { success: false, error: 'Server configuration error' },
-          { status: 500 }
-        )
-      }
-
-      const { data: userData } = await supabaseAdmin
-        .from('users')
-        .select('role')
-        .eq('id', authenticatedUser.id)
-        .single()
-
-      if (userData?.role !== 'Admin') {
-        return NextResponse.json(
-          {
-            success: false,
-            error: 'Unauthorized: You can only view your own balance'
-          },
-          { status: 403 }
-        )
-      }
+    if (targetUserId !== authenticatedUser!.id && !isAdmin) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Unauthorized: You can only view your own balance'
+        },
+        { status: 403 }
+      )
     }
     
     // Get user's current balance

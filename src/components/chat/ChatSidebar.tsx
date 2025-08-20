@@ -6,6 +6,7 @@ import { cn } from '@/lib/utils';
 import { Chat } from './index';
 import { Edit, MessageSquare, Trash2, GraduationCap, PanelLeft, Edit3, Check, X } from 'lucide-react';
 import { useTranslations } from '@/hooks/use-translations';
+import { formatChatPreview } from '@/lib/markdown-utils';
 
 interface ChatSidebarProps {
   isOpen: boolean;
@@ -79,13 +80,13 @@ export const ChatSidebar: React.FC<ChatSidebarProps> = ({
 
       {/* Sidebar - Fixed position on all screen sizes for proper layout */}
       <div className={cn(
-        "fixed inset-y-0 left-0 z-50 w-80 bg-sidebar border-r border-sidebar-border shadow-lg",
+        "fixed inset-y-0 left-0 z-50 w-80 bg-sidebar",
         "flex flex-col h-full",
         "transform transition-transform duration-300 ease-in-out",
         isOpen ? "translate-x-0" : "-translate-x-full"
       )}>
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-5 border-b border-sidebar-border flex-shrink-0">
+        <div className="p-4 flex items-center justify-between flex-shrink-0">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
               <GraduationCap className="w-4 h-4 text-primary" />
@@ -118,7 +119,7 @@ export const ChatSidebar: React.FC<ChatSidebarProps> = ({
         </div>
 
         {/* New Chat Button */}
-        <div className="p-4 border-b border-sidebar-border flex-shrink-0">
+        <div className="p-4 flex-shrink-0">
           <Button
             className="w-full bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm justify-start"
             onClick={onNewChat}
@@ -148,26 +149,16 @@ export const ChatSidebar: React.FC<ChatSidebarProps> = ({
                 <div
                   key={chat.id}
                   className={cn(
-                    "group relative flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-all duration-200",
+                    "group relative flex flex-col gap-1 p-3 rounded-xl cursor-pointer transition-all duration-200",
                     "hover:bg-sidebar-accent hover:shadow-sm",
                     currentChatId === chat.id
-                      ? "bg-sidebar-accent text-sidebar-accent-foreground shadow-sm border border-sidebar-border/50"
+                      ? "bg-sidebar-accent text-sidebar-accent-foreground shadow-sm"
                       : "text-sidebar-foreground hover:text-sidebar-accent-foreground"
                   )}
                   onClick={() => onSelectChat?.(chat.id)}
                   onMouseEnter={() => setHoveredChatId(chat.id)}
                   onMouseLeave={() => setHoveredChatId(null)}
                 >
-                  {/* Chat Icon */}
-                  <div className={cn(
-                    "w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 transition-colors",
-                    currentChatId === chat.id
-                      ? "bg-primary/10 text-primary"
-                      : "bg-muted text-muted-foreground group-hover:bg-primary/10 group-hover:text-primary"
-                  )}>
-                    <MessageSquare className="w-4 h-4" />
-                  </div>
-
                   {/* Chat Info */}
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between">
@@ -210,7 +201,7 @@ export const ChatSidebar: React.FC<ChatSidebarProps> = ({
                       ) : (
                         <>
                           <h3 className="text-sm font-medium truncate">
-                            {chat.title}
+                            {chat.title.replace(/["']/g, '')}
                           </h3>
                           {/* Action Buttons */}
                           {(hoveredChatId === chat.id || currentChatId === chat.id) && (
@@ -246,9 +237,10 @@ export const ChatSidebar: React.FC<ChatSidebarProps> = ({
                         </>
                       )}
                     </div>
+                    {/* Message Preview with Markdown Stripping */}
                     {chat.lastMessage && (
-                      <p className="text-xs text-muted-foreground truncate mt-1">
-                        {chat.lastMessage}
+                      <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed mt-1">
+                        {formatChatPreview(chat.lastMessage)}
                       </p>
                     )}
                   </div>
@@ -258,12 +250,7 @@ export const ChatSidebar: React.FC<ChatSidebarProps> = ({
           )}
         </div>
 
-        {/* Footer */}
-        <div className="p-4 border-t border-gray-700 flex-shrink-0">
-          <div className="text-xs text-gray-400 text-center">
-            JLPT4You AI Assistant
-          </div>
-        </div>
+
       </div>
     </>
   );

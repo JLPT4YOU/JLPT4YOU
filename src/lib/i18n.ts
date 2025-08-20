@@ -1,451 +1,63 @@
 // Server-side utilities (no React hooks)
 // Client-side hooks are in use-translation.ts
 
-// Supported languages
-export const SUPPORTED_LANGUAGES = ['vn', 'en', 'jp'] as const
-export type Language = typeof SUPPORTED_LANGUAGES[number]
+// Re-export constants from centralized types
+export { 
+  SUPPORTED_LANGUAGES,
+  DEFAULT_LANGUAGE,
+  LANGUAGE_METADATA
+} from './i18n-types'
 
-// Default language
-export const DEFAULT_LANGUAGE: Language = 'vn'
+// Re-export types separately for isolatedModules compatibility
+export type {
+  Language,
+  TranslationData,
+  CommonTranslations,
+  AuthTranslations,
+  ExamTranslations,
+  TranslationPath,
+  TranslationKey
+} from './i18n-types'
 
-// Language metadata
-export const LANGUAGE_METADATA = {
-  vn: {
-    name: 'Tiếng Việt',
-    nativeName: 'Tiếng Việt',
-    flag: '🇻🇳',
-    dir: 'ltr',
-    locale: 'vi-VN'
-  },
-  en: {
-    name: 'English',
-    nativeName: 'English',
-    flag: '🇺🇸',
-    dir: 'ltr',
-    locale: 'en-US'
-  },
-  jp: {
-    name: 'Japanese',
-    nativeName: '日本語',
-    flag: '🇯🇵',
-    dir: 'ltr',
-    locale: 'ja-JP'
-  }
-} as const
+// Re-export optimized utilities
+export {
+  detectLanguage,
+  PathManager,
+  ROUTES,
+  isProtectedRoute,
+  isPublicRoute
+} from './i18n-utils'
 
-// Translation type definitions
-export interface TranslationData {
-  common: {
-    appName: string
-    loading: string
-    error: string
-    retry: string
-    close: string
-    back: string
-    next: string
-    previous: string
-    save: string
-    cancel: string
-    confirm: string
+// Import for internal use
+import { SUPPORTED_LANGUAGES, DEFAULT_LANGUAGE, Language, TranslationData } from './i18n-types'
+import { LANGUAGE_METADATA } from './i18n-types'
+
+// Keep backward compatibility exports
+export { PathManager as UrlUtils } from './i18n-utils'
+
+/**
+ * Legacy regex builders - kept for backward compatibility
+ * Consider using PathManager methods instead
+ */
+export function buildLanguagePrefixRegex(options: { includeNumericLegacy?: boolean } = {}): string {
+  const { includeNumericLegacy = true } = options
+  const langCodes: string[] = [...SUPPORTED_LANGUAGES]
+  if (includeNumericLegacy) {
+    langCodes.push('1', '2', '3')
   }
-  header: {
-    logo: string
-    themeToggle: string
-    login: string
-    register: string
-    getStarted: string
-    userMenu: {
-      profile: string
-      settings: string
-      statistics: string
-      logout: string
-      expiryDate: string
-    }
-  }
-  hero: {
-    title: string
-    subtitle: string
-    description: string
-    ctaButton: string
-  }
-  benefits: {
-    title: string
-    subtitle: string
-    items: Array<{
-      title: string
-      description: string
-    }>
-  }
-  whyChooseUs: {
-    title: string
-    subtitle: string
-    problems: Array<{
-      problem: string
-      solution: string
-    }>
-    problemLabel: string
-    solutionLabel: string
-    problemTitle: string
-    solutionTitle: string
-    finalProblem: string
-    finalSolution: string
-    priceComparison: string
-  }
-  pricing: {
-    title: string
-    subtitle: string
-    free: {
-      name: string
-      price: string
-      period: string
-      description: string
-      features: string[]
-      limitations: string[]
-      button: string
-    }
-    premium: {
-      name: string
-      price: string
-      period: string
-      badge: string
-      description: string
-      features: string[]
-      button: string
-    }
-  }
-  aiDemo: {
-    title: string
-    subtitle: string
-    question: {
-      level: string
-      type: string
-      instruction: string
-      sentence: string
-      furigana: string
-      options: Array<{
-        id: string
-        text: string
-        furigana: string
-        isCorrect: boolean
-      }>
-      explanation: string
-    }
-    buttons: {
-      showExplanation: string
-      tryAgain: string
-    }
-    sensei: string
-  }
-  footer: {
-    description: string
-    contact: {
-      title: string
-      email: string
-      chat: string
-    }
-    links: {
-      product: {
-        title: string
-        features: string
-        pricing: string
-        aiDemo: string
-        resources: string
-      }
-      jlptLevels: {
-        title: string
-        n5: string
-        n4: string
-        n3: string
-        n2: string
-        n1: string
-      }
-      support: {
-        title: string
-        helpCenter: string
-        contact: string
-        faq: string
-        guide: string
-      }
-      legal: {
-        title: string
-        terms: string
-        privacy: string
-        refund: string
-      }
-    }
-    copyright: string
-    madeWithLove: string
-    madeWithLoveFor: string
-    trustBadges: {
-      secure: string
-      privacy: string
-    }
-  }
-  finalCta: {
-    title: string
-    subtitle: string
-    benefits: string[]
-    button: string
-    upgradeButton: string
-    trustSignal: string
-  }
-  auth: {
-    titles: {
-      login: string
-      register: string
-      forgotPassword: string
-    }
-    subtitles: {
-      login: string
-      register: string
-      forgotPassword: string
-    }
-    labels: {
-      email: string
-      password: string
-      confirmPassword: string
-      acceptTerms: string
-      rememberMe: string
-    }
-    placeholders: {
-      email: string
-      password: string
-      confirmPassword: string
-    }
-    buttons: {
-      login: string
-      register: string
-      forgotPassword: string
-      sendResetLink: string
-      backToLogin: string
-    }
-    loading: {
-      login: string
-      register: string
-      forgotPassword: string
-    }
-    validation: {
-      emailRequired: string
-      emailInvalid: string
-      passwordRequired: string
-      passwordTooShort: string
-      confirmPasswordRequired: string
-      passwordMismatch: string
-      termsRequired: string
-    }
-    messages: {
-      noAccount: string
-      hasAccount: string
-      signUpNow: string
-      loginNow: string
-      forgotPasswordText: string
-      resetPasswordSent: string
-      resetPasswordInstructions: string
-    }
-    social: {
-      googleLogin: string
-      continueWith: string
-    }
-  }
-  jlpt: {
-    page: {
-      title: string
-      subtitle: string
-    }
-    official: {
-      page: {
-        title: string
-        subtitle: string
-      }
-    }
-    custom: {
-      page: {
-        title: string
-        subtitle: string
-      }
-    }
-  }
-  challenge: {
-    page: {
-      title: string
-      subtitle: string
-    }
-    levels: {
-      n1: string
-      n2: string
-      n3: string
-      n4: string
-      n5: string
-    }
-    info: {
-      title: string
-      description: string
-    }
-    setup: {
-      title: string
-      subtitle: string
-      sectionsTitle: string
-      sectionsSubtitle: string
-      timeTitle: string
-      timeStandard: string
-      timeDescription: string
-      timeNote: string
-      startChallenge: string
-      sections: {
-        vocabulary: string
-        grammar: string
-        reading: string
-        listening: string
-      }
-      minutes: string
-    }
-    rules: {
-      title: string
-      importantNote: string
-      importantDescription: string
-      rulesTitle: string
-      rule1: {
-        title: string
-        description: string
-      }
-      rule2: {
-        title: string
-        description: string
-      }
-      rule3: {
-        title: string
-        description: string
-      }
-      aboutTitle: string
-      aboutDescription: string
-      cancel: string
-      accept: string
-    }
-  }
-  driving: {
-    page: {
-      title: string
-      subtitle: string
-    }
-    template: {
-      chooseTime: string
-    }
-  }
-  exam: {
-    interface: {
-      pause: string
-      resume: string
-      submit: string
-      flagged: string
-      showFlagged: string
-      showFlaggedTitle: string
-      question: string
-      of: string
-      previous: string
-      next: string
-      flag: string
-      unflag: string
-      answered: string
-      unanswered: string
-      timeRemaining: string
-      questionList: string
-      progress: string
-      pausedTitle: string
-      pausedDescription: string
-    }
-    sectionSelector: {
-      title: string
-      subtitle: string
-      startTest: string
-      selectAtLeastOne: string
-    }
-    timeSelector: {
-      title: string
-      defaultTime: string
-      defaultTimeDescription: string
-      customTime: string
-      customTimeDescription: string
-      unlimitedTime: string
-      unlimitedTimeDescription: string
-      customTimeLabel: string
-      customTimePlaceholder: string
-      minutes: string
-      hours: string
-      seconds: string
-    }
-    sections: {
-      vocabulary: string
-      grammar: string
-      reading: string
-      listening: string
-    }
-    submission: {
-      confirmTitle: string
-      confirmMessage: string
-      stats: {
-        total: string
-        answered: string
-        unanswered: string
-        flagged: string
-        timeLeft: string
-      }
-      confirm: string
-      cancel: string
-    }
-    timer: {
-      timeUp: string
-      autoSubmit: string
-    }
-    antiCheat: {
-      warningBadge: string
-      navigationWarning: {
-        title: string
-        description: string
-        consequences: string[]
-        confirmQuestion: string
-        stayButton: string
-        leaveButton: string
-      }
-      violationWarning: {
-        title: string
-        titleMaxReached: string
-        maxViolationsMessage: string
-        warningCount: string
-        remainingWarnings: string
-        examEndedMessage: string
-        continueButton: string
-        violations: {
-          fullscreen_exit: string
-          window_blur: string
-          tab_switch: string
-          default: string
-        }
-      }
-      fullscreenRestored: string
-    }
-    fullscreenModal: {
-      title: string
-      mobile: {
-        detected: string
-        description: string
-        warning: string
-        continueButton: string
-      }
-      desktop: {
-        title: string
-        description: string
-        requirementsTitle: string
-        requirements: string[]
-        importantNote: string
-        warningText: string
-        unsupportedBrowser: string
-        activateButton: string
-        activatingButton: string
-      }
-      cancelButton: string
-    }
-  }
+  return `^/(${langCodes.join('|')})/`
 }
+
+export function getLanguagePrefixRegex(options: { includeNumericLegacy?: boolean } = {}): RegExp {
+  const { includeNumericLegacy = true } = options
+  const langCodes: string[] = [...SUPPORTED_LANGUAGES]
+  if (includeNumericLegacy) {
+    langCodes.push('1', '2', '3')
+  }
+  return new RegExp(`^/(${langCodes.join('|')})/`)
+}
+
+// Translation type definitions moved to i18n-types.ts
 
 // Cache for loaded translations
 const translationCache = new Map<Language, TranslationData>()
@@ -460,8 +72,24 @@ export async function loadTranslation(language: Language): Promise<TranslationDa
   }
 
   try {
-    const translation = await import(`@/translations/${language}.json`)
-    const data = translation.default as TranslationData
+    let translationModule;
+    
+    // Use static imports for better compatibility
+    switch (language) {
+      case 'en':
+        translationModule = await import('@/translations/en.json');
+        break;
+      case 'vn':
+        translationModule = await import('@/translations/vn.json');
+        break;
+      case 'jp':
+        translationModule = await import('@/translations/jp.json');
+        break;
+      default:
+        translationModule = await import('@/translations/en.json');
+    }
+    
+    const data = translationModule.default as TranslationData
 
     // Cache the loaded translation
     translationCache.set(language, data)
@@ -526,10 +154,16 @@ export function getLanguageFromPath(pathname: string): Language {
     }
   }
 
-  // Handle old structure: /vn/path, /jp/path, /en/path
+  // Handle old structure: /vn/path, /jp/path, /en/path (including legacy numeric codes)
   const firstSegment = segments[0]
   if (SUPPORTED_LANGUAGES.includes(firstSegment as Language)) {
     return firstSegment as Language
+  }
+
+  // Handle legacy numeric codes for standard URLs
+  const legacyLanguage = getLanguageFromCode(firstSegment)
+  if (legacyLanguage) {
+    return legacyLanguage
   }
 
   return DEFAULT_LANGUAGE
@@ -537,6 +171,28 @@ export function getLanguageFromPath(pathname: string): Language {
 
 /**
  * Get localized path for a given path and language
+ *
+ * **URL Structure Policy (Single Source of Truth):**
+ *
+ * **PUBLIC PAGES** - MUST include language prefix for SEO and accessibility:
+ * - Landing page: `/vn/landing`, `/jp/landing`, `/en/landing`
+ * - Auth pages: `/auth/vn/login`, `/auth/jp/register`, `/auth/en/forgot-password`
+ *
+ * **PRIVATE PAGES** - MUST use clean URLs without language prefix:
+ * - Home: `/home` (not `/vn/home`)
+ * - JLPT: `/jlpt/official/n3` (not `/vn/jlpt/official/n3`)
+ * - Challenge: `/challenge/n2` (not `/jp/challenge/n2`)
+ * - Driving: `/driving/honmen` (not `/en/driving/honmen`)
+ * - All other authenticated routes: `/library`, `/settings`, etc.
+ *
+ * Language preference for private pages is handled via:
+ * - User stored preferences (localStorage/database)
+ * - Language context and translation hooks
+ * - NOT via URL structure
+ *
+ * @param path The base path (with or without leading slash)
+ * @param language The target language code
+ * @returns Localized path following the URL structure policy
  */
 export function getLocalizedPath(path: string, language: Language): string {
   // Remove leading slash
@@ -554,18 +210,13 @@ export function getLocalizedPath(path: string, language: Language): string {
     return `/auth/${language}/${authPath}`
   }
 
-  // Handle home path - use new language structure
-  if (cleanPath === 'home') {
-    return `/${language}/home`
-  }
-
-  // For all other paths (including nested routes), use language prefix structure
-  // This ensures nested routes like /jlpt/custom/n3/test work correctly
-  if (language === DEFAULT_LANGUAGE) {
-    return `/${cleanPath}`
-  }
-
-  return `/${language}/${cleanPath}`
+  // According to requirements, language parameter should ONLY exist on:
+  // landing, login, register, forgot-password
+  // All other routes (home, library, jlpt, etc.) should NOT have language prefix
+  
+  // For all other paths, return clean URL without language prefix
+  // Language preference is stored and handled separately
+  return `/${cleanPath}`
 }
 
 /**
@@ -585,9 +236,9 @@ export function removeLanguageFromPath(pathname: string): string {
     }
   }
 
-  // Handle old structure: /vn/path -> /path
+  // Handle old structure: /vn/path -> /path (including legacy numeric codes)
   const firstSegment = segments[0]
-  if (SUPPORTED_LANGUAGES.includes(firstSegment as Language)) {
+  if (SUPPORTED_LANGUAGES.includes(firstSegment as Language) || ['1', '2', '3'].includes(firstSegment)) {
     return '/' + segments.slice(1).join('/')
   }
 
@@ -639,8 +290,9 @@ export function createTranslationFunction(translations: TranslationData, fallbac
 
 /**
  * Generate hreflang links for SEO
+ * Note: Consider using the optimized version from i18n-utils instead
  */
-export function generateHreflangLinks(currentPath: string, baseUrl: string = 'https://jlpt4you.com') {
+export function generateHreflangLinksLegacy(currentPath: string, baseUrl: string = 'https://jlpt4you.com') {
   const cleanPath = removeLanguageFromPath(currentPath)
   
   return SUPPORTED_LANGUAGES.map(lang => ({
@@ -650,46 +302,9 @@ export function generateHreflangLinks(currentPath: string, baseUrl: string = 'ht
 }
 
 /**
- * Get page metadata for SEO
- */
-export function getPageMetadata(language: Language, translations: TranslationData) {
-  const metadata = LANGUAGE_METADATA[language]
-  
-  const baseTitle = translations.common.appName
-  const baseDescription = translations.hero.description
-  
-  return {
-    title: `${baseTitle} - ${translations.hero.subtitle}`,
-    description: baseDescription,
-    lang: metadata.locale,
-    dir: metadata.dir,
-    openGraph: {
-      title: `${baseTitle} - ${translations.hero.subtitle}`,
-      description: baseDescription,
-      locale: metadata.locale,
-      type: 'website'
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title: `${baseTitle} - ${translations.hero.subtitle}`,
-      description: baseDescription
-    }
-  }
-}
-
-/**
  * Route Management Utilities for Dual-Mode Language Routing
  */
 
-/**
- * Convert language-prefixed URL to clean URL
- * Example: /en/jlpt/official -> /jlpt/official
- */
-export function convertToCleanUrl(languagePrefixedUrl: string): string {
-  const match = languagePrefixedUrl.match(/^\/(vn|jp|en|1|2|3)\/(.*)$/)
-  if (!match) return languagePrefixedUrl
-  return '/' + match[2]
-}
 
 /**
  * Convert clean URL to language-prefixed URL
@@ -711,162 +326,6 @@ export function convertToLanguagePrefixedUrl(cleanUrl: string, language: Languag
  * Check if URL has language prefix
  */
 export function hasLanguagePrefix(url: string): boolean {
-  return url.match(/^\/(vn|jp|en|1|2|3)\//) !== null
+  return getLanguagePrefixRegex().test(url)
 }
 
-/**
- * Extract language from URL if present
- */
-export function extractLanguageFromUrl(url: string): Language | null {
-  const match = url.match(/^\/(vn|jp|en|1|2|3)\//)
-  if (!match) return null
-  
-  const langCode = match[1]
-  switch (langCode) {
-    case 'vn':
-    case '1':
-      return 'vn'
-    case 'jp':
-    case '2':
-      return 'jp'
-    case 'en':
-    case '3':
-      return 'en'
-    default:
-      return null
-  }
-}
-
-/**
- * Handle authentication state transition URLs
- * Converts URLs appropriately when user logs in/out
- */
-export function handleAuthTransitionUrl(
-  currentUrl: string, 
-  newAuthState: boolean, 
-  preferredLanguage: Language,
-  preserveParams: boolean = true
-): string {
-  // Parse URL to separate path and query parameters
-  const [path, queryString] = currentUrl.split('?')
-  const params = preserveParams && queryString ? `?${queryString}` : ''
-  
-  if (newAuthState) {
-    // User logged in: convert language-prefixed URL to clean URL
-    if (hasLanguagePrefix(path)) {
-      return convertToCleanUrl(path) + params
-    }
-    return currentUrl
-  } else {
-    // User logged out: convert clean URL to language-prefixed URL
-    if (!hasLanguagePrefix(path)) {
-      return convertToLanguagePrefixedUrl(path, preferredLanguage) + params
-    }
-    return currentUrl
-  }
-}
-
-/**
- * Generate appropriate URL based on authentication state
- */
-export function generateUrlForAuthState(
-  basePath: string,
-  language: Language,
-  isAuthenticated: boolean,
-  includeParams?: string
-): string {
-  const params = includeParams ? `?${includeParams}` : ''
-  
-  if (isAuthenticated) {
-    // Authenticated users get clean URLs
-    return basePath + params
-  } else {
-    // Non-authenticated users get language-prefixed URLs
-    return convertToLanguagePrefixedUrl(basePath, language) + params
-  }
-}
-
-/**
- * Preserve URL context during navigation
- * Maintains query parameters, hash fragments, etc.
- */
-export function preserveUrlContext(
-  newPath: string,
-  currentUrl: string
-): string {
-  try {
-    const current = new URL(currentUrl, 'http://localhost')
-    const newUrl = new URL(newPath, 'http://localhost')
-    
-    // Preserve query parameters if new URL doesn't have them
-    if (!newUrl.search && current.search) {
-      newUrl.search = current.search
-    }
-    
-    // Preserve hash fragment if new URL doesn't have it
-    if (!newUrl.hash && current.hash) {
-      newUrl.hash = current.hash
-    }
-    
-    return newUrl.pathname + newUrl.search + newUrl.hash
-  } catch {
-    // Fallback to simple concatenation if URL parsing fails
-    const [path] = newPath.split('?')
-    const [, queryAndHash] = currentUrl.split('?')
-    return queryAndHash ? `${path}?${queryAndHash}` : path
-  }
-}
-
-/**
- * Route configuration for different path types
- */
-export const ROUTE_CONFIG = {
-  // Routes that should always have language prefixes (for SEO)
-  alwaysPrefixed: [
-    '/auth',
-    '/login',
-    '/register',
-    '/forgot-password',
-    '/landing'
-  ],
-  
-  // Routes that support clean URLs for authenticated users
-  cleanUrlSupported: [
-    '/home',
-    '/jlpt',
-    '/challenge',
-    '/driving',
-    '/exam-results',
-    '/review-answers',
-    '/settings'
-  ],
-  
-  // Routes that require authentication
-  protected: [
-    '/home',
-    '/jlpt',
-    '/challenge',
-    '/driving',
-    '/exam-results',
-    '/review-answers',
-    '/settings'
-  ]
-} as const
-
-/**
- * Check if route supports clean URLs
- */
-export function supportsCleanUrl(path: string): boolean {
-  return ROUTE_CONFIG.cleanUrlSupported.some(route => 
-    path === route || path.startsWith(route + '/')
-  )
-}
-
-/**
- * Check if route should always have language prefix
- */
-export function requiresLanguagePrefix(path: string): boolean {
-  return ROUTE_CONFIG.alwaysPrefixed.some(route => 
-    path === route || path.startsWith(route + '/')
-  )
-}

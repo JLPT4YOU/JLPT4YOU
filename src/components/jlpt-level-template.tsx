@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { Clock, FileText, Users, Play, GraduationCap } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useTranslations } from "@/hooks/use-translations";
+import { WithTranslations, getLevelDisplayInfo } from "@/components/shared/component-utils";
 
 interface JLPTLevelTemplateProps {
   level: "N1" | "N2" | "N3" | "N4" | "N5";
@@ -11,35 +11,22 @@ interface JLPTLevelTemplateProps {
 }
 
 export function JLPTLevelTemplate({ level, type }: JLPTLevelTemplateProps) {
-  const { translations, t, language, isLoading } = useTranslations();
+  return (
+    <WithTranslations>
+      {({ translations, t }) => {
+        const levelInfo = getLevelDisplayInfo(level, 'jlpt')
 
-  if (isLoading || !translations) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-muted-foreground">Loading...</p>
-        </div>
-      </div>
-    );
-  }
+        const levelKey = level.toLowerCase() as 'n1' | 'n2' | 'n3' | 'n4' | 'n5';
+        const info = {
+          title: t(`jlpt.levelInfo.${levelKey}.title`),
+          description: t(`jlpt.levelInfo.${levelKey}.description`),
+          time: t(`jlpt.levelInfo.${levelKey}.time`),
+          questions: t(`jlpt.levelInfo.${levelKey}.questions`),
+          passScore: t(`jlpt.levelInfo.${levelKey}.passScore`)
+        };
 
-  const levelKey = level.toLowerCase() as 'n1' | 'n2' | 'n3' | 'n4' | 'n5';
-  const info = {
-    title: t(`jlpt.levelInfo.${levelKey}.title`),
-    description: t(`jlpt.levelInfo.${levelKey}.description`),
-    time: t(`jlpt.levelInfo.${levelKey}.time`),
-    questions: t(`jlpt.levelInfo.${levelKey}.questions`),
-    passScore: t(`jlpt.levelInfo.${levelKey}.passScore`)
-  };
-  const isCustom = type === "custom";
-  const customTitle = isCustom ? info.title.replace("JLPT", "JLPT4YOU") : info.title;
-  const customDescription = isCustom
-    ? info.description + " - Bài thi được thiết kế riêng"
-    : info.description;
-
-  // Tạo href cho trang chọn phần thi với dynamic routing
-  const testSetupHref = `/jlpt/${type}/${level.toLowerCase()}/test-setup`;
+        // Tạo href cho trang chọn phần thi với dynamic routing
+        const testSetupHref = `/jlpt/${type}/${level.toLowerCase()}/test-setup`;
 
   return (
     <div className="min-h-screen bg-background">
@@ -68,7 +55,7 @@ export function JLPTLevelTemplate({ level, type }: JLPTLevelTemplateProps) {
             </div>
 
             {/* Start Test Section */}
-            <div className="bg-gradient-to-r from-muted/50 to-accent/30 rounded-2xl p-8 md:p-12 text-center">
+            <div className="bg-muted/30 rounded-2xl p-8 md:p-12 text-center">
               <div className="w-20 h-20 bg-muted rounded-full flex items-center justify-center mx-auto mb-6">
                 <GraduationCap className="w-10 h-10 text-foreground" />
               </div>
@@ -91,5 +78,8 @@ export function JLPTLevelTemplate({ level, type }: JLPTLevelTemplateProps) {
         </div>
       </div>
     </div>
+        )
+      }}
+    </WithTranslations>
   );
 }

@@ -113,7 +113,7 @@ export function TestSectionSelector({
                 <h2 className="text-xl font-semibold text-foreground app-mb-md">
                   {t('exam.sectionSelector.title')}
                 </h2>
-                <div className="grid grid-cols-1 sm:grid-cols-2 app-gap-md">
+                <div className="grid grid-cols-2 gap-3 sm:gap-4">
                   {jlptSections.map((section) => {
                     const IconComponent = section.icon
                     const isSelected = selectedSections.includes(section.id)
@@ -121,28 +121,28 @@ export function TestSectionSelector({
                     return (
                       <div
                         key={section.id}
-                        className={`cursor-pointer rounded-2xl p-6 md:p-8 transition-all duration-200 ${
+                        className={`cursor-pointer rounded-2xl p-3 sm:p-4 md:p-6 transition-all duration-200 ${
                           isSelected
                             ? 'bg-primary/10 border-2 border-primary/30'
                             : 'bg-muted/10 hover:bg-muted/30 border border-border/20'
                         }`}
                         onClick={() => handleSectionToggle(section.id)}
                       >
-                        <div className="flex items-center gap-4">
-                          <div className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-200 ${
+                        <div className="flex items-center gap-3 sm:gap-4">
+                          <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center transition-all duration-200 ${
                             isSelected
                               ? 'bg-primary text-primary-foreground scale-105'
                               : 'bg-muted text-muted-foreground'
                           }`}>
-                            <IconComponent className="w-6 h-6" />
+                            <IconComponent className="w-5 h-5 sm:w-6 sm:h-6" />
                           </div>
                           <div className="flex-1">
-                            <h3 className={`font-semibold transition-colors duration-200 ${
+                            <h3 className={`font-semibold text-sm sm:text-base transition-colors duration-200 ${
                               isSelected ? 'text-primary' : 'text-foreground'
                             }`}>
                               {section.name}
                             </h3>
-                            <p className="text-sm text-muted-foreground">{section.description}</p>
+                            <p className="text-xs sm:text-sm text-muted-foreground line-clamp-2">{section.description}</p>
                           </div>
                           <div className="text-right">
                             <p className={`text-sm transition-colors duration-200 ${

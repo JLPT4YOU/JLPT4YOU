@@ -1,17 +1,46 @@
 "use client"
 
-import Image from "next/image"
+import dynamic from 'next/dynamic'
 import { LandingHeader } from "@/components/landing/landing-header"
 import { HeroSection } from "@/components/landing/hero-section"
-import { KeyBenefitsSection } from "@/components/landing/key-benefits-section"
-import { AIExplanationDemo } from "@/components/landing/ai-explanation-demo"
-import { PricingSection } from "@/components/landing/pricing-section"
-import { WhyChooseUsSection } from "@/components/landing/why-choose-us-section"
-import { FinalCTASection } from "@/components/landing/final-cta-section"
-import { Footer } from "@/components/landing/footer"
-import { TranslationData, Language, createTranslationFunction } from "@/lib/i18n"
-import { generateImageAltText } from "@/lib/content-seo"
+import { TranslationData, Language } from "@/lib/i18n"
 import { useScrollPreservation } from "@/lib/use-scroll-preservation"
+
+// Lazy load below-the-fold components for better LCP
+const KeyBenefitsSection = dynamic(() => import("@/components/landing/key-benefits-section").then(mod => ({ default: mod.KeyBenefitsSection })), {
+  loading: () => <div className="h-96 bg-muted animate-pulse" />,
+  ssr: true
+})
+
+const AIExplanationDemo = dynamic(() => import("@/components/landing/ai-explanation-demo").then(mod => ({ default: mod.AIExplanationDemo })), {
+  loading: () => <div className="h-96 bg-muted animate-pulse" />,
+  ssr: false // Heavy component, client-side only
+})
+
+const PricingSection = dynamic(() => import("@/components/landing/pricing-section").then(mod => ({ default: mod.PricingSection })), {
+  loading: () => <div className="h-96 bg-muted animate-pulse" />,
+  ssr: true
+})
+
+const WhyChooseUsSection = dynamic(() => import("@/components/landing/why-choose-us-section").then(mod => ({ default: mod.WhyChooseUsSection })), {
+  loading: () => <div className="h-64 bg-muted animate-pulse" />,
+  ssr: true
+})
+
+const FinalCTASection = dynamic(() => import("@/components/landing/final-cta-section").then(mod => ({ default: mod.FinalCTASection })), {
+  loading: () => <div className="h-48 bg-muted animate-pulse" />,
+  ssr: true
+})
+
+const Footer = dynamic(() => import("@/components/landing/footer").then(mod => ({ default: mod.Footer })), {
+  loading: () => <div className="h-32 bg-muted animate-pulse" />,
+  ssr: true
+})
+
+const LandingChatWidget = dynamic(() => import("@/components/landing-chat").then(mod => ({ default: mod.LandingChatWidget })), {
+  loading: () => null,
+  ssr: false // Chat widget doesn't need SSR
+})
 
 interface LandingPageProps {
   translations: TranslationData
@@ -23,10 +52,14 @@ export function LandingPage({ translations, language = 'vn' }: LandingPageProps)
   useScrollPreservation()
 
   // Create translation function
-  const t = createTranslationFunction(translations)
-
-  // Generate SEO-optimized alt text for images
-  const logoAltText = generateImageAltText('logo', { language })
+  const t = (key: string) => {
+    const keys = key.split('.');
+    let value: any = translations;
+    for (const k of keys) {
+      value = value?.[k];
+    }
+    return value || key;
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -64,11 +97,15 @@ export function LandingPage({ translations, language = 'vn' }: LandingPageProps)
         <Footer translations={translations} />
       </footer>
 
+      {/* Landing Chat Widget */}
+      <LandingChatWidget translations={translations} />
+
       {/* SEO: Hidden structured data for better indexing */}
       <div className="sr-only">
         <h1>JLPT4You - {t('seo.structuredData.title')}</h1>
         <p>{t('seo.structuredData.description')}</p>
-        <Image src="/logo.png" alt={logoAltText} width={32} height={32} />
+        {/* Logo replaced with text for SEO - no image file needed */}
+        <span>JLPT4YOU Logo</span>
       </div>
     </div>
   )

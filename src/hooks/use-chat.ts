@@ -12,6 +12,8 @@ import { getAvailableModels, GEMINI_MODELS, supportsThinking } from '@/lib/gemin
 import { shouldAutoEnableThinking } from '@/lib/model-utils';
 // createAIMessage import removed - not used
 import { useTranslations } from './use-translations';
+import { UserStorage } from '@/lib/user-storage';
+import { useAuth } from '@/contexts/auth-context-simple';
 
 export interface UseChatOptions {
   autoSaveToStorage?: boolean;
@@ -62,34 +64,51 @@ export interface UseChatReturn {
  * Main chat management hook
  */
 export function useChat(options: UseChatOptions = {}): UseChatReturn {
-  const { autoSaveToStorage = true, maxChats = 50 } = options;
-  
+  const { autoSaveToStorage = true } = options;
+
   // Dependencies
-  const { t } = useTranslations();
-  const { handleError, clearError, currentError } = useErrorHandler();
+  const { clearError, currentError } = useErrorHandler();
+  const { user } = useAuth();
+
+  // User-scoped storage for persistence
+  const [storedChats, setStoredChats] = useState<StoredChat[]>([]);
+  const [currentChatId, setCurrentChatId] = useState<string | undefined>(undefined);
+  const [selectedModel, setSelectedModel] = useState<string>(GEMINI_MODELS.FLASH_2_0);
+  const [isStorageLoaded, setIsStorageLoaded] = useState(false);
   
-  // Local storage for persistence
-  const { value: storedChats, setValue: setStoredChats } = useLocalStorage<StoredChat[]>('chat_history', {
-    defaultValue: [],
-    validator: (data): data is StoredChat[] => Array.isArray(data)
-  });
-  
-  const { value: currentChatId, setValue: setCurrentChatId } = useLocalStorage<string | undefined>('current_chat_id', {
-    defaultValue: undefined
-  });
-  
-  const { value: selectedModel, setValue: setSelectedModel } = useLocalStorage<string>('selected_model', {
-    defaultValue: GEMINI_MODELS.FLASH_2_0
-  });
-  
-  const { value: enableThinking, setValue: setEnableThinking } = useLocalStorage<boolean>('enable_thinking', {
-    defaultValue: false
-  });
-  
+  const [enableThinking, setEnableThinking] = useState<boolean>(false);
+
   // Local state
   const [chats, setChats] = useState<Chat[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [lastFailedMessage, setLastFailedMessage] = useState<string | null>(null);
+  const [isLoading] = useState(false);
+
+  // Load user-scoped data on mount and when user changes
+  useEffect(() => {
+    if (!user?.id) {
+      // Clear data when no user
+      setStoredChats([]);
+      setCurrentChatId(undefined);
+      setSelectedModel(GEMINI_MODELS.FLASH_2_0);
+      setEnableThinking(false);
+      setIsStorageLoaded(true);
+      return;
+    }
+
+    // Ensure UserStorage is set for current user (defensive programming)
+    UserStorage.setCurrentUser(user.id);
+
+    // Load user-scoped data
+    const userChats = UserStorage.getJSON('chat_history') as StoredChat[] || [];
+    const userCurrentChatId = UserStorage.getItem('current_chat_id');
+    const userSelectedModel = UserStorage.getItem('selected_model') || GEMINI_MODELS.FLASH_2_0;
+    const userEnableThinking = UserStorage.getItem('enable_thinking') === 'true';
+
+    setStoredChats(Array.isArray(userChats) ? userChats : []);
+    setCurrentChatId(userCurrentChatId || undefined);
+    setSelectedModel(userSelectedModel);
+    setEnableThinking(userEnableThinking);
+    setIsStorageLoaded(true);
+  }, [user?.id]);
 
   // Convert stored chats to runtime chats and restore persistent images
   useEffect(() => {
@@ -126,9 +145,9 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
     }
   }, [storedChats]);
 
-  // Auto-save chats to storage
+  // Auto-save chats to user-scoped storage
   useEffect(() => {
-    if (autoSaveToStorage && chats.length > 0) {
+    if (autoSaveToStorage && chats.length > 0 && user?.id && isStorageLoaded) {
       const storableChats: StoredChat[] = chats.map(chat => ({
         ...chat,
         timestamp: chat.timestamp.toISOString(),
@@ -137,9 +156,35 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
           timestamp: msg.timestamp.toISOString()
         }))
       }));
+      UserStorage.setJSON('chat_history', storableChats);
       setStoredChats(storableChats);
     }
-  }, [chats, autoSaveToStorage, setStoredChats]);
+  }, [chats, autoSaveToStorage, user?.id, isStorageLoaded]);
+
+  // Auto-save current chat ID to user-scoped storage
+  useEffect(() => {
+    if (user?.id && isStorageLoaded) {
+      if (currentChatId) {
+        UserStorage.setItem('current_chat_id', currentChatId);
+      } else {
+        UserStorage.removeItem('current_chat_id');
+      }
+    }
+  }, [currentChatId, user?.id, isStorageLoaded]);
+
+  // Auto-save selected model to user-scoped storage
+  useEffect(() => {
+    if (user?.id && isStorageLoaded) {
+      UserStorage.setItem('selected_model', selectedModel);
+    }
+  }, [selectedModel, user?.id, isStorageLoaded]);
+
+  // Auto-save thinking mode to user-scoped storage
+  useEffect(() => {
+    if (user?.id && isStorageLoaded) {
+      UserStorage.setItem('enable_thinking', enableThinking.toString());
+    }
+  }, [enableThinking, user?.id, isStorageLoaded]);
 
   // Auto-enable thinking only for PRO_2_5 model, others default to OFF
   useEffect(() => {
@@ -154,7 +199,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
         setEnableThinking(false);
       }
     }
-  }, [selectedModel, enableThinking, setEnableThinking]);
+  }, [selectedModel, enableThinking]);
 
   // Get available models
   const availableModels = getAvailableModels().map(model => ({
@@ -189,7 +234,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
     try {
       const { imageStorage } = await import('@/lib/image-storage');
       await imageStorage.deleteImagesByChat(chatId);
-    } catch (error) {
+    } catch {
       // Silent error - images may remain in storage
     }
 
@@ -211,43 +256,22 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
       if (stats.totalImages > 0) {
         await imageStorage.cleanupOldImages(0); // Clean all images
       }
-    } catch (error) {
+    } catch {
       // Silent error - images may remain in storage
+    }
+
+    // Clear user-scoped storage
+    if (user?.id) {
+      UserStorage.removeItem('chat_history');
+      UserStorage.removeItem('current_chat_id');
     }
 
     setChats([]);
     setCurrentChatId(undefined);
-  }, [setCurrentChatId]);
+    setStoredChats([]);
+  }, [user?.id]);
 
-  // Detect URLs in message content
-  const detectUrls = useCallback((text: string): string[] => {
-    const urlRegex = /(https?:\/\/[^\s]+)/g;
-    const matches = text.match(urlRegex);
-    return matches || [];
-  }, []);
 
-  // Check if model supports URL context
-  const supportsUrlContext = useCallback((modelId: string): boolean => {
-    return modelId.includes('2.5') || modelId.includes('2.0');
-  }, []);
-
-  // Detect code-related keywords
-  const detectCodeKeywords = useCallback((text: string): boolean => {
-    const baseKeywords = [
-      'code', 'python', 'javascript', 'java', 'c++', 'c#', 'go', 'rust', 'php',
-      'calculate', 'compute', 'algorithm', 'function', 'script', 'program',
-      'sum of', 'factorial', 'fibonacci', 'prime numbers', 'sort', 'search',
-      'data analysis', 'plot', 'graph', 'chart', 'visualization',
-      'math', 'mathematics', 'equation', 'formula', 'solve'
-    ];
-
-    // Get localized programming keywords
-    const localizedKeywords = t ? (t('chat.keywords.programming') as string[]) || [] : [];
-    const allKeywords = [...baseKeywords, ...localizedKeywords];
-
-    const lowerText = text.toLowerCase();
-    return allKeywords.some(keyword => lowerText.includes(keyword));
-  }, [t]);
 
   return {
     // State
@@ -268,7 +292,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
     
     // Model management
     selectedModel,
-    setSelectedModel,
+    setSelectedModel: (model: string) => setSelectedModel(model),
     availableModels,
     
     // Settings
@@ -279,9 +303,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
     error: currentError?.message || null,
     clearError,
     retryLastMessage: () => {
-      if (lastFailedMessage) {
-        // Will implement retry logic
-      }
+      // Will implement retry logic
     }
   };
 }

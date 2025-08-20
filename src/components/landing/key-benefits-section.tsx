@@ -1,12 +1,7 @@
 "use client"
 
 import { motion } from "framer-motion"
-import {
-  FileText,
-  Bot,
-  Library,
-  TrendingUp
-} from "lucide-react"
+import { FileText, Bot, Library, TrendingUp } from "lucide-react"
 import { TranslationData } from "@/lib/i18n"
 import { useTranslation } from "@/lib/use-translation"
 
@@ -73,21 +68,21 @@ export const KeyBenefitsSection = ({ translations }: KeyBenefitsSectionProps) =>
   }
 
   return (
-    <section id="features" className="relative bg-background py-16 md:py-20 lg:py-24">
+    <section id="features" className="relative bg-background py-12 md:py-20 lg:py-24">
       <div className="app-container app-section">
-        <div className="app-content">
+        <div className="app-content px-4">
           {/* Section Header */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.6 }}
-            className="text-center mb-12 md:mb-16"
+            className="text-center mb-8 md:mb-16"
           >
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4">
+            <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4">
               {t('benefits.title')}
             </h2>
-            <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-base md:text-xl text-muted-foreground max-w-2xl mx-auto">
               {t('benefits.subtitle')}
             </p>
           </motion.div>
@@ -98,7 +93,7 @@ export const KeyBenefitsSection = ({ translations }: KeyBenefitsSectionProps) =>
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-50px" }}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8"
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8"
           >
             {benefits.map((benefit) => {
               const IconComponent = benefit.icon
@@ -113,17 +108,17 @@ export const KeyBenefitsSection = ({ translations }: KeyBenefitsSectionProps) =>
                   }}
                   className="group"
                 >
-                  <div className="bg-background rounded-2xl p-6 md:p-8 h-full border border-border/50 hover-card-scale">
+                  <div className="bg-background rounded-2xl p-4 md:p-8 h-full border border-border/50 hover-card-scale">
                     {/* Icon */}
-                    <div className="mb-6">
-                      <div className="w-12 h-12 md:w-14 md:h-14 bg-muted rounded-xl flex items-center justify-center hover-brightness-light">
-                        <IconComponent className="w-6 h-6 md:w-7 md:h-7 text-foreground" />
+                    <div className="mb-4 md:mb-6">
+                      <div className="w-10 h-10 md:w-14 md:h-14 bg-muted rounded-xl flex items-center justify-center hover-brightness-light">
+                        <IconComponent className="w-5 h-5 md:w-7 md:h-7 text-foreground" />
                       </div>
                     </div>
 
                     {/* Content */}
-                    <div className="space-y-3">
-                      <h3 className="text-lg md:text-xl font-semibold text-foreground leading-tight">
+                    <div className="space-y-2 md:space-y-3">
+                      <h3 className="text-base md:text-xl font-semibold text-foreground leading-tight">
                         {benefit.title}
                       </h3>
                       <p className="text-sm md:text-base text-muted-foreground leading-relaxed">

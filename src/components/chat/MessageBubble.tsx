@@ -104,38 +104,51 @@ const MessageBubbleComponent: React.FC<MessageBubbleProps> = ({
             {message.files.map((file, index) => (
               <div key={index} className="relative">
                 {file.type && file.type.startsWith('image/') ? (
-                  <img
-                    src={file.url}
-                    alt={file.name}
-                    className="max-w-[250px] max-h-[200px] object-cover rounded-lg border shadow-sm cursor-pointer hover:shadow-md transition-shadow"
-                    onClick={() => {
-                      // Open image in new tab for full view
-                      if (file.url) {
-                        window.open(file.url, '_blank');
-                      }
-                    }}
-                    onError={(e) => {
-                      // Handle image load errors (e.g., persistent image not found)
-                      const target = e.target as HTMLImageElement;
-                      target.style.display = 'none';
+                  file.url ? (
+                    <img
+                      src={file.url}
+                      alt={file.name}
+                      className="max-w-[250px] max-h-[200px] object-cover rounded-lg shadow-sm cursor-pointer hover:shadow-md transition-shadow"
+                      onClick={() => {
+                        // Open image in new tab for full view
+                        if (file.url) {
+                          window.open(file.url, '_blank');
+                        }
+                      }}
+                      onError={(e) => {
+                        // Handle image load errors (e.g., persistent image not found)
+                        const target = e.target as HTMLImageElement;
+                        target.style.display = 'none';
 
-                      // Show fallback UI
-                      const fallback = document.createElement('div');
-                      fallback.className = 'flex items-center gap-2 px-3 py-2 bg-background rounded-lg border shadow-sm';
-                      fallback.innerHTML = `
-                        <div class="w-8 h-8 bg-gray-200 rounded flex items-center justify-center">
-                          <span class="text-xs">🖼️</span>
-                        </div>
-                        <div>
-                          <p class="text-xs font-medium truncate max-w-[120px]">${file.name}</p>
-                          <p class="text-xs text-red-500">Image unavailable</p>
-                        </div>
-                      `;
-                      target.parentNode?.appendChild(fallback);
-                    }}
-                  />
+                        // Show fallback UI
+                        const fallback = document.createElement('div');
+                        fallback.className = 'flex items-center gap-2 px-3 py-2 bg-background rounded-lg shadow-sm';
+                        fallback.innerHTML = `
+                          <div class="w-8 h-8 bg-gray-200 rounded flex items-center justify-center">
+                            <span class="text-xs">🖼️</span>
+                          </div>
+                          <div>
+                            <p class="text-xs font-medium truncate max-w-[120px]">${file.name}</p>
+                            <p class="text-xs text-destructive">Image unavailable</p>
+                          </div>
+                        `;
+                        target.parentNode?.appendChild(fallback);
+                      }}
+                    />
+                  ) : (
+                    // Show fallback UI when no URL is available
+                    <div className="flex items-center gap-2 px-3 py-2 bg-background rounded-lg shadow-sm">
+                      <div className="w-8 h-8 bg-gray-200 rounded flex items-center justify-center">
+                        <span className="text-xs">🖼️</span>
+                      </div>
+                      <div>
+                        <p className="text-xs font-medium truncate max-w-[120px]">{file.name}</p>
+                        <p className="text-xs text-destructive">Image unavailable</p>
+                      </div>
+                    </div>
+                  )
                 ) : (
-                  <div className="flex items-center gap-2 px-3 py-2 bg-background rounded-lg border shadow-sm">
+                  <div className="flex items-center gap-2 px-3 py-2 bg-background rounded-lg shadow-sm">
                     <div className="w-8 h-8 bg-gray-200 rounded flex items-center justify-center">
                       <span className="text-xs">📎</span>
                     </div>
@@ -227,7 +240,7 @@ const MessageBubbleComponent: React.FC<MessageBubbleProps> = ({
                   onClick={handleEditClick}
                   className={cn(
                     "p-2 h-auto rounded hover:bg-muted/50 transition-all duration-200",
-                    "opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-foreground"
+                    "opacity-100 sm:opacity-0 sm:group-hover:opacity-100 text-muted-foreground hover:text-foreground"
                   )}
                   title="Chỉnh sửa tin nhắn"
                 >
@@ -240,8 +253,8 @@ const MessageBubbleComponent: React.FC<MessageBubbleProps> = ({
                 onClick={handleCopy}
                 className={cn(
                   "p-2 rounded hover:bg-muted/50 transition-all duration-200",
-                  "opacity-0 group-hover:opacity-100",
-                  isCopied ? "text-green-500 opacity-100" : "text-muted-foreground hover:text-foreground"
+                  "opacity-100 sm:opacity-0 sm:group-hover:opacity-100",
+                  isCopied ? "text-success opacity-100" : "text-muted-foreground hover:text-foreground"
                 )}
                 title={isCopied ? "Đã copy!" : "Copy tin nhắn"}
               >

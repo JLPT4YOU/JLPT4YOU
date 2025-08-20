@@ -44,7 +44,7 @@ function SectionCard({ section, index, t }: SectionCardProps) {
   }
 
   return (
-    <div className="p-4 md:p-5 rounded-xl bg-muted/20 transition-all duration-200 hover:bg-muted/30">
+    <div className="p-4 md:p-5 rounded-xl bg-muted/20 hover-card">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-3">
           <div className="p-2 rounded-lg bg-background/60">

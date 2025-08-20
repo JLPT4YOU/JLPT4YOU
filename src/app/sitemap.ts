@@ -104,95 +104,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     }
   ]
 
-  // JLPT practice routes
-  const jlptLevels = ['n1', 'n2', 'n3', 'n4', 'n5']
-  const jlptTypes = ['custom', 'official']
-  
-  const jlptRoutes = jlptLevels.flatMap(level => 
-    jlptTypes.map(type => ({
-      url: `${baseUrl}/jlpt/${type}/${level}`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly' as const,
-      priority: 0.8,
-    }))
-  )
+  // Note: Protected routes (JLPT, Challenge, Driving, etc.) are removed from sitemap
+  // as they require authentication and should not be indexed by search engines
 
-  // JLPT test setup routes
-  const jlptTestSetupRoutes = jlptLevels.flatMap(level => 
-    jlptTypes.map(type => ({
-      url: `${baseUrl}/jlpt/${type}/${level}/test-setup`,
-      lastModified: currentDate,
-      changeFrequency: 'monthly' as const,
-      priority: 0.6,
-    }))
-  )
-
-  // Challenge routes
-  const challengeRoutes = jlptLevels.map(level => ({
-    url: `${baseUrl}/challenge/${level}`,
-    lastModified: currentDate,
-    changeFrequency: 'weekly' as const,
-    priority: 0.7,
-  }))
-
-  // Driving test routes
-  const drivingRoutes = [
-    {
-      url: `${baseUrl}/driving`,
-      lastModified: currentDate,
-      changeFrequency: 'monthly' as const,
-      priority: 0.5,
-    },
-    {
-      url: `${baseUrl}/driving/honmen`,
-      lastModified: currentDate,
-      changeFrequency: 'monthly' as const,
-      priority: 0.5,
-    },
-    {
-      url: `${baseUrl}/driving/karimen`,
-      lastModified: currentDate,
-      changeFrequency: 'monthly' as const,
-      priority: 0.5,
-    },
-    {
-      url: `${baseUrl}/driving/honmen/test-setup`,
-      lastModified: currentDate,
-      changeFrequency: 'monthly' as const,
-      priority: 0.4,
-    },
-    {
-      url: `${baseUrl}/driving/karimen/test-setup`,
-      lastModified: currentDate,
-      changeFrequency: 'monthly' as const,
-      priority: 0.4,
-    }
-  ]
-
-  // Utility routes
-  const utilityRoutes = [
-    {
-      url: `${baseUrl}/exam-results`,
-      lastModified: currentDate,
-      changeFrequency: 'yearly' as const,
-      priority: 0.3,
-    },
-    {
-      url: `${baseUrl}/review-answers`,
-      lastModified: currentDate,
-      changeFrequency: 'yearly' as const,
-      priority: 0.3,
-    }
-  ]
-
-  // Combine all routes
+  // Combine all public routes (only landing and auth routes for SEO)
   return [
     ...baseRoutes,
-    ...authRoutes,
-    ...jlptRoutes,
-    ...jlptTestSetupRoutes,
-    ...challengeRoutes,
-    ...drivingRoutes,
-    ...utilityRoutes
+    ...authRoutes
   ]
 }

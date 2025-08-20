@@ -105,7 +105,7 @@ export function LevelCard({
         
         {/* Custom badge for special levels */}
         {level.id === 'n1' && variant === 'detailed' && (
-          <div className="absolute -top-1 -right-1 w-3 h-3 bg-yellow-500 rounded-full border-2 border-background" />
+          <div className="absolute -top-1 -right-1 w-3 h-3 bg-primary rounded-full border-2 border-background" />
         )}
       </div>
 
@@ -170,13 +170,13 @@ function getVariantConfig(variant: LevelCardVariant) {
   switch (variant) {
     case 'compact':
       return {
-        containerClass: "p-4 md:p-6",
-        iconContainerClass: "w-12 h-12 rounded-2xl relative",
-        iconClass: "w-6 h-6",
-        textClass: "text-lg font-bold",
-        contentClass: "space-y-2",
-        titleClass: "text-sm md:text-base",
-        descriptionClass: "text-xs md:text-sm line-clamp-2",
+        containerClass: "p-3 sm:p-4 md:p-6",
+        iconContainerClass: "w-10 h-10 sm:w-12 sm:h-12 rounded-2xl relative",
+        iconClass: "w-5 h-5 sm:w-6 sm:h-6",
+        textClass: "text-base sm:text-lg font-bold",
+        contentClass: "space-y-1 sm:space-y-2",
+        titleClass: "text-xs sm:text-sm md:text-base",
+        descriptionClass: "text-xs line-clamp-2",
         statsClass: "text-xs"
       }
     
@@ -194,26 +194,26 @@ function getVariantConfig(variant: LevelCardVariant) {
     
     case 'minimal':
       return {
-        containerClass: "p-3 md:p-4",
-        iconContainerClass: "w-10 h-10 rounded-full",
-        iconClass: "w-5 h-5",
-        textClass: "text-base font-semibold",
+        containerClass: "p-2 sm:p-3 md:p-4",
+        iconContainerClass: "w-8 h-8 sm:w-10 sm:h-10 rounded-full",
+        iconClass: "w-4 h-4 sm:w-5 sm:h-5",
+        textClass: "text-sm sm:text-base font-semibold",
         contentClass: "space-y-1",
-        titleClass: "text-sm",
+        titleClass: "text-xs sm:text-sm",
         descriptionClass: "text-xs line-clamp-1",
         statsClass: "text-xs"
       }
     
     default: // 'default'
       return {
-        containerClass: "p-6 md:p-8",
-        iconContainerClass: "w-16 h-16 rounded-full relative",
-        iconClass: "w-8 h-8",
-        textClass: "text-xl md:text-2xl font-bold",
-        contentClass: "space-y-3",
-        titleClass: "text-base md:text-lg",
-        descriptionClass: "text-sm",
-        statsClass: "text-sm"
+        containerClass: "p-3 sm:p-4 md:p-6",
+        iconContainerClass: "w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-full relative",
+        iconClass: "w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8",
+        textClass: "text-lg sm:text-xl md:text-2xl font-bold",
+        contentClass: "space-y-2 sm:space-y-3",
+        titleClass: "text-sm sm:text-base md:text-lg",
+        descriptionClass: "text-xs sm:text-sm line-clamp-2",
+        statsClass: "text-xs sm:text-sm"
       }
   }
 }
@@ -335,9 +335,9 @@ export function LevelCardGrid({
   className?: string
 }) {
   const gridClasses = {
-    default: "grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5",
-    compact: "grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5",
-    detailed: "grid-cols-1 md:grid-cols-2",
+    default: "grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5",
+    compact: "grid-cols-2 md:grid-cols-3 lg:grid-cols-5",
+    detailed: "grid-cols-2",
     minimal: "grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6"
   }
   

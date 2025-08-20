@@ -1,6 +1,6 @@
 "use client"
 
-import React, { createContext, useContext, useCallback, useEffect, useState } from 'react'
+import React, { createContext, useContext, useCallback, useEffect, useState, Suspense } from 'react'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import {
   Language,
@@ -13,6 +13,7 @@ import {
   createTranslationFunction,
   loadTranslation
 } from '@/lib/i18n'
+import { devConsole } from '@/lib/console-override'
 
 // Storage keys
 const LANGUAGE_PREFERENCE_KEY = 'jlpt4you_language_preference'
@@ -44,14 +45,24 @@ interface LanguageProviderProps {
 }
 
 // Provider component
-export function LanguageProvider({ 
-  children, 
+// Safe wrapper for useSearchParams
+function useSearchParamsSafe() {
+  try {
+    return useSearchParams()
+  } catch {
+    return new URLSearchParams()
+  }
+}
+
+// Internal provider component
+function LanguageProviderInner({
+  children,
   initialLanguage,
-  initialTranslations 
+  initialTranslations
 }: LanguageProviderProps) {
   const pathname = usePathname()
   const router = useRouter()
-  const searchParams = useSearchParams()
+  const searchParams = useSearchParamsSafe()
   
   // State management
   const [translations, setTranslations] = useState<TranslationData | null>(
@@ -66,7 +77,8 @@ export function LanguageProvider({
   
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      setIsAuthenticated(!!document.cookie.includes('jlpt4you_auth_token'))
+      // ✅ FIXED: Use Supabase session cookies instead of custom cookie
+      setIsAuthenticated(!!document.cookie.includes('sb-access-token'))
     }
   }, [])
   
@@ -103,22 +115,34 @@ export function LanguageProvider({
     return null
   }, [])
   
+  // State for current language (to allow manual updates)
+  const [currentLanguageState, setCurrentLanguageState] = useState<Language | null>(null)
+
   // Detect current language from pathname or stored preference
   const currentLanguage = React.useMemo(() => {
+    // If we have a manually set language state, use it
+    if (currentLanguageState) return currentLanguageState
+
     if (initialLanguage) return initialLanguage
-    
+
     const pathLanguage = getLanguageFromPath(pathname)
-    
-    // For authenticated users with clean URLs, use stored preference if available
-    if (isAuthenticated && pathLanguage === DEFAULT_LANGUAGE) {
+
+    // For clean URLs (no language prefix), always use stored preference if available
+    // This ensures consistency regardless of authentication status
+    const hasLangPrefix = pathname.match(/^\/(vn|jp|en)\//) || pathname.startsWith('/auth/')
+
+    if (!hasLangPrefix) {
+      // Clean URL - use stored preference
       const storedLanguage = getStoredLanguagePreference()
+      devConsole.log(`[LanguageContext] Clean URL detected: ${pathname}, stored language: ${storedLanguage}, path language: ${pathLanguage}, isAuthenticated: ${isAuthenticated}`)
       if (storedLanguage) {
         return storedLanguage
       }
     }
-    
+
+    devConsole.log(`[LanguageContext] Language detection: pathname=${pathname}, isAuthenticated=${isAuthenticated}, pathLanguage=${pathLanguage}`)
     return pathLanguage
-  }, [pathname, isAuthenticated, getStoredLanguagePreference, forceRefresh, initialLanguage])
+  }, [pathname, isAuthenticated, getStoredLanguagePreference, forceRefresh, initialLanguage, currentLanguageState])
   
   // Store language preference
   const storeLanguagePreference = useCallback((language: Language) => {
@@ -184,53 +208,58 @@ export function LanguageProvider({
   // Switch language function
   const switchLanguage = useCallback(async (newLanguage: Language) => {
     if (newLanguage === currentLanguage) return
-    
+
     try {
       setIsLoading(true)
       setError(null)
-      
+
       // Store preference first
       storeLanguagePreference(newLanguage)
-      
+
+      // Update current language state immediately
+      setCurrentLanguageState(newLanguage)
+
       // Load new translations
       const newTranslations = await loadTranslationsForLanguage(newLanguage)
       setTranslations(newTranslations)
-      
+
       // Check if we're on auth pages (regardless of authentication state)
       const currentPath = removeLanguageFromPath(pathname)
-      const isAuthPage = currentPath === '' || currentPath === 'login' || currentPath === 'register' || 
+      const isAuthPage = currentPath === '' || currentPath === 'login' || currentPath === 'register' ||
                         currentPath === 'forgot-password' || currentPath === 'landing' ||
-                        pathname.startsWith('/auth/') || 
+                        pathname.startsWith('/auth/') ||
                         pathname.match(/^\/(vn|jp|en)\/(login|register|forgot-password|landing)$/)
-      
+
       // Handle URL routing
       if (isAuthenticated && !isAuthPage) {
         // Authenticated users on main pages: use clean URLs with stored preference
         // Language switched to clean URLs for authenticated users
-        
+
         // Force refresh the language detection
         setForceRefresh(prev => prev + 1)
-        
+
         // Dispatch custom event for other components to listen
-        window.dispatchEvent(new CustomEvent('languageChanged', { 
-          detail: { language: newLanguage } 
+        window.dispatchEvent(new CustomEvent('languageChanged', {
+          detail: { language: newLanguage }
         }))
       } else {
         // Auth pages OR non-authenticated users: always use language-prefixed URLs
         const newPath = getLocalizedPath(currentPath, newLanguage)
-        
+
         // Keep existing query params but don't add lang_switch
         const params = new URLSearchParams(searchParams.toString())
         const fullPath = params.toString() ? `${newPath}?${params.toString()}` : newPath
-        
+
         // Switching language and navigating to new path
-        
+
         router.push(fullPath)
       }
-      
+
     } catch (error) {
       console.error('Failed to switch language:', error)
       setError(error as Error)
+      // Reset language state on error
+      setCurrentLanguageState(null)
     } finally {
       setIsLoading(false)
     }
@@ -262,16 +291,8 @@ export function LanguageProvider({
         setIsLoading(true)
         setError(null)
         
-        // Determine which language to load
-        let languageToLoad = currentLanguage
-        
-        // For authenticated users with clean URLs, check stored preference
-        if (isAuthenticated && currentLanguage === DEFAULT_LANGUAGE) {
-          const storedLanguage = getStoredLanguagePreference()
-          if (storedLanguage) {
-            languageToLoad = storedLanguage
-          }
-        }
+        // Use the currentLanguage which already includes stored preference logic
+        const languageToLoad = currentLanguage
         
         const translationData = await loadTranslationsForLanguage(languageToLoad)
         
@@ -299,30 +320,57 @@ export function LanguageProvider({
     }
   }, [currentLanguage, isAuthenticated, getStoredLanguagePreference, loadTranslationsForLanguage, initialTranslations])
   
+  // Re-evaluate language when auth state changes or when on clean URLs with stored preferences
+  useEffect(() => {
+    const hasLangPrefix = pathname.match(/^\/(vn|jp|en)\//) || pathname.startsWith('/auth/')
+
+    if (!hasLangPrefix) {
+      // Clean URL - check if we need to reload translations based on stored preference
+      const storedLanguage = getStoredLanguagePreference()
+      devConsole.log(`[LanguageContext] Clean URL effect: pathname=${pathname}, isAuthenticated=${isAuthenticated}, currentLanguage=${currentLanguage}, storedLanguage=${storedLanguage}`)
+
+      if (storedLanguage && storedLanguage !== currentLanguage) {
+        devConsole.log(`[LanguageContext] Reloading translations for stored language: ${storedLanguage}`)
+        // Reset manual language state to allow automatic detection
+        setCurrentLanguageState(null)
+        setForceRefresh(prev => prev + 1)
+      }
+    } else {
+      // On lang-prefixed URLs, reset manual language state to use path-based detection
+      setCurrentLanguageState(null)
+    }
+  }, [isAuthenticated, pathname, currentLanguage, getStoredLanguagePreference])
+
   // Listen for language change events (for authenticated users with clean URLs)
   useEffect(() => {
     const handleLanguageChange = async (event: Event) => {
       const customEvent = event as CustomEvent
       const newLanguage = customEvent.detail?.language as Language
-      
+
       if (newLanguage && newLanguage !== currentLanguage) {
         try {
           setIsLoading(true)
           setError(null)
+
+          // Update language state
+          setCurrentLanguageState(newLanguage)
+
           const newTranslations = await loadTranslationsForLanguage(newLanguage)
           setTranslations(newTranslations)
           setForceRefresh(prev => prev + 1)
         } catch (error) {
           console.error('Failed to load translations after language change:', error)
           setError(error as Error)
+          // Reset language state on error
+          setCurrentLanguageState(null)
         } finally {
           setIsLoading(false)
         }
       }
     }
-    
+
     window.addEventListener('languageChanged', handleLanguageChange)
-    
+
     return () => {
       window.removeEventListener('languageChanged', handleLanguageChange)
     }
@@ -344,6 +392,15 @@ export function LanguageProvider({
     <LanguageContext.Provider value={contextValue}>
       {children}
     </LanguageContext.Provider>
+  )
+}
+
+// Main export with Suspense wrapper
+export function LanguageProvider(props: LanguageProviderProps) {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-background" />}>
+      <LanguageProviderInner {...props} />
+    </Suspense>
   )
 }
 

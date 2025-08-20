@@ -91,22 +91,27 @@ export function QuestionContent({
               className={cn(
                 "w-full text-left p-3 rounded-lg border-2 transition-all duration-200 md:app-p-md",
                 "hover:bg-accent/50 hover:border-accent-foreground/30",
-                "focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
+                "focus-button",
                 selectedAnswer === key
-                  ? "border-primary bg-primary/5 shadow-sm"
-                  : "border-border bg-card"
+                  ? "border-primary bg-primary/10 shadow-md ring-1 ring-primary/20"
+                  : "border-border bg-card hover:border-muted-foreground/50"
               )}
             >
               <div className="flex items-start gap-3 md:app-gap-sm">
                 <span className={cn(
-                  "w-6 h-6 rounded-full border-2 flex items-center justify-center text-sm font-semibold shrink-0 mt-0.5 text-foreground",
+                  "w-6 h-6 rounded-full border-2 flex items-center justify-center text-sm font-semibold shrink-0 mt-0.5 transition-all duration-200",
                   selectedAnswer === key
-                    ? "bg-primary/10 border-primary"
-                    : "border-muted-foreground bg-muted/20"
+                    ? "bg-primary text-primary-foreground border-primary shadow-sm"
+                    : "border-muted-foreground bg-muted/20 text-foreground"
                 )}>
                   {key}
                 </span>
-                <span className="text-sm leading-relaxed text-foreground">{value}</span>
+                <span className={cn(
+                  "text-sm leading-relaxed transition-colors duration-200",
+                  selectedAnswer === key
+                    ? "text-foreground font-medium"
+                    : "text-foreground"
+                )}>{value}</span>
               </div>
             </button>
           ))}

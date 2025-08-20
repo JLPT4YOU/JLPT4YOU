@@ -1,11 +1,13 @@
 "use client";
 
-import { ReactNode, useEffect, useState } from "react";
-import { loadTranslation, DEFAULT_LANGUAGE, type TranslationData, type Language } from "@/lib/i18n";
+import { ReactNode } from "react";
+import { LanguagePageWrapper } from "@/components/language-page-wrapper";
+import { type TranslationData, type Language } from "@/lib/i18n";
 
 interface ExamPageTemplateProps {
   /**
-   * ISO language code to load translations for. If not provided, falls back to DEFAULT_LANGUAGE.
+   * ISO language code to load translations for. This prop is now optional
+   * as LanguagePageWrapper will handle language detection from context.
    */
   language?: Language;
   /**
@@ -20,6 +22,7 @@ interface ExamPageTemplateProps {
 
 /**
  * Generic wrapper that handles translation loading & loading UI for all exam-type pages.
+ * Now integrated with LanguageContext for consistent language switching across the app.
  *
  * Usage:
  * ```tsx
@@ -31,28 +34,22 @@ interface ExamPageTemplateProps {
  * ```
  */
 export function ExamPageTemplate({
-  language = DEFAULT_LANGUAGE,
+  language,
   children,
   fallback = <div>Loading...</div>,
 }: ExamPageTemplateProps) {
-  const [translations, setTranslations] = useState<TranslationData | null>(null);
-
-  useEffect(() => {
-    const load = async () => {
-      try {
-        const data = await loadTranslation(language);
-        setTranslations(data);
-      } catch (error) {
-        console.error("Failed to load translations:", error);
-      }
-    };
-
-    load();
-  }, [language]);
-
-  if (!translations) {
-    return <>{fallback}</>;
-  }
-
-  return <>{children(translations)}</>;
+  return (
+    <LanguagePageWrapper 
+      loadingFallback={fallback}
+    >
+      {({ translations }) => {
+        // If translations are available from context, use them
+        if (translations) {
+          return <>{children(translations)}</>;
+        }
+        // This shouldn't happen as LanguagePageWrapper handles loading
+        return <>{fallback}</>;
+      }}
+    </LanguagePageWrapper>
+  );
 }

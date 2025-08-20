@@ -70,21 +70,21 @@ export const WhyChooseUsSection = ({ translations }: WhyChooseUsSectionProps) =>
   }
 
   return (
-    <section id="why-choose-us" className="relative bg-muted/5 py-12 md:py-16">
+    <section id="why-choose-us" className="relative bg-muted/5 py-10 md:py-16">
       <div className="app-container app-section">
-        <div className="app-content">
+        <div className="app-content px-4">
           {/* Section Header */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.6 }}
-            className="text-center mb-8 md:mb-12"
+            className="text-center mb-6 md:mb-12"
           >
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-foreground mb-3">
+            <h2 className="text-xl md:text-3xl lg:text-4xl font-bold text-foreground mb-3">
               {t('whyChooseUs.title')}
             </h2>
-            <p className="text-base md:text-lg text-muted-foreground max-w-xl mx-auto">
+            <p className="text-sm md:text-lg text-muted-foreground max-w-xl mx-auto">
               {t('whyChooseUs.subtitle')}
             </p>
           </motion.div>
@@ -95,7 +95,7 @@ export const WhyChooseUsSection = ({ translations }: WhyChooseUsSectionProps) =>
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-50px" }}
-            className="max-w-5xl mx-auto mb-8 md:mb-10"
+            className="max-w-5xl mx-auto mb-6 md:mb-10"
           >
             {/* Table Header */}
             <div className="hidden md:grid md:grid-cols-2 gap-4 mb-4">

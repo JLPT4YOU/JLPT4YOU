@@ -118,6 +118,7 @@ export function ExamResultsPageContent({ translations, language }: ExamResultsPa
                   correctAnswers={examResult.correctAnswers}
                   incorrectAnswers={examResult.incorrectAnswers}
                   unansweredQuestions={examResult.unansweredQuestions}
+                  flaggedQuestions={examResult.flaggedQuestions}
                   percentage={examResult.percentage}
                   status={examResult.status}
                   timeSpent={examResult.timeSpent}

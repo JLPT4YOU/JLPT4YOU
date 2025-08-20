@@ -1,0 +1,21 @@
+[2025-08-04 18:06:36] TEST_PASS: Server Running
+[2025-08-04 18:06:36] TEST_PASS: Server Response Time
+[2025-08-04 18:06:36] TEST_PASS: Login Page Accessible
+[2025-08-04 18:06:37] TEST_PASS: Register Page Accessible
+[2025-08-04 18:06:37] TEST_PASS: Protected Route Redirects
+[2025-08-04 18:06:37] TEST_FAIL: Rollout Percentage Set - expected: PASS, got: FAIL
+[2025-08-04 18:06:37] TEST_FAIL: Monitoring Enabled - expected: PASS, got: FAIL
+[2025-08-04 18:06:37] TEST_FAIL: Security Headers Present - expected: PASS, got: FAIL
+[2025-08-04 18:06:37] TEST_FAIL: HTTPS Redirect (if applicable) - expected: FAIL, got: PASS
+[2025-08-04 18:06:37] TEST_PASS: No Sensitive Info in Headers
+[2025-08-04 18:06:40] TEST_FAIL: Supabase Connection - expected: PASS, got: FAIL
+[2025-08-04 18:06:40] TEST_PASS: Language Detection
+[2025-08-04 18:06:40] TEST_PASS: Cookie Handling
+[2025-08-04 18:06:41] TEST_PASS: File exists: src/lib/auth/supabase-ssr.ts
+[2025-08-04 18:06:41] TEST_PASS: File exists: src/lib/auth/rbac.ts
+[2025-08-04 18:06:41] TEST_PASS: File exists: src/lib/auth/middleware-v2.ts
+[2025-08-04 18:06:41] TEST_PASS: File exists: src/contexts/auth-context-v2.tsx
+[2025-08-04 18:06:41] TEST_PASS: File exists: src/lib/feature-flags.ts
+[2025-08-04 18:06:41] TEST_PASS: File exists: scripts/emergency-rollback.sh
+[2025-08-04 18:06:42] TEST_PASS: File exists: scripts/rollout-dashboard.sh
+[2025-08-04 18:06:42] INTEGRATION_TESTS: FAILED - Success rate: 64%

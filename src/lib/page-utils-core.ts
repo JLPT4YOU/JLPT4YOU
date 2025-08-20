@@ -3,35 +3,30 @@
  * For testing purposes and shared logic
  */
 
-import { Language } from '@/lib/i18n'
+import { Language, getLanguageFromCode as getLanguageFromCodeUnified } from '@/lib/i18n'
+import { generateHreflangLinksLegacy as generateHreflangLinksUnified } from '@/lib/i18n'
 
-// Language code mapping utility (consolidates duplicate functions)
+// Language code mapping utility (delegates to unified i18n)
+// NOTE: Keeps legacy numeric codes for backward compatibility
 export function getLanguageFromCode(code: string): Language | null {
-  switch (code) {
-    case '1':
-    case 'vn':
-      return 'vn'
-    case '2':
-    case 'jp':
-      return 'jp'
-    case '3':
-    case 'en':
-      return 'en'
-    default:
-      return null
-  }
+  return getLanguageFromCodeUnified(code)
 }
 
-// Generate hreflang links for SEO
+// Generate hreflang links for SEO (wrapper for unified implementation)
+// Returns a Record mapping (keeps x-default for backward compatibility)
 export function generateHreflangLinks(path: string): Record<string, string> {
   const baseUrl = 'https://jlpt4you.com'
-  
-  return {
-    'vi-VN': `${baseUrl}/vn${path}`,
-    'ja-JP': `${baseUrl}/jp${path}`,
-    'en-US': `${baseUrl}/en${path}`,
-    'x-default': `${baseUrl}/vn${path}`
+  const entries = generateHreflangLinksUnified(path, baseUrl)
+  const record: Record<string, string> = {}
+  for (const { hreflang, href } of entries) {
+    record[hreflang] = href
   }
+  // Backward compatibility: include x-default -> Vietnamese
+  if (!record['x-default']) {
+    // Prefer vi-VN if available; fallback constructs VN URL
+    record['x-default'] = record['vi-VN'] ?? `${baseUrl}/vn${path}`
+  }
+  return record
 }
 
 // Generate content language header
@@ -41,7 +36,7 @@ export function getContentLanguage(language: Language): string {
     jp: 'ja-JP',
     en: 'en-US'
   }
-  
+
   return languageMap[language]
 }
 
@@ -140,22 +135,22 @@ export function generateRoute<T extends RouteFeature>(
         return `${basePath}/jlpt/${jlptParams.type}/${jlptParams.level}`
       }
       return `${basePath}/jlpt/${jlptParams.type}`
-    
+
     case 'challenge':
       const challengeParams = params as RouteParams['challenge']
       return `${basePath}/challenge/${challengeParams.level}`
-    
+
     case 'driving':
       const drivingParams = params as RouteParams['driving']
       return `${basePath}/driving/${drivingParams.type}`
-    
+
     case 'home':
       return `${basePath}/home`
-    
+
     case 'auth':
       const authParams = params as RouteParams['auth']
       return `/auth/${language}/${authParams.type}`
-    
+
     default:
       return basePath
   }

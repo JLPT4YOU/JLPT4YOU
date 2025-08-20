@@ -12,6 +12,8 @@ import { useTheme } from 'next-themes';
 import { useTranslations } from '@/hooks/use-translations';
 import { cn } from '@/lib/utils';
 import { ConfirmationDialog } from '@/components/ui/confirmation-dialog';
+import { UserStorage } from '@/lib/user-storage';
+import { useAuth } from '@/contexts/auth-context-simple';
 
 interface ChatSettingsProps {
   onClearHistory?: () => void;
@@ -25,18 +27,26 @@ export const ChatSettings: React.FC<ChatSettingsProps> = ({ onClearHistory }) =>
   const [showSavedMessage, setShowSavedMessage] = useState(false);
   const { theme, setTheme } = useTheme();
   const { t } = useTranslations();
+  const { user } = useAuth();
   const [mounted, setMounted] = useState(false);
   const [showClearHistoryDialog, setShowClearHistoryDialog] = useState(false);
 
-  // Prevent hydration mismatch
+  // Prevent hydration mismatch and load user-scoped settings
   useEffect(() => {
     setMounted(true);
-    // Load saved settings
-    const savedLanguage = localStorage.getItem('ai_language') || 'auto';
-    const savedCustomLanguage = localStorage.getItem('ai_custom_language') || '';
-    setAiLanguage(savedLanguage);
-    setCustomLanguage(savedCustomLanguage);
-  }, []);
+
+    if (user?.id) {
+      // Load user-scoped settings
+      const savedLanguage = UserStorage.getItem('ai_language') || 'auto';
+      const savedCustomLanguage = UserStorage.getItem('ai_custom_language') || '';
+      setAiLanguage(savedLanguage);
+      setCustomLanguage(savedCustomLanguage);
+    } else {
+      // Reset to defaults when no user
+      setAiLanguage('auto');
+      setCustomLanguage('');
+    }
+  }, [user?.id]);
 
   const handleLanguageChange = (language: string) => {
     setAiLanguage(language);
@@ -47,11 +57,13 @@ export const ChatSettings: React.FC<ChatSettingsProps> = ({ onClearHistory }) =>
   };
 
   const handleSave = async () => {
+    if (!user?.id) return;
+
     setIsSaving(true);
     try {
-      // Save settings to localStorage
-      localStorage.setItem('ai_language', aiLanguage);
-      localStorage.setItem('ai_custom_language', customLanguage);
+      // Save settings to user-scoped storage
+      UserStorage.setItem('ai_language', aiLanguage);
+      UserStorage.setItem('ai_custom_language', customLanguage);
 
       // Show success message
       setShowSavedMessage(true);
@@ -68,7 +80,11 @@ export const ChatSettings: React.FC<ChatSettingsProps> = ({ onClearHistory }) =>
   };
 
   const handleConfirmClearHistory = () => {
-    localStorage.removeItem('chat_history');
+    if (user?.id) {
+      // Clear user-scoped chat history
+      UserStorage.removeItem('chat_history');
+      UserStorage.removeItem('current_chat_id');
+    }
     onClearHistory?.();
     setIsOpen(false);
   };

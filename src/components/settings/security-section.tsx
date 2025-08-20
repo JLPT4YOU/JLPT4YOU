@@ -1,12 +1,12 @@
 /**
  * Security Section Component
- * Quản lý bảo mật tài khoản: đổi mật khẩu
+ * Manages account security: password change
  */
 
 "use client"
 
 import { useState } from 'react'
-import { useAuth } from '@/contexts/auth-context'
+import { useAuth } from '@/contexts/auth-context-simple'
 import { userSettingsService } from '@/lib/user-settings-service'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -66,7 +66,7 @@ export function SecuritySection({ className }: SecuritySectionProps) {
       if (result.success) {
         setMessage({
           type: 'success',
-          text: 'Đổi mật khẩu thành công!'
+          text: t ? t('pages.settings.security.changeSuccess') : 'Đổi mật khẩu thành công!'
         })
 
         // Clear form
@@ -81,14 +81,14 @@ export function SecuritySection({ className }: SecuritySectionProps) {
       } else {
         setMessage({
           type: 'error',
-          text: result.error || 'Có lỗi xảy ra khi đổi mật khẩu'
+          text: result.error || (t ? t('pages.settings.security.changeError') : 'Có lỗi xảy ra khi đổi mật khẩu')
         })
       }
     } catch (error) {
       console.error('Change password error:', error)
       setMessage({
         type: 'error',
-        text: 'Đã xảy ra lỗi không mong muốn'
+        text: t ? t('pages.settings.profile.unexpectedError') : 'Đã xảy ra lỗi không mong muốn'
       })
     } finally {
       setIsSaving(false)
@@ -107,10 +107,10 @@ export function SecuritySection({ className }: SecuritySectionProps) {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Shield className="w-5 h-5" />
-          Bảo mật tài khoản
+          {t ? t('pages.settings.security.title') : 'Bảo mật'}
         </CardTitle>
         <CardDescription>
-          Quản lý mật khẩu và bảo mật tài khoản của bạn
+          {t ? t('pages.settings.security.description') : 'Quản lý mật khẩu và bảo mật tài khoản'}
         </CardDescription>
       </CardHeader>
       
@@ -120,11 +120,11 @@ export function SecuritySection({ className }: SecuritySectionProps) {
           <div className="flex items-center gap-3">
             <Lock className="w-5 h-5 text-muted-foreground" />
             <div>
-              <p className="font-medium">Mật khẩu</p>
+              <p className="font-medium">{t ? t('pages.settings.security.password') : 'Mật khẩu'}</p>
               <p className="text-sm text-muted-foreground">
-                {user?.passwordUpdatedAt 
-                  ? `Đổi lần cuối: ${new Date(user.passwordUpdatedAt).toLocaleDateString('vi-VN')}`
-                  : 'Chưa từng đổi mật khẩu'
+                {(user as any)?.passwordUpdatedAt
+                  ? `${t ? t('pages.settings.security.lastChanged') : 'Lần cuối thay đổi'}: ${new Date((user as any).passwordUpdatedAt).toLocaleDateString('vi-VN')}`
+                  : (t ? t('pages.settings.security.neverChanged') : 'Chưa từng thay đổi')
                 }
               </p>
             </div>
@@ -134,18 +134,18 @@ export function SecuritySection({ className }: SecuritySectionProps) {
 
         {/* Change Password Form */}
         <div className="space-y-4">
-          <h4 className="font-medium">Đổi mật khẩu</h4>
+          <h4 className="font-medium">{t ? t('pages.settings.security.changePassword') : 'Đổi mật khẩu'}</h4>
           
           {/* Current Password */}
           <div className="space-y-2">
-            <Label htmlFor="currentPassword">Mật khẩu hiện tại</Label>
+            <Label htmlFor="currentPassword">{t ? t('pages.settings.security.currentPassword') : 'Mật khẩu hiện tại'}</Label>
             <div className="relative">
               <Input
                 id="currentPassword"
                 type={showPasswords.current ? "text" : "password"}
                 value={formData.currentPassword}
                 onChange={(e) => handleInputChange('currentPassword', e.target.value)}
-                placeholder="Nhập mật khẩu hiện tại"
+                placeholder={t ? t('pages.settings.security.currentPasswordPlaceholder') : 'Nhập mật khẩu hiện tại'}
                 className="pr-10"
               />
               <Button
@@ -166,14 +166,14 @@ export function SecuritySection({ className }: SecuritySectionProps) {
 
           {/* New Password */}
           <div className="space-y-2">
-            <Label htmlFor="newPassword">Mật khẩu mới</Label>
+            <Label htmlFor="newPassword">{t ? t('pages.settings.security.newPassword') : 'Mật khẩu mới'}</Label>
             <div className="relative">
               <Input
                 id="newPassword"
                 type={showPasswords.new ? "text" : "password"}
                 value={formData.newPassword}
                 onChange={(e) => handleInputChange('newPassword', e.target.value)}
-                placeholder="Nhập mật khẩu mới (6-8 ký tự)"
+                placeholder={t ? t('pages.settings.security.newPasswordPlaceholder') : 'Nhập mật khẩu mới'}
                 className="pr-10"
                 maxLength={8}
               />
@@ -192,20 +192,20 @@ export function SecuritySection({ className }: SecuritySectionProps) {
               </Button>
             </div>
             <p className="text-xs text-muted-foreground">
-              Mật khẩu phải có từ 6-8 ký tự
+              {t ? t('pages.settings.security.passwordLength') : 'Mật khẩu phải có từ 6-8 ký tự'}
             </p>
           </div>
 
           {/* Confirm Password */}
           <div className="space-y-2">
-            <Label htmlFor="confirmPassword">Xác nhận mật khẩu mới</Label>
+            <Label htmlFor="confirmPassword">{t ? t('pages.settings.security.confirmPassword') : 'Xác nhận mật khẩu mới'}</Label>
             <div className="relative">
               <Input
                 id="confirmPassword"
                 type={showPasswords.confirm ? "text" : "password"}
                 value={formData.confirmPassword}
                 onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
-                placeholder="Nhập lại mật khẩu mới"
+                placeholder={t ? t('pages.settings.security.confirmPasswordPlaceholder') : 'Nhập lại mật khẩu mới'}
                 className="pr-10"
                 maxLength={8}
               />
@@ -224,8 +224,8 @@ export function SecuritySection({ className }: SecuritySectionProps) {
               </Button>
             </div>
             {formData.confirmPassword && formData.newPassword !== formData.confirmPassword && (
-              <p className="text-xs text-red-600">
-                Mật khẩu xác nhận không khớp
+              <p className="text-xs text-destructive">
+                {t ? t('pages.settings.security.passwordMismatch') : 'Mật khẩu xác nhận không khớp'}
               </p>
             )}
           </div>
@@ -234,9 +234,9 @@ export function SecuritySection({ className }: SecuritySectionProps) {
         {/* Message */}
         {message && (
           <div className={`p-3 rounded-lg text-sm ${
-            message.type === 'success' 
-              ? 'bg-green-50 text-green-700 border border-green-200' 
-              : 'bg-red-50 text-red-700 border border-red-200'
+            message.type === 'success'
+              ? 'alert-success-soft'
+              : 'alert-error-soft'
           }`}>
             {message.text}
           </div>
@@ -252,12 +252,12 @@ export function SecuritySection({ className }: SecuritySectionProps) {
             {isSaving ? (
               <>
                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                Đang lưu...
+                {t ? t('pages.settings.security.changing') : 'Đang đổi...'}
               </>
             ) : (
               <>
                 <Save className="w-4 h-4 mr-2" />
-                Đổi mật khẩu
+                {t ? t('pages.settings.security.changePassword') : 'Đổi mật khẩu'}
               </>
             )}
           </Button>

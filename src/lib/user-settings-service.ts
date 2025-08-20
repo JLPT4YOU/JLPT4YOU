@@ -3,13 +3,19 @@
  * Xử lý các thao tác CRUD cho user profile và settings
  */
 
-import { supabase, supabaseAdmin } from '@/lib/supabase'
+import { createClient } from '@/utils/supabase/client'
+import { supabaseAdmin } from '@/utils/supabase/admin'
 import type { User, UserUpdate } from '@/types/supabase'
+
+// ✅ FIXED: Create supabase client instance
+const supabase = createClient()
 
 // Types cho user settings
 export interface UserProfileUpdate {
   name?: string
   avatar_icon?: string
+  role?: 'Free' | 'Premium' | 'Admin'
+  subscription_expires_at?: string
 }
 
 export interface PasswordChangeData {
@@ -33,7 +39,7 @@ export class UserSettingsService {
       const { data, error } = await supabase
         .from('users')
         .select('*')
-        .eq('id', userId)
+        .eq('id', userId as any)
         .single()
 
       if (error) {
@@ -93,7 +99,7 @@ export class UserSettingsService {
       const { data: existingUser, error: getUserError } = await supabase
         .from('users')
 .select('id, email, name, avatar_icon')
-        .eq('id', userId)
+        .eq('id', userId as any)
         .single()
 
       if (getUserError) {
@@ -118,8 +124,8 @@ export class UserSettingsService {
       // Update in database
       const { data, error } = await supabase
         .from('users')
-        .update(updateData)
-        .eq('id', userId)
+        .update(updateData as any)
+        .eq('id', userId as any)
         .select()
         .single()
 
@@ -230,11 +236,11 @@ export class UserSettingsService {
       if (user) {
         await supabase
           .from('users')
-          .update({ 
+          .update({
             password_updated_at: new Date().toISOString(),
             updated_at: new Date().toISOString()
-          })
-          .eq('id', user.id)
+          } as any)
+          .eq('id', user.id as any)
       }
 
       return {
@@ -264,11 +270,11 @@ export class UserSettingsService {
 
       const { data, error } = await supabase
         .from('users')
-        .update({ 
+        .update({
           avatar_icon: iconName,
           updated_at: new Date().toISOString()
-        })
-        .eq('id', userId)
+        } as any)
+        .eq('id', userId as any)
         .select()
         .single()
 
@@ -299,11 +305,11 @@ export class UserSettingsService {
     try {
       const { data, error } = await supabase
         .from('users')
-.update({ 
+.update({
           avatar_icon: null,
           updated_at: new Date().toISOString()
-        })
-        .eq('id', userId)
+        } as any)
+        .eq('id', userId as any)
         .select()
         .single()
 
@@ -336,7 +342,7 @@ export class UserSettingsService {
       const { data: progress, error: progressError } = await supabase
         .from('user_progress')
         .select('*')
-        .eq('user_id', userId)
+        .eq('user_id', userId as any)
         .single()
 
       if (progressError) {
@@ -350,7 +356,7 @@ export class UserSettingsService {
       const { count: examCount, error: examError } = await supabase
         .from('exam_results')
         .select('*', { count: 'exact', head: true })
-        .eq('user_id', userId)
+        .eq('user_id', userId as any)
 
       if (examError) {
         console.warn('Could not load exam count:', examError)

@@ -110,7 +110,7 @@ export function ChallengeTestSetup({ level }: ChallengeTestSetupProps) {
               <p className="text-sm text-muted-foreground app-mb-md">
                 {t('challenge.setup.sectionsSubtitle')}
               </p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 app-gap-md">
+              <div className="grid grid-cols-2 gap-3 sm:gap-4">
                 {challengeSections.map((section) => {
                   const IconComponent = section.icon
 

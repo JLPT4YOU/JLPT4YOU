@@ -80,34 +80,9 @@ export function validatePromptConfig(config: any): config is CustomPromptConfig 
 /**
  * Sanitizes user input to prevent identity override and prompt injection
  */
+import { sanitizeText } from './shared/sanitize-utils'
 export function sanitizeUserInput(input: string): string {
-  if (!input) return '';
-
-  // Remove potentially harmful instructions that could override identity
-  const forbiddenPatterns = [
-    /you are not/gi,
-    /ignore previous/gi,
-    /forget that you are/gi,
-    /act as if you are/gi,
-    /pretend to be/gi,
-    /your name is not/gi,
-    /you are actually/gi,
-    /you are chatgpt/gi,
-    /not irin/gi,
-    /you are gpt/gi,
-    /you are openai/gi,
-    /system\s*:/gi,
-    /assistant\s*:/gi,
-    /human\s*:/gi
-  ];
-
-  let sanitized = input;
-  forbiddenPatterns.forEach(pattern => {
-    sanitized = sanitized.replace(pattern, '[FILTERED]');
-  });
-
-  // Limit length based on field type
-  return sanitized.slice(0, 300).trim();
+  return sanitizeText(input, 300)
 }
 
 /**
@@ -343,13 +318,19 @@ export function detectLanguageFromMessage(message: string): string {
 }
 
 /**
- * Get AI communication language from settings
+ * Get AI communication language from user-scoped settings
  */
 export function getAICommunicationLanguage(userMessage?: string): string {
   if (typeof window === 'undefined') return 'Tiếng Việt'; // SSR fallback
 
-  const aiLanguage = localStorage.getItem('ai_language') || 'auto';
-  const customLanguage = localStorage.getItem('ai_custom_language') || '';
+  // Use UserStorage for user-scoped settings with fallback
+  let aiLanguage = 'auto';
+  let customLanguage = '';
+
+  // For now, fallback to localStorage until we can refactor this to be async
+  // TODO: Refactor this function to be async when UserStorage is properly integrated
+  aiLanguage = localStorage.getItem('ai_language') || 'auto';
+  customLanguage = localStorage.getItem('ai_custom_language') || '';
 
   // Auto detect mode
   if (aiLanguage === 'auto' && userMessage) {

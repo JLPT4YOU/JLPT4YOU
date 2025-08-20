@@ -13,7 +13,7 @@ const Checkbox = React.forwardRef<
     ref={ref}
     className={cn(
       // Base styles
-      "peer h-4 w-4 shrink-0 rounded-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+      "peer h-4 w-4 shrink-0 rounded-sm focus-ring disabled:cursor-not-allowed disabled:opacity-50",
       // Light mode: black border and background, white check
       "border-foreground bg-background",
       // Dark mode: white border and background, black check

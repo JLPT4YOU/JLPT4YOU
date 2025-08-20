@@ -11,13 +11,18 @@ import { ExamResult } from '@/types'
 import { Button } from '@/components/ui/button'
 
 interface ExamResultsContentProps {
-  t: (key: string) => any
-  language: string
+  t: (key: string) => string
+  searchParams: URLSearchParams
 }
 
-function ExamResultsContent({ t, language }: ExamResultsContentProps) {
-  const router = useRouter()
+// Component that uses useSearchParams - must be wrapped in Suspense
+function ExamResultsWithSearchParams({ t }: { t: (key: string) => string }) {
   const searchParams = useSearchParams()
+  return <ExamResultsContent t={t} searchParams={searchParams} />
+}
+
+function ExamResultsContent({ t, searchParams }: ExamResultsContentProps) {
+  const router = useRouter()
   const [examResult, setExamResult] = useState<ExamResult | null>(null)
   const [isLoading, setIsLoading] = useState(true)
 
@@ -101,7 +106,7 @@ function ExamResultsContent({ t, language }: ExamResultsContentProps) {
               <p className="text-muted-foreground mb-4">
                 {t('examResults.noData')}
               </p>
-              <Button onClick={() => router.push('/')} className="rounded-xl bg-primary/90 hover:bg-primary">
+              <Button onClick={() => router.push('/')} className="rounded-xl bg-primary/90 text-primary-foreground hover-primary">
                 {t('examResults.actions.backToHome')}
               </Button>
             </div>
@@ -129,6 +134,7 @@ function ExamResultsContent({ t, language }: ExamResultsContentProps) {
                   correctAnswers={examResult.correctAnswers}
                   incorrectAnswers={examResult.incorrectAnswers}
                   unansweredQuestions={examResult.unansweredQuestions}
+                  flaggedQuestions={examResult.flaggedQuestions}
                   percentage={examResult.percentage}
                   status={examResult.status}
                   timeSpent={examResult.timeSpent}
@@ -169,9 +175,9 @@ function ExamResultsContent({ t, language }: ExamResultsContentProps) {
 export default function ExamResultsPage() {
   return (
     <LanguagePageWrapper>
-      {({ language, translations, t, isLoading, isAuthenticated }) => (
+      {({ t }) => (
         <Suspense fallback={<div>{t('common.loading')}</div>}>
-          <ExamResultsContent t={t} language={language} />
+          <ExamResultsWithSearchParams t={t} />
         </Suspense>
       )}
     </LanguagePageWrapper>

@@ -14,7 +14,6 @@ import {
   Settings,
   Moon,
   Sun,
-  MessageSquare,
   Trash2,
   Key,
   Eye,
@@ -26,20 +25,21 @@ import {
 } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { useTranslations } from '@/hooks/use-translations';
-import { getGeminiService } from '@/lib/gemini-service';
 import { getAIProviderManager, type ProviderType } from '@/lib/ai-provider-manager';
 import { PromptSettings } from './PromptSettings';
 import { hasCustomPrompt } from '@/lib/prompt-storage';
-import { getAvailableModels, GEMINI_MODEL_INFO } from '@/lib/gemini-config';
 import { cn } from '@/lib/utils';
 import { ConfirmationDialog } from '@/components/ui/confirmation-dialog';
+import { createClient } from '@/utils/supabase/client';
+import { createSecureApiPayload, isWebCryptoSupported } from '@/lib/client-crypto-utils';
+
+// ✅ FIXED: Create supabase client instance
+const supabase = createClient();
 
 interface UnifiedSettingsProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
   onClearHistory?: () => void;
-  selectedModel?: string;
-  onModelChange?: (model: string) => void;
   defaultTab?: string;
 }
 
@@ -47,8 +47,6 @@ export const UnifiedSettings: React.FC<UnifiedSettingsProps> = ({
   isOpen,
   onOpenChange,
   onClearHistory,
-  selectedModel,
-  onModelChange,
   defaultTab = "general"
 }) => {
   // Multi-provider API key states
@@ -81,22 +79,44 @@ export const UnifiedSettings: React.FC<UnifiedSettingsProps> = ({
   useEffect(() => {
     setMounted(true);
     // Load saved settings
-    const savedGeminiKey = localStorage.getItem('gemini_api_key') || '';
-    const savedGroqKey = localStorage.getItem('groq_api_key') || '';
     const savedFontSize = localStorage.getItem('chat_font_size') as 'small' | 'medium' | 'large' | 'extraLarge';
-
-    setApiKeys({
-      gemini: savedGeminiKey,
-      groq: savedGroqKey
-    });
 
     if (savedFontSize && ['small', 'medium', 'large', 'extraLarge'].includes(savedFontSize)) {
       setFontSize(savedFontSize);
     }
 
-    // Note: Removed automatic API key validation on mount to prevent unnecessary network requests
-    // API keys will be validated only when user manually tests them or when actually needed
+    // Load API key status from server
+    loadKeyStatus();
   }, []);
+
+  const loadKeyStatus = async () => {
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+
+      const headers: HeadersInit = { 'Content-Type': 'application/json' };
+      if (session?.access_token) {
+        headers['Authorization'] = `Bearer ${session.access_token}`;
+      }
+
+      const res = await fetch('/api/user/keys', { headers });
+      if (res.ok) {
+        const status: { gemini: boolean; groq: boolean } = await res.json();
+
+        // Update validation status first
+        const newValidation: Record<ProviderType, 'idle' | 'valid' | 'invalid'> = {
+          gemini: status.gemini ? 'valid' : 'idle',
+          groq: status.groq ? 'valid' : 'idle'
+        };
+        setKeyValidationStatus(newValidation);
+
+        // ✅ SECURITY FIX: Do NOT fetch decrypted keys on page load
+        // This was causing API keys to appear in network traffic
+        // Instead, we only load the status (whether keys exist or not)
+      }
+    } catch (error) {
+      console.error('Failed to load key status:', error);
+    }
+  };
 
   // Apply font size when component mounts or fontSize changes
   useEffect(() => {
@@ -114,6 +134,23 @@ export const UnifiedSettings: React.FC<UnifiedSettingsProps> = ({
 
 
 
+  // Delete key from server
+  const deleteApiKey = async (provider: ProviderType) => {
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      const headers: HeadersInit = { 'Content-Type': 'application/json' };
+      if (session?.access_token) {
+        headers['Authorization'] = `Bearer ${session.access_token}`;
+      }
+      await fetch(`/api/user/keys/${provider}`, {
+        method: 'DELETE',
+        headers
+      });
+    } catch (err) {
+      console.error(`Failed to delete ${provider} key:`, err);
+    }
+  };
+
   const handleApiKeyChange = (provider: ProviderType, key: string) => {
     setApiKeys(prev => ({ ...prev, [provider]: key }));
     setKeyValidationStatus(prev => ({ ...prev, [provider]: 'idle' }));
@@ -122,19 +159,68 @@ export const UnifiedSettings: React.FC<UnifiedSettingsProps> = ({
   const handleSave = async () => {
     setIsSaving(true);
     try {
-      // Save all API keys to localStorage
-      localStorage.setItem('gemini_api_key', apiKeys.gemini);
-      localStorage.setItem('groq_api_key', apiKeys.groq);
+      const { data: { session } } = await supabase.auth.getSession();
 
-      // Configure providers with API keys
-      const aiProviderManager = getAIProviderManager();
-
-      if (apiKeys.gemini.trim()) {
-        aiProviderManager.configureProvider('gemini', apiKeys.gemini);
+      if (!session?.user) {
+        throw new Error('User not authenticated');
       }
 
-      if (apiKeys.groq.trim()) {
-        aiProviderManager.configureProvider('groq', apiKeys.groq);
+      // Save API keys to server
+      for (const provider of ['gemini', 'groq'] as ProviderType[]) {
+        const key = apiKeys[provider];
+        if (key.trim()) {
+          const headers: HeadersInit = {
+            'Content-Type': 'application/json'
+          };
+
+          if (session?.access_token) {
+            headers['Authorization'] = `Bearer ${session.access_token}`;
+          }
+
+          let requestBody: any;
+
+          // Try to use client-side encryption if supported
+          if (isWebCryptoSupported() && session.user.email) {
+            try {
+              const securePayload = await createSecureApiPayload(
+                key.trim(),
+                provider as 'gemini' | 'groq',
+                session.user.id,
+                session.user.email
+              );
+
+              requestBody = {
+                encryptedKey: securePayload.encryptedKey,
+                checksum: securePayload.checksum,
+                timestamp: securePayload.timestamp
+              };
+            } catch (encryptError) {
+              requestBody = { key: key.trim() };
+            }
+          } else {
+            requestBody = { key: key.trim() };
+          }
+
+          const res = await fetch(`/api/user/keys/${provider}`, {
+            method: 'PUT',
+            headers,
+            body: JSON.stringify(requestBody)
+          });
+
+          if (res.ok) {
+            // ✅ SECURITY: Do NOT configure provider with API key here
+            // This would store the key in memory. Instead, just mark as valid.
+            // The AI service will fetch the key when actually needed for requests.
+
+            // Clear plaintext value from state once validated & configured
+            setApiKeys(prev => ({ ...prev, [provider]: '' }));
+            setKeyValidationStatus(prev => ({ ...prev, [provider]: 'valid' }));
+          } else {
+            const errorData = await res.text();
+            console.error(`API Error (${res.status}):`, errorData);
+            throw new Error(`Không thể lưu ${provider} key: ${res.status} - ${errorData}`);
+          }
+        }
       }
 
       // Show success message
@@ -157,7 +243,66 @@ export const UnifiedSettings: React.FC<UnifiedSettingsProps> = ({
     try {
       const aiProviderManager = getAIProviderManager();
       const isValid = await aiProviderManager.validateApiKey(provider, key);
-      setKeyValidationStatus(prev => ({ ...prev, [provider]: isValid ? 'valid' : 'invalid' }));
+      
+      if (isValid) {
+        // Save to server if validation succeeds
+        const { data: { session } } = await supabase.auth.getSession();
+
+        if (!session?.user) {
+          setKeyValidationStatus(prev => ({ ...prev, [provider]: 'invalid' }));
+          return;
+        }
+
+        const headers: HeadersInit = {
+          'Content-Type': 'application/json'
+        };
+
+        if (session?.access_token) {
+          headers['Authorization'] = `Bearer ${session.access_token}`;
+        }
+
+        let requestBody: any;
+
+        // Try to use client-side encryption if supported
+        if (isWebCryptoSupported() && session.user.email) {
+          try {
+            const securePayload = await createSecureApiPayload(
+              key.trim(),
+              provider as 'gemini' | 'groq',
+              session.user.id,
+              session.user.email
+            );
+
+            requestBody = {
+              encryptedKey: securePayload.encryptedKey,
+              checksum: securePayload.checksum,
+              timestamp: securePayload.timestamp
+            };
+          } catch (encryptError) {
+            requestBody = { key: key.trim() };
+          }
+        } else {
+          requestBody = { key: key.trim() };
+        }
+
+        const res = await fetch(`/api/user/keys/${provider}`, {
+          method: 'PUT',
+          headers,
+          body: JSON.stringify(requestBody)
+        });
+
+        if (res.ok) {
+          // ✅ SECURITY: Do NOT configure provider with API key here
+          // This would store the key in memory. Instead, just mark as valid.
+          setKeyValidationStatus(prev => ({ ...prev, [provider]: 'valid' }));
+        } else {
+          const errorData = await res.text();
+          console.error(`API Error (${res.status}):`, errorData);
+          setKeyValidationStatus(prev => ({ ...prev, [provider]: 'invalid' }));
+        }
+      } else {
+        setKeyValidationStatus(prev => ({ ...prev, [provider]: 'invalid' }));
+      }
     } catch (error) {
       console.error(`${provider} API key validation error:`, error);
       setKeyValidationStatus(prev => ({ ...prev, [provider]: 'invalid' }));
@@ -251,8 +396,6 @@ export const UnifiedSettings: React.FC<UnifiedSettingsProps> = ({
     return null;
   }
 
-  const availableModels = getAvailableModels();
-
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent
@@ -272,7 +415,7 @@ export const UnifiedSettings: React.FC<UnifiedSettingsProps> = ({
             <TabsTrigger value="prompts" className="relative">
               {t ? t('settings.tabs.prompts') : 'Prompts'}
               {hasCustomPrompt() && (
-                <div className="absolute -top-1 -right-1 w-2 h-2 bg-blue-500 rounded-full" />
+                <div className="absolute -top-1 -right-1 w-2 h-2 bg-primary rounded-full" />
               )}
             </TabsTrigger>
             <TabsTrigger value="api">{t ? t('settings.tabs.api') : 'API Keys'}</TabsTrigger>
@@ -470,17 +613,17 @@ export const UnifiedSettings: React.FC<UnifiedSettingsProps> = ({
                           {isValidatingKeys[provider] ? 'Validating...' : 'Validate Key'}
                         </Button>
                         <Button
-                          onClick={() => {
+                          onClick={async () => {
                             setApiKeys(prev => ({ ...prev, [provider]: '' }));
-                            localStorage.removeItem(`${provider}_api_key`);
                             setKeyValidationStatus(prev => ({ ...prev, [provider]: 'idle' }));
+                            await deleteApiKey(provider);
                           }}
                           variant="outline"
                           size="sm"
                         >
                           Clear
                         </Button>
-                      </div>
+                        </div>
                     </CardContent>
                   </Card>
                 );
@@ -506,26 +649,6 @@ export const UnifiedSettings: React.FC<UnifiedSettingsProps> = ({
               {t ? t('chat.settings.saved') : 'Đã lưu'}
             </div>
           )}
-
-          <div className="flex gap-2 ml-auto">
-            <Button
-              onClick={handleSave}
-              disabled={isSaving}
-              className="min-w-[80px]"
-            >
-              {isSaving ? (
-                <div className="flex items-center gap-2">
-                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                  {t ? t('chat.settings.saving') : 'Đang lưu...'}
-                </div>
-              ) : (
-                t ? t('chat.settings.save') : 'Lưu'
-              )}
-            </Button>
-            <Button variant="outline" onClick={() => onOpenChange(false)}>
-              {t ? t('chat.settings.close') : 'Đóng'}
-            </Button>
-          </div>
         </div>
       </DialogContent>
 

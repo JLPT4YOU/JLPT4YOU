@@ -3,7 +3,29 @@
  * Supports both translation and non-translation modes
  */
 
-// TranslationData import removed - validation now handled in hooks
+import { createTranslationFunction, loadTranslation, DEFAULT_LANGUAGE, TranslationData } from './i18n'
+
+// Translation helper for validation messages
+let cachedTranslations: TranslationData | null = null
+let cachedT: ((key: string) => string) | null = null
+
+async function initializeValidationTranslations() {
+  if (!cachedTranslations) {
+    try {
+      cachedTranslations = await loadTranslation(DEFAULT_LANGUAGE)
+      cachedT = createTranslationFunction(cachedTranslations)
+    } catch (error) {
+      console.warn('Failed to load translations for validation:', error)
+    }
+  }
+}
+
+// Initialize translations
+initializeValidationTranslations()
+
+function getValidationText(key: string, fallback: string): string {
+  return cachedT ? cachedT(key) : fallback
+}
 
 // Base validation rules without translations
 export const baseValidationRules = {
@@ -24,28 +46,28 @@ export const baseValidationRules = {
   }
 } as const
 
-// Default Vietnamese error messages
+// Default Vietnamese error messages with i18n support
 export const defaultErrorMessages = {
   email: {
-    required: "Email là bắt buộc",
-    invalid: "Email không hợp lệ"
+    required: () => getValidationText('auth.validation.emailRequired', "Email là bắt buộc"),
+    invalid: () => getValidationText('auth.validation.emailInvalid', "Email không hợp lệ")
   },
   password: {
-    required: "Mật khẩu là bắt buộc", 
-    tooShort: "Mật khẩu phải có ít nhất 8 ký tự"
+    required: () => getValidationText('auth.validation.passwordRequired', "Mật khẩu là bắt buộc"),
+    tooShort: () => getValidationText('auth.validation.passwordTooShort', "Mật khẩu phải có ít nhất 8 ký tự")
   },
   confirmPassword: {
-    required: "Xác nhận mật khẩu là bắt buộc",
-    mismatch: "Mật khẩu xác nhận không khớp"
+    required: () => getValidationText('auth.validation.confirmPasswordRequired', "Xác nhận mật khẩu là bắt buộc"),
+    mismatch: () => getValidationText('auth.validation.passwordMismatch', "Mật khẩu xác nhận không khớp")
   },
   acceptTerms: {
-    required: "Bạn phải đồng ý với điều khoản sử dụng"
+    required: () => getValidationText('auth.validation.termsRequired', "Bạn phải đồng ý với điều khoản sử dụng")
   },
   general: {
-    error: "Đã xảy ra lỗi. Vui lòng thử lại.",
-    loginFailed: "Email hoặc mật khẩu không chính xác",
-    emailExists: "Email này đã được sử dụng",
-    resendFailed: "Không thể gửi lại email. Vui lòng thử lại."
+    error: () => getValidationText('auth.errors.general', "Đã xảy ra lỗi. Vui lòng thử lại."),
+    loginFailed: () => getValidationText('auth.errors.loginFailed', "Sai tên đăng nhập hoặc mật khẩu"),
+    emailExists: () => getValidationText('auth.errors.emailExists', "Email này đã được sử dụng"),
+    resendFailed: () => getValidationText('auth.errors.resendFailed', "Không thể gửi lại email. Vui lòng thử lại.")
   }
 } as const
 
@@ -80,9 +102,9 @@ export function createAuthValidator() {
   // It's kept for backward compatibility but should not be used in new code
 
   const getMessage = (category: keyof typeof translationKeys, key: string) => {
-    // For now, just return default messages since we can't use hooks here
-    // This will be handled by the components that use translations
-    return defaultErrorMessages[category]?.[key as keyof typeof defaultErrorMessages[typeof category]] || ""
+    // Use the function-based error messages that support i18n
+    const messageFunc = (defaultErrorMessages as any)[category]?.[key]
+    return typeof messageFunc === 'function' ? messageFunc() : ""
   }
 
   return {

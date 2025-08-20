@@ -17,6 +17,7 @@ import { MultiProviderApiKeyModal } from '@/components/multi-provider-api-key-mo
 import { useAIProvider } from './hooks/useAIProvider';
 import { useChatManager } from './hooks/useChatManager';
 import { useUIState } from './hooks/useUIState';
+import { useAdvancedFeatures } from './hooks/useAdvancedFeatures';
 import { useMessageHandler } from './hooks/useMessageHandler';
 
 
@@ -32,6 +33,7 @@ export const ChatLayout: React.FC<ChatLayoutProps> = ({ className }) => {
   const aiProvider = useAIProvider();
   const chatManager = useChatManager();
   const uiState = useUIState(aiProvider.selectedModel);
+  const advancedFeatures = useAdvancedFeatures(aiProvider.selectedModel);
 
   // Message handler with all dependencies
   const messageHandler = useMessageHandler({
@@ -45,7 +47,9 @@ export const ChatLayout: React.FC<ChatLayoutProps> = ({ className }) => {
     setCurrentChatId: chatManager.setCurrentChatId,
     setIsSidebarOpen: uiState.setIsSidebarOpen,
     chats: chatManager.chats,
-    currentChatId: chatManager.currentChatId
+    currentChatId: chatManager.currentChatId,
+    // Advanced features for Groq
+    advancedFeatures
   });
 
   // Navigation handlers
@@ -143,6 +147,8 @@ export const ChatLayout: React.FC<ChatLayoutProps> = ({ className }) => {
             currentProvider={aiProvider.currentProvider}
             onEditMessage={messageHandler.handleEditMessage}
             onToggleThinking={uiState.handleToggleThinking}
+            reasoningEffort={advancedFeatures.reasoningEffort}
+            onReasoningEffortChange={advancedFeatures.handleReasoningEffortChange}
           />
         </div>
 
@@ -156,8 +162,6 @@ export const ChatLayout: React.FC<ChatLayoutProps> = ({ className }) => {
             }
           }}
           onClearHistory={chatManager.handleClearHistory}
-          selectedModel={aiProvider.selectedModel}
-          onModelChange={aiProvider.setSelectedModel}
           defaultTab={uiState.settingsDefaultTab}
         />
 

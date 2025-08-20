@@ -32,7 +32,7 @@ export interface Question {
   options: string[]
   correctAnswer: 'A' | 'B' | 'C' | 'D'
   explanation?: string
-  difficulty?: 'easy' | 'medium' | 'hard'
+  difficulty?: 'easy' | 'medium' | 'hard' | 'extremely_hard'
 }
 
 // Time limit configurations by test type and level

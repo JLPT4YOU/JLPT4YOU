@@ -13,7 +13,12 @@ import {
   createGroqConfig,
   getGroqModelInfo,
   getAvailableGroqModels,
-  type GroqModelInfo
+  getReasoningModels,
+  getToolsModels,
+  type GroqModelInfo,
+  type GroqAdvancedResponse,
+  type ReasoningEffort,
+  type ReasoningFormat
 } from './groq-config';
 import { BaseAIService, AIMessage } from './ai-config';
 import { getCurrentSystemPrompt, getAICommunicationLanguage, detectLanguageFromMessage } from './prompt-storage';
@@ -24,7 +29,7 @@ import {
   convertMessagesToGroq
 } from './ai-shared-utils';
 
-// Thinking result interface for Groq
+// Type definitions
 interface ThinkingResult {
   thoughtSummary: string;
   answer: string;
@@ -32,18 +37,50 @@ interface ThinkingResult {
   outputTokens: number;
 }
 
+interface GroqMessage {
+  role: string;
+  content: string;
+}
 
+interface GroqOptions {
+  model?: string;
+  temperature?: number;
+  top_p?: number;
+  stop?: string | string[] | null;
+  stream?: boolean;
+}
+
+interface GroqStreamChunk {
+  choices: Array<{
+    delta?: {
+      content?: string;
+      reasoning?: string; // For OpenAI GPT-OSS models
+    };
+  }>;
+  // Alternative formats from OpenAI GPT-OSS
+  delta?: {
+    content?: string;
+    reasoning?: string;
+  };
+  content?: string;
+  reasoning?: string;
+}
 
 export interface UseGroqServiceOptions {
   model?: string;
   temperature?: number;
   topP?: number; // Will be converted to top_p
   stop?: string | string[] | null;
+  // Advanced features for GPT-OSS models
+  reasoning_effort?: ReasoningEffort;
+  reasoning_format?: ReasoningFormat;
+  enable_code_interpreter?: boolean;
+  enable_browser_search?: boolean;
 }
 
 export class GroqService extends BaseAIService {
   private client: Groq | null = null;
-  protected defaultModel: string = GROQ_MODELS.LLAMA_3_3_70B;
+  protected defaultModel: string = GROQ_MODELS.OPENAI_GPT_OSS_20B;
   protected storageKeyPrefix: string = 'groq';
 
   constructor(apiKey?: string) {
@@ -77,10 +114,10 @@ export class GroqService extends BaseAIService {
   /**
    * Convert options to Groq-compatible format
    */
-  private convertOptions(options?: UseGroqServiceOptions): any {
+  private convertOptions(options?: UseGroqServiceOptions): GroqOptions {
     if (!options) return {};
 
-    const groqOptions: any = {};
+    const groqOptions: GroqOptions = {};
 
     if (options.model) groqOptions.model = options.model;
     if (options.temperature !== undefined) groqOptions.temperature = options.temperature;
@@ -93,10 +130,10 @@ export class GroqService extends BaseAIService {
   /**
    * Convert AIMessage format to Groq format
    */
-  private convertMessages(messages: AIMessage[]): Array<{ role: string; content: string }> {
+  private convertMessages(messages: AIMessage[]): GroqMessage[] {
     const systemPrompt = getCurrentSystemPrompt();
 
-    const convertedMessages: Array<{ role: string; content: string }> = [
+    const convertedMessages: GroqMessage[] = [
       { role: 'system', content: systemPrompt }
     ];
 
@@ -105,6 +142,70 @@ export class GroqService extends BaseAIService {
     convertedMessages.push(...groqMessages as Array<{ role: string; content: string }>);
 
     return convertedMessages;
+  }
+
+  /**
+   * Check if model supports advanced features
+   */
+  private supportsAdvancedFeatures(model: string): boolean {
+    const modelInfo = getGroqModelInfo(model);
+    return modelInfo?.supportsReasoning || modelInfo?.supportsTools || false;
+  }
+
+  /**
+   * Build tools array for advanced models
+   */
+  private buildTools(options?: UseGroqServiceOptions): any[] | undefined {
+    if (!options) return undefined;
+
+    const tools: any[] = [];
+
+    if (options.enable_code_interpreter) {
+      tools.push({ type: 'code_interpreter' });
+    }
+
+    if (options.enable_browser_search) {
+      tools.push({ type: 'browser_search' });
+    }
+
+    return tools.length > 0 ? tools : undefined;
+  }
+
+  /**
+   * Build advanced config for GPT-OSS models
+   */
+  private buildAdvancedConfig(model: string, options?: UseGroqServiceOptions): any {
+    const baseConfig = this.convertOptions(options);
+
+    if (!this.supportsAdvancedFeatures(model) || !options) {
+      return baseConfig;
+    }
+
+    const advancedConfig: any = { ...baseConfig };
+
+    // Add reasoning parameters (these are specific to OpenAI GPT-OSS models)
+    if (options.reasoning_effort) {
+      advancedConfig.reasoning_effort = options.reasoning_effort;
+    }
+
+    // Note: reasoning_format is NOT supported by OpenAI GPT-OSS models
+    // Only add reasoning_format for other models that support it
+    if (options.reasoning_format && !model.includes('openai/gpt-oss')) {
+      advancedConfig.reasoning_format = options.reasoning_format;
+    }
+
+    // Add tools - use the exact format expected by Groq API for GPT-OSS models
+    const tools = this.buildTools(options);
+    if (tools && tools.length > 0) {
+      advancedConfig.tools = tools;
+    }
+
+    // Log the config for debugging
+    if (process.env.NODE_ENV === 'development') {
+      console.log('🔧 Advanced config for model', model, ':', advancedConfig);
+    }
+
+    return advancedConfig;
   }
 
   /**
@@ -118,19 +219,48 @@ export class GroqService extends BaseAIService {
       this.ensureConfigured();
 
       const model = options?.model || this.defaultModel;
-      const convertedOptions = this.convertOptions(options);
+      const advancedConfig = this.buildAdvancedConfig(model, options);
+      
+      // For OpenAI GPT-OSS models, we need to pass the parameters directly
+      const isGPTOSS = model.includes('openai/gpt-oss');
+      
       const config = createGroqConfig({
-        ...convertedOptions,
+        ...advancedConfig,
         model,
-        stream: false // Non-streaming for this method
+        stream: false,
+        // Ensure max_completion_tokens is set for GPT-OSS models
+        max_completion_tokens: advancedConfig.max_completion_tokens || 8192
       });
 
       const convertedMessages = this.convertMessages(messages);
 
-      const response = await this.client!.chat.completions.create({
+      // Build the final request with all parameters
+      const requestConfig: any = {
         ...config,
         messages: convertedMessages
-      });
+      };
+
+      // Add advanced features directly to the request for GPT-OSS models
+      if (isGPTOSS) {
+        if (advancedConfig.reasoning_effort) {
+          requestConfig.reasoning_effort = advancedConfig.reasoning_effort;
+        }
+        // Note: reasoning_format is NOT supported by OpenAI GPT-OSS models
+        if (advancedConfig.tools) {
+          requestConfig.tools = advancedConfig.tools;
+        }
+
+        // Log the request for debugging
+        if (process.env.NODE_ENV === 'development') {
+          console.log('📤 Groq API Request for GPT-OSS (non-streaming):', {
+            model: requestConfig.model,
+            reasoning_effort: requestConfig.reasoning_effort,
+            tools: requestConfig.tools
+          });
+        }
+      }
+
+      const response = await this.client!.chat.completions.create(requestConfig);
 
       return response.choices[0]?.message?.content || 'No response generated';
     } catch (error) {
@@ -151,19 +281,48 @@ export class GroqService extends BaseAIService {
       this.ensureConfigured();
 
       const model = options?.model || this.defaultModel;
-      const convertedOptions = this.convertOptions(options);
+      const advancedConfig = this.buildAdvancedConfig(model, options);
+      
+      // For OpenAI GPT-OSS models, we need to pass the parameters directly
+      const isGPTOSS = model.includes('openai/gpt-oss');
+      
       const config = createGroqConfig({
-        ...convertedOptions,
+        ...advancedConfig,
         model,
-        stream: true
+        stream: true,
+        // Ensure max_completion_tokens is set for GPT-OSS models
+        max_completion_tokens: advancedConfig.max_completion_tokens || 8192
       });
 
       const convertedMessages = this.convertMessages(messages);
 
-      const stream = await this.client!.chat.completions.create({
+      // Build the final request with all parameters
+      const requestConfig: any = {
         ...config,
         messages: convertedMessages
-      });
+      };
+
+      // Add advanced features directly to the request for GPT-OSS models
+      if (isGPTOSS) {
+        if (advancedConfig.reasoning_effort) {
+          requestConfig.reasoning_effort = advancedConfig.reasoning_effort;
+        }
+        // Note: reasoning_format is NOT supported by OpenAI GPT-OSS models
+        if (advancedConfig.tools) {
+          requestConfig.tools = advancedConfig.tools;
+        }
+
+        // Log the request for debugging
+        if (process.env.NODE_ENV === 'development') {
+          console.log('📤 Groq API Request for GPT-OSS:', {
+            model: requestConfig.model,
+            reasoning_effort: requestConfig.reasoning_effort,
+            tools: requestConfig.tools
+          });
+        }
+      }
+
+      const response = await this.client!.chat.completions.create(requestConfig);
 
       let fullContent = '';
       let answerContent = '';
@@ -173,8 +332,23 @@ export class GroqService extends BaseAIService {
       let thinkingStarted = false;
       let thinkingCompleted = false;
 
-      for await (const chunk of stream) {
-        const content = chunk.choices[0]?.delta?.content;
+      // Check if response is a stream or regular response
+      if (config.stream && Symbol.asyncIterator in response) {
+        for await (const chunk of response as AsyncIterable<GroqStreamChunk>) {
+        const content = chunk.choices[0]?.delta?.content || chunk.delta?.content || chunk.content;
+        const reasoning = chunk.choices[0]?.delta?.reasoning || chunk.delta?.reasoning || chunk.reasoning;
+
+        // Handle OpenAI GPT-OSS reasoning (thinking mode)
+        if (reasoning) {
+          if (!thinkingStarted) {
+            onChunk('__GROQ_THINKING_START__');
+            thinkingStarted = true;
+            hasThinkingContent = true;
+          }
+          onChunk(`__GROQ_THINKING_CONTENT__${reasoning}`);
+          thinkingBuffer += reasoning;
+        }
+
         if (content) {
           fullContent += content;
 
@@ -225,6 +399,22 @@ export class GroqService extends BaseAIService {
             }
           }
         }
+
+        // For OpenAI models: End thinking when we start getting content and no more reasoning
+        if (content && hasThinkingContent && !thinkingCompleted && !reasoning) {
+          onChunk('__GROQ_THINKING_END__');
+          thinkingCompleted = true;
+          // Send any buffered content immediately after ending thinking
+          if (content && !isInThinkingMode) {
+            answerContent += content;
+            onChunk(content);
+          }
+        }
+      }
+      } else {
+        // Handle non-streaming response
+        const content = response.choices[0]?.message?.content || '';
+        onChunk(content);
       }
     } catch (error) {
       console.error('Groq streamMessage error:', error);
@@ -266,6 +456,91 @@ export class GroqService extends BaseAIService {
   }
 
   /**
+   * Send message with advanced features (reasoning + tools)
+   * Only works with GPT-OSS models
+   */
+  async sendAdvancedMessage(
+    messages: AIMessage[],
+    options?: UseGroqServiceOptions
+  ): Promise<GroqAdvancedResponse> {
+    try {
+      this.ensureConfigured();
+
+      const model = options?.model || this.defaultModel;
+
+      // Check if model supports advanced features
+      if (!this.supportsAdvancedFeatures(model)) {
+        throw new Error(`Model ${model} does not support advanced features. Use GPT-OSS models instead.`);
+      }
+
+      const advancedConfig = this.buildAdvancedConfig(model, options);
+      
+      // For OpenAI GPT-OSS models, we need to pass the parameters directly
+      const isGPTOSS = model.includes('openai/gpt-oss');
+      
+      const config = createGroqConfig({
+        ...advancedConfig,
+        model,
+        stream: false,
+        // Ensure max_completion_tokens is set for GPT-OSS models
+        max_completion_tokens: advancedConfig.max_completion_tokens || 8192
+      });
+
+      const convertedMessages = this.convertMessages(messages);
+
+      // Build the final request with all parameters
+      const requestConfig: any = {
+        ...config,
+        messages: convertedMessages
+      };
+
+      // Add advanced features directly to the request for GPT-OSS models
+      if (isGPTOSS) {
+        if (advancedConfig.reasoning_effort) {
+          requestConfig.reasoning_effort = advancedConfig.reasoning_effort;
+        }
+        // Note: reasoning_format is NOT supported by OpenAI GPT-OSS models
+        if (advancedConfig.tools) {
+          requestConfig.tools = advancedConfig.tools;
+        }
+
+        // Log the request for debugging
+        console.log('📤 Groq API Request for GPT-OSS (advanced):', {
+          model: requestConfig.model,
+          reasoning_effort: requestConfig.reasoning_effort,
+          tools: requestConfig.tools,
+          max_completion_tokens: requestConfig.max_completion_tokens
+        });
+      }
+
+      const response = await this.client!.chat.completions.create(requestConfig);
+
+      const choice = response.choices[0];
+      const message = choice?.message;
+
+      // Build advanced response
+      const advancedResponse: GroqAdvancedResponse = {
+        content: message?.content || 'No response generated'
+      };
+
+      // Add reasoning if available
+      if ((message as any)?.reasoning) {
+        advancedResponse.reasoning = (message as any).reasoning;
+      }
+
+      // Add executed tools if available
+      if ((message as any)?.executed_tools) {
+        advancedResponse.executed_tools = (message as any).executed_tools;
+      }
+
+      return advancedResponse;
+    } catch (error) {
+      console.error('Groq sendAdvancedMessage error:', error);
+      throw this.handleApiError(error, 'gửi tin nhắn với tính năng nâng cao');
+    }
+  }
+
+  /**
    * Generate chat title using fast model
    */
   async generateChatTitle(firstMessage: string): Promise<string> {
@@ -278,12 +553,12 @@ export class GroqService extends BaseAIService {
       const prompt = createTitleGenerationPrompt(language, firstMessage);
 
       const response = await this.client!.chat.completions.create({
-        model: GROQ_MODELS.COMPOUND_MINI, // Use fast model for title generation
+        model: GROQ_MODELS.LLAMA_3_1_8B_INSTANT, // Use Llama 3.1 8B Instant for title generation
         messages: [
           { role: 'user', content: prompt }
         ],
-        temperature: 1.0,
-        max_completion_tokens: 20,
+        temperature: 0.8, // Slightly lower for more focused titles
+        max_completion_tokens: 30, // Increased for better title generation
         stream: false
       });
 
@@ -399,6 +674,27 @@ export class GroqService extends BaseAIService {
    */
   getDefaultModel(): string {
     return this.defaultModel;
+  }
+
+  /**
+   * Get models that support reasoning
+   */
+  getReasoningModels(): GroqModelInfo[] {
+    return getReasoningModels();
+  }
+
+  /**
+   * Get models that support tools
+   */
+  getToolsModels(): GroqModelInfo[] {
+    return getToolsModels();
+  }
+
+  /**
+   * Check if a specific model supports advanced features
+   */
+  modelSupportsAdvancedFeatures(model: string): boolean {
+    return this.supportsAdvancedFeatures(model);
   }
 }
 

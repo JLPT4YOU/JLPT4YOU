@@ -25,6 +25,7 @@ interface ScoreDisplayProps {
   correctAnswers: number
   incorrectAnswers: number
   unansweredQuestions: number
+  flaggedQuestions: number
   percentage: number
   status: string
   timeSpent: number
@@ -75,6 +76,7 @@ export function ScoreDisplay({
   correctAnswers,
   incorrectAnswers,
   unansweredQuestions,
+  flaggedQuestions,
   percentage,
   status,
   timeSpent,
@@ -247,10 +249,10 @@ export function ScoreDisplay({
             {/* Flagged Questions */}
             <StatItem
               icon={<Flag className="h-4 w-4 text-yellow-600" />}
-              label={t('examResults.stats.unansweredQuestions')}
+              label={t('examResults.stats.flaggedQuestions')}
               labelClassName="text-yellow-600"
-              value={unansweredQuestions}
-              subtitle={t('examResults.score.percentage').replace('{percentage}', Math.round((unansweredQuestions / totalQuestions) * 100).toString())}
+              value={flaggedQuestions}
+              subtitle={t('examResults.score.percentage').replace('{percentage}', Math.round((flaggedQuestions / totalQuestions) * 100).toString())}
               className="animate-fade-in animate-stagger-4"
             />
           </div>

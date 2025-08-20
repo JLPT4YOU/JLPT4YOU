@@ -25,12 +25,12 @@ export function ApiKeySetupModal({ isOpen, onClose, onApiKeySet }: ApiKeySetupMo
     e.preventDefault()
     
     if (!apiKey.trim()) {
-      setValidationError(t?.apiKeySetup?.errors?.required || 'API key là bắt buộc')
+      setValidationError(t('modals.apiKey.required'))
       return
     }
 
     if (!apiKey.startsWith('AIza')) {
-      setValidationError(t?.apiKeySetup?.errors?.invalid || 'API key phải bắt đầu bằng "AIza"')
+      setValidationError(`${t('modals.apiKey.invalidFormat')} "AIza"`)
       return
     }
 
@@ -46,23 +46,22 @@ export function ApiKeySetupModal({ isOpen, onClose, onApiKeySet }: ApiKeySetupMo
       })
 
       if (response.ok) {
-        // Save to localStorage
-        localStorage.setItem('gemini_api_key', apiKey.trim())
+        // Call parent handler to persist key securely (server-side)
         onApiKeySet(apiKey.trim())
         onClose()
       } else {
-        setValidationError(t?.apiKeySetup?.errors?.testFailed || 'API key không hợp lệ hoặc đã hết hạn')
+        setValidationError(t('modals.apiKey.invalid'))
       }
     } catch (error) {
-      setValidationError(t?.apiKeySetup?.errors?.networkError || 'Lỗi kết nối. Vui lòng thử lại.')
+      setValidationError(t('modals.apiKey.connectionError'))
     } finally {
       setIsValidating(false)
     }
   }
 
   const handleSkip = () => {
-    // Save empty key to localStorage to remember user choice
-    localStorage.setItem('gemini_api_key_skipped', 'true')
+    // Remember skip choice only in session (no localStorage)
+    sessionStorage.setItem('gemini_api_key_skipped', 'true')
     onClose()
   }
 
@@ -75,28 +74,28 @@ export function ApiKeySetupModal({ isOpen, onClose, onApiKeySet }: ApiKeySetupMo
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Key className="h-5 w-5 text-primary" />
-            {t?.apiKeySetup?.title || 'Cài đặt API Key'}
+            {t('modals.apiKey.title')}
           </DialogTitle>
           <DialogDescription>
-            {t?.apiKeySetup?.description || 'Để sử dụng tính năng AI chat, bạn cần cung cấp Google Gemini API key'}
+            {t('modals.apiKey.description')}
           </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4">
           {/* Instructions */}
-          <Card className="border-blue-200 bg-blue-50">
+          <Card className="border-border bg-muted">
             <CardContent className="pt-4">
               <div className="flex gap-3">
-                <Info className="h-4 w-4 text-blue-600 mt-0.5 flex-shrink-0" />
+                <Info className="h-4 w-4 text-foreground mt-0.5 flex-shrink-0" />
                 <div className="space-y-2">
-                  <p className="font-medium text-blue-900">
-                    {t?.apiKeySetup?.instructions?.title || 'Cách lấy API key:'}
+                  <p className="font-medium text-foreground">
+                    {t('modals.apiKey.instructions.title')}:
                   </p>
-                  <ol className="list-decimal list-inside space-y-1 text-sm text-blue-800">
-                    <li>{t?.apiKeySetup?.instructions?.step1 || 'Truy cập Google AI Studio'}</li>
-                    <li>{t?.apiKeySetup?.instructions?.step2 || 'Đăng nhập với tài khoản Google'}</li>
-                    <li>{t?.apiKeySetup?.instructions?.step3 || 'Click "Get API Key" → "Create API Key"'}</li>
-                    <li>{t?.apiKeySetup?.instructions?.step4 || 'Copy và dán API key vào ô bên dưới'}</li>
+                  <ol className="list-decimal list-inside space-y-1 text-sm text-muted-foreground">
+                    <li>{t('modals.apiKey.instructions.step1')}</li>
+                    <li>{t('modals.apiKey.instructions.step2')}</li>
+                    <li>{t('modals.apiKey.instructions.step3')}</li>
+                    <li>{t('modals.apiKey.instructions.step4')}</li>
                   </ol>
                   <Button
                     variant="outline"
@@ -105,7 +104,7 @@ export function ApiKeySetupModal({ isOpen, onClose, onApiKeySet }: ApiKeySetupMo
                     onClick={() => window.open('https://aistudio.google.com/', '_blank')}
                   >
                     <ExternalLink className="h-3 w-3 mr-1" />
-                    {t?.apiKeySetup?.openAIStudio || 'Mở AI Studio'}
+                    {t('modals.apiKey.openStudio')}
                   </Button>
                 </div>
               </div>
@@ -116,12 +115,12 @@ export function ApiKeySetupModal({ isOpen, onClose, onApiKeySet }: ApiKeySetupMo
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="apiKey">
-                {t?.apiKeySetup?.inputLabel || 'Google Gemini API Key'}
+                {t('modals.apiKey.label')}
               </Label>
               <Input
                 id="apiKey"
                 type="password"
-                placeholder="AIzaSy..."
+                placeholder={t('modals.apiKey.placeholder')}
                 value={apiKey}
                 onChange={(e) => {
                   setApiKey(e.target.value)
@@ -147,12 +146,12 @@ export function ApiKeySetupModal({ isOpen, onClose, onApiKeySet }: ApiKeySetupMo
                 {isValidating ? (
                   <>
                     <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-white mr-2" />
-                    {t?.apiKeySetup?.validating || 'Đang kiểm tra...'}
+                    {t('modals.apiKey.validating')}
                   </>
                 ) : (
                   <>
                     <CheckCircle className="h-3 w-3 mr-2" />
-                    {t?.apiKeySetup?.save || 'Lưu & Sử dụng'}
+                    {t('modals.apiKey.validate')}
                   </>
                 )}
               </Button>
@@ -162,7 +161,7 @@ export function ApiKeySetupModal({ isOpen, onClose, onApiKeySet }: ApiKeySetupMo
                 onClick={handleSkip}
                 disabled={isValidating}
               >
-                {t?.apiKeySetup?.skip || 'Bỏ qua'}
+                {t('modals.apiKey.skip')}
               </Button>
             </div>
           </form>
@@ -173,7 +172,7 @@ export function ApiKeySetupModal({ isOpen, onClose, onApiKeySet }: ApiKeySetupMo
               <div className="flex gap-2">
                 <AlertCircle className="h-3 w-3 text-gray-600 mt-0.5 flex-shrink-0" />
                 <p className="text-xs text-gray-700">
-                  {t?.apiKeySetup?.securityNote || 'API key được lưu trữ an toàn trên thiết bị của bạn và không được chia sẻ với bên thứ ba.'}
+                  {t('modals.apiKey.security.note')}
                 </p>
               </div>
             </CardContent>

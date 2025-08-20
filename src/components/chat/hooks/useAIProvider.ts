@@ -67,9 +67,39 @@ export const useAIProvider = (): UseAIProviderReturn => {
   // AI Provider Manager
   const aiProviderManager = useRef(getAIProviderManager());
   
+  // Initialize selected model from localStorage or default
+  const getInitialModel = () => {
+    if (typeof window !== 'undefined') {
+      const savedModel = localStorage.getItem('selected_model');
+      const savedProvider = localStorage.getItem('selected_provider') as ProviderType;
+      
+      // If we have a saved model and provider, use them
+      if (savedModel && savedProvider) {
+        // Verify the model exists for the provider
+        const providerModels = aiProviderManager.current.getProviderModels(savedProvider);
+        const modelExists = providerModels.some((m: any) => m.id === savedModel);
+        if (modelExists) {
+          return { model: savedModel, provider: savedProvider };
+        }
+      }
+    }
+    // Default to Gemini Flash 2.0
+    return { model: GEMINI_MODELS.FLASH_2_0, provider: 'gemini' as ProviderType };
+  };
+  
+  const initial = getInitialModel();
+  
   // State
-  const [selectedModel, setSelectedModel] = useState<string>(GEMINI_MODELS.FLASH_2_0);
-  const [currentProvider, setCurrentProvider] = useState<ProviderType>('gemini');
+  const [selectedModel, setSelectedModelState] = useState<string>(initial.model);
+  const [currentProvider, setCurrentProvider] = useState<ProviderType>(initial.provider);
+  
+  // Wrapper to persist model selection
+  const setSelectedModel = useCallback((model: string) => {
+    setSelectedModelState(model);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('selected_model', model);
+    }
+  }, []);
   
   // Helper function to get provider color based on category (monochrome system)
   const getProviderColor = useCallback((providerType: ProviderType, category?: string): string => {
@@ -94,6 +124,7 @@ export const useAIProvider = (): UseAIProviderReturn => {
       category: model.category || 'text',
       supportsStreaming: model.supportsStreaming,
       supportsFiles: model.supportsFiles || false,
+      supportsThinking: model.supportsThinking || false,
       supportsTTS: false // Removed from GeminiModelInfo
     }));
   }, [getProviderColor]);
@@ -110,6 +141,7 @@ export const useAIProvider = (): UseAIProviderReturn => {
       category: model.category,
       supportsStreaming: model.supportsStreaming,
       supportsFiles: model.supportsFiles,
+      supportsThinking: model.supportsThinking || false,
       supportsTTS: false // Removed from GeminiModelInfo
     }));
   });
@@ -119,6 +151,11 @@ export const useAIProvider = (): UseAIProviderReturn => {
     // Switch provider in manager first
     aiProviderManager.current.switchProvider(provider);
     setCurrentProvider(provider);
+    
+    // Persist provider selection
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('selected_provider', provider);
+    }
 
     // Update available models based on provider
     const providerModels = aiProviderManager.current.getProviderModels(provider);
@@ -129,19 +166,23 @@ export const useAIProvider = (): UseAIProviderReturn => {
     if (formattedModels.length > 0) {
       setSelectedModel(formattedModels[0].id);
     }
-  }, [formatModelsForUI]);
+  }, [formatModelsForUI, setSelectedModel]);
 
   // Initialize provider and models on mount
   useEffect(() => {
-    // Load current provider and update models
-    const currentProviderType = aiProviderManager.current.getCurrentProvider();
-    setCurrentProvider(currentProviderType);
+    // Switch to the initial provider (from localStorage or default)
+    if (initial.provider !== aiProviderManager.current.getCurrentProvider()) {
+      aiProviderManager.current.switchProvider(initial.provider);
+    }
 
-    // Update models based on current provider
-    const providerModels = aiProviderManager.current.getProviderModels(currentProviderType);
-    const formattedModels = formatModelsForUI(providerModels, currentProviderType);
+    // Update models based on initial provider
+    const providerModels = aiProviderManager.current.getProviderModels(initial.provider);
+    const formattedModels = formatModelsForUI(providerModels, initial.provider);
     setAiModels(formattedModels);
-  }, []);
+    
+    // The state is already initialized with the correct provider and model from localStorage
+    // This ensures the UI shows the correct state on first load
+  }, [formatModelsForUI, initial.provider]);
 
   return {
     // State

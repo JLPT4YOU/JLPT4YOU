@@ -1,8 +1,9 @@
 import { Suspense } from "react"
 import { Metadata } from "next"
 import { notFound } from "next/navigation"
-import { loadTranslation, Language } from "@/lib/i18n"
+import { loadTranslation, Language } from '@/lib/i18n'
 import { AuthPageContent } from "@/components/auth/auth-page-content"
+import { getLanguageFromCode } from '@/lib/page-utils-core'
 import { generateSEOConfig, generateHreflangLinks } from "@/lib/seo-config"
 
 interface LoginPageProps {
@@ -11,22 +12,7 @@ interface LoginPageProps {
   }>
 }
 
-// Map language codes to Language type
-const getLanguageFromCode = (code: string): Language | null => {
-  switch (code) {
-    case '1':
-    case 'vn':
-      return 'vn'
-    case '2':
-    case 'jp':
-      return 'jp'
-    case '3':
-    case 'en':
-      return 'en'
-    default:
-      return null
-  }
-}
+
 
 // Generate metadata for SEO
 export async function generateMetadata({ params }: LoginPageProps): Promise<Metadata> {

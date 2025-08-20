@@ -108,7 +108,7 @@ export const useFileHandler = ({
     setIsLoading(true);
 
     try {
-      console.log(`Processing ${files.length} PDFs with prompt:`, prompt);
+
 
       // Validate file support
       const validation = validateFileSupport(files);

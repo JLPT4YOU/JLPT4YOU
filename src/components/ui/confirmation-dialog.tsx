@@ -12,6 +12,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { AlertTriangle, Trash2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useTranslations } from '@/hooks/use-translations';
 
 interface ConfirmationDialogProps {
   isOpen: boolean;
@@ -30,14 +31,21 @@ export const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
   isOpen,
   onOpenChange,
   onConfirm,
-  title = 'Xác nhận',
-  description = 'Bạn có chắc chắn muốn thực hiện hành động này?',
-  confirmText = 'Xác nhận',
-  cancelText = 'Hủy',
+  title,
+  description,
+  confirmText,
+  cancelText,
   variant = 'default',
   icon,
   className
 }) => {
+  const { t } = useTranslations();
+
+  // Use translation keys with fallbacks
+  const modalTitle = title || t('modals.confirmation.title');
+  const modalDescription = description || t('modals.confirmation.defaultMessage');
+  const modalConfirmText = confirmText || t('modals.confirmation.confirm');
+  const modalCancelText = cancelText || t('modals.confirmation.cancel');
   const handleConfirm = () => {
     onConfirm();
     onOpenChange(false);
@@ -57,10 +65,10 @@ export const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-3">
             {icon || defaultIcon}
-            {title}
+            {modalTitle}
           </DialogTitle>
           <DialogDescription className="text-left">
-            {description}
+            {modalDescription}
           </DialogDescription>
         </DialogHeader>
         
@@ -70,7 +78,7 @@ export const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
             onClick={handleCancel}
             className="w-full sm:w-auto"
           >
-            {cancelText}
+            {modalCancelText}
           </Button>
           <Button
             variant={variant}
@@ -78,7 +86,7 @@ export const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
             className="w-full sm:w-auto"
           >
             {variant === 'destructive' && <Trash2 className="mr-2 h-4 w-4" />}
-            {confirmText}
+            {modalConfirmText}
           </Button>
         </DialogFooter>
       </DialogContent>

@@ -5,6 +5,7 @@ import { Check, X, Crown } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { TranslationData } from "@/lib/i18n"
 import { useTranslation } from "@/lib/use-translation"
+import { useRouter } from "next/navigation"
 
 interface PricingSectionProps {
   translations: TranslationData
@@ -12,7 +13,8 @@ interface PricingSectionProps {
 
 // Pricing Section Component
 export const PricingSection = ({ translations }: PricingSectionProps) => {
-  const { t } = useTranslation(translations)
+  const { t, currentLanguage } = useTranslation(translations)
+  const router = useRouter()
 
   // Get pricing data from translations
   const freeData = t('pricing.free') as {
@@ -31,8 +33,8 @@ export const PricingSection = ({ translations }: PricingSectionProps) => {
       description: freeData.description,
       isRecommended: false,
       features: [
-        ...freeData.features.map((text: string) => ({ text, included: true })),
-        ...freeData.limitations.map((text: string) => ({ text, included: false }))
+        ...(freeData.features || []).map((text: string) => ({ text, included: true })),
+        ...(freeData.limitations || []).map((text: string) => ({ text, included: false }))
       ],
       ctaText: freeData.button,
       ctaVariant: "outline" as const
@@ -45,7 +47,7 @@ export const PricingSection = ({ translations }: PricingSectionProps) => {
       description: premiumData.description,
       badge: premiumData.badge,
       isRecommended: true,
-      features: premiumData.features.map((text: string) => ({ text, included: true })),
+      features: (premiumData.features || []).map((text: string) => ({ text, included: true })),
       ctaText: premiumData.button,
       ctaVariant: "default" as const
     }
@@ -78,21 +80,21 @@ export const PricingSection = ({ translations }: PricingSectionProps) => {
   }
 
   return (
-    <section id="pricing" className="relative bg-background py-16 md:py-20 lg:py-24">
+    <section id="pricing" className="relative bg-background py-12 md:py-20 lg:py-24">
       <div className="app-container app-section">
-        <div className="app-content">
+        <div className="app-content px-4">
           {/* Section Header */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.6 }}
-            className="text-center mb-12 md:mb-16"
+            className="text-center mb-8 md:mb-16"
           >
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4">
+            <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4">
               {t('pricing.title')}
             </h2>
-            <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-base md:text-xl text-muted-foreground max-w-2xl mx-auto">
               {t('pricing.subtitle')}
             </p>
           </motion.div>
@@ -103,7 +105,7 @@ export const PricingSection = ({ translations }: PricingSectionProps) => {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-50px" }}
-            className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 max-w-5xl mx-auto"
+            className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-8 max-w-5xl mx-auto"
           >
             {pricingTiers.map((tier) => (
               <motion.div
@@ -159,9 +161,9 @@ export const PricingSection = ({ translations }: PricingSectionProps) => {
                       <div key={index} className="flex items-start gap-3">
                         <div className="flex-shrink-0 mt-0.5">
                           {feature.included ? (
-                            <Check className="w-5 h-5 text-green-600" />
+                            <Check className="w-5 h-5 text-success" />
                           ) : (
-                            <X className="w-5 h-5 text-red-500" />
+                            <X className="w-5 h-5 text-destructive" />
                           )}
                         </div>
                         <span className={`
@@ -179,6 +181,13 @@ export const PricingSection = ({ translations }: PricingSectionProps) => {
                     <Button
                       variant={tier.ctaVariant}
                       size="lg"
+                      onClick={() => {
+                        if (tier.id === "free") {
+                          router.push(`/auth/${currentLanguage}/register`)
+                        } else {
+                          router.push(`/premium`)
+                        }
+                      }}
                       className={`
                         w-full py-3 text-base md:text-lg font-medium
                         ${tier.isRecommended

@@ -13,7 +13,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       <button
         className={cn(
           // Base styles with improved focus and transition
-          "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm interactive-text ring-offset-background focus-ring disabled:pointer-events-none disabled:opacity-50",
+          "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm interactive-text focus-button disabled:pointer-events-none disabled:opacity-50",
           // Variant styles with consistent hover effects
           {
             // Default: Primary button with consistent hover

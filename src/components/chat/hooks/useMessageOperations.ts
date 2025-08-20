@@ -4,7 +4,7 @@
  * Handles send, edit, and PDF processing operations
  */
 
-import { Chat, Message, chatUtils } from '../index';
+import { Chat, Message, FileAttachment, chatUtils } from '../index';
 import { ChatStateManager } from './useChatStateManager';
 import { FileProcessor } from './useFileProcessor';
 import { useTranslations } from '@/hooks/use-translations';
@@ -61,12 +61,34 @@ export const useMessageOperations = (props: MessageOperationsProps): MessageOper
     setLastFailedMessage(null);
 
     try {
-      const userMessage = chatUtils.createMessage(content, 'user', 'text', files);
+      let userMessage = chatUtils.createMessage(content, 'user', 'text', files);
       let chatId = currentChatId;
 
+      // Store images persistently BEFORE adding to chat state
+      if (userMessage.files && userMessage.files.length > 0) {
+        // Generate chatId first if needed
+        if (!chatId || chats.length === 0) {
+          chatId = `chat-${Date.now()}`;
+        }
+
+        try {
+          userMessage = await chatUtils.storeImagesPersistently(userMessage, chatId);
+          if (process.env.NODE_ENV === 'development') {
+
+          }
+        } catch (error) {
+          if (process.env.NODE_ENV === 'development') {
+            console.warn('⚠️ Failed to store images persistently:', error);
+          }
+        }
+      }
+
       if (!chatId || chats.length === 0) {
-        // Create new chat
-        chatId = `chat-${Date.now()}`;
+        // Create new chat (chatId already generated above if needed)
+        if (!chatId) {
+          chatId = `chat-${Date.now()}`;
+        }
+
         const newChat: Chat = {
           id: chatId,
           title: content.slice(0, 30) + (content.length > 30 ? '...' : ''),
@@ -80,23 +102,31 @@ export const useMessageOperations = (props: MessageOperationsProps): MessageOper
         setIsSidebarOpen(false);
 
         // Generate AI title in background using current provider
-        console.log('Starting to generate title for:', content.slice(0, 50));
+        if (process.env.NODE_ENV === 'development') {
+
+        }
         aiProviderManager.current.generateChatTitle(content).then((aiTitle: string) => {
-          console.log('Generated title:', aiTitle);
+          if (process.env.NODE_ENV === 'development') {
+
+          }
           if (chatId) {
             chatStateManager.updateChatTitle(chatId, aiTitle);
           }
         }).catch((error: Error) => {
-          console.error('Failed to generate title:', error);
+          if (process.env.NODE_ENV === 'development') {
+            console.error('Failed to generate title:', error);
+          }
           // Fallback to truncated content
           const fallbackTitle = content.slice(0, 30) + (content.length > 30 ? '...' : '');
-          console.log('Using fallback title:', fallbackTitle);
+          if (process.env.NODE_ENV === 'development') {
+
+          }
           if (chatId) {
             chatStateManager.updateChatTitle(chatId, fallbackTitle);
           }
         });
       } else {
-        // Update existing chat with user message
+        // Update existing chat with user message (images already stored above)
         if (chatId) {
           const currentChat = chats.find(chat => chat.id === chatId);
           if (currentChat && !currentChat.messages.some(msg => msg.id === userMessage.id)) {
@@ -112,7 +142,9 @@ export const useMessageOperations = (props: MessageOperationsProps): MessageOper
         await generateAIResponse(chatId, messages);
       }
     } catch (error) {
-      console.error('Error in handleSendMessage:', error);
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Error in handleSendMessage:', error);
+      }
       handleError(error instanceof Error ? error : new Error('Failed to send message'));
       setLastFailedMessage(content);
     } finally {
@@ -133,12 +165,31 @@ export const useMessageOperations = (props: MessageOperationsProps): MessageOper
       if (messageIndex === -1) return;
 
       // Create updated message
-      const updatedMessage = {
+      let updatedMessage = {
         ...currentChat.messages[messageIndex],
         content: newContent,
-        files: files || currentChat.messages[messageIndex].files,
+        files: (files as unknown as FileAttachment[]) || currentChat.messages[messageIndex].files,
         timestamp: new Date()
       };
+
+      // Store images persistently if there are new files
+      if (files && files.length > 0) {
+        try {
+          const messageWithFiles = chatUtils.createMessage(newContent, 'user', 'text', files);
+          const persistentMessage = await chatUtils.storeImagesPersistently(messageWithFiles, currentChatId);
+          updatedMessage = {
+            ...updatedMessage,
+            files: persistentMessage.files || []
+          };
+          if (process.env.NODE_ENV === 'development') {
+
+          }
+        } catch (error) {
+          if (process.env.NODE_ENV === 'development') {
+            console.warn('⚠️ Failed to store images persistently for edited message:', error);
+          }
+        }
+      }
 
       // Keep messages up to and including the edited message, remove AI responses after it
       const updatedMessages = [
@@ -152,7 +203,9 @@ export const useMessageOperations = (props: MessageOperationsProps): MessageOper
       // Generate new AI response
       await generateAIResponse(currentChatId, updatedMessages);
     } catch (error) {
-      console.error('Error editing message:', error);
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Error editing message:', error);
+      }
       handleError(error instanceof Error ? error : new Error('Failed to edit message'));
     } finally {
       setIsLoading(false);
@@ -191,18 +244,20 @@ export const useMessageOperations = (props: MessageOperationsProps): MessageOper
       chatStateManager.addMessageToChat(chatId, aiMessage);
 
     } catch (error) {
-      console.error('Error processing PDFs:', error);
-      
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Error processing PDFs:', error);
+      }
+
       const errorMessage = chatUtils.createMessage(
         'Sorry, I encountered an error while processing the PDFs. Please try again.',
         'assistant',
         'text'
       );
-      
+
       if (currentChatId) {
         chatStateManager.addMessageToChat(currentChatId, errorMessage);
       }
-      
+
       handleError(error instanceof Error ? error : new Error('Failed to process PDFs'));
     } finally {
       setIsLoading(false);

@@ -3,7 +3,23 @@
  * Tools for monitoring and optimizing React component performance
  */
 
-import { useRef, useEffect, useMemo, useCallback } from 'react';
+import { useRef, useEffect, useMemo, useCallback, useState } from 'react';
+
+// Type definitions
+type PropValue = string | number | boolean | object | null | undefined;
+type PropsRecord = Record<string, PropValue>;
+type ChangedProps = Record<string, { from: PropValue; to: PropValue }>;
+type CallbackFunction = (...args: unknown[]) => unknown;
+
+interface MemoryInfo {
+  usedJSHeapSize: number;
+  totalJSHeapSize: number;
+  jsHeapSizeLimit: number;
+}
+
+interface PerformanceWithMemory extends Performance {
+  memory?: MemoryInfo;
+}
 
 /**
  * Hook to measure component render time
@@ -26,15 +42,15 @@ export function useRenderTime(componentName: string, enabled: boolean = false) {
 /**
  * Hook to detect unnecessary re-renders
  */
-export function useWhyDidYouUpdate(name: string, props: Record<string, any>, enabled: boolean = false) {
-  const previousProps = useRef<Record<string, any>>();
+export function useWhyDidYouUpdate(name: string, props: PropsRecord, enabled: boolean = false) {
+  const previousProps = useRef<PropsRecord>({});
 
   useEffect(() => {
     if (!enabled) return;
-    
+
     if (previousProps.current) {
       const allKeys = Object.keys({ ...previousProps.current, ...props });
-      const changedProps: Record<string, { from: any; to: any }> = {};
+      const changedProps: ChangedProps = {};
 
       allKeys.forEach(key => {
         if (previousProps.current![key] !== props[key]) {
@@ -76,15 +92,15 @@ export function useDebounce<T>(value: T, delay: number): T {
 /**
  * Throttled callback hook
  */
-export function useThrottle<T extends (...args: any[]) => any>(
+export function useThrottle<T extends CallbackFunction>(
   callback: T,
   delay: number
 ): T {
-  const throttledCallback = useRef<T>();
+  const throttledCallback = useRef<T>(callback);
   const lastRan = useRef<number>(0);
 
   return useMemo(() => {
-    return ((...args: any[]) => {
+    return ((...args: Parameters<T>) => {
       if (Date.now() - lastRan.current >= delay) {
         callback(...args);
         lastRan.current = Date.now();
@@ -96,14 +112,14 @@ export function useThrottle<T extends (...args: any[]) => any>(
 /**
  * Memoized callback with stable reference
  */
-export function useStableCallback<T extends (...args: any[]) => any>(callback: T): T {
+export function useStableCallback<T extends CallbackFunction>(callback: T): T {
   const callbackRef = useRef<T>(callback);
-  
+
   useEffect(() => {
     callbackRef.current = callback;
   });
 
-  return useCallback(((...args: any[]) => {
+  return useCallback(((...args: Parameters<T>) => {
     return callbackRef.current(...args);
   }) as T, []);
 }
@@ -222,13 +238,14 @@ export function usePerformanceMonitor(componentName: string, enabled: boolean = 
  * Memory usage monitoring (experimental)
  */
 export function useMemoryMonitor(enabled: boolean = false) {
-  const [memoryInfo, setMemoryInfo] = useState<any>(null);
+  const [memoryInfo, setMemoryInfo] = useState<MemoryInfo | null>(null);
 
   useEffect(() => {
-    if (!enabled || !(performance as any).memory) return;
+    const performanceWithMemory = performance as PerformanceWithMemory;
+    if (!enabled || !performanceWithMemory.memory) return;
 
     const interval = setInterval(() => {
-      const memory = (performance as any).memory;
+      const memory = performanceWithMemory.memory!;
       setMemoryInfo({
         usedJSHeapSize: memory.usedJSHeapSize,
         totalJSHeapSize: memory.totalJSHeapSize,
@@ -259,5 +276,4 @@ export function analyzeBundleSize() {
   return null;
 }
 
-// Import useState for useDebounce
-import { useState } from 'react';
+
