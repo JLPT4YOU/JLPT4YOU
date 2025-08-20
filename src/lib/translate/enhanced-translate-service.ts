@@ -42,6 +42,7 @@ export const SUPPORTED_LANGUAGES: LanguageOption[] = [
 
 class EnhancedTranslateService {
   private readonly googleBaseUrl = 'https://translate.googleapis.com/translate_a/single';
+  private readonly proxyServerUrl = 'http://localhost:8080'; // Proxy server for Safari bypass
   private readonly defaultParams = {
     client: 'gtx',
     dt: ['t', 'bd', 'ex', 'ld', 'md', 'qca', 'rw', 'rm', 'ss', 'at'],
@@ -57,6 +58,31 @@ class EnhancedTranslateService {
   private readonly minRequestInterval = 500; // 500ms between requests
   private retryCount = new Map<string, number>();
   private readonly maxRetries = 3;
+
+  /**
+   * Detect if current browser is Safari
+   */
+  private isSafari(): boolean {
+    if (typeof window === 'undefined') return false;
+    const userAgent = window.navigator.userAgent;
+    return /Safari/.test(userAgent) && !/Chrome/.test(userAgent);
+  }
+
+  /**
+   * Check if proxy server is available
+   */
+  private async isProxyAvailable(): Promise<boolean> {
+    try {
+      const response = await fetch(`${this.proxyServerUrl}/health`, {
+        method: 'GET',
+        signal: AbortSignal.timeout(2000), // 2 second timeout
+      });
+      return response.ok;
+    } catch (error) {
+      console.warn('Proxy server not available:', error);
+      return false;
+    }
+  }
 
   /**
    * Primary translation method with enhanced features
@@ -90,6 +116,20 @@ class EnhancedTranslateService {
     const currentRetries = this.retryCount.get(retryKey) || 0;
 
     try {
+      // For Safari, try proxy server first if available
+      if (this.isSafari() && await this.isProxyAvailable()) {
+        console.log('Safari detected, using proxy server');
+        const result = await this.translateWithProxy(text, sourceLanguage, targetLanguage);
+
+        // Reset retry count on success
+        this.retryCount.delete(retryKey);
+
+        // Cache the result
+        this.cache.set(cacheKey, result);
+
+        return result;
+      }
+
       // Try server-side API first (most reliable bypass)
       const result = await this.translateWithServerAPI(text, sourceLanguage, targetLanguage);
 
@@ -101,9 +141,26 @@ class EnhancedTranslateService {
 
       return result;
     } catch (error) {
-      console.error('Server API translation failed, trying client-side:', error);
+      console.error('Primary translation method failed, trying fallback:', error);
 
       try {
+        // For Safari, try proxy server as fallback
+        if (this.isSafari()) {
+          try {
+            const result = await this.translateWithProxy(text, sourceLanguage, targetLanguage);
+
+            // Reset retry count on success
+            this.retryCount.delete(retryKey);
+
+            // Cache the result
+            this.cache.set(cacheKey, result);
+
+            return result;
+          } catch (proxyError) {
+            console.error('Proxy server failed:', proxyError);
+          }
+        }
+
         // Fallback to client-side Google Translate
         const result = await this.translateWithGoogle(text, sourceLanguage, targetLanguage);
 
@@ -163,6 +220,49 @@ class EnhancedTranslateService {
     }
 
     return result;
+  }
+
+  /**
+   * Proxy server translation (Safari bypass)
+   */
+  private async translateWithProxy(
+    text: string,
+    sourceLanguage: string,
+    targetLanguage: string
+  ): Promise<TranslationResult> {
+    const response = await fetch(`${this.proxyServerUrl}/translate`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        text,
+        source_lang: sourceLanguage,
+        target_lang: targetLanguage,
+        method: 'mazii' // Use mazii method for better compatibility
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Proxy server failed: ${response.status} ${response.statusText}`);
+    }
+
+    const result = await response.json();
+
+    if (!result.success) {
+      throw new Error(`Proxy server error: ${result.error}`);
+    }
+
+    // Convert proxy response to our TranslationResult format
+    return {
+      translatedText: result.translated_text,
+      originalText: result.original_text,
+      sourceLanguage: result.source_language,
+      targetLanguage: result.target_language,
+      confidence: result.confidence,
+      service: `Proxy Server (${result.method})`,
+      timestamp: Date.now(),
+    };
   }
 
   /**

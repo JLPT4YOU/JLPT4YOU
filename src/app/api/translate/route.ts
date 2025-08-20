@@ -34,6 +34,7 @@ class ServerTranslateService {
 
     // Try multiple translation methods
     const methods = [
+      () => this.translateWithPythonProxy(text, sourceLanguage, targetLanguage),
       () => this.translateWithLibreTranslate(text, sourceLanguage, targetLanguage),
       () => this.translateWithMyMemory(text, sourceLanguage, targetLanguage),
       () => this.translateWithGoogleProxy(text, sourceLanguage, targetLanguage),
@@ -63,6 +64,49 @@ class ServerTranslateService {
       service: 'Fallback',
       timestamp: Date.now(),
       confidence: 0
+    };
+  }
+
+  private async translateWithPythonProxy(
+    text: string,
+    sourceLanguage: string,
+    targetLanguage: string
+  ): Promise<TranslationResult> {
+    // Python proxy server for Safari bypass
+    const proxyUrl = 'http://localhost:8080/translate';
+
+    const response = await fetch(proxyUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'User-Agent': 'Mozilla/5.0 (compatible; JLPT4YOU-Server/1.0)',
+      },
+      body: JSON.stringify({
+        text,
+        source_lang: sourceLanguage,
+        target_lang: targetLanguage,
+        method: 'mazii' // Use mazii method for better compatibility
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Python proxy failed: ${response.status}`);
+    }
+
+    const data = await response.json();
+
+    if (!data.success) {
+      throw new Error(`Python proxy error: ${data.error}`);
+    }
+
+    return {
+      translatedText: data.translated_text || text,
+      originalText: data.original_text || text,
+      sourceLanguage: data.source_language || sourceLanguage,
+      targetLanguage: data.target_language || targetLanguage,
+      service: `Python Proxy (${data.method})`,
+      timestamp: Date.now(),
+      confidence: data.confidence || 0.9
     };
   }
 
