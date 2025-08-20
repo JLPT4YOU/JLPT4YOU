@@ -22,8 +22,8 @@ if (!supabaseAnonKey) {
 // ✅ ENHANCED: Optimized client configuration
 export function createClient() {
   return createBrowserClient<Database>(
-    supabaseUrl,
-    supabaseAnonKey,
+    supabaseUrl!,
+    supabaseAnonKey!,
     {
       auth: {
         // ✅ Enhanced session persistence

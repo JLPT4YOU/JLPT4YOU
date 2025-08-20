@@ -24,16 +24,34 @@ const nextConfig: NextConfig = {
   // Webpack configuration for better build performance
   webpack: (config, { dev, isServer }) => {
     // Optimize for production builds
-    if (!dev) {
+    if (!dev && !isServer) {
       config.optimization = {
         ...config.optimization,
         splitChunks: {
           chunks: 'all',
           cacheGroups: {
-            vendor: {
-              test: /[\\/]node_modules[\\/]/,
-              name: 'vendors',
+            default: false,
+            vendors: false,
+            framework: {
+              name: 'framework',
               chunks: 'all',
+              test: /(?<!node_modules.*)[\\/]node_modules[\\/](react|react-dom|scheduler|prop-types|use-subscription)[\\/]/,
+              priority: 40,
+              enforce: true,
+            },
+            lib: {
+              test(module: any) {
+                return module.size() > 160000 &&
+                  /node_modules[/\\]/.test(module.nameForCondition() || '');
+              },
+              name(module: any) {
+                const hash = require('crypto').createHash('sha1');
+                hash.update(module.nameForCondition() || '');
+                return hash.digest('hex').substring(0, 8);
+              },
+              priority: 30,
+              minChunks: 1,
+              reuseExistingChunk: true,
             },
           },
         },

@@ -11,7 +11,7 @@ class NotificationService {
     try {
       const { data: notification, error } = await this.supabase
         .from('notifications')
-        .insert([data])
+        .insert([data] as any)
         .select()
         .single();
 
@@ -20,7 +20,7 @@ class NotificationService {
         return null;
       }
 
-      return notification;
+      return notification as any;
     } catch (error) {
       console.error('Error in createNotification:', error);
       return null;
@@ -35,7 +35,7 @@ class NotificationService {
       const { data, error } = await this.supabase
         .from('notifications')
         .select('*')
-        .eq('user_id', userId)
+        .eq('user_id', userId as any)
         .order('created_at', { ascending: false });
 
       if (error) {
@@ -43,7 +43,7 @@ class NotificationService {
         return [];
       }
 
-      return data || [];
+      return (data as any) || [];
     } catch (error) {
       console.error('Error in getUserNotifications:', error);
       return [];
@@ -83,7 +83,7 @@ class NotificationService {
       localStorage.setItem(cacheKey, count.toString())
       localStorage.setItem(`${cacheKey}_time`, Date.now().toString())
 
-      return count;
+      return count as number;
     } catch (error) {
       console.error('Error in getUnreadCount:', error);
       return 0;
@@ -166,7 +166,7 @@ class NotificationService {
         return false;
       }
 
-      return data || false;
+      return (data as any) || false;
     } catch (error) {
       console.error('Error in markAsRead:', error);
       return false;
@@ -186,7 +186,7 @@ class NotificationService {
         return 0;
       }
 
-      return data || 0;
+      return (data as any) || 0;
     } catch (error) {
       console.error('Error in markAllAsRead:', error);
       return 0;
@@ -201,7 +201,7 @@ class NotificationService {
       const { error } = await this.supabase
         .from('notifications')
         .delete()
-        .eq('id', notificationId);
+        .eq('id', notificationId as any);
 
       if (error) {
         console.error('Error deleting notification:', error);
@@ -318,7 +318,7 @@ class NotificationService {
 
     const { error: insertError } = await this.supabase
       .from('notifications')
-      .insert(notifications);
+        .insert(notifications as any);
 
     if (insertError) {
       console.error('Error sending broadcast notification:', insertError);

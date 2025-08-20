@@ -37,8 +37,8 @@ export async function validateCoupon(
     const { data: coupon, error } = await supabase
       .from('coupons')
       .select('*')
-      .eq('code', code.toUpperCase())
-      .eq('is_active', true)
+      .eq('code', code.toUpperCase() as any)
+      .eq('is_active', true as any)
       .single()
 
     if (error || !coupon) {
@@ -48,9 +48,12 @@ export async function validateCoupon(
       }
     }
 
+    // Type assertion for coupon
+    const typedCoupon = coupon as any
+
     // Check expiry date (schema: valid_until)
-    if (coupon.valid_until) {
-      const expiryDate = new Date(coupon.valid_until)
+    if (typedCoupon.valid_until) {
+      const expiryDate = new Date(typedCoupon.valid_until)
       if (expiryDate < new Date()) {
         return {
           valid: false,
@@ -60,7 +63,7 @@ export async function validateCoupon(
     }
 
     // Check usage limit (schema: usage_limit, usage_count)
-    if (coupon.usage_limit !== null && coupon.usage_limit !== undefined && coupon.usage_count >= coupon.usage_limit) {
+    if (typedCoupon.usage_limit !== null && typedCoupon.usage_limit !== undefined && typedCoupon.usage_count >= typedCoupon.usage_limit) {
       return {
         valid: false,
         message: 'Mã giảm giá đã hết lượt sử dụng'
@@ -68,30 +71,30 @@ export async function validateCoupon(
     }
 
     // Check minimum amount requirement (schema: min_purchase_amount)
-    if (coupon.min_purchase_amount !== null && coupon.min_purchase_amount !== undefined && amount < Number(coupon.min_purchase_amount)) {
+    if (typedCoupon.min_purchase_amount !== null && typedCoupon.min_purchase_amount !== undefined && amount < Number(typedCoupon.min_purchase_amount)) {
       return {
         valid: false,
-        message: `Đơn hàng tối thiểu $${Number(coupon.min_purchase_amount).toFixed(2)} để sử dụng mã này`
+        message: `Đơn hàng tối thiểu $${Number(typedCoupon.min_purchase_amount).toFixed(2)} để sử dụng mã này`
       }
     }
 
     // Calculate actual discount
     let actualDiscountValue: number
-    const isPercentage = coupon.discount_type === 'percentage'
+    const isPercentage = typedCoupon.discount_type === 'percentage'
     if (isPercentage) {
-      const percentageDiscount = amount * (Number(coupon.discount_value) / 100)
+      const percentageDiscount = amount * (Number(typedCoupon.discount_value) / 100)
       if (
-        coupon.max_discount_amount !== null &&
-        coupon.max_discount_amount !== undefined &&
-        percentageDiscount > Number(coupon.max_discount_amount)
+        typedCoupon.max_discount_amount !== null &&
+        typedCoupon.max_discount_amount !== undefined &&
+        percentageDiscount > Number(typedCoupon.max_discount_amount)
       ) {
-        actualDiscountValue = Number(coupon.max_discount_amount)
+        actualDiscountValue = Number(typedCoupon.max_discount_amount)
       } else {
         actualDiscountValue = percentageDiscount
       }
     } else {
       // fixed_amount
-      actualDiscountValue = Math.min(Number(coupon.discount_value), amount)
+      actualDiscountValue = Math.min(Number(typedCoupon.discount_value), amount)
     }
 
     return {
@@ -99,7 +102,7 @@ export async function validateCoupon(
       // normalize discount_type to 'percentage' | 'fixed'
       discount_type: isPercentage ? 'percentage' : 'fixed',
       discount_value: actualDiscountValue,
-      coupon_id: coupon.id,
+      coupon_id: typedCoupon.id,
       message: 'Áp dụng mã giảm giá thành công!'
     }
   } catch (error) {
@@ -130,7 +133,7 @@ export async function recordCouponUsage(
     const { data: coupon, error: fetchError } = await supabase
       .from('coupons')
       .select('usage_count')
-      .eq('id', couponId)
+      .eq('id', couponId as any)
       .single()
 
     if (fetchError || !coupon) {
@@ -141,10 +144,10 @@ export async function recordCouponUsage(
     const { error: updateError } = await supabase
       .from('coupons')
       .update({ 
-        usage_count: (coupon.usage_count || 0) + 1,
+        usage_count: ((coupon as any)?.usage_count || 0) + 1,
         updated_at: new Date().toISOString()
-      })
-      .eq('id', couponId)
+      } as any)
+      .eq('id', couponId as any)
 
     if (updateError) {
       console.error('Error updating coupon usage:', updateError)
@@ -161,7 +164,7 @@ export async function recordCouponUsage(
         order_id: orderId,
         used_at: new Date().toISOString(),
         amount_discounted: amountDiscounted
-      })
+      } as any)
 
     // Don't fail if history recording fails (it's optional)
     if (historyError) {

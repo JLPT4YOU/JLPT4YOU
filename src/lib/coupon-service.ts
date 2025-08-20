@@ -67,23 +67,30 @@ export async function validateCoupon(
       }
     }
 
-    if (!data || data.length === 0) {
+    if (!data) {
       return {
         is_valid: false,
         message: 'Mã giảm giá không hợp lệ'
       }
     }
 
-    const result = data[0]
-    
+    // Type assertion for RPC function return
+    const result = data as {
+      is_valid: boolean
+      discount_type?: 'percentage' | 'fixed_amount'
+      discount_value?: number
+      max_discount_amount?: number
+      message?: string
+    }
+
     // Calculate final discount amount
     let finalDiscount = 0
     if (result.is_valid) {
       if (result.discount_type === 'fixed_amount') {
-        finalDiscount = result.discount_value
+        finalDiscount = result.discount_value || 0
       } else if (result.discount_type === 'percentage') {
-        finalDiscount = (amount * result.discount_value) / 100
-        
+        finalDiscount = (amount * (result.discount_value || 0)) / 100
+
         // Apply max discount cap if exists
         if (result.max_discount_amount && finalDiscount > result.max_discount_amount) {
           finalDiscount = result.max_discount_amount
@@ -96,7 +103,7 @@ export async function validateCoupon(
       discount_type: result.discount_type,
       discount_value: result.discount_value,
       max_discount_amount: result.max_discount_amount,
-      message: result.message,
+      message: result.message || (result.is_valid ? 'Mã giảm giá hợp lệ' : 'Mã giảm giá không hợp lệ'),
       final_discount: finalDiscount
     }
   } catch (error) {
@@ -125,7 +132,7 @@ export async function applyCouponUsage(
     const { data: coupon, error: couponError } = await supabase
       .from('coupons')
       .select('id, usage_count')
-      .eq('code', couponCode.toUpperCase())
+      .eq('code', couponCode.toUpperCase() as any)
       .single()
 
     if (couponError || !coupon) {
@@ -133,16 +140,19 @@ export async function applyCouponUsage(
       return false
     }
 
+    // Type assertion for coupon data
+    const couponData = coupon as { id: string; usage_count: number }
+
     // Record usage
     const { error: usageError } = await supabase
       .from('coupon_usage')
       .insert({
-        coupon_id: coupon.id,
+        coupon_id: couponData.id,
         user_id: userId,
         order_amount: orderAmount,
         discount_applied: discountApplied,
         transaction_id: transactionId
-      })
+      } as any)
 
     if (usageError) {
       console.error('Error recording coupon usage:', usageError)
@@ -152,8 +162,8 @@ export async function applyCouponUsage(
     // Update usage count
     const { error: updateError } = await supabase
       .from('coupons')
-      .update({ usage_count: (coupon.usage_count || 0) + 1 })
-      .eq('id', coupon.id)
+      .update({ usage_count: (couponData.usage_count || 0) + 1 } as any)
+      .eq('id', couponData.id as any)
 
     if (updateError) {
       console.error('Error updating usage count:', updateError)
@@ -184,7 +194,7 @@ export async function getAllCoupons(): Promise<Coupon[]> {
       return []
     }
 
-    return data || []
+    return (data as any) || []
   } catch (error) {
     console.error('Error in getAllCoupons:', error)
     return []
@@ -204,10 +214,18 @@ export async function createCoupon(coupon: Omit<Coupon, 'id' | 'created_at' | 'u
     const { data, error } = await supabase
       .from('coupons')
       .insert({
-        ...coupon,
         code: coupon.code.toUpperCase(),
-        created_by: user?.id
-      })
+        created_by: user?.id,
+        discount_type: coupon.discount_type,
+        discount_value: coupon.discount_value,
+        max_discount_amount: coupon.max_discount_amount,
+        description: coupon.description,
+        min_purchase_amount: coupon.min_purchase_amount,
+        usage_limit: coupon.usage_limit,
+        valid_from: coupon.valid_from,
+        valid_until: coupon.valid_until,
+        usage_count: 0
+      } as any)
       .select()
       .single()
 
@@ -216,7 +234,7 @@ export async function createCoupon(coupon: Omit<Coupon, 'id' | 'created_at' | 'u
       return null
     }
 
-    return data
+    return data as any
   } catch (error) {
     console.error('Error in createCoupon:', error)
     return null
@@ -233,10 +251,10 @@ export async function updateCoupon(id: string, updates: Partial<Coupon>): Promis
     const { error } = await supabase
       .from('coupons')
       .update({
-        ...updates,
-        code: updates.code?.toUpperCase()
-      })
-      .eq('id', id)
+        code: updates.code?.toUpperCase(),
+        ...updates
+      } as any)
+      .eq('id', id as any)
 
     if (error) {
       console.error('Error updating coupon:', error)
@@ -257,13 +275,13 @@ export async function deleteCoupon(id: string): Promise<boolean> {
   try {
     const supabase = createClient()
     
-    const { error } = await supabase
+    const { error: deleteError } = await supabase
       .from('coupons')
       .delete()
-      .eq('id', id)
+      .eq('id', id as any)
 
-    if (error) {
-      console.error('Error deleting coupon:', error)
+    if (deleteError) {
+      console.error('Error deleting coupon:', deleteError)
       return false
     }
 
@@ -287,7 +305,7 @@ export async function getCouponUsageHistory(couponId?: string): Promise<CouponUs
       .order('used_at', { ascending: false })
 
     if (couponId) {
-      query = query.eq('coupon_id', couponId)
+      query = query.eq('coupon_id', couponId as any)
     }
 
     const { data, error } = await query
@@ -297,7 +315,7 @@ export async function getCouponUsageHistory(couponId?: string): Promise<CouponUs
       return []
     }
 
-    return data || []
+    return (data as any) || []
   } catch (error) {
     console.error('Error in getCouponUsageHistory:', error)
     return []
