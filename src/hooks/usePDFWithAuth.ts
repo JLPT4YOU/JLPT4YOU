@@ -55,7 +55,7 @@ export function usePDFWithAuth(pdfUrl: string | null) {
         if (!response.ok) {
           const errorText = await response.text()
           let errorMessage = `Failed to fetch PDF: ${response.status}`
-          
+
           try {
             const errorJson = JSON.parse(errorText)
             errorMessage = errorJson.error || errorJson.message || errorMessage
@@ -65,7 +65,50 @@ export function usePDFWithAuth(pdfUrl: string | null) {
               errorMessage = errorText
             }
           }
-          
+
+          // ✅ FALLBACK: If proxy fails with 401/403, try to get book info and use direct URL
+          if (response.status === 401 || response.status === 403) {
+            if (process.env.NODE_ENV === 'development') {
+              console.log('[usePDFWithAuth] Proxy auth failed, trying fallback...')
+            }
+
+            try {
+              // Extract book ID from proxy URL
+              const bookIdMatch = pdfUrl.match(/\/api\/pdf\/([^\/]+)/)
+              if (bookIdMatch) {
+                const bookId = bookIdMatch[1]
+
+                // Get book info to get direct URL
+                const bookResponse = await fetch(`/api/books/${bookId}`)
+                if (bookResponse.ok) {
+                  const bookData = await bookResponse.json()
+                  if (bookData.file_url) {
+                    if (process.env.NODE_ENV === 'development') {
+                      console.log('[usePDFWithAuth] Using direct URL fallback:', bookData.file_url)
+                    }
+
+                    // Try direct URL
+                    const directResponse = await fetch(bookData.file_url, {
+                      method: 'GET',
+                      signal: controller.signal,
+                    })
+
+                    if (directResponse.ok) {
+                      const blob = await directResponse.blob()
+                      objectUrl = URL.createObjectURL(blob)
+                      setBlobUrl(objectUrl)
+                      return // Success with fallback
+                    }
+                  }
+                }
+              }
+            } catch (fallbackError) {
+              if (process.env.NODE_ENV === 'development') {
+                console.log('[usePDFWithAuth] Fallback also failed:', fallbackError)
+              }
+            }
+          }
+
           throw new Error(errorMessage)
         }
 
