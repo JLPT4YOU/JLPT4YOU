@@ -145,6 +145,140 @@ export function validateScale(scale: number): number {
 }
 
 /**
+ * Coordinate transformation utilities for PDF rotation
+ * Handle coordinate conversion when PDF is rotated
+ */
+
+export interface Point {
+  x: number
+  y: number
+}
+
+/**
+ * Transform coordinates based on PDF rotation
+ * @param point Original point coordinates
+ * @param rotation Rotation angle in degrees (0, 90, 180, 270)
+ * @param width PDF page width
+ * @param height PDF page height
+ * @returns Transformed coordinates
+ */
+export function transformCoordinatesForRotation(
+  point: Point,
+  rotation: number,
+  width: number,
+  height: number
+): Point {
+  // Normalize rotation to 0-360 range
+  const normalizedRotation = ((rotation % 360) + 360) % 360
+
+  switch (normalizedRotation) {
+    case 0:
+      // No rotation
+      return { x: point.x, y: point.y }
+
+    case 90:
+      // 90 degrees clockwise: (x,y) -> (height-y, x)
+      return {
+        x: height - point.y,
+        y: point.x
+      }
+
+    case 180:
+      // 180 degrees: (x,y) -> (width-x, height-y)
+      return {
+        x: width - point.x,
+        y: height - point.y
+      }
+
+    case 270:
+      // 270 degrees clockwise: (x,y) -> (y, width-x)
+      return {
+        x: point.y,
+        y: width - point.x
+      }
+
+    default:
+      // For non-standard rotations, return original coordinates
+      console.warn(`Unsupported rotation angle: ${rotation}. Using original coordinates.`)
+      return { x: point.x, y: point.y }
+  }
+}
+
+/**
+ * Reverse transform coordinates (from rotated back to original)
+ * Used when loading saved annotations that were created in a different rotation
+ * @param point Rotated point coordinates
+ * @param rotation Rotation angle in degrees (0, 90, 180, 270)
+ * @param width PDF page width
+ * @param height PDF page height
+ * @returns Original coordinates
+ */
+export function reverseTransformCoordinatesForRotation(
+  point: Point,
+  rotation: number,
+  width: number,
+  height: number
+): Point {
+  // Normalize rotation to 0-360 range
+  const normalizedRotation = ((rotation % 360) + 360) % 360
+
+  switch (normalizedRotation) {
+    case 0:
+      // No rotation
+      return { x: point.x, y: point.y }
+
+    case 90:
+      // Reverse 90 degrees: (x,y) -> (y, width-x)
+      return {
+        x: point.y,
+        y: width - point.x
+      }
+
+    case 180:
+      // Reverse 180 degrees: (x,y) -> (width-x, height-y)
+      return {
+        x: width - point.x,
+        y: height - point.y
+      }
+
+    case 270:
+      // Reverse 270 degrees: (x,y) -> (height-y, x)
+      return {
+        x: height - point.y,
+        y: point.x
+      }
+
+    default:
+      // For non-standard rotations, return original coordinates
+      return { x: point.x, y: point.y }
+  }
+}
+
+/**
+ * Get effective dimensions after rotation
+ * When PDF is rotated 90/270 degrees, width and height are swapped
+ * @param width Original width
+ * @param height Original height
+ * @param rotation Rotation angle in degrees
+ * @returns Effective dimensions after rotation
+ */
+export function getRotatedDimensions(
+  width: number,
+  height: number,
+  rotation: number
+): { width: number; height: number } {
+  const normalizedRotation = ((rotation % 360) + 360) % 360
+
+  if (normalizedRotation === 90 || normalizedRotation === 270) {
+    // Swap width and height for 90/270 degree rotations
+    return { width: height, height: width }
+  }
+
+  // No dimension change for 0/180 degree rotations
+  return { width, height }
+}
+
+/**
  * Color and brush size persistence utilities
  * Save and load selected colors and brush sizes from localStorage
  */

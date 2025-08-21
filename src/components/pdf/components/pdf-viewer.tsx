@@ -214,6 +214,7 @@ export function PDFViewer({
                 width={pageWidth}
                 height={pageHeight}
                 scale={effectiveScale}
+                rotation={rotation}
                 activeAnnotationTool={activeAnnotationTool || null}
                 selectedColor={selectedColor}
                 brushSize={getMobileBrushSize(brushSize)}

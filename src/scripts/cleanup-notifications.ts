@@ -30,7 +30,6 @@ export async function cleanupNotifications(): Promise<CleanupResult> {
       throw new Error('Supabase admin client not available');
     }
 
-    console.log('Starting notification cleanup...');
 
     // 1. Delete old read notifications (older than 30 days)
     // Keep admin and system messages longer
@@ -76,10 +75,8 @@ export async function cleanupNotifications(): Promise<CleanupResult> {
     try {
       await supabaseAdmin.rpc('vacuum_analyze_notifications');
     } catch (vacuumError) {
-      console.log('Vacuum analyze not available (this is normal in hosted environments)');
     }
 
-    console.log(`Cleanup completed. Total deleted: ${result.totalDeleted} notifications`);
     
     return result;
   } catch (error) {
@@ -142,44 +139,26 @@ export async function getNotificationStats() {
 // CLI interface for running the script
 if (require.main === module) {
   async function main() {
-    console.log('=== Notification Cleanup Script ===');
     
     // Show current stats
-    console.log('\nCurrent notification stats:');
     const stats = await getNotificationStats();
     if (stats) {
-      console.log(`Total notifications: ${stats.total}`);
-      console.log(`Unread notifications: ${stats.unread}`);
-      console.log(`Read rate: ${stats.readRate}%`);
-      console.log(`Cleanable old notifications: ${stats.cleanable}`);
-      console.log('Notifications by type (last 7 days):');
       Object.entries(stats.typeStats).forEach(([type, count]) => {
-        console.log(`  ${type}: ${count}`);
       });
     }
 
     // Run cleanup
-    console.log('\nRunning cleanup...');
     const result = await cleanupNotifications();
     
     if (result.error) {
       console.error('Cleanup failed:', result.error);
       process.exit(1);
     } else {
-      console.log('\nCleanup completed successfully!');
-      console.log(`Deleted ${result.deletedReadNotifications} old read notifications`);
-      console.log(`Deleted ${result.deletedExpiredNotifications} expired notifications`);
-      console.log(`Total deleted: ${result.totalDeleted} notifications`);
     }
 
     // Show updated stats
-    console.log('\nUpdated notification stats:');
     const updatedStats = await getNotificationStats();
     if (updatedStats) {
-      console.log(`Total notifications: ${updatedStats.total}`);
-      console.log(`Unread notifications: ${updatedStats.unread}`);
-      console.log(`Read rate: ${updatedStats.readRate}%`);
-      console.log(`Cleanable old notifications: ${updatedStats.cleanable}`);
     }
   }
 

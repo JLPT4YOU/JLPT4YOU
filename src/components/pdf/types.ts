@@ -129,6 +129,8 @@ export interface UsePDFNavigationReturn {
   zoomByDelta: (delta: number) => void
   rotate: () => void
   fitToWidth: () => void
+  cleanup: () => void
+  debouncedSetScale: (scale: number) => void
 }
 
 export interface UsePDFAnnotationReturn {

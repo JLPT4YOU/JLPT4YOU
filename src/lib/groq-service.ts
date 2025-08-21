@@ -200,10 +200,6 @@ export class GroqService extends BaseAIService {
       advancedConfig.tools = tools;
     }
 
-    // Log the config for debugging
-    if (process.env.NODE_ENV === 'development') {
-      console.log('🔧 Advanced config for model', model, ':', advancedConfig);
-    }
 
     return advancedConfig;
   }
@@ -250,14 +246,6 @@ export class GroqService extends BaseAIService {
           requestConfig.tools = advancedConfig.tools;
         }
 
-        // Log the request for debugging
-        if (process.env.NODE_ENV === 'development') {
-          console.log('📤 Groq API Request for GPT-OSS (non-streaming):', {
-            model: requestConfig.model,
-            reasoning_effort: requestConfig.reasoning_effort,
-            tools: requestConfig.tools
-          });
-        }
       }
 
       const response = await this.client!.chat.completions.create(requestConfig);
@@ -312,14 +300,6 @@ export class GroqService extends BaseAIService {
           requestConfig.tools = advancedConfig.tools;
         }
 
-        // Log the request for debugging
-        if (process.env.NODE_ENV === 'development') {
-          console.log('📤 Groq API Request for GPT-OSS:', {
-            model: requestConfig.model,
-            reasoning_effort: requestConfig.reasoning_effort,
-            tools: requestConfig.tools
-          });
-        }
       }
 
       const response = await this.client!.chat.completions.create(requestConfig);
@@ -504,13 +484,6 @@ export class GroqService extends BaseAIService {
           requestConfig.tools = advancedConfig.tools;
         }
 
-        // Log the request for debugging
-        console.log('📤 Groq API Request for GPT-OSS (advanced):', {
-          model: requestConfig.model,
-          reasoning_effort: requestConfig.reasoning_effort,
-          tools: requestConfig.tools,
-          max_completion_tokens: requestConfig.max_completion_tokens
-        });
       }
 
       const response = await this.client!.chat.completions.create(requestConfig);

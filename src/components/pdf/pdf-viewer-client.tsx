@@ -87,7 +87,7 @@ function PDFViewerClientInner({ fileUrl, fileName, className }: PDFViewerClientP
   } = state
 
   // Navigation hooks with mobile-specific zoom behavior and fit-to-width
-  const { goToPrevPage, goToNextPage, zoomIn, zoomOut, zoomByDelta, rotate, fitToWidth } = usePDFNavigation({
+  const { goToPrevPage, goToNextPage, zoomIn, zoomOut, zoomByDelta, rotate, fitToWidth, cleanup, debouncedSetScale } = usePDFNavigation({
     pageNumber,
     numPages,
     scale,
@@ -99,6 +99,20 @@ function PDFViewerClientInner({ fileUrl, fileName, className }: PDFViewerClientP
     containerWidth,
     pageWidth,
   })
+
+  // Create optimized zoom function for wheel events (debounced)
+  const zoomByDeltaWheel = useCallback((delta: number) => {
+    const zoomFactor = delta > 0 ? 0.1 : -0.1
+    const minZoom = isMobileView ? 0.3 : 0.5
+    const maxZoom = isMobileView ? 2.5 : 3.0
+    const newScale = Math.max(minZoom, Math.min(maxZoom, scale + zoomFactor))
+    debouncedSetScale(newScale) // Use debounced for wheel events
+  }, [scale, debouncedSetScale, isMobileView])
+
+  // Cleanup navigation timeouts on unmount
+  useEffect(() => {
+    return cleanup
+  }, [cleanup])
 
   // Annotation hooks
   const { handleHighlight, handleDraw, handleEraser } = usePDFAnnotation({
@@ -141,63 +155,89 @@ function PDFViewerClientInner({ fileUrl, fileName, className }: PDFViewerClientP
   // Track previous mobile state to detect transitions
   const [prevIsMobile, setPrevIsMobile] = useState<boolean | null>(null)
 
-  // Handle window resize for mobile detection and auto-optimization
+  // Handle window resize for mobile detection and auto-optimization with throttling
   useEffect(() => {
+    let resizeTimeout: NodeJS.Timeout | null = null
+
     const handleResize = () => {
-      const isMobile = window.innerWidth < PDF_CONFIG.TABLET_BREAKPOINT
-      const wasDesktop = prevIsMobile === false
-      const isNowMobile = isMobile && wasDesktop
-
-      setIsMobileView(isMobile)
-
-      // Update container width
-      if (containerRef.current) {
-        setContainerWidth(containerRef.current.clientWidth)
+      // Throttle resize events to prevent excessive re-renders
+      if (resizeTimeout) {
+        clearTimeout(resizeTimeout)
       }
 
-      // Auto-hide thumbnails only when switching FROM desktop TO mobile
-      if (isNowMobile && showThumbnails) {
-        setShowThumbnails(false)
-      }
+      resizeTimeout = setTimeout(() => {
+        const isMobile = window.innerWidth < PDF_CONFIG.TABLET_BREAKPOINT
+        const wasDesktop = prevIsMobile === false
+        const isNowMobile = isMobile && wasDesktop
 
-      // Auto-hide annotation panel on mobile
-      if (isMobile && showAnnotationPanel) {
-        setShowAnnotationPanel(false)
-      }
+        setIsMobileView(isMobile)
 
-      // Update previous state
-      setPrevIsMobile(isMobile)
+        // Update container width
+        if (containerRef.current) {
+          setContainerWidth(containerRef.current.clientWidth)
+        }
 
-      // Container width tracking for manual fit-to-width button
+        // Auto-hide thumbnails only when switching FROM desktop TO mobile
+        if (isNowMobile && showThumbnails) {
+          setShowThumbnails(false)
+        }
+
+        // Auto-hide annotation panel on mobile
+        if (isMobile && showAnnotationPanel) {
+          setShowAnnotationPanel(false)
+        }
+
+        // Update previous state
+        setPrevIsMobile(isMobile)
+      }, 100) // 100ms throttle for resize events
     }
 
     if (typeof window !== 'undefined') {
       handleResize() // Initial check
-      window.addEventListener('resize', handleResize)
-      return () => window.removeEventListener('resize', handleResize)
+      window.addEventListener('resize', handleResize, { passive: true })
+      return () => {
+        if (resizeTimeout) {
+          clearTimeout(resizeTimeout)
+        }
+        window.removeEventListener('resize', handleResize)
+      }
     }
   }, [setIsMobileView, showThumbnails, showAnnotationPanel, scale, setShowThumbnails, setShowAnnotationPanel, setScale, prevIsMobile, containerWidth, pageWidth, fitToWidth])
 
-  // Auto-hide toolbar on mobile when scrolling
+  // Auto-hide toolbar on mobile when scrolling with throttling
   useEffect(() => {
     if (!isMobileView) return
 
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY
+    let scrollTimeout: NodeJS.Timeout | null = null
 
-      if (currentScrollY > lastScrollY && currentScrollY > 100) {
-        // Scrolling down - hide toolbar
-        setToolbarVisible(false)
-      } else if (currentScrollY < lastScrollY) {
-        // Scrolling up - show toolbar
-        setToolbarVisible(true)
+    const handleScroll = () => {
+      // Throttle scroll events for better performance
+      if (scrollTimeout) {
+        clearTimeout(scrollTimeout)
       }
 
-      setLastScrollY(currentScrollY)
+      scrollTimeout = setTimeout(() => {
+        const currentScrollY = window.scrollY
+
+        if (currentScrollY > lastScrollY && currentScrollY > 100) {
+          // Scrolling down - hide toolbar
+          setToolbarVisible(false)
+        } else if (currentScrollY < lastScrollY) {
+          // Scrolling up - show toolbar
+          setToolbarVisible(true)
+        }
+
+        setLastScrollY(currentScrollY)
+      }, 16) // ~60fps throttling
     }
 
     window.addEventListener('scroll', handleScroll, { passive: true })
-    return () => window.removeEventListener('scroll', handleScroll)
+    return () => {
+      if (scrollTimeout) {
+        clearTimeout(scrollTimeout)
+      }
+      window.removeEventListener('scroll', handleScroll)
+    }
   }, [isMobileView, lastScrollY])
 
   // Handle orientation change
@@ -347,13 +387,14 @@ function PDFViewerClientInner({ fileUrl, fileName, className }: PDFViewerClientP
     setTouchEnd(null)
   }, [touchStart, touchEnd, isMobileView, activeAnnotationTool, pageNumber, numPages, setPageNumber])
 
-  // Wheel zoom handler
+  // Wheel zoom handler - now uses immediate response with internal debouncing
   const handleWheel = useCallback((e: WheelEvent) => {
     if (e.ctrlKey || e.metaKey) {
       e.preventDefault()
-      zoomByDelta(-e.deltaY)
+      // Use debounced zoom for wheel events (smooth continuous zoom)
+      zoomByDeltaWheel(-e.deltaY)
     }
-  }, [zoomByDelta])
+  }, [zoomByDeltaWheel])
 
   // Touch zoom handlers
   const lastTouchDistance = useRef<number>(0)
@@ -397,18 +438,20 @@ function PDFViewerClientInner({ fileUrl, fileName, className }: PDFViewerClientP
     }
   }, [])
 
-  // Setup zoom event listeners
+  // Setup zoom event listeners with performance optimization
   useEffect(() => {
     const container = containerRef.current
     if (!container) return
 
-    // Add wheel event listener for mouse zoom
-    container.addEventListener('wheel', handleWheel, { passive: false })
+    // Add wheel event listener for mouse zoom with optimized passive handling
+    const wheelOptions = { passive: false, capture: false }
+    container.addEventListener('wheel', handleWheel, wheelOptions)
 
-    // Add touch event listeners for pinch zoom
-    container.addEventListener('touchstart', handleTouchStartZoom, { passive: false })
-    container.addEventListener('touchmove', handleTouchMoveZoom, { passive: false })
-    container.addEventListener('touchend', handleTouchEndZoom, { passive: false })
+    // Add touch event listeners for pinch zoom with optimized passive handling
+    const touchOptions = { passive: false, capture: false }
+    container.addEventListener('touchstart', handleTouchStartZoom, touchOptions)
+    container.addEventListener('touchmove', handleTouchMoveZoom, touchOptions)
+    container.addEventListener('touchend', handleTouchEndZoom, touchOptions)
 
     return () => {
       container.removeEventListener('wheel', handleWheel)

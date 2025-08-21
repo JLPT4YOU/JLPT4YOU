@@ -35,7 +35,6 @@ export class SessionStorage {
       // ✅ PRIMARY: Save to localStorage
       try {
         localStorage.setItem(this.SESSION_KEY, serialized)
-        console.log('✅ [SessionStorage] Session saved to localStorage')
       } catch (error) {
         console.warn('⚠️ [SessionStorage] localStorage save failed:', error)
       }
@@ -43,7 +42,6 @@ export class SessionStorage {
       // ✅ BACKUP: Save to sessionStorage
       try {
         sessionStorage.setItem(this.BACKUP_KEY, serialized)
-        console.log('✅ [SessionStorage] Session backup saved to sessionStorage')
       } catch (error) {
         console.warn('⚠️ [SessionStorage] sessionStorage save failed:', error)
       }
@@ -69,7 +67,6 @@ export class SessionStorage {
       }
       
       if (!stored) {
-        console.log('ℹ️ [SessionStorage] No stored session found')
         return null
       }
 
@@ -84,7 +81,6 @@ export class SessionStorage {
 
       // ✅ VALIDATE: Check if session is expired
       if (sessionData.expiresAt && new Date(sessionData.expiresAt * 1000) < new Date()) {
-        console.log('ℹ️ [SessionStorage] Stored session expired, clearing')
         this.clearSession()
         return null
       }
@@ -92,12 +88,10 @@ export class SessionStorage {
       // ✅ VALIDATE: Check if stored data is too old (24 hours)
       const maxAge = 24 * 60 * 60 * 1000 // 24 hours
       if (Date.now() - sessionData.timestamp > maxAge) {
-        console.log('ℹ️ [SessionStorage] Stored session too old, clearing')
         this.clearSession()
         return null
       }
 
-      console.log('✅ [SessionStorage] Valid session retrieved from storage')
       return sessionData.session
     } catch (error) {
       console.error('❌ [SessionStorage] Failed to get session:', error)

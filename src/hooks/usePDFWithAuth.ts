@@ -68,9 +68,6 @@ export function usePDFWithAuth(pdfUrl: string | null) {
 
           // ✅ FALLBACK: If proxy fails with 401/403, try to get book info and use direct URL
           if (response.status === 401 || response.status === 403) {
-            if (process.env.NODE_ENV === 'development') {
-              console.log('[usePDFWithAuth] Proxy auth failed, trying fallback...')
-            }
 
             try {
               // Extract book ID from proxy URL
@@ -83,9 +80,6 @@ export function usePDFWithAuth(pdfUrl: string | null) {
                 if (bookResponse.ok) {
                   const bookData = await bookResponse.json()
                   if (bookData.file_url) {
-                    if (process.env.NODE_ENV === 'development') {
-                      console.log('[usePDFWithAuth] Using direct URL fallback:', bookData.file_url)
-                    }
 
                     // Try direct URL
                     const directResponse = await fetch(bookData.file_url, {
@@ -103,9 +97,6 @@ export function usePDFWithAuth(pdfUrl: string | null) {
                 }
               }
             } catch (fallbackError) {
-              if (process.env.NODE_ENV === 'development') {
-                console.log('[usePDFWithAuth] Fallback also failed:', fallbackError)
-              }
             }
           }
 

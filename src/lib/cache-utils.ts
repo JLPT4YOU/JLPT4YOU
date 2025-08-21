@@ -62,13 +62,11 @@ export async function getCachedData<T>(
   if (useMemoryCache && !revalidate) {
     const cached = memoryCache.get(key);
     if (cached) {
-      console.log(`Cache HIT (memory): ${key}`);
       return cached;
     }
   }
 
   // If no cache hit, fetch fresh data
-  console.log(`Cache MISS: ${key} - Fetching fresh data`);
   const data = await fetcher();
   
   // Store in memory cache

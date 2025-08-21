@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState, useRef, useMemo } from 'react'
 import { Document, Page } from 'react-pdf'
-import { Loader2 } from 'lucide-react'
+import { Loader2, AlertCircle } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 import { PDFAnnotationCanvas } from './pdf-annotation-canvas'
 import { PDFWatermark } from './pdf-watermark'
 import { PDF_CONFIG } from '../config/pdf-config'
@@ -55,7 +56,11 @@ export function PDFContinuousViewer({
 }: PDFContinuousViewerProps) {
   const [pageWidths, setPageWidths] = useState<{ [key: number]: number }>({})
   const [pageHeights, setPageHeights] = useState<{ [key: number]: number }>({})
+  const [pageLoadingStates, setPageLoadingStates] = useState<{ [key: number]: boolean }>({})
+  const [pageErrors, setPageErrors] = useState<{ [key: number]: string | null }>({})
+  const [isZooming, setIsZooming] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
+  const prevScaleRef = useRef<number>(scale)
 
   // Fetch PDF with authentication
   const { blobUrl, loading: pdfLoading, error: pdfError } = usePDFWithAuth(fileUrl)
@@ -103,10 +108,40 @@ export function PDFContinuousViewer({
     return () => observer.disconnect()
   }, [numPages, onPageInView])
 
+  // Track scale changes to detect zoom operations
+  useEffect(() => {
+    if (Math.abs(scale - prevScaleRef.current) > 0.01) {
+      setIsZooming(true)
+
+      // Reset page loading states when zoom changes
+      setPageLoadingStates({})
+      setPageErrors({})
+
+      // Clear zoom state after a delay
+      const timeout = setTimeout(() => {
+        setIsZooming(false)
+      }, 300) // 300ms delay to allow pages to render
+
+      prevScaleRef.current = scale
+
+      return () => clearTimeout(timeout)
+    }
+  }, [scale])
+
   const handlePageLoadSuccess = useCallback((page: any, pageNumber: number) => {
     const viewport = page.getViewport({ scale: 1 })
     setPageWidths(prev => ({ ...prev, [pageNumber]: viewport.width }))
     setPageHeights(prev => ({ ...prev, [pageNumber]: viewport.height }))
+
+    // Clear loading state for this page
+    setPageLoadingStates(prev => ({ ...prev, [pageNumber]: false }))
+    setPageErrors(prev => ({ ...prev, [pageNumber]: null }))
+  }, [])
+
+  const handlePageLoadError = useCallback((error: Error, pageNumber: number) => {
+    console.warn(`Page ${pageNumber} load error:`, error)
+    setPageLoadingStates(prev => ({ ...prev, [pageNumber]: false }))
+    setPageErrors(prev => ({ ...prev, [pageNumber]: error.message }))
   }, [])
 
   // Use shared utilities with mobile scaling enabled for continuous viewer
@@ -115,6 +150,61 @@ export function PDFContinuousViewer({
     maxMobileScale: 2.0,
     mobileScaleMultiplier: 0.85
   }
+
+  // Memory management: Clear page states when component unmounts
+  useEffect(() => {
+    return () => {
+      setPageWidths({})
+      setPageHeights({})
+      setPageLoadingStates({})
+      setPageErrors({})
+    }
+  }, [])
+
+  // Performance optimization: Limit visible pages during zoom
+  const visiblePageRange = useMemo(() => {
+    if (!isZooming) return { start: 1, end: numPages }
+
+    // During zoom, only render a subset of pages to improve performance
+    const maxVisiblePages = 5
+    const currentPage = Math.max(1, Math.min(numPages, Math.floor(numPages / 2)))
+    const start = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2))
+    const end = Math.min(numPages, start + maxVisiblePages - 1)
+
+    return { start, end }
+  }, [isZooming, numPages])
+
+  // Progressive loading: Load pages in batches to prevent overwhelming
+  const [loadedPages, setLoadedPages] = useState<Set<number>>(new Set())
+
+  useEffect(() => {
+    if (!isZooming && numPages > 0) {
+      // Progressive loading: Load pages in batches of 3
+      const batchSize = 3
+      let currentBatch = 1
+
+      const loadNextBatch = () => {
+        const startPage = (currentBatch - 1) * batchSize + 1
+        const endPage = Math.min(currentBatch * batchSize, numPages)
+
+        setLoadedPages(prev => {
+          const newSet = new Set(prev)
+          for (let i = startPage; i <= endPage; i++) {
+            newSet.add(i)
+          }
+          return newSet
+        })
+
+        currentBatch++
+        if (startPage <= numPages) {
+          setTimeout(loadNextBatch, 100) // 100ms delay between batches
+        }
+      }
+
+      // Start loading first batch immediately
+      loadNextBatch()
+    }
+  }, [numPages, isZooming])
 
   // Show loading state while fetching PDF
   if (pdfLoading) {
@@ -163,13 +253,45 @@ export function PDFContinuousViewer({
           >
           {Array.from({ length: numPages }, (_, index) => {
             const pageNumber = index + 1
+
+            // Performance optimization: Skip rendering pages outside visible range during zoom
+            if (isZooming && (pageNumber < visiblePageRange.start || pageNumber > visiblePageRange.end)) {
+              return (
+                <div
+                  key={`placeholder-${pageNumber}`}
+                  className="relative bg-muted/20 shadow-lg border border-border flex-shrink-0 flex items-center justify-center"
+                  style={{ minHeight: '400px' }}
+                >
+                  <p className="text-muted-foreground text-sm">Trang {pageNumber}</p>
+                </div>
+              )
+            }
+
+            // Progressive loading: Only render pages that have been loaded
+            if (!isZooming && !loadedPages.has(pageNumber)) {
+              return (
+                <div
+                  key={`loading-${pageNumber}`}
+                  className="relative bg-muted/10 shadow-lg border border-border flex-shrink-0 flex items-center justify-center"
+                  style={{ minHeight: '400px' }}
+                >
+                  <div className="flex flex-col items-center">
+                    <Loader2 className="h-6 w-6 animate-spin mb-2 text-muted-foreground" />
+                    <p className="text-muted-foreground text-sm">Đang tải trang {pageNumber}...</p>
+                  </div>
+                </div>
+              )
+            }
+
             const pageWidth = pageWidths[pageNumber] || 0
             const pageHeight = pageHeights[pageNumber] || 0
             const dimensions = getDisplayDimensions(scale, pageWidth, pageHeight, scaleOptions)
+            const isPageLoading = pageLoadingStates[pageNumber] !== false && (pageWidth === 0 || isZooming)
+            const pageError = pageErrors[pageNumber]
 
             return (
               <div
-                key={pageNumber}
+                key={`page-${pageNumber}-${scale}-${rotation}`} // Include scale and rotation in key to force re-render
                 ref={(el) => { pageRefs.current[pageNumber] = el }}
                 data-page-number={pageNumber}
                 className="relative bg-white shadow-lg border border-border flex-shrink-0"
@@ -177,15 +299,39 @@ export function PDFContinuousViewer({
                   width: dimensions.width || 'auto',
                   height: dimensions.height || 'auto',
                   maxWidth: 'none',
-                  maxHeight: 'none'
+                  maxHeight: 'none',
+                  minHeight: isPageLoading ? '400px' : 'auto' // Prevent layout shift during loading
                 }}
               >
                 {/* Loading Overlay for individual pages */}
-                {loading && pageWidth === 0 && (
+                {isPageLoading && (
                   <div className="absolute inset-0 flex items-center justify-center bg-muted/80 backdrop-blur-sm z-20">
                     <div className="flex flex-col items-center justify-center p-8">
                       <Loader2 className="h-6 w-6 animate-spin mb-2 text-foreground" />
-                      <p className="text-sm text-muted-foreground">Đang tải trang {pageNumber}...</p>
+                      <p className="text-sm text-muted-foreground">
+                        {isZooming ? `Đang zoom trang ${pageNumber}...` : `Đang tải trang ${pageNumber}...`}
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                {/* Error state for individual pages */}
+                {pageError && !isPageLoading && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-muted/80 backdrop-blur-sm z-20">
+                    <div className="flex flex-col items-center justify-center p-8 text-center">
+                      <AlertCircle className="h-8 w-8 text-destructive mb-2" />
+                      <p className="text-sm text-muted-foreground">Lỗi tải trang {pageNumber}</p>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="mt-2"
+                        onClick={() => {
+                          setPageErrors(prev => ({ ...prev, [pageNumber]: null }))
+                          setPageLoadingStates(prev => ({ ...prev, [pageNumber]: true }))
+                        }}
+                      >
+                        Thử lại
+                      </Button>
                     </div>
                   </div>
                 )}
@@ -198,6 +344,12 @@ export function PDFContinuousViewer({
                   renderAnnotationLayer={false}
                   className="w-full h-full"
                   onLoadSuccess={(page) => handlePageLoadSuccess(page, pageNumber)}
+                  onLoadError={(error) => handlePageLoadError(error, pageNumber)}
+                  loading={
+                    <div className="flex items-center justify-center h-full min-h-[200px]">
+                      <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+                    </div>
+                  }
                 />
 
                 {/* PDF Watermark for each page */}
@@ -215,6 +367,7 @@ export function PDFContinuousViewer({
                     width={pageWidth}
                     height={pageHeight}
                     scale={getEffectiveScale(scale, scaleOptions)}
+                    rotation={rotation}
                     activeAnnotationTool={activeAnnotationTool}
                     selectedColor={selectedColor}
                     brushSize={getMobileBrushSize(brushSize)}

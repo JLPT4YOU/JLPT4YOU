@@ -2,11 +2,18 @@ import { useRef, useEffect, useState, useCallback, useMemo } from 'react'
 import { AnnotationTool } from '../types'
 import { PDF_CONFIG } from '../config/pdf-config'
 import { safeStorageSave } from '../utils/storage-manager'
+import {
+  transformCoordinatesForRotation,
+  reverseTransformCoordinatesForRotation,
+  getRotatedDimensions,
+  Point as HelperPoint
+} from '../utils/pdf-helpers'
 
 interface PDFAnnotationCanvasProps {
   width: number
   height: number
   scale: number
+  rotation: number
   activeAnnotationTool: AnnotationTool | null
   selectedColor?: string
   brushSize?: number
@@ -18,16 +25,17 @@ interface PDFAnnotationCanvasProps {
   pageNumber?: number
 }
 
-interface Point {
+interface AnnotationPoint {
   x: number
   y: number
 }
 
 interface Stroke {
-  points: Point[]
+  points: AnnotationPoint[]
   color: string
   size: number
   tool: 'draw' | 'highlight' | 'eraser'
+  rotation?: number // Add rotation context for saved strokes
 }
 
 // Create simple black dot cursor
@@ -67,6 +75,7 @@ export function PDFAnnotationCanvas({
   width,
   height,
   scale,
+  rotation,
   activeAnnotationTool,
   selectedColor = PDF_CONFIG.ANNOTATION_COLORS.DEFAULT,
   brushSize = PDF_CONFIG.DEFAULT_BRUSH_SIZE,
@@ -80,7 +89,7 @@ export function PDFAnnotationCanvas({
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const [isDrawing, setIsDrawing] = useState(false)
   const [strokes, setStrokes] = useState<Stroke[]>([])
-  const [currentStroke, setCurrentStroke] = useState<Point[]>([])
+  const [currentStroke, setCurrentStroke] = useState<AnnotationPoint[]>([])
   const [cursorStyle, setCursorStyle] = useState('crosshair')
   // const { reportError } = usePDFErrorReporting() // Removed to avoid dependency issues
 
@@ -126,7 +135,8 @@ export function PDFAnnotationCanvas({
         pageNumber,
         strokes,
         timestamp: Date.now(),
-        version: PDF_CONFIG.STORAGE_VERSION
+        version: PDF_CONFIG.STORAGE_VERSION,
+        currentRotation: rotation // Save current rotation context
       }
 
       safeStorageSave(key, annotationData)
@@ -156,7 +166,35 @@ export function PDFAnnotationCanvas({
             return
           }
 
-          setStrokes(annotationData.strokes)
+          // Process strokes to handle rotation differences
+          let processedStrokes = annotationData.strokes
+
+          // If annotations were saved with a different rotation, we need to adjust them
+          const savedRotation = annotationData.currentRotation || 0
+          if (savedRotation !== rotation) {
+            processedStrokes = annotationData.strokes.map((stroke: Stroke) => ({
+              ...stroke,
+              points: stroke.points.map(point => {
+                // First, reverse the saved rotation to get original coordinates
+                const originalPoint = reverseTransformCoordinatesForRotation(
+                  point,
+                  savedRotation,
+                  width,
+                  height
+                )
+                // Then apply current rotation
+                return transformCoordinatesForRotation(
+                  originalPoint,
+                  rotation,
+                  width,
+                  height
+                )
+              }),
+              rotation: rotation // Update rotation context
+            }))
+          }
+
+          setStrokes(processedStrokes)
           // Don't affect undo/redo history when loading
           setHistory([])
           setRedoStack([])
@@ -165,7 +203,7 @@ export function PDFAnnotationCanvas({
     } catch (error) {
       // Silently handle parsing errors
     }
-  }, [getStorageKey, fileUrl, pageNumber]) // Remove reportError to prevent re-creation
+  }, [getStorageKey, fileUrl, pageNumber, rotation, width, height]) // Add rotation and dimensions for coordinate transformation
 
   // Get current drawing settings
   const getCurrentSettings = useCallback(() => {
@@ -281,7 +319,8 @@ export function PDFAnnotationCanvas({
 
   // Get mouse/touch position relative to canvas with proper coordinate mapping
   // Returns normalized coordinates (0-1 range based on original PDF dimensions)
-  const getMousePos = useCallback((e: MouseEvent | React.MouseEvent | TouchEvent | React.TouchEvent): Point => {
+  // Now includes rotation transformation
+  const getMousePos = useCallback((e: MouseEvent | React.MouseEvent | TouchEvent | React.TouchEvent): AnnotationPoint => {
     const canvas = canvasRef.current
     if (!canvas) return { x: 0, y: 0 }
 
@@ -306,13 +345,24 @@ export function PDFAnnotationCanvas({
     const canvasX = clientX - rect.left
     const canvasY = clientY - rect.top
 
-    // Convert to normalized coordinates (0-1 range based on original PDF dimensions)
-    // This ensures coordinates are scale-independent
-    const x = (canvasX / rect.width) * width  // Use original width, not scaled
-    const y = (canvasY / rect.height) * height // Use original height, not scaled
+    // Get effective dimensions based on rotation
+    const rotatedDims = getRotatedDimensions(width, height, rotation)
 
-    return { x, y }
-  }, [width, height])
+    // Convert to normalized coordinates based on rotated dimensions
+    const normalizedX = (canvasX / rect.width) * rotatedDims.width
+    const normalizedY = (canvasY / rect.height) * rotatedDims.height
+
+    // Transform coordinates back to original orientation for storage
+    // This ensures all coordinates are stored in the same reference frame
+    const transformedPoint = reverseTransformCoordinatesForRotation(
+      { x: normalizedX, y: normalizedY },
+      rotation,
+      width,
+      height
+    )
+
+    return transformedPoint
+  }, [width, height, rotation])
 
   // Start drawing (mouse)
   const startDrawing = useCallback((e: React.MouseEvent) => {
@@ -370,18 +420,33 @@ export function PDFAnnotationCanvas({
 
     if (currentStroke.length > 0) {
       const prevPoint = currentStroke[currentStroke.length - 1]
-      // Scale coordinates when drawing
-      const scaledPrevX = prevPoint.x * scale
-      const scaledPrevY = prevPoint.y * scale
-      const scaledX = point.x * scale
-      const scaledY = point.y * scale
+
+      // Transform coordinates for current rotation before scaling
+      const transformedPrev = transformCoordinatesForRotation(
+        prevPoint,
+        rotation,
+        width,
+        height
+      )
+      const transformedCurrent = transformCoordinatesForRotation(
+        point,
+        rotation,
+        width,
+        height
+      )
+
+      // Scale transformed coordinates when drawing
+      const scaledPrevX = transformedPrev.x * scale
+      const scaledPrevY = transformedPrev.y * scale
+      const scaledX = transformedCurrent.x * scale
+      const scaledY = transformedCurrent.y * scale
 
       ctx.beginPath()
       ctx.moveTo(scaledPrevX, scaledPrevY)
       ctx.lineTo(scaledX, scaledY)
       ctx.stroke()
     }
-  }, [isDrawing, activeAnnotationTool, currentStroke, getMousePos, getCurrentSettings, scale])
+  }, [isDrawing, activeAnnotationTool, currentStroke, getMousePos, getCurrentSettings, scale, rotation, width, height])
 
   // Stop drawing
   const stopDrawing = useCallback(() => {
@@ -394,18 +459,19 @@ export function PDFAnnotationCanvas({
         points: currentStroke,
         color: settings.color,
         size: settings.size,
-        tool: activeAnnotationTool as 'draw' | 'highlight' | 'eraser'
+        tool: activeAnnotationTool as 'draw' | 'highlight' | 'eraser',
+        rotation: rotation // Save current rotation context
       }
-      
+
       setStrokes(prev => [...prev, newStroke])
       onAnnotationChange?.()
     }
 
     setIsDrawing(false)
     setCurrentStroke([])
-  }, [isDrawing, currentStroke, activeAnnotationTool, getCurrentSettings, onAnnotationChange])
+  }, [isDrawing, currentStroke, activeAnnotationTool, getCurrentSettings, onAnnotationChange, rotation])
 
-  // Redraw all strokes with proper scaling
+  // Redraw all strokes with proper scaling and rotation transformation
   const redrawCanvas = useCallback(() => {
     const canvas = canvasRef.current
     if (!canvas) return
@@ -416,7 +482,10 @@ export function PDFAnnotationCanvas({
     // Clear canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height)
 
-    // Redraw all strokes with scaling applied
+    // Get current rotated dimensions for transformation
+    const rotatedDims = getRotatedDimensions(width, height, rotation)
+
+    // Redraw all strokes with scaling and rotation applied
     strokes.forEach(stroke => {
       if (stroke.points.length < 2) return
 
@@ -434,28 +503,44 @@ export function PDFAnnotationCanvas({
       ctx.lineJoin = 'round'
 
       ctx.beginPath()
-      // Scale the first point
-      const firstPoint = stroke.points[0]
-      ctx.moveTo(firstPoint.x * scale, firstPoint.y * scale)
 
-      // Scale all subsequent points
+      // Transform and scale the first point
+      const firstPoint = stroke.points[0]
+      const transformedFirst = transformCoordinatesForRotation(
+        firstPoint,
+        rotation,
+        width,
+        height
+      )
+      ctx.moveTo(transformedFirst.x * scale, transformedFirst.y * scale)
+
+      // Transform and scale all subsequent points
       for (let i = 1; i < stroke.points.length; i++) {
         const point = stroke.points[i]
-        ctx.lineTo(point.x * scale, point.y * scale)
+        const transformedPoint = transformCoordinatesForRotation(
+          point,
+          rotation,
+          width,
+          height
+        )
+        ctx.lineTo(transformedPoint.x * scale, transformedPoint.y * scale)
       }
 
       ctx.stroke()
     })
-  }, [strokes, scale])
+  }, [strokes, scale, rotation, width, height])
 
-  // Update canvas size when dimensions change
+  // Update canvas size when dimensions or rotation change
   useEffect(() => {
     const canvas = canvasRef.current
     if (!canvas) return
 
+    // Get effective dimensions based on rotation
+    const rotatedDims = getRotatedDimensions(width, height, rotation)
+
     // Set canvas internal dimensions to match PDF at current scale for high resolution
-    const scaledWidth = width * scale
-    const scaledHeight = height * scale
+    const scaledWidth = rotatedDims.width * scale
+    const scaledHeight = rotatedDims.height * scale
 
     canvas.width = scaledWidth
     canvas.height = scaledHeight
@@ -466,7 +551,7 @@ export function PDFAnnotationCanvas({
 
     // Redraw after resize
     redrawCanvas()
-  }, [width, height, scale, redrawCanvas])
+  }, [width, height, scale, rotation, redrawCanvas])
 
   // Redraw when strokes change
   useEffect(() => {
@@ -510,7 +595,8 @@ export function PDFAnnotationCanvas({
             pageNumber: prevPage.pageNumber,
             strokes: prevStrokesRef.current,
             timestamp: Date.now(),
-            version: PDF_CONFIG.STORAGE_VERSION
+            version: PDF_CONFIG.STORAGE_VERSION,
+            currentRotation: rotation
           }
           safeStorageSave(prevKey, annotationData)
         } catch (error) {
@@ -553,7 +639,8 @@ export function PDFAnnotationCanvas({
             pageNumber,
             strokes: prevStrokesRef.current,
             timestamp: Date.now(),
-            version: PDF_CONFIG.STORAGE_VERSION
+            version: PDF_CONFIG.STORAGE_VERSION,
+            currentRotation: rotation
           }
           safeStorageSave(key, annotationData)
         } catch (error) {
@@ -732,18 +819,33 @@ export function PDFAnnotationCanvas({
 
     if (currentStroke.length > 0) {
       const prevPoint = currentStroke[currentStroke.length - 1]
-      // Scale coordinates when drawing
-      const scaledPrevX = prevPoint.x * scale
-      const scaledPrevY = prevPoint.y * scale
-      const scaledX = point.x * scale
-      const scaledY = point.y * scale
+
+      // Transform coordinates for current rotation before scaling
+      const transformedPrev = transformCoordinatesForRotation(
+        prevPoint,
+        rotation,
+        width,
+        height
+      )
+      const transformedCurrent = transformCoordinatesForRotation(
+        point,
+        rotation,
+        width,
+        height
+      )
+
+      // Scale transformed coordinates when drawing
+      const scaledPrevX = transformedPrev.x * scale
+      const scaledPrevY = transformedPrev.y * scale
+      const scaledX = transformedCurrent.x * scale
+      const scaledY = transformedCurrent.y * scale
 
       ctx.beginPath()
       ctx.moveTo(scaledPrevX, scaledPrevY)
       ctx.lineTo(scaledX, scaledY)
       ctx.stroke()
     }
-  }, [isDrawing, activeAnnotationTool, currentStroke, getMousePos, getCurrentSettings, scale, touchDebounceDelay])
+  }, [isDrawing, activeAnnotationTool, currentStroke, getMousePos, getCurrentSettings, scale, touchDebounceDelay, rotation, width, height])
 
   return (
     <canvas

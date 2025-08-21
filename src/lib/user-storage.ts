@@ -123,7 +123,6 @@ export class UserStorage {
         localStorage.removeItem(key)
       })
 
-      console.log(`🧹 Cleared ${keysToRemove.length} keys for user ${this.currentUserId}`)
 
     } catch (error) {
       console.error('Failed to clear user data:', error)
@@ -151,7 +150,6 @@ export class UserStorage {
         localStorage.removeItem(key)
       })
 
-      console.log(`🧹 Cleared ${keysToRemove.length} keys for user ${userId}`)
 
     } catch (error) {
       console.error(`Failed to clear data for user ${userId}:`, error)
@@ -199,7 +197,6 @@ export class UserStorage {
         localStorage.removeItem(key)
       })
 
-      console.log(`🧹 Cleared ${keysToRemove.length} app-related localStorage keys`)
 
 
     } catch (error) {
