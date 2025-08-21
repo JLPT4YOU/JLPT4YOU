@@ -176,9 +176,9 @@ async function getMaterials(level: string, type: string, selectionMode: 'random'
   devConsole.log(`🔍 [getMaterials] Fetching ${type} for level ${level}`);
 
   try {
-    // Use relative URLs for server-side API calls within Next.js
+    // Use fixed production URL or localhost
     const baseUrl = process.env.NODE_ENV === 'production' 
-      ? `https://${process.env.VERCEL_URL || 'jlpt-4-you.vercel.app'}`
+      ? 'https://jlpt-4-you.vercel.app'
       : 'http://localhost:3000';
 
     if (type === 'vocabulary') {
