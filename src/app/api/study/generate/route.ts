@@ -176,21 +176,38 @@ async function getMaterials(level: string, type: string, selectionMode: 'random'
   devConsole.log(`🔍 [getMaterials] Fetching ${type} for level ${level}`);
 
   try {
-    // Use fixed production URL or localhost
-    const baseUrl = process.env.NODE_ENV === 'production' 
-      ? 'https://jlpt-4-you.vercel.app'
-      : 'http://localhost:3000';
+    // Use multiple fallback methods to determine the base URL
+    let baseUrl = 'http://localhost:3000';
 
+    if (process.env.VERCEL_URL) {
+      baseUrl = `https://${process.env.VERCEL_URL}`;
+    } else if (process.env.NODE_ENV === 'production') {
+      // Fallback to production domain if VERCEL_URL is not available
+      baseUrl = 'https://jlpt-4-you.vercel.app';
+    }
+
+    devConsole.log(`🌐 [getMaterials] Using baseUrl: ${baseUrl}`, {
+      VERCEL_URL: process.env.VERCEL_URL,
+      NODE_ENV: process.env.NODE_ENV
+    });
     if (type === 'vocabulary') {
       // Random mode: fetch 50 items with random=true
       if (selectionMode === 'random') {
-        const url = new URL(`/api/jlpt/words/kanji-only`, baseUrl);
+        const url = new URL(`${baseUrl}/api/jlpt/words`);
         url.searchParams.set('level', level.toLowerCase());
         url.searchParams.set('limit', '50');
-        url.searchParams.set('random', 'true');
+        url.searchParams.set('random', 'true')
         devConsole.log(`📡 [API] Vocabulary RANDOM: ${url.toString()}`);
-        const response = await fetch(url.toString());
-        if (!response.ok) throw new Error(`API error: ${response.status}`);
+        const response = await fetch(url.toString(), {
+          headers: {
+            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+          }
+        });
+        if (!response.ok) {
+          const errorText = await response.text().catch(() => 'Unknown error');
+          devConsole.error(`❌ [API] Vocabulary API error ${response.status}:`, errorText);
+          throw new Error(`Local proxy error: ${response.status} - ${errorText}`);
+        }
         const data = await response.json();
         const words = data.words || data.kanji || [];
         devConsole.log(`📊 [API] Vocabulary response:`, { wordsCount: words.length || 0, firstWord: words?.[0] || null });
@@ -204,13 +221,21 @@ async function getMaterials(level: string, type: string, selectionMode: 'random'
           });
         }
       } else { // sequential
-        const url = new URL(`/api/jlpt/words/kanji-only`, baseUrl);
+        const url = new URL(`${baseUrl}/api/jlpt/words`);
         url.searchParams.set('level', level.toLowerCase());
         url.searchParams.set('limit', String(materialLimit || 10)); // Default 10 for sequential vocabulary
         if (typeof offset === 'number') url.searchParams.set('offset', String(offset));
         devConsole.log(`📡 [API] Vocabulary SEQUENTIAL: ${url.toString()}`);
-        const response = await fetch(url.toString());
-        if (!response.ok) throw new Error(`API error: ${response.status}`);
+        const response = await fetch(url.toString(), {
+          headers: {
+            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+          }
+        });
+        if (!response.ok) {
+          const errorText = await response.text().catch(() => 'Unknown error');
+          devConsole.error(`❌ [API] Vocabulary API error ${response.status}:`, errorText);
+          throw new Error(`Local proxy error: ${response.status} - ${errorText}`);
+        }
         const data = await response.json();
         const words = data.words || data.kanji || [];
         devConsole.log(`📊 [API] Vocabulary response:`, { wordsCount: words.length || 0, firstWord: words?.[0] || null });
@@ -226,13 +251,17 @@ async function getMaterials(level: string, type: string, selectionMode: 'random'
       }
     } else if (type === 'grammar') {
       if (selectionMode === 'random') {
-        const url = new URL(`/api/jlpt/grammar/structure-examples`, baseUrl);
+        const url = new URL(`${baseUrl}/api/jlpt/grammar`);
         url.searchParams.set('level', level.toLowerCase());
         url.searchParams.set('limit', '5'); // Fixed limit 5 for random grammar
-        url.searchParams.set('random', 'true');
+        url.searchParams.set('random', 'true')
         devConsole.log(`📡 [API] Grammar RANDOM: ${url.toString()}`);
-        const response = await fetch(url.toString());
-        if (!response.ok) throw new Error(`API error: ${response.status}`);
+        const response = await fetch(url.toString(), {
+          headers: {
+            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+          }
+        });
+        if (!response.ok) throw new Error(`Local proxy error: ${response.status}`);
         const data = await response.json();
         const grammarItems = data.grammar || [];
         devConsole.log(`📊 [API] Grammar response:`, { grammarCount: grammarItems.length || 0, firstGrammar: grammarItems?.[0] || null });
@@ -245,13 +274,17 @@ async function getMaterials(level: string, type: string, selectionMode: 'random'
           });
         }
       } else { // sequential
-        const url = new URL(`/api/jlpt/grammar/structure-examples`, baseUrl);
+        const url = new URL(`${baseUrl}/api/jlpt/grammar`);
         url.searchParams.set('level', level.toLowerCase());
         url.searchParams.set('limit', String(materialLimit || 5)); // Default 5 for sequential grammar
         if (typeof offset === 'number') url.searchParams.set('offset', String(offset));
         devConsole.log(`📡 [API] Grammar SEQUENTIAL: ${url.toString()}`);
-        const response = await fetch(url.toString());
-        if (!response.ok) throw new Error(`API error: ${response.status}`);
+        const response = await fetch(url.toString(), {
+          headers: {
+            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+          }
+        });
+        if (!response.ok) throw new Error(`Local proxy error: ${response.status}`);
         const data = await response.json();
         const grammarItems = data.grammar || [];
         devConsole.log(`📊 [API] Grammar response:`, { grammarCount: grammarItems.length || 0, firstGrammar: grammarItems?.[0] || null });
@@ -276,7 +309,7 @@ async function getMaterials(level: string, type: string, selectionMode: 'random'
         // Get vocabulary materials
         (async () => {
           try {
-            const url = new URL(`/api/jlpt/words/kanji-only`, baseUrl);
+            const url = new URL(`${baseUrl}/api/jlpt/words`);
             url.searchParams.set('level', level.toLowerCase());
             url.searchParams.set('limit', String(vocabLimit));
             if (selectionMode === 'random') url.searchParams.set('random', 'true');
@@ -284,7 +317,11 @@ async function getMaterials(level: string, type: string, selectionMode: 'random'
               url.searchParams.set('offset', String(offset));
             }
 
-            const response = await fetch(url.toString());
+            const response = await fetch(url.toString(), {
+              headers: {
+                'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+              }
+            });
             if (!response.ok) throw new Error(`Vocabulary API error: ${response.status}`);
             const data = await response.json();
             const words = data.words || data.kanji || [];
@@ -304,7 +341,7 @@ async function getMaterials(level: string, type: string, selectionMode: 'random'
         // Get grammar materials
         (async () => {
           try {
-            const url = new URL(`/api/jlpt/grammar/structure-examples`, baseUrl);
+            const url = new URL(`${baseUrl}/api/jlpt/grammar`);
             url.searchParams.set('level', level.toLowerCase());
             url.searchParams.set('limit', String(grammarLimit));
             if (selectionMode === 'random') url.searchParams.set('random', 'true');
@@ -312,7 +349,11 @@ async function getMaterials(level: string, type: string, selectionMode: 'random'
               url.searchParams.set('offset', String(Math.floor(offset / 2))); // Offset for grammar
             }
 
-            const response = await fetch(url.toString());
+            const response = await fetch(url.toString(), {
+              headers: {
+                'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+              }
+            });
             if (!response.ok) throw new Error(`Grammar API error: ${response.status}`);
             const data = await response.json();
             const grammarItems = data.grammar || [];
