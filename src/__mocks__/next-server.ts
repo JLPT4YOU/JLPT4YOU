@@ -80,6 +80,7 @@ export class MockNextResponse {
   private _headers: Map<string, string> = new Map()
   public cookies: Map<string, MockCookieOptions> = new Map()
   public redirectUrl?: string
+  public body?: any
 
   static next() {
     return new MockNextResponse()
@@ -91,6 +92,17 @@ export class MockNextResponse {
     const urlString = url instanceof URL ? url.toString() : url
     response.redirectUrl = urlString
     response._headers.set('location', urlString)
+    return response
+  }
+
+  static json(data: any, init?: { status?: number; headers?: Record<string, string> }) {
+    const response = new MockNextResponse()
+    if (init?.status) response.status = init.status
+    response._headers.set('content-type', 'application/json')
+    if (init?.headers) {
+      Object.entries(init.headers).forEach(([k, v]) => response._headers.set(k.toLowerCase(), v))
+    }
+    response.body = data
     return response
   }
 
