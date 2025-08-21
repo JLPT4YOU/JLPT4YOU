@@ -176,17 +176,15 @@ async function getMaterials(level: string, type: string, selectionMode: 'random'
   devConsole.log(`🔍 [getMaterials] Fetching ${type} for level ${level}`);
 
   try {
-    // Use absolute URL for internal API calls on Vercel
-    const host = process.env.VERCEL_URL 
-      ? `https://${process.env.VERCEL_URL}`
-      : process.env.NODE_ENV === 'production' 
-        ? 'https://jlpt-4-you.vercel.app'  // Fallback to production URL
-        : 'http://localhost:3000';
+    // Use relative URLs for server-side API calls within Next.js
+    const baseUrl = process.env.NODE_ENV === 'production' 
+      ? `https://${process.env.VERCEL_URL || 'jlpt-4-you.vercel.app'}`
+      : 'http://localhost:3000';
 
     if (type === 'vocabulary') {
       // Random mode: fetch 50 items with random=true
       if (selectionMode === 'random') {
-        const url = new URL(`${host}/api/jlpt/words/kanji-only`);
+        const url = new URL(`/api/jlpt/words/kanji-only`, baseUrl);
         url.searchParams.set('level', level.toLowerCase());
         url.searchParams.set('limit', '50');
         url.searchParams.set('random', 'true');
@@ -206,7 +204,7 @@ async function getMaterials(level: string, type: string, selectionMode: 'random'
           });
         }
       } else { // sequential
-        const url = new URL(`${host}/api/jlpt/words/kanji-only`);
+        const url = new URL(`/api/jlpt/words/kanji-only`, baseUrl);
         url.searchParams.set('level', level.toLowerCase());
         url.searchParams.set('limit', String(materialLimit || 10)); // Default 10 for sequential vocabulary
         if (typeof offset === 'number') url.searchParams.set('offset', String(offset));
@@ -228,7 +226,7 @@ async function getMaterials(level: string, type: string, selectionMode: 'random'
       }
     } else if (type === 'grammar') {
       if (selectionMode === 'random') {
-        const url = new URL(`${host}/api/jlpt/grammar/structure-examples`);
+        const url = new URL(`/api/jlpt/grammar/structure-examples`, baseUrl);
         url.searchParams.set('level', level.toLowerCase());
         url.searchParams.set('limit', '5'); // Fixed limit 5 for random grammar
         url.searchParams.set('random', 'true');
@@ -247,7 +245,7 @@ async function getMaterials(level: string, type: string, selectionMode: 'random'
           });
         }
       } else { // sequential
-        const url = new URL(`${host}/api/jlpt/grammar/structure-examples`);
+        const url = new URL(`/api/jlpt/grammar/structure-examples`, baseUrl);
         url.searchParams.set('level', level.toLowerCase());
         url.searchParams.set('limit', String(materialLimit || 5)); // Default 5 for sequential grammar
         if (typeof offset === 'number') url.searchParams.set('offset', String(offset));
@@ -278,7 +276,7 @@ async function getMaterials(level: string, type: string, selectionMode: 'random'
         // Get vocabulary materials
         (async () => {
           try {
-            const url = new URL(`${host}/api/jlpt/words/kanji-only`);
+            const url = new URL(`/api/jlpt/words/kanji-only`, baseUrl);
             url.searchParams.set('level', level.toLowerCase());
             url.searchParams.set('limit', String(vocabLimit));
             if (selectionMode === 'random') url.searchParams.set('random', 'true');
@@ -306,7 +304,7 @@ async function getMaterials(level: string, type: string, selectionMode: 'random'
         // Get grammar materials
         (async () => {
           try {
-            const url = new URL(`${host}/api/jlpt/grammar/structure-examples`);
+            const url = new URL(`/api/jlpt/grammar/structure-examples`, baseUrl);
             url.searchParams.set('level', level.toLowerCase());
             url.searchParams.set('limit', String(grammarLimit));
             if (selectionMode === 'random') url.searchParams.set('random', 'true');
