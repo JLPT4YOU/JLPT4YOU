@@ -36,7 +36,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Get materials from JLPT API or fallback to defaults
-    const materialsToUse = await getMaterials(params.level, params.type, params.selectionMode, params.offset, params.materialLimit ?? params.count);
+    const materialsToUse = await getMaterials(request, params.level, params.type, params.selectionMode, params.offset, params.materialLimit ?? params.count);
 
     // Generate prompt for Gemini
     const prompt = generateExercisePrompt({
@@ -172,11 +172,13 @@ export async function POST(request: NextRequest) {
 // GET endpoint removed - no longer using Supabase storage
 
 // Get materials from JLPT API with fallback to defaults
-async function getMaterials(level: string, type: string, selectionMode: 'random' | 'sequential', offset: number | undefined, materialLimit: number): Promise<any[]> {
+async function getMaterials(request: NextRequest, level: string, type: string, selectionMode: 'random' | 'sequential', offset: number | undefined, materialLimit: number): Promise<any[]> {
   devConsole.log(`🔍 [getMaterials] Fetching ${type} for level ${level}`);
 
   try {
-    const baseUrl = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000';
+    // Use request origin for self-referencing proxy calls (works on both localhost and Vercel)
+    const url = new URL(request.url);
+    const baseUrl = `${url.protocol}//${url.host}`;
     if (type === 'vocabulary') {
       // Random mode: fetch 50 items with random=true
       if (selectionMode === 'random') {
