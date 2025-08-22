@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import { Copy, Check, Edit3 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -34,6 +34,7 @@ const MessageBubbleComponent: React.FC<MessageBubbleProps> = ({
 }) => {
   const [isCopied, setIsCopied] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [showActions, setShowActions] = useState(false);
 
   // Memoized computed values
   const isUser = useMemo(() => message.role === 'user', [message.role]);
@@ -90,6 +91,14 @@ const MessageBubbleComponent: React.FC<MessageBubbleProps> = ({
       console.error('Failed to copy text:', error);
     }
   }, [message.content]);
+
+  // Auto-hide actions shortly after being shown on tap (mobile UX)
+  useEffect(() => {
+    if (showActions && !isEditing) {
+      const timeoutId = setTimeout(() => setShowActions(false), 2500);
+      return () => clearTimeout(timeoutId);
+    }
+  }, [showActions, isEditing]);
 
   return (
     <div className={messageClasses}>
@@ -203,6 +212,7 @@ const MessageBubbleComponent: React.FC<MessageBubbleProps> = ({
                 ? 'rounded-br-md shadow-sm max-w-[85%] sm:max-w-full'
                 : 'rounded-bl-md w-full'
             )}
+            onPointerDown={() => setShowActions(true)}
             style={{
               backgroundColor: isUser ? 'var(--chat-user-bg)' : 'transparent',
               color: isUser ? 'var(--chat-user-text)' : 'var(--chat-assistant-text)'
@@ -229,18 +239,21 @@ const MessageBubbleComponent: React.FC<MessageBubbleProps> = ({
 
             {/* Action Buttons - Copy and Edit */}
             <div className={cn(
-              "flex items-center gap-2 mt-1 w-full",
-              isUser ? "justify-end" : "justify-start pl-3 sm:pl-4"
+              "flex items-center gap-2 mt-1 w-full transition-opacity duration-150",
+              isUser ? "justify-end" : "justify-start pl-3 sm:pl-4",
+              showActions
+                ? "opacity-100 pointer-events-auto"
+                : "opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto group-focus-within:opacity-100 group-focus-within:pointer-events-auto"
             )}>
               {/* Edit Button - Only for user messages */}
               {showEditButton && (
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={handleEditClick}
+                  onClick={(e) => { e.stopPropagation(); handleEditClick(); }}
                   className={cn(
                     "p-2 h-auto rounded hover:bg-muted/50 transition-all duration-200",
-                    "opacity-100 sm:opacity-0 sm:group-hover:opacity-100 text-muted-foreground hover:text-foreground"
+                    "text-muted-foreground hover:text-foreground"
                   )}
                   title="Chỉnh sửa tin nhắn"
                 >
@@ -250,10 +263,9 @@ const MessageBubbleComponent: React.FC<MessageBubbleProps> = ({
 
               {/* Copy Button */}
               <button
-                onClick={handleCopy}
+                onClick={(e) => { e.stopPropagation(); handleCopy(); }}
                 className={cn(
                   "p-2 rounded hover:bg-muted/50 transition-all duration-200",
-                  "opacity-100 sm:opacity-0 sm:group-hover:opacity-100",
                   isCopied ? "text-success opacity-100" : "text-muted-foreground hover:text-foreground"
                 )}
                 title={isCopied ? "Đã copy!" : "Copy tin nhắn"}

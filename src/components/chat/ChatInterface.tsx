@@ -5,7 +5,7 @@ import { MessageBubble } from './MessageBubble';
 import { InputArea } from './InputArea';
 import { MessagePulsingDot } from './ThreeDots';
 
-import { cn } from '@/lib/utils';
+import { cn, debounce } from '@/lib/utils';
 import { useTranslations } from '@/hooks/use-translations';
 import { GraduationCap, ChevronDown } from 'lucide-react';
 import { Message } from './index';
@@ -46,38 +46,60 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
   const { t } = useTranslations();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
+  const isUserAtBottomRef = useRef(true);
   const [showScrollButton, setShowScrollButton] = useState(false);
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  const scrollToBottom = (behavior: ScrollBehavior = 'smooth') => {
+    const container = messagesContainerRef.current;
+    if (container) {
+      try {
+        container.scrollTo({ top: container.scrollHeight, behavior });
+      } catch {
+        // Fallback for older browsers
+        container.scrollTop = container.scrollHeight;
+      }
+    } else {
+      messagesEndRef.current?.scrollIntoView({ behavior });
+    }
   };
 
   // Check if user is at bottom of chat - show button when NOT at bottom
   const checkScrollPosition = useCallback(() => {
-    if (messagesContainerRef.current) {
-      const { scrollTop, scrollHeight, clientHeight } = messagesContainerRef.current;
-      const isAtBottom = scrollHeight - scrollTop - clientHeight < 50; // 50px threshold for more sensitive detection
-      // Show button when NOT at bottom AND there are messages
-      setShowScrollButton(!isAtBottom && messages.length > 0);
-    }
+    const container = messagesContainerRef.current;
+    if (!container) return;
+    const { scrollTop, scrollHeight, clientHeight } = container;
+    const isAtBottom = scrollHeight - scrollTop - clientHeight < 50; // 50px threshold for more sensitive detection
+    isUserAtBottomRef.current = isAtBottom;
+    // Show button when NOT at bottom AND there are messages
+    setShowScrollButton(!isAtBottom && messages.length > 0);
   }, [messages.length]);
 
   useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
+    // Auto-scroll only if user is already near the bottom
+    if (isUserAtBottomRef.current) {
+      // Use instant scroll during streaming to avoid jitter from repeated smooth animations
+      scrollToBottom('auto');
+    }
+    // Re-evaluate scroll button visibility on content changes
+    checkScrollPosition();
+  }, [messages, checkScrollPosition]);
 
-  // Add scroll listener to detect when user scrolls up
+  // Add scroll listener to detect when user scrolls up (debounced)
   useEffect(() => {
     const container = messagesContainerRef.current;
-    if (container) {
-      container.addEventListener('scroll', checkScrollPosition);
-      // Initial check
-      checkScrollPosition();
+    if (!container) return;
 
-      return () => {
-        container.removeEventListener('scroll', checkScrollPosition);
-      };
-    }
+    const handleScroll = debounce(() => {
+      checkScrollPosition();
+    }, 50);
+
+    container.addEventListener('scroll', handleScroll as EventListener);
+    // Initial check
+    checkScrollPosition();
+
+    return () => {
+      container.removeEventListener('scroll', handleScroll as EventListener);
+    };
   }, [messages.length, checkScrollPosition]);
 
   const handleSendMessage = (content: string, files?: File[]) => {
@@ -190,7 +212,7 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
         <div className="relative">
           <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 z-10">
             <Button
-              onClick={scrollToBottom}
+              onClick={() => scrollToBottom('smooth')}
               size="sm"
               className={cn(
                 "scroll-to-bottom-button h-10 w-10 p-0"

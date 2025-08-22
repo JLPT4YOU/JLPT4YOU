@@ -63,17 +63,13 @@ export const ProviderSelector: React.FC<ProviderSelectorProps> = ({
   }, []);
 
   const handleProviderSwitch = (provider: ProviderType) => {
-    try {
-      aiProviderManager.switchProvider(provider);
-      setCurrentProvider(provider);
-      onProviderChange?.(provider);
-      setIsOpen(false);
-      // Remove focus from button after selection
-      if (document.activeElement instanceof HTMLElement) {
-        document.activeElement.blur();
-      }
-    } catch (error) {
-      console.error('Failed to switch provider:', error);
+    // Let parent handle actual switching and persistence to avoid duplicate calls
+    setCurrentProvider(provider);
+    onProviderChange?.(provider);
+    setIsOpen(false);
+    // Remove focus from button after selection
+    if (document.activeElement instanceof HTMLElement) {
+      document.activeElement.blur();
     }
   };
 
