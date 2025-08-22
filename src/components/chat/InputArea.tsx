@@ -55,10 +55,11 @@ export const InputArea: React.FC<InputAreaProps> = ({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const trimmedInput = input.trim();
-    if (trimmedInput && !isSubmitting && onSendMessage) {
+    const hasFiles = selectedFiles.length > 0;
+    if ((trimmedInput || hasFiles) && !isSubmitting && onSendMessage) {
       setIsSubmitting(true);
       setShouldFocusAfterResponse(true); // Set flag to focus after AI responds
-      onSendMessage(trimmedInput, selectedFiles.length > 0 ? selectedFiles : undefined);
+      onSendMessage(trimmedInput, hasFiles ? selectedFiles : undefined);
       setInput('');
       setSelectedFiles([]);
 

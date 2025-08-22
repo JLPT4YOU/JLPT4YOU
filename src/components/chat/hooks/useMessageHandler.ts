@@ -141,8 +141,9 @@ export const useMessageHandler = (props: UseMessageHandlerProps): UseMessageHand
 
   // Helper: Prepare chat history for AI
   const prepareChatHistory = (messages: Message[]) => {
+    // Support file-only prompts: include messages that have either content or attachments
     const chatHistory = messages
-      .filter(msg => msg.content && msg.content.trim().length > 0)
+      .filter(msg => (msg.content && msg.content.trim().length > 0) || (msg.files && msg.files.length > 0))
       .map(msg => ({
         role: msg.role,
         content: msg.content,
@@ -152,7 +153,7 @@ export const useMessageHandler = (props: UseMessageHandlerProps): UseMessageHand
     if (chatHistory.length === 0) {
       if (process.env.NODE_ENV === 'development') {
         console.error('prepareChatHistory: No valid messages found', {
-          originalMessages: messages.map(m => ({ role: m.role, contentLength: m.content?.length || 0 }))
+          originalMessages: messages.map(m => ({ role: m.role, contentLength: m.content?.length || 0, hasFiles: Boolean(m.files && m.files.length > 0) }))
         });
       }
       throw new Error('No valid messages found to send to AI');

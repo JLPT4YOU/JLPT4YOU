@@ -55,26 +55,29 @@ export const useMessageOperations = (props: MessageOperationsProps): MessageOper
   const { handleError } = useErrorHandler();
 
   const handleSendMessage = async (content: string, files?: File[]) => {
+    // Allow file-only messages (Gemini supports file-only prompts)
     if (!content.trim() && (!files || files.length === 0)) return;
 
     setIsLoading(true);
     setLastFailedMessage(null);
 
     try {
+      // For file-only send, keep an empty content but include files
       let userMessage = chatUtils.createMessage(content, 'user', 'text', files);
       let chatId = currentChatId;
+      const isNewChat = !currentChatId; // Decide creation based solely on currentChatId
 
       // Store images persistently BEFORE adding to chat state
       if (userMessage.files && userMessage.files.length > 0) {
-        // Generate chatId first if needed
-        if (!chatId || chats.length === 0) {
+        // Ensure we have a chatId for persistent storage, regardless of existing chats
+        if (!chatId) {
           chatId = `chat-${Date.now()}`;
         }
 
         try {
           userMessage = await chatUtils.storeImagesPersistently(userMessage, chatId);
           if (process.env.NODE_ENV === 'development') {
-
+            
           }
         } catch (error) {
           if (process.env.NODE_ENV === 'development') {
@@ -83,7 +86,7 @@ export const useMessageOperations = (props: MessageOperationsProps): MessageOper
         }
       }
 
-      if (!chatId || chats.length === 0) {
+      if (isNewChat) {
         // Create new chat (chatId already generated above if needed)
         if (!chatId) {
           chatId = `chat-${Date.now()}`;
@@ -103,11 +106,11 @@ export const useMessageOperations = (props: MessageOperationsProps): MessageOper
 
         // Generate AI title in background using current provider
         if (process.env.NODE_ENV === 'development') {
-
+          
         }
         aiProviderManager.current.generateChatTitle(content).then((aiTitle: string) => {
           if (process.env.NODE_ENV === 'development') {
-
+            
           }
           if (chatId) {
             chatStateManager.updateChatTitle(chatId, aiTitle);
@@ -119,7 +122,7 @@ export const useMessageOperations = (props: MessageOperationsProps): MessageOper
           // Fallback to truncated content
           const fallbackTitle = content.slice(0, 30) + (content.length > 30 ? '...' : '');
           if (process.env.NODE_ENV === 'development') {
-
+            
           }
           if (chatId) {
             chatStateManager.updateChatTitle(chatId, fallbackTitle);
@@ -137,6 +140,17 @@ export const useMessageOperations = (props: MessageOperationsProps): MessageOper
 
       // Generate AI response
       if (chatId) {
+        // Ensure the new chat creation has been applied before streaming begins
+        if (isNewChat) {
+          await new Promise<void>(resolve => {
+            if (typeof window !== 'undefined') {
+              requestAnimationFrame(() => resolve());
+            } else {
+              resolve();
+            }
+          });
+        }
+
         const updatedChat = chats.find(chat => chat.id === chatId);
         const messages = updatedChat ? [...updatedChat.messages, userMessage] : [userMessage];
         await generateAIResponse(chatId, messages);
