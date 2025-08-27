@@ -119,7 +119,25 @@ export class GeminiStreamingHandler {
     });
 
     for await (const chunk of response) {
-      if (chunk.text) {
+      // Prefer inspecting parts to capture code execution outputs too
+      const parts = chunk.candidates?.[0]?.content?.parts || [];
+      if (parts.length > 0) {
+        for (const part of parts) {
+          if (part.text) {
+            onChunk(part.text);
+          }
+          if (part.executableCode && part.executableCode.code) {
+            const lang = (part.executableCode.language || 'text').toLowerCase();
+            const codeBlock = `\n\u0060\u0060\u0060${lang}\n${part.executableCode.code}\n\u0060\u0060\u0060\n`;
+            onChunk(codeBlock);
+          }
+          if (part.codeExecutionResult && part.codeExecutionResult.output) {
+            const outputBlock = `\nOutput:\n\u0060\u0060\u0060\n${part.codeExecutionResult.output}\n\u0060\u0060\u0060\n`;
+            onChunk(outputBlock);
+          }
+        }
+      } else if (chunk.text) {
+        // Fallback in case SDK provided plain text convenience
         onChunk(chunk.text);
       }
     }
@@ -174,14 +192,27 @@ export class GeminiStreamingHandler {
       const parts = chunk.candidates?.[0]?.content?.parts || [];
 
       parts.forEach((part: any) => {
-        if (!part.text) return;
-
-        if (part.thought) {
-          // This is a thought chunk
+        // Thought text
+        if (part.thought && part.text) {
           onThoughtChunk(part.text);
-        } else {
-          // This is an answer chunk
+        }
+
+        // Answer text
+        if (!part.thought && part.text) {
           onAnswerChunk(part.text);
+        }
+
+        // Executable code block
+        if (part.executableCode && part.executableCode.code) {
+          const lang = (part.executableCode.language || 'text').toLowerCase();
+          const codeBlock = `\n\u0060\u0060\u0060${lang}\n${part.executableCode.code}\n\u0060\u0060\u0060\n`;
+          onAnswerChunk(codeBlock);
+        }
+
+        // Code execution result output
+        if (part.codeExecutionResult && part.codeExecutionResult.output) {
+          const outputBlock = `\nOutput:\n\u0060\u0060\u0060\n${part.codeExecutionResult.output}\n\u0060\u0060\u0060\n`;
+          onAnswerChunk(outputBlock);
         }
       });
 
@@ -237,7 +268,23 @@ export class GeminiStreamingHandler {
     });
 
     for await (const chunk of response) {
-      if (chunk.text) {
+      const parts = chunk.candidates?.[0]?.content?.parts || [];
+      if (parts.length > 0) {
+        for (const part of parts) {
+          if (part.text) {
+            onChunk(part.text);
+          }
+          if (part.executableCode && part.executableCode.code) {
+            const lang = (part.executableCode.language || 'text').toLowerCase();
+            const codeBlock = `\n\u0060\u0060\u0060${lang}\n${part.executableCode.code}\n\u0060\u0060\u0060\n`;
+            onChunk(codeBlock);
+          }
+          if (part.codeExecutionResult && part.codeExecutionResult.output) {
+            const outputBlock = `\nOutput:\n\u0060\u0060\u0060\n${part.codeExecutionResult.output}\n\u0060\u0060\u0060\n`;
+            onChunk(outputBlock);
+          }
+        }
+      } else if (chunk.text) {
         onChunk(chunk.text);
       }
     }

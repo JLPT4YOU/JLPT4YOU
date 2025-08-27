@@ -229,6 +229,8 @@ const MessageBubbleComponent: React.FC<MessageBubbleProps> = ({
                   <MarkdownRenderer
                     content={message.content}
                     className="w-full"
+                    // Truyền trạng thái streaming để code hiển thị ngay khi về chunk
+                    isStreaming={isAIGenerating || message.status === 'sending'}
                   />
                 ) : isAIGenerating && !message.thinking?.thoughtSummary ? (
                   // Show pulsing dot only when AI is generating AND no thinking content yet

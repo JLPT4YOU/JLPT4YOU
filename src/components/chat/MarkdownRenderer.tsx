@@ -33,13 +33,16 @@ interface ParagraphComponentProps {
 interface MarkdownRendererProps {
   content: string
   className?: string
+  // Cho phép render tối ưu khi streaming để code xuất hiện ngay lập tức
+  isStreaming?: boolean
 }
 
 // CodeBlock component đã được thay thế bằng ShikiCodeBlock
 
 export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
   content,
-  className
+  className,
+  isStreaming
 }) => {
   // Pre-process content to fix list formatting and math issues
   const processedContent = content
@@ -98,6 +101,8 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
               <ShikiCodeBlock
                 inline={inline}
                 className={className}
+                // Truyền trạng thái streaming để render nhanh không chờ highlight
+                isStreaming={isStreaming}
                 {...props}
               >
                 {String(children).replace(/\n$/, '')}
