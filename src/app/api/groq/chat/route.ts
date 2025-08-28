@@ -102,7 +102,21 @@ export async function POST(request: NextRequest) {
             await groqService.streamMessage(
               messages,
               (chunk: string) => {
-                const data = `data: ${JSON.stringify({ content: chunk })}\n\n`;
+                let type = 'answer';
+                let content = chunk;
+
+                if (chunk.startsWith('__GROQ_THINKING_START__')) {
+                  type = 'thought_start';
+                  content = '';
+                } else if (chunk.startsWith('__GROQ_THINKING_CONTENT__')) {
+                  type = 'thought';
+                  content = chunk.replace('__GROQ_THINKING_CONTENT__', '');
+                } else if (chunk.startsWith('__GROQ_THINKING_END__')) {
+                  type = 'thought_end';
+                  content = '';
+                }
+
+                const data = `data: ${JSON.stringify({ type, content })}\n\n`;
                 controller.enqueue(encoder.encode(data));
               },
               options

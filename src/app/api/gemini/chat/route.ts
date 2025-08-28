@@ -86,14 +86,33 @@ export async function POST(request: NextRequest) {
       const readableStream = new ReadableStream({
         async start(controller) {
           try {
-            await geminiService.streamMessage(
-              messages,
-              (chunk: string) => {
-                const data = `data: ${JSON.stringify({ content: chunk })}\n\n`;
-                controller.enqueue(encoder.encode(data));
-              },
-              { model, temperature, enableThinking, enableTools }
-            );
+            const streamOptions = { model, temperature, enableTools };
+
+            if (enableThinking) {
+              if (files && files.length > 0) {
+                await (geminiService as any).streamMessageWithFilesAndThinking(
+                  messages,
+                  files,
+                  (thoughtChunk: string) => controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'thought', content: thoughtChunk })}\n\n`)),
+                  (answerChunk: string) => controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'answer', content: answerChunk })}\n\n`)),
+                  streamOptions
+                );
+              } else {
+                await geminiService.streamMessageWithThinking(
+                  messages,
+                  (thoughtChunk: string) => controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'thought', content: thoughtChunk })}\n\n`)),
+                  (answerChunk: string) => controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'answer', content: answerChunk })}\n\n`)),
+                  streamOptions
+                );
+              }
+            } else {
+              await geminiService.streamMessageWithFiles(
+                messages,
+                files,
+                (chunk: string) => controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'answer', content: chunk })}\n\n`)),
+                streamOptions
+              );
+            }
             const doneData = `data: ${JSON.stringify({ done: true })}\n\n`;
             controller.enqueue(encoder.encode(doneData));
             controller.close();
