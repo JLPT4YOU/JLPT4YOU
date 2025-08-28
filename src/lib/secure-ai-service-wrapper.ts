@@ -125,6 +125,162 @@ export class SecureAIServiceWrapper implements AIService {
     const data = await response.json();
     return data.message?.content || '';
   }
+  /**
+  * Stream message WITH thinking (Gemini) via server proxy.
+  */
+  async streamMessageWithThinking?(
+    messages: any[],
+    onThoughtChunk: (chunk: string) => void,
+    onAnswerChunk: (chunk: string) => void,
+    options?: any
+  ): Promise<void> {
+    const headers = await this.getAuthHeaders();
+    const body = JSON.stringify({ messages, stream: true, enableThinking: true, ...options });
+
+    const response = await fetch(`/api/${this.provider}/chat`, {
+      method: 'POST',
+      headers,
+      body,
+    });
+
+    if (!response.ok || !response.body) {
+      const errorData = await response.json().catch(() => ({ error: 'Unknown error occurred' }));
+      throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+    }
+
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+
+    try {
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        const sse = decoder.decode(value, { stream: true });
+        const lines = sse.split('\n\n').filter(line => line.startsWith('data:'));
+
+        for (const line of lines) {
+          const jsonStr = line.replace('data: ', '');
+          try {
+            const data = JSON.parse(jsonStr);
+            if (data.done) return;
+            if (data.error) throw new Error(data.error);
+            if (data.type === 'thought' && data.content) onThoughtChunk(data.content);
+            if (data.type === 'answer' && data.content) onAnswerChunk(data.content);
+          } catch (e) {
+            console.error('Failed to parse SSE chunk (thinking):', jsonStr);
+          }
+        }
+      }
+    } finally {
+      reader.releaseLock();
+    }
+  }
+
+  /**
+  * Stream message WITH FILES and thinking (Gemini) via server proxy.
+  */
+  async streamMessageWithFilesAndThinking?(
+    messages: any[],
+    files: any[],
+    onThoughtChunk: (chunk: string) => void,
+    onAnswerChunk: (chunk: string) => void,
+    options?: any
+  ): Promise<void> {
+    const headers = await this.getAuthHeaders();
+    const body = JSON.stringify({ messages, files, stream: true, enableThinking: true, ...options });
+
+    const response = await fetch(`/api/${this.provider}/chat`, {
+      method: 'POST',
+      headers,
+      body,
+    });
+
+    if (!response.ok || !response.body) {
+      const errorData = await response.json().catch(() => ({ error: 'Unknown error occurred' }));
+      throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+    }
+
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+
+    try {
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        const sse = decoder.decode(value, { stream: true });
+        const lines = sse.split('\n\n').filter(line => line.startsWith('data:'));
+
+        for (const line of lines) {
+          const jsonStr = line.replace('data: ', '');
+          try {
+            const data = JSON.parse(jsonStr);
+            if (data.done) return;
+            if (data.error) throw new Error(data.error);
+            if (data.type === 'thought' && data.content) onThoughtChunk(data.content);
+            if (data.type === 'answer' && data.content) onAnswerChunk(data.content);
+          } catch (e) {
+            console.error('Failed to parse SSE chunk (files+thinking):', jsonStr);
+          }
+        }
+      }
+    } finally {
+      reader.releaseLock();
+    }
+  }
+
+  /**
+  * Stream message WITH FILES (no thinking) via server proxy.
+  */
+  async streamMessageWithFiles?(
+    messages: any[],
+    files: any[],
+    onChunk: (chunk: string) => void,
+    options?: any
+  ): Promise<void> {
+    const headers = await this.getAuthHeaders();
+    const body = JSON.stringify({ messages, files, stream: true, enableThinking: false, ...options });
+
+    const response = await fetch(`/api/${this.provider}/chat`, {
+      method: 'POST',
+      headers,
+      body,
+    });
+
+    if (!response.ok || !response.body) {
+      const errorData = await response.json().catch(() => ({ error: 'Unknown error occurred' }));
+      throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+    }
+
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+
+    try {
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        const sse = decoder.decode(value, { stream: true });
+        const lines = sse.split('\n\n').filter(line => line.startsWith('data:'));
+
+        for (const line of lines) {
+          const jsonStr = line.replace('data: ', '');
+          try {
+            const data = JSON.parse(jsonStr);
+            if (data.done) return;
+            if (data.error) throw new Error(data.error);
+            if (data.content) onChunk(data.content);
+          } catch (e) {
+            console.error('Failed to parse SSE chunk (files no thinking):', jsonStr);
+          }
+        }
+      }
+    } finally {
+      reader.releaseLock();
+    }
+  }
+
 
   /**
    * Validate API key - use provided key, not cached one
@@ -181,59 +337,32 @@ export class SecureAIServiceWrapper implements AIService {
   // to the base service, which is now just a thin client for the server API.
   // This dynamic proxying is handled by the constructor logic that was removed and will be simplified.
 
-  async streamMessageWithThinking?(
-    messages: AIMessage[],
-    onThoughtChunk: (chunk: string) => void,
-    onAnswerChunk: (chunk: string) => void,
-    options?: any
-  ): Promise<void> {
-    const headers = await this.getAuthHeaders();
-    const body = JSON.stringify({ messages, stream: true, enableThinking: true, ...options });
-
-    const response = await fetch(`/api/${this.provider}/chat`, {
-      method: 'POST',
-      headers,
-      body,
-    });
-
-    if (!response.ok || !response.body) {
-      const errorData = await response.json().catch(() => ({ error: 'Unknown error occurred' }));
-      throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+  /**
+   * Get available models - delegates to base service (no key needed).
+   */
+  getAvailableModels?(): any[] {
+    if (this.baseService.getAvailableModels) {
+      return this.baseService.getAvailableModels();
     }
+    return [];
+  }
 
-    const reader = response.body.getReader();
-    const decoder = new TextDecoder();
+  /**
+   * Get default model - delegates to base service (no key needed).
+   */
+  getDefaultModel?(): string {
+    if (this.baseService.getDefaultModel) {
+      return this.baseService.getDefaultModel();
+    }
+    return '';
+  }
 
-    try {
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-
-        const sse = decoder.decode(value, { stream: true });
-        const lines = sse.split('\n\n').filter(line => line.startsWith('data:'));
-
-        for (const line of lines) {
-          const jsonStr = line.replace('data: ', '');
-          try {
-            const data = JSON.parse(jsonStr);
-            if (data.done) return;
-            if (data.error) throw new Error(data.error);
-
-            if (data.type === 'thought' || data.type === 'thought_start' || data.type === 'thought_end') {
-              onThoughtChunk(data.content);
-            } else if (data.type === 'answer') {
-              onAnswerChunk(data.content);
-            }
-          } catch (e) {
-            console.error('Failed to parse SSE chunk:', jsonStr);
-          }
-        }
-      }
-    } catch (error) {
-      console.error('Thinking stream failed:', error);
-      throw error;
-    } finally {
-      reader.releaseLock();
+  /**
+   * Set default model - delegates to base service (no key needed).
+   */
+  setDefaultModel?(model: string): void {
+    if (this.baseService.setDefaultModel) {
+      this.baseService.setDefaultModel(model);
     }
   }
 

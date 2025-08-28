@@ -85,40 +85,29 @@ export async function POST(request: NextRequest) {
       const encoder = new TextEncoder();
       const readableStream = new ReadableStream({
         async start(controller) {
-          try {
-            const streamOptions = { model, temperature, enableTools };
+          const send = (data: object) => controller.enqueue(encoder.encode(`data: ${JSON.stringify(data)}\n\n`));
 
+          try {
             if (enableThinking) {
-              if (files && files.length > 0) {
-                await (geminiService as any).streamMessageWithFilesAndThinking(
-                  messages,
-                  files,
-                  (thoughtChunk: string) => controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'thought', content: thoughtChunk })}\n\n`)),
-                  (answerChunk: string) => controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'answer', content: answerChunk })}\n\n`)),
-                  streamOptions
-                );
-              } else {
-                await geminiService.streamMessageWithThinking(
-                  messages,
-                  (thoughtChunk: string) => controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'thought', content: thoughtChunk })}\n\n`)),
-                  (answerChunk: string) => controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'answer', content: answerChunk })}\n\n`)),
-                  streamOptions
-                );
-              }
-            } else {
-              await geminiService.streamMessageWithFiles(
+              await geminiService.streamMessageWithFilesAndThinking!(
                 messages,
                 files,
-                (chunk: string) => controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'answer', content: chunk })}\n\n`)),
-                streamOptions
+                (thoughtChunk: string) => send({ type: 'thought', content: thoughtChunk }),
+                (answerChunk: string) => send({ type: 'answer', content: answerChunk }),
+                { model, temperature, enableTools }
+              );
+            } else {
+              await geminiService.streamMessageWithFiles!(
+                messages,
+                files,
+                (chunk: string) => send({ type: 'answer', content: chunk }),
+                { model, temperature, enableTools }
               );
             }
-            const doneData = `data: ${JSON.stringify({ done: true })}\n\n`;
-            controller.enqueue(encoder.encode(doneData));
+            send({ done: true });
             controller.close();
           } catch (error) {
-            const errorData = `data: ${JSON.stringify({ error: error instanceof Error ? error.message : 'Unknown streaming error' })}\n\n`;
-            controller.enqueue(encoder.encode(errorData));
+            send({ error: error instanceof Error ? error.message : 'Unknown streaming error' });
             controller.close();
           }
         },
