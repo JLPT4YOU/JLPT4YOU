@@ -54,17 +54,13 @@ export class GeminiUtils {
    */
   static handleApiError(error: any, operation: string): Error {
     if (error instanceof Error) {
-      const errorMessage = error.message.toLowerCase();
-      if (errorMessage.includes('api key')) {
+      if (error.message.includes('API key')) {
         return new Error(`Lỗi API key khi ${operation}. Vui lòng kiểm tra API key của bạn.`);
       }
-      if (errorMessage.includes('quota')) {
+      if (error.message.includes('quota')) {
         return new Error(`Đã vượt quá giới hạn API khi ${operation}. Vui lòng thử lại sau.`);
       }
-      if (errorMessage.includes('503') || errorMessage.includes('overloaded')) {
-        return new Error(`Model hiện đang quá tải. Vui lòng thử lại sau hoặc chọn model khác.`);
-      }
-      if (errorMessage.includes('model')) {
+      if (error.message.includes('model')) {
         return new Error(`Lỗi model khi ${operation}. Model có thể không khả dụng.`);
       }
       return new Error(`Lỗi khi ${operation}: ${error.message}`);

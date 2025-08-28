@@ -68,11 +68,16 @@ export class GeminiConfigHelper {
     };
 
     // Add thinking config if supported and enabled
-    if (options?.model && options?.enableThinking && getModelInfo(options.model)?.supportsThinking) {
-      configOptions.thinkingConfig = {
-        thinkingBudget: options?.thinkingConfig?.thinkingBudget ?? -1,
-        includeThoughts: options?.thinkingConfig?.includeThoughts ?? true,
-      };
+    if (options?.model && options?.enableThinking) {
+      const modelInfo = getModelInfo(options.model);
+      const supportsThinkingMode = modelInfo?.supportsThinking || false;
+
+      if (supportsThinkingMode) {
+        configOptions.thinkingConfig = {
+          thinkingBudget: options?.thinkingConfig?.thinkingBudget ?? -1,
+          includeThoughts: options?.thinkingConfig?.includeThoughts ?? true
+        };
+      }
     }
 
     return createGeminiConfig(configOptions);

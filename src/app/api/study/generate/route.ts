@@ -4,19 +4,6 @@ import { generateExercisePrompt } from '@/lib/study/exercise-prompts';
 // Remove external API imports - use local proxy endpoints instead
 import { z } from 'zod';
 import { devConsole } from '@/lib/console-override';
-import { supabaseAdmin } from '@/utils/supabase/admin';
-import { decrypt } from '@/lib/crypto-utils';
-
-const SECRET = process.env.APP_ENCRYPT_SECRET || '';
-
-function getAccessToken(req: NextRequest): string | null {
-  const authHeader = req.headers.get('authorization');
-  if (authHeader?.startsWith('Bearer ')) {
-    return authHeader.replace('Bearer ', '').trim();
-  }
-  const cookieToken = req.cookies.get('sb-access-token')?.value;
-  return cookieToken || null;
-}
 
 // Request validation schema
 const generateRequestSchema = z.object({
@@ -61,35 +48,29 @@ export async function POST(request: NextRequest) {
       tags: params.tags
     });
     
-    // Fetch Gemini API key securely on the server (no client decrypt)
-    const accessToken = getAccessToken(request);
-    if (!accessToken) {
-      throw new Error('Bạn chưa đăng nhập. Vui lòng đăng nhập để sử dụng AI.');
+    // Fetch Gemini API key from secure endpoint (Supabase-backed)
+    const origin = new URL(request.url).origin;
+    const authHeader = request.headers.get('authorization') || '';
+    const keyRes = await fetch(`${origin}/api/user/keys/gemini/decrypt`, {
+      headers: {
+        'Content-Type': 'application/json',
+        ...(authHeader ? { Authorization: authHeader } : {})
+      },
+      // Forward cookies as well in case auth uses cookies
+      // Next.js fetch in route handlers forwards cookies by default when same-origin
+    });
+
+    if (!keyRes.ok) {
+      const status = keyRes.status;
+      if (status === 401) throw new Error('Bạn chưa đăng nhập. Vui lòng đăng nhập để sử dụng AI.');
+      if (status === 404) throw new Error('Chưa tìm thấy Gemini API key. Vào Settings → API Keys để thêm key.');
+      throw new Error(`Không thể lấy Gemini API key (status ${status}).`);
     }
 
-    const { data: { user }, error: authError } = await supabaseAdmin.auth.getUser(accessToken);
-    if (authError || !user) {
-      throw new Error('Phiên đăng nhập không hợp lệ. Vui lòng đăng nhập lại.');
-    }
-
-    const { data: keyRow, error: keyError } = await (supabaseAdmin as any)
-      .from('user_api_keys')
-      .select('key_encrypted')
-      .eq('user_id', user.id)
-      .eq('provider', 'gemini')
-      .single();
-
-    if (keyError || !keyRow) {
-      throw new Error('Chưa tìm thấy Gemini API key. Vào Settings → API Keys để thêm key.');
-    }
-
-    if (!SECRET) {
-      throw new Error('Máy chủ chưa cấu hình APP_ENCRYPT_SECRET.');
-    }
-
-    const apiKey = decrypt(keyRow.key_encrypted, SECRET);
+    const keyData = await keyRes.json().catch(() => ({} as any));
+    const apiKey = keyData?.key as string | undefined;
     if (!apiKey) {
-      throw new Error('Giải mã Gemini API key thất bại. Vui lòng cấu hình lại key.');
+      throw new Error('Gemini API key rỗng hoặc không hợp lệ. Vào Settings → API Keys để cấu hình.');
     }
 
     // Call Gemini AI to generate questions with server-fetched key
