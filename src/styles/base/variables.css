@@ -1,4 +1,6 @@
 :root {
+  /* Ensure native UI paints in correct theme by default */
+  color-scheme: light;
   --radius: 0.75rem;
 
   /* ===== PROFESSIONAL UX/UI COLOR SYSTEM 2025 ===== */
@@ -127,6 +129,8 @@
 }
 
 .dark {
+  /* Ensure native UI paints in correct theme when dark */
+  color-scheme: dark;
   /* === DARK MODE - Material Design Standards === */
   /* Optimized for reduced eye strain and professional appearance */
 

@@ -132,33 +132,7 @@ class DatabaseCleanupTool {
     }
   }
 
-  /**
-   * Tạo backup trước khi cleanup
-   */
-  async createBackup() {
-    console.log('\n💾 Creating backup before cleanup...')
-    
-    try {
-      const { SupabaseBackupTool } = require('./backup/create-backup')
-      const backupTool = new SupabaseBackupTool()
-      
-      const result = await backupTool.createFullBackup({
-        schemaOnly: false,
-        dataOnly: false
-      })
 
-      console.log('✅ Backup created successfully:')
-      result.files.forEach(file => {
-        console.log(`   - ${path.basename(file)}`)
-      })
-
-      return result
-
-    } catch (error) {
-      console.error('❌ Backup creation failed:', error.message)
-      throw error
-    }
-  }
 
   /**
    * Thực hiện dry run - xem preview
@@ -223,8 +197,7 @@ class DatabaseCleanupTool {
       // throw new Error('Aborting: Table contains data')
     }
 
-    // 4. Tạo backup
-    await this.createBackup()
+
 
     // 5. Đọc và thực hiện cleanup SQL
     console.log('\n🔧 Executing cleanup SQL script...')

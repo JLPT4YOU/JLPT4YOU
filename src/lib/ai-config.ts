@@ -79,6 +79,12 @@ export interface AIService {
   isConfigured?: boolean;
   // Special method for user prompt generation without system prompt injection
   sendMessageWithoutSystemPrompt?(messages: AIMessage[], options?: AIServiceOptions): Promise<string>;
+
+  // Methods for model management, proxied by the secure wrapper
+  getAvailableModels?(): any[];
+  getDefaultModel?(): string;
+  setDefaultModel?(model: string): void;
+  modelSupportsAdvancedFeatures?(model: string): boolean;
 }
 
 // Base abstract class for AI services with common functionality

@@ -36,6 +36,27 @@ const MessageBubbleComponent: React.FC<MessageBubbleProps> = ({
   const [isEditing, setIsEditing] = useState(false);
   const [showActions, setShowActions] = useState(false);
 
+  // Track image load errors to render React fallback instead of manipulating DOM
+  const [imageErrorSet, setImageErrorSet] = useState<Set<string>>(new Set());
+  const markImageFailed = useCallback((key: string) => {
+    setImageErrorSet(prev => {
+      const next = new Set(prev);
+      next.add(key);
+      return next;
+    });
+  }, []);
+
+  const renderImageFallback = (file: any) => (
+    <div className="flex items-center gap-2 px-3 py-2 bg-background rounded-lg shadow-sm">
+      <div className="w-8 h-8 bg-gray-200 rounded flex items-center justify-center">
+        <span className="text-xs">🖼️</span>
+      </div>
+      <div>
+        <p className="text-xs font-medium truncate max-w-[120px]">{file?.name}</p>
+        <p className="text-xs text-destructive">Image unavailable</p>
+      </div>
+    </div>
+  );
   // Memoized computed values
   const isUser = useMemo(() => message.role === 'user', [message.role]);
 
@@ -64,7 +85,7 @@ const MessageBubbleComponent: React.FC<MessageBubbleProps> = ({
   );
 
   const messageClasses = useMemo(() => cn(
-    'flex gap-3 sm:gap-4 max-w-4xl mx-auto py-2 sm:py-3 group',
+    'flex gap-2 sm:gap-4 max-w-4xl mx-auto py-2 sm:py-3 group',
     isUser ? 'justify-end' : 'justify-start'
   ), [isUser]);
 
@@ -110,65 +131,42 @@ const MessageBubbleComponent: React.FC<MessageBubbleProps> = ({
             "mb-2 flex flex-wrap gap-2 mx-4",
             isUser ? "justify-end" : "justify-start"
           )}>
-            {message.files.map((file, index) => (
-              <div key={index} className="relative">
-                {file.type && file.type.startsWith('image/') ? (
-                  file.url ? (
-                    <img
-                      src={file.url}
-                      alt={file.name}
-                      className="max-w-[250px] max-h-[200px] object-cover rounded-lg shadow-sm cursor-pointer hover:shadow-md transition-shadow"
-                      onClick={() => {
-                        // Open image in new tab for full view
-                        if (file.url) {
-                          window.open(file.url, '_blank');
-                        }
-                      }}
-                      onError={(e) => {
-                        // Handle image load errors (e.g., persistent image not found)
-                        const target = e.target as HTMLImageElement;
-                        target.style.display = 'none';
+            {message.files.map((file, index) => {
+              const f: any = file as any;
+              const imageKey = (f?.url as string) || `${f?.name || 'image'}-${index}`;
+              const isImage = Boolean(f?.type && (f.type as string).startsWith('image/'));
+              const hadError = imageErrorSet.has(imageKey);
 
-                        // Show fallback UI
-                        const fallback = document.createElement('div');
-                        fallback.className = 'flex items-center gap-2 px-3 py-2 bg-background rounded-lg shadow-sm';
-                        fallback.innerHTML = `
-                          <div class="w-8 h-8 bg-gray-200 rounded flex items-center justify-center">
-                            <span class="text-xs">🖼️</span>
-                          </div>
-                          <div>
-                            <p class="text-xs font-medium truncate max-w-[120px]">${file.name}</p>
-                            <p class="text-xs text-destructive">Image unavailable</p>
-                          </div>
-                        `;
-                        target.parentNode?.appendChild(fallback);
-                      }}
-                    />
+              return (
+                <div key={imageKey} className="relative">
+                  {isImage ? (
+                    f?.url && !hadError ? (
+                      <img
+                        src={f.url}
+                        alt={f.name}
+                        className="max-w-[250px] max-h-[200px] object-cover rounded-lg shadow-sm cursor-pointer hover:shadow-md transition-shadow"
+                        onClick={() => {
+                          if (f.url) window.open(f.url, '_blank');
+                        }}
+                        onError={() => markImageFailed(imageKey)}
+                      />
+                    ) : (
+                      renderImageFallback(f)
+                    )
                   ) : (
-                    // Show fallback UI when no URL is available
                     <div className="flex items-center gap-2 px-3 py-2 bg-background rounded-lg shadow-sm">
                       <div className="w-8 h-8 bg-gray-200 rounded flex items-center justify-center">
-                        <span className="text-xs">🖼️</span>
+                        <span className="text-xs">📎</span>
                       </div>
                       <div>
-                        <p className="text-xs font-medium truncate max-w-[120px]">{file.name}</p>
-                        <p className="text-xs text-destructive">Image unavailable</p>
+                        <p className="text-xs font-medium truncate max-w-[120px]">{f?.name}</p>
+                        <p className="text-xs text-muted-foreground">{(f?.size / 1024).toFixed(1)} KB</p>
                       </div>
                     </div>
-                  )
-                ) : (
-                  <div className="flex items-center gap-2 px-3 py-2 bg-background rounded-lg shadow-sm">
-                    <div className="w-8 h-8 bg-gray-200 rounded flex items-center justify-center">
-                      <span className="text-xs">📎</span>
-                    </div>
-                    <div>
-                      <p className="text-xs font-medium truncate max-w-[120px]">{file.name}</p>
-                      <p className="text-xs text-muted-foreground">{(file.size / 1024).toFixed(1)} KB</p>
-                    </div>
-                  </div>
-                )}
-              </div>
-            ))}
+                  )}
+                </div>
+              );
+            })}
           </div>
         )}
 
@@ -207,10 +205,11 @@ const MessageBubbleComponent: React.FC<MessageBubbleProps> = ({
           <>
             {/* Message Bubble */}
             <div className={cn(
-              'rounded-2xl px-3 sm:px-4 py-2 sm:py-3',
+              'rounded-2xl py-2 sm:py-3',
+              // Tối ưu padding: user giữ padding lớn, assistant giảm padding trái để bớt thụt
               isUser
-                ? 'rounded-br-md shadow-sm max-w-[85%] sm:max-w-full'
-                : 'rounded-bl-md w-full'
+                ? 'px-3 sm:px-4 rounded-br-md shadow-sm max-w-[85%] sm:max-w-full'
+                : 'px-2 sm:px-3 rounded-bl-md w-full'
             )}
             onPointerDown={() => setShowActions(true)}
             style={{

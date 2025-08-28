@@ -6,10 +6,11 @@ import remarkGfm from 'remark-gfm'
 import remarkMath from 'remark-math'
 import rehypeKatex from 'rehype-katex'
 // remarkBreaks removed to fix unnecessary line breaks in lists
-import rehypeRaw from 'rehype-raw'
+// Note: rehype-raw removed to avoid rendering untrusted HTML from model output
 import { cn } from '@/lib/utils'
 import ShikiCodeBlock from './ShikiCodeBlock'
 import 'katex/dist/katex.min.css'
+
 // Type definitions for react-markdown components
 interface HeadingComponentProps {
   children?: React.ReactNode
@@ -18,8 +19,6 @@ interface HeadingComponentProps {
 interface ListComponentProps {
   children?: React.ReactNode
 }
-
-
 
 interface LinkComponentProps {
   href?: string
@@ -78,12 +77,14 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
           [remarkMath, { singleDollarTextMath: true }] // Enable single $ for inline math
         ]}
         rehypePlugins={[
-          rehypeRaw,
+
+
           [rehypeKatex, {
-            throwOnError: false, // Don't throw on KaTeX errors
+            throwOnError: false,
             errorColor: '#cc0000',
-            strict: false, // Allow more flexible parsing
-            trust: true, // Trust all input
+            // Giảm quyền để an toàn hơn
+            strict: 'warn',
+            trust: false,
             macros: {
               "\\RR": "\\mathbb{R}",
               "\\NN": "\\mathbb{N}",
@@ -151,12 +152,12 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
 
           // Lists - Fixed to prevent unnecessary line breaks
           ul: ({ children }: ListComponentProps) => (
-            <ul className="list-disc list-outside ml-6 mb-4 space-y-1 text-foreground">
+            <ul className="list-disc list-outside ml-3 sm:ml-4 md:ml-5 mb-3 space-y-1 text-foreground">
               {children}
             </ul>
           ),
           ol: ({ children }: ListComponentProps) => (
-            <ol className="list-decimal list-outside ml-6 mb-4 space-y-1 text-foreground">
+            <ol className="list-decimal list-outside ml-3 sm:ml-4 md:ml-5 mb-3 space-y-1 text-foreground">
               {children}
             </ol>
           ),

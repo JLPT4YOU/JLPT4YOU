@@ -6,18 +6,70 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getGroqService } from '@/lib/groq-service';
 import { createAIMessage } from '@/lib/ai-shared-utils';
+import { supabaseAdmin } from '@/utils/supabase/admin';
+import { decrypt } from '@/lib/crypto-utils';
+
+const SECRET = process.env.APP_ENCRYPT_SECRET || '';
+
+function getAccessToken(req: NextRequest): string | null {
+  const authHeader = req.headers.get('authorization');
+  if (authHeader?.startsWith('Bearer ')) {
+    return authHeader.replace('Bearer ', '').trim();
+  }
+  const cookieToken = req.cookies.get('sb-access-token')?.value;
+  return cookieToken || null;
+}
 
 export async function POST(request: NextRequest) {
   try {
+    // 1. Authenticate user and decrypt API key on the server
+    const accessToken = getAccessToken(request);
+    if (!accessToken) {
+      return NextResponse.json({ error: 'Unauthorized: No access token' }, { status: 401 });
+    }
+
+    const { data: { user }, error: authError } = await supabaseAdmin.auth.getUser(accessToken);
+    if (authError || !user) {
+      return NextResponse.json({ error: 'Unauthorized: Invalid token' }, { status: 401 });
+    }
+
+    const { data: row, error: dbError } = await (supabaseAdmin as any)
+      .from('user_api_keys')
+      .select('key_encrypted')
+      .eq('user_id', user.id)
+      .eq('provider', 'groq')
+      .single();
+
+    if (dbError || !row) {
+      return NextResponse.json({ error: 'Groq API key not found for user.' }, { status: 404 });
+    }
+
+    if (!SECRET) {
+      console.error('APP_ENCRYPT_SECRET is not configured on the server.');
+      return NextResponse.json({ error: 'Server encryption secret not configured.' }, { status: 500 });
+    }
+
+    let decryptedKey: string;
+    try {
+      decryptedKey = decrypt(row.key_encrypted, SECRET);
+    } catch (e) {
+      console.error('API key decryption failed:', e);
+      return NextResponse.json({ error: 'API key decryption failed on the server.' }, { status: 500 });
+    }
+
+    if (!decryptedKey) {
+      return NextResponse.json({ error: 'Decrypted key is empty or invalid.' }, { status: 500 });
+    }
+
+    // 2. Process the chat request using the decrypted key
     const body = await request.json();
-    const { 
-      messages, 
-      model, 
+    const {
+      messages,
+      model,
       temperature,
       topP,
       stop,
       stream = false,
-      // Advanced features for GPT-OSS models
       reasoning_effort,
       reasoning_format,
       enable_code_interpreter,
@@ -25,15 +77,11 @@ export async function POST(request: NextRequest) {
     } = body;
 
     if (!messages || !Array.isArray(messages)) {
-      return NextResponse.json(
-        { error: 'Messages array is required' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Messages array is required' }, { status: 400 });
     }
 
-    const groqService = getGroqService();
-    
-    // Build options with advanced features
+    const groqService = getGroqService(decryptedKey);
+
     const options = {
       model,
       temperature,
@@ -45,11 +93,10 @@ export async function POST(request: NextRequest) {
       enable_browser_search
     };
 
-    // Handle streaming requests
+    // 3. Handle streaming or regular requests
     if (stream) {
       const encoder = new TextEncoder();
-      
-      const stream = new ReadableStream({
+      const readableStream = new ReadableStream({
         async start(controller) {
           try {
             await groqService.streamMessage(
@@ -60,22 +107,18 @@ export async function POST(request: NextRequest) {
               },
               options
             );
-            
-            // Send completion signal
             const doneData = `data: ${JSON.stringify({ done: true })}\n\n`;
             controller.enqueue(encoder.encode(doneData));
             controller.close();
           } catch (error) {
-            const errorData = `data: ${JSON.stringify({ 
-              error: error instanceof Error ? error.message : 'Unknown error' 
-            })}\n\n`;
+            const errorData = `data: ${JSON.stringify({ error: error instanceof Error ? error.message : 'Unknown streaming error' })}\n\n`;
             controller.enqueue(encoder.encode(errorData));
             controller.close();
           }
         },
       });
 
-      return new Response(stream, {
+      return new Response(readableStream, {
         headers: {
           'Content-Type': 'text/event-stream',
           'Cache-Control': 'no-cache',
@@ -85,14 +128,9 @@ export async function POST(request: NextRequest) {
     }
 
     // Handle regular requests
-    let response: string;
-    
-    // Check if model supports advanced features
     if (groqService.modelSupportsAdvancedFeatures(model || groqService.getDefaultModel())) {
-      // Use advanced message method for GPT-OSS models
       const advancedResponse = await groqService.sendAdvancedMessage(messages, options);
-      
-      return NextResponse.json({ 
+      return NextResponse.json({
         message: createAIMessage(advancedResponse.content, 'assistant'),
         reasoning: advancedResponse.reasoning,
         executed_tools: advancedResponse.executed_tools,
@@ -100,10 +138,8 @@ export async function POST(request: NextRequest) {
         advanced_features: true
       });
     } else {
-      // Use regular method for other models
-      response = await groqService.sendMessage(messages, options);
-      
-      return NextResponse.json({ 
+      const response = await groqService.sendMessage(messages, options);
+      return NextResponse.json({
         message: createAIMessage(response, 'assistant'),
         model: model || groqService.getDefaultModel(),
         advanced_features: false
@@ -113,9 +149,9 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Groq API route error:', error);
     return NextResponse.json(
-      { 
+      {
         error: error instanceof Error ? error.message : 'Internal server error',
-        details: process.env.NODE_ENV === 'development' ? error : undefined
+        details: process.env.NODE_ENV === 'development' ? String(error) : undefined
       },
       { status: 500 }
     );

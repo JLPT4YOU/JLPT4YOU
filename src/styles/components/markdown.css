@@ -20,10 +20,10 @@
   margin: 0;
 }
 
-/* Ensure list markers stay with content */
+/* Ensure list markers stay with content - avoid double indentation (we handle margin in component) */
 .markdown-content ol,
 .markdown-content ul {
-  padding-left: 1.5rem;
+  padding-left: 0; /* reduce left padding to maximize content width */
 }
 
 .markdown-content ol li::marker,
@@ -85,11 +85,21 @@
   white-space: pre;
 }
 
-/* Additional override for any code elements */
-.markdown-content code {
+/* Code elements */
+/* Keep non-wrapping only for code inside pre (code blocks) */
+.markdown-content pre code {
   border: none !important;
   white-space: pre;
   word-break: normal;
+}
+
+/* Inline code (not inside pre): allow wrapping on mobile to avoid horizontal scroll */
+.markdown-content :not(pre) > code {
+  border: none !important;
+  /* Preserve spaces and allow wrapping */
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-wrap: anywhere;
 }
 
 .markdown-content pre::-webkit-scrollbar {
@@ -231,6 +241,10 @@
   word-break: normal;
   /* Smooth scrolling */
   scroll-behavior: smooth;
+  /* Reduce flicker/jank by isolating paint */
+  contain: paint;
+  backface-visibility: hidden;
+  transform: translateZ(0);
 }
 
 .shiki-code-block pre {

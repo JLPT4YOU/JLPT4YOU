@@ -6,6 +6,7 @@ import { useTheme } from 'next-themes'
 import { Copy, Check } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
+import DOMPurify from 'dompurify'
 
 interface ShikiCodeBlockProps {
   children: string
@@ -24,7 +25,7 @@ const ShikiCodeBlock: React.FC<ShikiCodeBlockProps> = ({
   inline,
   isStreaming
 }) => {
-  const { theme } = useTheme()
+  const { resolvedTheme } = useTheme()
   const [copied, setCopied] = useState(false)
   const [highlightedHtml, setHighlightedHtml] = useState<string>('')
   const [isLoading, setIsLoading] = useState(true)
@@ -44,8 +45,8 @@ const ShikiCodeBlock: React.FC<ShikiCodeBlockProps> = ({
 
   // Tạo cache key duy nhất
   const cacheKey = useMemo(() => {
-    return `${children}-${language}-${theme}-${shouldRenderInline ? 'inline' : 'block'}`
-  }, [children, language, theme, shouldRenderInline])
+    return `${children}-${language}-${resolvedTheme}-${shouldRenderInline ? 'inline' : 'block'}`
+  }, [children, language, resolvedTheme, shouldRenderInline])
 
   const handleCopy = async () => {
     try {
@@ -65,6 +66,12 @@ const ShikiCodeBlock: React.FC<ShikiCodeBlockProps> = ({
       return
     }
 
+    // Đợi theme được resolve để tránh double-render gây nháy hình
+    if (!resolvedTheme && !shouldRenderInline) {
+      setIsLoading(true)
+      return
+    }
+
     const highlightCode = async () => {
       // Kiểm tra cache trước
       if (codeCache.has(cacheKey)) {
@@ -77,7 +84,7 @@ const ShikiCodeBlock: React.FC<ShikiCodeBlockProps> = ({
         setIsLoading(true)
 
         // Sử dụng Min themes cho dark/light mode
-        const currentTheme = theme === 'dark' ? 'min-dark' : 'min-light'
+        const currentTheme = resolvedTheme === 'dark' ? 'min-dark' : 'min-light'
 
         const html = await codeToHtml(children, {
           lang: language || 'text',
@@ -85,9 +92,12 @@ const ShikiCodeBlock: React.FC<ShikiCodeBlockProps> = ({
           structure: 'inline' // Sử dụng inline structure để tương thích với React
         })
 
-        // Lưu vào cache
-        codeCache.set(cacheKey, html)
-        setHighlightedHtml(html)
+        // Sanitize output trước khi render để tránh XSS
+        const safeHtml = DOMPurify.sanitize(html, { USE_PROFILES: { html: true } })
+
+        // Lưu vào cache (đã sanitize)
+        codeCache.set(cacheKey, safeHtml)
+        setHighlightedHtml(safeHtml)
       } catch (error) {
         console.error('Shiki highlighting error:', error)
         // Fallback về plain text với basic styling nếu có lỗi
@@ -99,7 +109,7 @@ const ShikiCodeBlock: React.FC<ShikiCodeBlockProps> = ({
     }
 
     highlightCode()
-  }, [children, language, theme, cacheKey, isStreaming, shouldRenderInline])
+  }, [children, language, resolvedTheme, cacheKey, isStreaming, shouldRenderInline])
 
   // Nếu là inline và có vẻ không phải code → render như text thường
   if (inline) {
@@ -128,12 +138,20 @@ const ShikiCodeBlock: React.FC<ShikiCodeBlockProps> = ({
     return (
       <code
         className={cn(
-          "relative rounded px-1.5 py-0.5 font-mono text-sm",
+          "relative rounded px-1.5 py-0.5 font-mono text-sm align-baseline inline-block max-w-full",
           "bg-muted text-muted-foreground",
           "border border-border/50",
-          "whitespace-nowrap"
+          // Mobile-first: allow wrapping long inline code to prevent horizontal scroll
+          "whitespace-pre-wrap break-words",
+          // On medium screens and up, keep as a single line if it fits
+          "md:whitespace-nowrap"
         )}
-        style={{ fontSize: 'calc(var(--chat-font-size, 16px) * 0.875)' }}
+        style={{
+          fontSize: 'calc(var(--chat-font-size, 16px) * 0.875)',
+          // Ensure really long tokens can still break (e.g., long URLs, base64, tokens)
+          overflowWrap: 'anywhere' as any,
+          wordBreak: 'break-word' as any
+        }}
       >
         {children}
       </code>
@@ -177,17 +195,39 @@ const ShikiCodeBlock: React.FC<ShikiCodeBlockProps> = ({
     )
   }
 
-  // Loading state
-  if (isLoading) {
+  // Loading state: keep plain pre fallback to avoid flicker/jump while highlighting
+  if (isLoading && !shouldRenderInline) {
     return (
-      <div className="relative group my-4">
-        <div className={cn(
-          "rounded-lg border border-border/50 bg-muted/30 p-4",
-          "animate-pulse"
-        )}>
-          <div className="h-4 bg-muted-foreground/20 rounded w-3/4 mb-2"></div>
-          <div className="h-4 bg-muted-foreground/20 rounded w-1/2"></div>
-        </div>
+      <div className="relative group my-4 w-full max-w-full">
+        {/* Language label */}
+        {language && language !== 'text' && (
+          <div className="absolute top-2 left-3 z-10">
+            <span className="text-xs text-muted-foreground bg-background/80 px-2 py-1 rounded">
+              {language}
+            </span>
+          </div>
+        )}
+        <pre
+          className={cn(
+            "overflow-x-auto overflow-y-hidden",
+            "rounded-lg border border-border/50",
+            "bg-muted/30"
+          )}
+          style={{
+            fontSize: 'calc(var(--chat-font-size, 16px) * 0.875)',
+            lineHeight: '1.5',
+            background: 'var(--code-block-bg)',
+            border: '1px solid var(--code-block-border)',
+            borderRadius: 'var(--code-block-radius)',
+            padding: language && language !== 'text' ? '2.5rem 1rem 1rem 1rem' : '1rem',
+            fontFamily: 'ui-monospace, SFMono-Regular, "SF Mono", Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
+            maxWidth: '100%',
+            wordBreak: 'normal',
+            whiteSpace: 'pre'
+          }}
+        >
+          <code>{children}</code>
+        </pre>
       </div>
     )
   }

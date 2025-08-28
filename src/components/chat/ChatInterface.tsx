@@ -170,14 +170,17 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
         className="flex-1 overflow-y-auto scrollbar-thin"
       >
         {messages.length > 0 && (
-          <div className="app-container app-section space-y-2">
+          <div className="app-section space-y-2 px-2 sm:px-5 md:px-6">
             <div className="space-y-1">
               {messages.map((message, index) => {
                 // Check if there are subsequent messages after this one
                 const hasSubsequentMessages = index < messages.length - 1;
+                // Reduce animation for messages likely containing code blocks to avoid flicker
+                const likelyHasCode = typeof message.content === 'string' && message.content.includes('```');
+                const wrapperClass = cn(likelyHasCode ? '' : 'animate-message-in');
 
                 return (
-                  <div key={message.id || index} className="animate-message-in">
+                  <div key={message.id || index} className={wrapperClass}>
                     <MessageBubble
                       message={message}
                       currentProvider={currentProvider}
