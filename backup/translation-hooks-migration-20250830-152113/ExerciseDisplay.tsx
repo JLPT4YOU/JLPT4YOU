@@ -245,21 +245,21 @@ export function ExerciseDisplay({
                   {/* Correct Answer Explanation */}
                   <div>
                     <h4 className="font-bold text-green-600 dark:text-green-400 mb-2">✓ Đáp án đúng:</h4>
-                    <RenderHTML content={question.explanation.correct_answer} as="div" className="text-base text-foreground" />
+                    <RenderHTML content={question.explanation.correct_answer} as="p" className="text-base text-foreground" />
                   </div>
 
                   {/* Translation */}
                   {question.explanation.translation && (
                     <div>
                       <h4 className="font-bold text-cyan-600 dark:text-cyan-400 mb-2">🌐 Dịch nghĩa:</h4>
-                      <RenderHTML content={question.explanation.translation} as="div" className="text-base text-foreground font-medium" />
+                      <RenderHTML content={question.explanation.translation} as="p" className="text-base text-foreground font-medium" />
                     </div>
                   )}
 
                   {/* Why Correct */}
                   <div>
                     <h4 className="font-bold text-blue-600 dark:text-blue-400 mb-2">📚 Tại sao đúng:</h4>
-                    <RenderHTML content={question.explanation.why_correct} as="div" className="text-base text-foreground" />
+                    <RenderHTML content={question.explanation.why_correct} as="p" className="text-base text-foreground" />
                   </div>
 
                   {/* Wrong Answers Explanation */}
@@ -289,7 +289,7 @@ export function ExerciseDisplay({
                   {question.explanation.additional_notes && (
                     <div>
                       <h4 className="font-bold text-purple-600 dark:text-purple-400 mb-2">💡 Ghi chú thêm:</h4>
-                      <RenderHTML content={question.explanation.additional_notes} as="div" className="text-base text-foreground" />
+                      <RenderHTML content={question.explanation.additional_notes} as="p" className="text-base text-foreground" />
                     </div>
                   )}
 
@@ -297,7 +297,7 @@ export function ExerciseDisplay({
                   {question.explanation.example_usage && (
                     <div>
                       <h4 className="font-bold text-orange-600 dark:text-orange-400 mb-2">📝 Ví dụ sử dụng:</h4>
-                      <RenderHTML content={question.explanation.example_usage} as="div" className="text-base text-foreground italic" />
+                      <RenderHTML content={question.explanation.example_usage} as="p" className="text-base text-foreground italic" />
                     </div>
                   )}
                 </div>

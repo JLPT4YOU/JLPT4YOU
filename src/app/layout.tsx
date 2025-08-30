@@ -119,8 +119,8 @@ export default function RootLayout({
         <link rel="shortcut icon" href="/graduation-cap-icon.svg" />
 
         {/* Theme color tự động điều chỉnh theo giao diện sáng/tối */}
-        <meta name="theme-color" content="#000000" media="(prefers-color-scheme: light)" />
-        <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: dark)" />
+        <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+        <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)" />
 
         {/* Force favicon refresh */}
         <meta name="msapplication-TileColor" content="#000000" />

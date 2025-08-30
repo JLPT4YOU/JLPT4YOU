@@ -214,7 +214,7 @@ export function FlashcardContainer({
             className={cn(
               "p-2 rounded-full transition-all duration-200",
               isPlaying
-                ? "bg-red-600 hover:bg-red-700 text-white"
+                ? "bg-destructive text-destructive-foreground hover-destructive"
                 : "bg-muted hover:bg-muted/80 text-foreground"
             )}
             title={isPlaying ? 'Tạm dừng' : 'Tự động phát'}

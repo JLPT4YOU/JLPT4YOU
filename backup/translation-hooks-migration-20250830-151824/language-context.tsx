@@ -22,6 +22,12 @@ const LANGUAGE_COOKIE_KEY = 'preferred-language'
 // Cache for loaded translations
 const translationCache = new Map<Language, TranslationData>()
 
+// Clear cache in development
+if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
+  // Clear cache on hot reload
+  translationCache.clear()
+}
+
 // Context interface
 interface LanguageContextValue {
   language: Language
@@ -167,8 +173,11 @@ function LanguageProviderInner({
   
   // Load translations for a specific language
   const loadTranslationsForLanguage = useCallback(async (language: Language): Promise<TranslationData> => {
-    // Check cache first
-    if (translationCache.has(language)) {
+    // Skip cache in development
+    const isDevelopment = process.env.NODE_ENV === 'development'
+    
+    // Check cache first (skip in development)
+    if (!isDevelopment && translationCache.has(language)) {
       return translationCache.get(language)!
     }
     

@@ -223,7 +223,7 @@ function Content({ language, translations, t }: ContentProps) {
             initialSettings={{
               autoFlip: false,
               audioEnabled: true,
-              shuffleCards: true,
+              shuffleCards: false,
               showHints: true,
               spacedRepetition: true
             }}

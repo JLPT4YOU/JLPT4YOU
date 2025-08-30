@@ -85,11 +85,13 @@
   white-space: pre;
 }
 
-/* Additional override for any code elements */
-.markdown-content code {
+/* Inline code should wrap on small screens to avoid horizontal scroll */
+/* Keep block code (inside pre) non-wrapping, but allow inline code to wrap */
+.markdown-content :not(pre) > code {
   border: none !important;
-  white-space: pre;
-  word-break: normal;
+  white-space: pre-wrap; /* allow wrapping and preserve spaces */
+  word-break: break-word; /* break long tokens */
+  overflow-wrap: anywhere; /* as a last resort, break anywhere */
 }
 
 .markdown-content pre::-webkit-scrollbar {
@@ -157,6 +159,25 @@
   color: var(--primary);
   opacity: 0.5;
 }
+
+
+/* Reduce list indentation on mobile for a tighter layout */
+@media (max-width: 640px) {
+  .markdown-content ul,
+  .markdown-content ol {
+    padding-left: 0.75rem !important; /* ~12px */
+    margin-left: 0 !important;
+  }
+
+  /* Slight indent for nested lists */
+  .markdown-content li > ul,
+  .markdown-content li > ol {
+    padding-left: 0.75rem !important;
+    margin-left: 0 !important;
+  }
+}
+
+
 
 /* Mobile responsive adjustments */
 @media (max-width: 640px) {

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Star } from 'lucide-react'
 import { FlashcardData, CardState, UserAction } from './flashcard-types'
 import { cn } from '@/lib/utils'
@@ -51,11 +51,27 @@ export function FlashcardItem({
   }, [card.id])
 
   // Flip when external trigger changes (for auto-play)
+  // Use a ref to track the previous trigger value to avoid race conditions
+  const prevTriggerRef = useRef<number | undefined>(externalFlipTrigger)
+  const cardIdRef = useRef<string>(card.id)
+
   useEffect(() => {
     if (!isActive || externalFlipTrigger === undefined) return
-    // Chỉ flip khi tick thay đổi (không phụ thuộc vào cardState để tránh flip ngay khi Next)
-    if (cardState === 'front') handleFlip()
-  }, [externalFlipTrigger, isActive])
+
+    // Reset trigger tracking when card changes to prevent stale triggers from previous card
+    if (cardIdRef.current !== card.id) {
+      prevTriggerRef.current = externalFlipTrigger
+      cardIdRef.current = card.id
+      return
+    }
+
+    // Only flip if the trigger actually changed and we're showing the front
+    if (externalFlipTrigger !== prevTriggerRef.current && cardState === 'front') {
+      handleFlip()
+    }
+
+    prevTriggerRef.current = externalFlipTrigger
+  }, [externalFlipTrigger, isActive, cardState, card.id])
 
   const handleFlip = () => {
     if (isFlipping) return

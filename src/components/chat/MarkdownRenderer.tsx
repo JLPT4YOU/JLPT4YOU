@@ -151,12 +151,12 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
 
           // Lists - Fixed to prevent unnecessary line breaks
           ul: ({ children }: ListComponentProps) => (
-            <ul className="list-disc list-outside ml-6 mb-4 space-y-1 text-foreground">
+            <ul className="list-disc list-inside ml-2 sm:list-outside sm:ml-5 mb-4 space-y-1 text-foreground">
               {children}
             </ul>
           ),
           ol: ({ children }: ListComponentProps) => (
-            <ol className="list-decimal list-outside ml-6 mb-4 space-y-1 text-foreground">
+            <ol className="list-decimal list-inside ml-2 sm:list-outside sm:ml-5 mb-4 space-y-1 text-foreground">
               {children}
             </ol>
           ),

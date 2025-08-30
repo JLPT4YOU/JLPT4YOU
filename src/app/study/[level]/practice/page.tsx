@@ -61,10 +61,10 @@ function Content({ language, translations, t }: ContentProps) {
                 {/* Vocabulary Card */}
                 <Link
                   href={`/study/${level}/practice/vocabulary`}
-                  className="block w-full max-w-[320px] group focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-2xl"
+                  className="block w-full max-w-[320px] h-full group focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-2xl"
                   aria-label={`${t('study.vocabulary.title')} ${level.toUpperCase()}`}
                 >
-                  <article className="bg-muted/10 rounded-2xl p-6 md:p-8 text-center transition-all duration-200 hover:bg-muted/30 border border-border/20 group-hover:scale-105">
+                  <article className="bg-muted/10 rounded-2xl p-6 md:p-8 text-center transition-all duration-200 hover:bg-muted/30 border border-border/20 group-hover:scale-105 h-full flex flex-col justify-center min-h-[200px]">
                     <div className="w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-4 group-hover:scale-105 transition-transform duration-200 bg-primary/10 group-hover:bg-primary/20">
                       <BookOpen className="w-8 h-8 text-primary" />
                     </div>
@@ -76,10 +76,10 @@ function Content({ language, translations, t }: ContentProps) {
                 {/* Grammar Card */}
                 <Link
                   href={`/study/${level}/practice/grammar`}
-                  className="block w-full max-w-[320px] group focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-2xl"
+                  className="block w-full max-w-[320px] h-full group focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-2xl"
                   aria-label={`${t('study.grammar.title')} ${level.toUpperCase()}`}
                 >
-                  <article className="bg-muted/10 rounded-2xl p-6 md:p-8 text-center transition-all duration-200 hover:bg-muted/30 border border-border/20 group-hover:scale-105">
+                  <article className="bg-muted/10 rounded-2xl p-6 md:p-8 text-center transition-all duration-200 hover:bg-muted/30 border border-border/20 group-hover:scale-105 h-full flex flex-col justify-center min-h-[200px]">
                     <div className="w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-4 group-hover:scale-105 transition-transform duration-200 bg-primary/10 group-hover:bg-primary/20">
                       <Target className="w-8 h-8 text-primary" />
                     </div>
@@ -91,10 +91,10 @@ function Content({ language, translations, t }: ContentProps) {
                 {/* Reading Card */}
                 <Link
                   href={`/study/${level}/practice/reading`}
-                  className="block w-full max-w-[320px] group focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-2xl"
+                  className="block w-full max-w-[320px] h-full group focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-2xl"
                   aria-label={`${t('study.practice.types.reading')} ${level.toUpperCase()}`}
                 >
-                  <article className="bg-muted/10 rounded-2xl p-6 md:p-8 text-center transition-all duration-200 hover:bg-muted/30 border border-border/20 group-hover:scale-105">
+                  <article className="bg-muted/10 rounded-2xl p-6 md:p-8 text-center transition-all duration-200 hover:bg-muted/30 border border-border/20 group-hover:scale-105 h-full flex flex-col justify-center min-h-[200px]">
                     <div className="w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-4 group-hover:scale-105 transition-transform duration-200 bg-primary/10 group-hover:bg-primary/20">
                       <FileText className="w-8 h-8 text-primary" />
                     </div>

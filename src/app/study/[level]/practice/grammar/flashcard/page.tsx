@@ -221,7 +221,7 @@ function Content() {
               initialSettings={{
                 autoFlip: false,
                 audioEnabled: false, // Grammar doesn't need audio by default
-                shuffleCards: true,
+                shuffleCards: false,
                 showHints: true,
                 spacedRepetition: true
               }}

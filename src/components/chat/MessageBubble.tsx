@@ -207,9 +207,9 @@ const MessageBubbleComponent: React.FC<MessageBubbleProps> = ({
           <>
             {/* Message Bubble */}
             <div className={cn(
-              'rounded-2xl px-3 sm:px-4 py-2 sm:py-3',
+              'rounded-2xl px-2 sm:px-4 py-2 sm:py-3',
               isUser
-                ? 'rounded-br-md shadow-sm max-w-[85%] sm:max-w-full'
+                ? 'rounded-br-md shadow-sm max-w-[90%] sm:max-w-full'
                 : 'rounded-bl-md w-full'
             )}
             onPointerDown={() => setShowActions(true)}
