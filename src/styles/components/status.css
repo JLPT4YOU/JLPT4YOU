@@ -1,0 +1,58 @@
+/* Status Colors - Monochrome System */
+/* Replaces hardcode colors with design system variables */
+
+/* === EXAM STATUS COLORS === */
+
+/* Correct Answer Status - Only used classes kept */
+.status-correct-solid {
+  @apply bg-success text-success-foreground;
+}
+
+/* Removed unused status classes:
+   - status-correct, status-correct-outline (0% usage)
+   - status-incorrect, status-incorrect-solid, status-incorrect-outline (0% usage)
+   - status-flagged, status-flagged-solid, status-flagged-outline (0% usage)
+   - status-neutral, status-neutral-solid (0% usage)
+*/
+
+/* === PROVIDER STATUS COLORS === */
+/* Removed unused provider classes - 0% usage rate */
+
+/* === INTERACTIVE STATUS COLORS === */
+
+/* Success State (for test results, operations) */
+.interactive-success {
+  @apply bg-success/10 text-success border-success/20 hover:bg-success/20 transition-colors;
+}
+
+/* Error State (for test results, operations) */
+.interactive-error {
+  @apply bg-destructive/10 text-destructive border-destructive/20 hover:bg-destructive/20 transition-colors;
+}
+
+/* Info State (for neutral information) */
+.interactive-info {
+  @apply bg-info/10 text-info border-info/20 hover:bg-info/20 transition-colors;
+}
+
+/* === ICON STATUS COLORS === */
+
+/* Status icons with consistent colors */
+.icon-correct {
+  @apply text-success;
+}
+
+.icon-incorrect {
+  @apply text-destructive;
+}
+
+.icon-flagged {
+  @apply text-warning;
+}
+
+.icon-neutral {
+  @apply text-muted-foreground;
+}
+
+/* === BADGE STATUS COLORS === */
+/* Removed unused badge classes - 0% usage rate */

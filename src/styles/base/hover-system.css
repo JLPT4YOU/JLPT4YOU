@@ -1,0 +1,235 @@
+/* ===== UNIFIED HOVER & FOCUS SYSTEM ===== */
+/* Centralized hover and focus states to prevent conflicts */
+
+/* === BASE INTERACTIVE STATES === */
+
+/* Focus visible for keyboard navigation */
+.focus-visible:focus-visible {
+  outline: var(--outline-width) solid hsl(var(--primary));
+  outline-offset: var(--outline-offset);
+}
+
+/* Remove focus for mouse users (handled by focus-fix.css) */
+.focus-mouse-none:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* === BUTTON HOVER STATES === */
+/* Following user preferences: subtle brightness changes, not dramatic color changes */
+
+/* Primary button hover - subtle brightness increase */
+.hover-primary {
+  transition: filter var(--duration-base), transform var(--duration-base);
+}
+.hover-primary:hover:not(:disabled) {
+  filter: brightness(1.1);
+}
+
+/* Secondary button hover - subtle brightness increase */
+.hover-secondary {
+  transition: filter var(--duration-base), transform var(--duration-base);
+}
+.hover-secondary:hover:not(:disabled) {
+  filter: brightness(1.1);
+}
+
+/* Destructive button hover - subtle brightness increase */
+.hover-destructive {
+  transition: filter var(--duration-base), transform var(--duration-base);
+}
+.hover-destructive:hover:not(:disabled) {
+  filter: brightness(1.1);
+}
+
+/* Outline button hover - subtle background tint */
+.hover-outline {
+  transition: filter var(--duration-base), background-color var(--duration-base);
+}
+.hover-outline:hover:not(:disabled) {
+  background-color: hsl(var(--accent) / 0.05);
+  filter: brightness(1.05);
+}
+
+/* Ghost button hover - very subtle background */
+.hover-ghost {
+  transition: background-color var(--duration-base);
+}
+.hover-ghost:hover:not(:disabled) {
+  background-color: hsl(var(--muted) / 0.3);
+}
+
+/* Muted button hover - subtle brightness */
+.hover-muted {
+  transition: filter var(--duration-base);
+}
+.hover-muted:hover:not(:disabled) {
+  filter: brightness(1.1);
+}
+
+/* === LINK HOVER STATES === */
+
+.hover-link {
+  transition: colors var(--duration-base);
+}
+.hover-link:hover {
+  color: hsl(var(--primary));
+}
+
+.hover-underline {
+  transition: all var(--duration-base);
+  text-decoration: none;
+}
+.hover-underline:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+/* === CARD HOVER STATES === */
+/* Subtle lift and shadow effects */
+
+.hover-card {
+  transition: transform var(--duration-moderate), box-shadow var(--duration-moderate), filter var(--duration-moderate);
+}
+.hover-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-hover);
+  filter: brightness(1.02);
+}
+
+.hover-scale {
+  transition: transform var(--duration-base);
+}
+.hover-scale:hover {
+  transform: scale(1.03);
+}
+
+.hover-scale-sm {
+  transition: transform var(--duration-base);
+}
+.hover-scale-sm:hover {
+  transform: scale(1.02);
+}
+
+/* === ICON HOVER STATES === */
+
+.hover-icon {
+  transition: all var(--duration-base);
+}
+.hover-icon:hover {
+  transform: translateY(-1px);
+  color: hsl(var(--primary));
+}
+
+.hover-icon-rotate {
+  transition: transform var(--duration-moderate);
+}
+.hover-icon-rotate:hover {
+  transform: rotate(90deg);
+}
+
+/* === BRIGHTNESS HOVER EFFECTS === */
+/* Standardized brightness effects following user preferences */
+
+.hover-brightness {
+  transition: filter var(--duration-base);
+}
+.hover-brightness:hover {
+  filter: brightness(1.1);
+}
+
+.hover-brightness-subtle {
+  transition: filter var(--duration-base);
+}
+.hover-brightness-subtle:hover {
+  filter: brightness(1.05);
+}
+
+.hover-dim {
+  transition: filter var(--duration-base);
+}
+.hover-dim:hover {
+  filter: brightness(0.95);
+}
+
+/* === OPACITY HOVER EFFECTS === */
+
+.hover-opacity-80:hover {
+  opacity: var(--opacity-80);
+}
+
+.hover-opacity-90:hover {
+  opacity: var(--opacity-90);
+}
+
+/* === FOCUS RING STYLES === */
+
+.focus-ring {
+  transition: all var(--duration-base);
+}
+.focus-ring:focus-visible {
+  outline: var(--outline-width) solid hsl(var(--primary));
+  outline-offset: var(--outline-offset);
+}
+
+.focus-ring-accent:focus-visible {
+  outline: var(--outline-width) solid hsl(var(--accent));
+  outline-offset: var(--outline-offset);
+}
+
+/* === DISABLED STATES === */
+
+.disabled:disabled,
+[disabled] {
+  opacity: var(--opacity-50);
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* === ACTIVE/PRESSED STATES === */
+
+.active-scale:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.active-brightness:active:not(:disabled) {
+  filter: brightness(0.95);
+}
+
+/* === TRANSITION UTILITIES === */
+
+.transition-fast {
+  transition: all var(--duration-fast);
+}
+
+.transition-base {
+  transition: all var(--duration-base);
+}
+
+.transition-slow {
+  transition: all var(--duration-moderate);
+}
+
+.transition-colors-only {
+  transition: color var(--duration-base), background-color var(--duration-base), border-color var(--duration-base);
+}
+
+.transition-transform-only {
+  transition: transform var(--duration-base);
+}
+
+/* === GROUP HOVER EFFECTS === */
+
+.group-hover-visible {
+  opacity: var(--opacity-0);
+  transition: opacity var(--duration-base);
+}
+.group:hover .group-hover-visible {
+  opacity: var(--opacity-100);
+}
+
+.group-hover-scale {
+  transition: transform var(--duration-base);
+}
+.group:hover .group-hover-scale {
+  transform: scale(1.05);
+}

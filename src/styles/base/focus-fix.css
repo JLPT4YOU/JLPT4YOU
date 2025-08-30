@@ -1,0 +1,78 @@
+/* ===== FIX FOCUS STATE ISSUES ===== */
+/* Remove annoying focus styles after mouse click, but keep for keyboard navigation */
+
+/* Remove focus outline for mouse users globally */
+:focus:not(:focus-visible) {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Remove focus visual effects for mouse users (but keep background colors) */
+button:focus:not(:focus-visible),
+a:focus:not(:focus-visible),
+[role="button"]:focus:not(:focus-visible),
+.focus-button:focus:not(:focus-visible),
+.focus-ring:focus:not(:focus-visible) {
+  /* Only remove outline and box-shadow, not background colors */
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Keep button colors intact on focus - no override needed */
+/* Buttons should maintain their variant colors when focused */
+
+/* Fix for input elements */
+input:focus:not(:focus-visible),
+textarea:focus:not(:focus-visible),
+select:focus:not(:focus-visible) {
+  outline: none !important;
+  box-shadow: none !important;
+  border-color: var(--border) !important;
+}
+
+/* Keep subtle focus indicators for keyboard navigation only */
+:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+/* For buttons, use a more subtle focus indicator */
+button:focus-visible,
+[role="button"]:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+/* Completely disable focus styles for specific interactive elements */
+.no-focus-effect:focus,
+.no-focus-effect:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+  background-color: inherit !important;
+  border-color: inherit !important;
+}
+
+/* Fix for hover state persisting after click */
+/* REMOVED: This rule was causing buttons to not update immediately on click
+   It forced background-color: inherit with !important, overriding all state changes
+@media (hover: hover) {
+  button:not(:hover):focus:not(:focus-visible) {
+    // Removed problematic background-color override
+  }
+}
+*/
+
+/* Remove tap highlight on mobile */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Ensure smooth transitions are not affected */
+button,
+a,
+[role="button"] {
+  transition: background-color 0.15s ease-out, 
+              color 0.15s ease-out, 
+              border-color 0.15s ease-out,
+              transform 0.15s ease-out;
+}

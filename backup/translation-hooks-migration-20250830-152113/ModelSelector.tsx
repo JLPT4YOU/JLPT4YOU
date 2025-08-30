@@ -1,0 +1,293 @@
+/**
+ * Model Selector Component
+ * Handles AI model selection with features display
+ */
+
+import React from 'react';
+import { cn } from '@/lib/utils';
+import { useTranslations } from '@/hooks/use-translations';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+
+export interface ModelInfo {
+  id: string;
+  name: string;
+  description: string;
+  category: string;
+  supportsStreaming: boolean;
+  supportsFiles: boolean;
+  supportsTTS: boolean;
+  supportsThinking?: boolean;
+  supportsGoogleSearch?: boolean;
+  supportsCodeExecution?: boolean;
+  // New advanced features for GPT-OSS models
+  supportsReasoning?: boolean;
+  supportsTools?: boolean;
+}
+
+export interface ModelSelectorProps {
+  selectedModel: string;
+  availableModels: ModelInfo[];
+  onModelChange: (modelId: string) => void;
+  enableThinking: boolean;
+  onToggleThinking: () => void;
+  className?: string;
+  // Advanced features for GPT-OSS models
+  reasoningEffort?: 'low' | 'medium' | 'high';
+  onReasoningEffortChange?: (effort: 'low' | 'medium' | 'high') => void;
+}
+
+export const ModelSelector: React.FC<ModelSelectorProps> = ({
+  selectedModel,
+  availableModels,
+  onModelChange,
+  enableThinking,
+  onToggleThinking,
+  className,
+  // Advanced features
+  reasoningEffort = 'medium',
+  onReasoningEffortChange
+}) => {
+  const { t } = useTranslations();
+
+  // Get current model info
+  const currentModel = availableModels.find(model => model.id === selectedModel);
+
+  // Check if current model supports thinking
+  const supportsThinking = currentModel?.supportsThinking || false;
+
+  // Check if current model supports advanced features
+  const supportsReasoning = currentModel?.supportsReasoning || false;
+  const supportsTools = currentModel?.supportsTools || false;
+
+  return (
+    <div className={cn("space-y-4", className)}>
+      {/* Model Selection */}
+      <div className="space-y-2">
+        <label className="text-sm font-medium">
+          {t ? t('chat.modelSelection') : 'AI Model'}
+        </label>
+        <Select value={selectedModel} onValueChange={onModelChange}>
+          <SelectTrigger className="w-full rounded-2xl border-0">
+            <SelectValue placeholder="Select a model" />
+          </SelectTrigger>
+          <SelectContent className="rounded-2xl border-0">
+            {availableModels.map((model) => (
+              <SelectItem key={model.id} value={model.id}>
+                <div className="flex flex-col items-start">
+                  <span className="font-medium">{model.name}</span>
+                  <span className="text-xs text-muted-foreground">
+                    {model.description}
+                  </span>
+                </div>
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
+      {/* Current Model Features */}
+      {currentModel && (
+        <div className="space-y-3">
+          <h4 className="text-sm font-medium">
+            {t ? t('chat.modelFeatures') : 'Model Features'}
+          </h4>
+          
+          <div className="grid grid-cols-2 gap-2 text-xs">
+            {/* Streaming */}
+            <div className={cn(
+              "flex items-center gap-2 p-2 rounded-md",
+              currentModel.supportsStreaming
+                ? "bg-success/10 text-success"
+                : "bg-muted/50 text-muted-foreground"
+            )}>
+              <div className={cn(
+                "w-2 h-2 rounded-full",
+                currentModel.supportsStreaming ? "bg-success" : "bg-muted-foreground"
+              )} />
+              <span>Streaming</span>
+            </div>
+
+            {/* File Support */}
+            <div className={cn(
+              "flex items-center gap-2 p-2 rounded-md",
+              currentModel.supportsFiles
+                ? "bg-success/10 text-success"
+                : "bg-muted/50 text-muted-foreground"
+            )}>
+              <div className={cn(
+                "w-2 h-2 rounded-full",
+                currentModel.supportsFiles ? "bg-success" : "bg-muted-foreground"
+              )} />
+              <span>Files</span>
+            </div>
+
+            {/* Google Search */}
+            <div className={cn(
+              "flex items-center gap-2 p-2 rounded-md",
+              currentModel.supportsGoogleSearch
+                ? "bg-success/10 text-success"
+                : "bg-muted/50 text-muted-foreground"
+            )}>
+              <div className={cn(
+                "w-2 h-2 rounded-full",
+                currentModel.supportsGoogleSearch ? "bg-success" : "bg-muted-foreground"
+              )} />
+              <span>Search</span>
+            </div>
+
+            {/* Code Execution */}
+            <div className={cn(
+              "flex items-center gap-2 p-2 rounded-md",
+              currentModel.supportsCodeExecution
+                ? "bg-success/10 text-success"
+                : "bg-muted/50 text-muted-foreground"
+            )}>
+              <div className={cn(
+                "w-2 h-2 rounded-full",
+                currentModel.supportsCodeExecution ? "bg-success" : "bg-muted-foreground"
+              )} />
+              <span>Code</span>
+            </div>
+          </div>
+
+          {/* Thinking Mode Toggle */}
+          {supportsThinking && (
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <label className="text-sm font-medium">
+                  {t ? t('chat.thinkingMode') : 'Thinking Mode'}
+                </label>
+                <button
+                  onClick={onToggleThinking}
+                  className={cn(
+                    "relative inline-flex h-5 w-9 items-center rounded-full transition-colors",
+                    enableThinking ? "bg-primary" : "bg-muted"
+                  )}
+                >
+                  <span
+                    className={cn(
+                      "inline-block h-3 w-3 transform rounded-full bg-white transition-transform",
+                      enableThinking ? "translate-x-5" : "translate-x-1"
+                    )}
+                  />
+                </button>
+              </div>
+              <p className="text-xs text-muted-foreground">
+                {t ? t('chat.thinkingModeDescription') : 'Shows AI reasoning process'}
+              </p>
+            </div>
+          )}
+
+          {/* Reasoning Effort for GPT-OSS Models (only when thinking is enabled) */}
+          {supportsReasoning && enableThinking && onReasoningEffortChange && (
+            <div className="space-y-2 pt-2 border-t border-border/50">
+              <label className="text-sm font-medium">
+                Reasoning Effort
+              </label>
+              <Select
+                value={reasoningEffort}
+                onValueChange={onReasoningEffortChange}
+              >
+                <SelectTrigger className="w-full h-8 text-sm">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="low">Low - Fast responses</SelectItem>
+                  <SelectItem value="medium">Medium - Balanced</SelectItem>
+                  <SelectItem value="high">High - Deep thinking</SelectItem>
+                </SelectContent>
+              </Select>
+              <p className="text-xs text-muted-foreground">
+                Controls how much the AI thinks before responding
+              </p>
+            </div>
+          )}
+
+          {/* Info about auto-enabled tools for GPT-OSS models */}
+          {supportsTools && (
+            <div className="space-y-2 pt-2 border-t border-border/50">
+              <div className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                Auto-enabled Features
+              </div>
+              <div className="space-y-1">
+                <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                  Code Interpreter - Execute Python code
+                </div>
+                <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                  Browser Search - Web search capabilities
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+};
+
+/**
+ * Compact Model Selector for header/toolbar use
+ */
+export interface CompactModelSelectorProps {
+  selectedModel: string;
+  availableModels: ModelInfo[];
+  onModelChange: (modelId: string) => void;
+  className?: string;
+}
+
+export const CompactModelSelector: React.FC<CompactModelSelectorProps> = ({
+  selectedModel,
+  availableModels,
+  onModelChange,
+  className
+}) => {
+  const currentModel = availableModels.find(model => model.id === selectedModel);
+
+  return (
+    <Select value={selectedModel} onValueChange={onModelChange}>
+      <SelectTrigger className={cn("w-auto min-w-[100px] sm:min-w-[120px] rounded-2xl border-0", className)}>
+        <SelectValue>
+          <span className="truncate text-xs sm:text-sm max-w-[80px] sm:max-w-none">
+            {currentModel?.name || 'Select Model'}
+          </span>
+        </SelectValue>
+      </SelectTrigger>
+      <SelectContent className="rounded-2xl border-0 w-64 sm:w-80 max-w-[90vw]">
+        {availableModels.map((model) => (
+          <SelectItem key={model.id} value={model.id}>
+            <div className="flex flex-col gap-1 w-full">
+              <span className="font-medium text-sm sm:text-base leading-tight break-words">
+                {model.name}
+              </span>
+              {model.description && (
+                <span className="text-xs text-muted-foreground leading-relaxed whitespace-normal break-words">
+                  {model.description}
+                </span>
+              )}
+              {/* Feature indicators */}
+              <div className="flex gap-1">
+                {model.supportsFiles && (
+                  <div className="w-1.5 h-1.5 bg-primary rounded-full" title="Supports files" />
+                )}
+                {model.supportsGoogleSearch && (
+                  <div className="w-1.5 h-1.5 bg-green-500 rounded-full" title="Google Search" />
+                )}
+                {model.supportsCodeExecution && (
+                  <div className="w-1.5 h-1.5 bg-secondary rounded-full" title="Code execution" />
+                )}
+              </div>
+            </div>
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
+  );
+};

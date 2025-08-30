@@ -1,0 +1,2058 @@
+{
+  "apiKeySetup": {
+    "title": "API Key Setup",
+    "description": "To use AI chat features, you need to provide a Google Gemini API key",
+    "instructions": {
+      "title": "How to get API key:",
+      "step1": "Visit Google AI Studio",
+      "step2": "Sign in with your Google account",
+      "step3": "Click \"Get API Key\" → \"Create API Key\"",
+      "step4": "Copy and paste the API key below"
+    },
+    "openAIStudio": "Open AI Studio",
+    "inputLabel": "Google Gemini API Key",
+    "save": "Save & Use",
+    "skip": "Skip",
+    "validating": "Validating...",
+    "securityNote": "API key is stored securely on your device and is not shared with third parties.",
+    "errors": {
+      "required": "API key is required",
+      "invalid": "API key must start with \"AIza\"",
+      "testFailed": "Invalid or expired API key",
+      "networkError": "Connection error. Please try again."
+    }
+  },
+  "common": {
+    "appName": "JLPT4YOU",
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "retry": "Retry",
+    "close": "Close",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "save": "Save",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "continue": "Continue",
+    "instruction": "Choose an option above to get started",
+    "preview": "Preview",
+    "hide": "Hide"
+  },
+  "landingChat": {
+    "bubble": {
+      "openLabel": "Open support chat",
+      "closeLabel": "Close chat"
+    },
+    "interface": {
+      "title": "iRIN Sensei",
+      "subtitle": "Online Support",
+      "placeholder": "Type your question...",
+      "typing": "iRIN is responding...",
+      "welcomeMessage": "Hello! I'm iRIN, teacher of JLPT4YOU platform.\nThank you for visiting JLPT4YOU!\nIf you have any questions, feel free to ask me!",
+      "responses": {
+        "default": "Thank you for your question! I'll be updated with more knowledge to support you better in the future. For now, feel free to explore JLPT4YOU's features!"
+      },
+      "errorMessage": "Sorry, I can't respond right now. Please try again later!",
+      "rateLimitError": "You're sending messages too quickly. Please wait {time} before sending again.",
+      "spamBlockError": "Account temporarily blocked due to spam. Try again in {minutes} minutes.",
+      "inputDisabled": "Temporarily locked due to sending messages too quickly",
+      "retryIn": "Try again in {time}"
+    }
+  },
+  "header": {
+    "logo": "JLPT4YOU",
+    "themeToggle": "Toggle theme",
+    "login": "Login",
+    "register": "Sign Up",
+    "getStarted": "Get Started",
+    "userMenu": {
+      "profile": "Profile",
+      "settings": "Settings",
+      "statistics": "Learning Statistics",
+      "logout": "Logout",
+      "expiryDate": "Expires",
+      "screenReader": "User menu",
+      "home": "Home",
+      "unlimited": "Unlimited"
+    },
+    "comments": {
+      "logoAndName": "Logo and app name",
+      "languageThemeUser": "Language Switcher, Theme toggle and User menu"
+    }
+  },
+  "hero": {
+    "title": "JLPT4YOU",
+    "subtitle": "AI-Powered JLPT Learning Platform",
+    "description": "JLPT4YOU is an advanced learning platform that combines AI technology with standard JLPT curriculum, helping you progressively improve your Japanese proficiency – from beginner to advanced levels. Whether you're at N5 or aiming for N1, we have the right path for you.",
+    "ctaButton": "Start Free"
+  },
+  "benefits": {
+    "title": "Key Benefits",
+    "subtitle": "Outstanding features to help you conquer JLPT effectively",
+    "items": [
+      {
+        "title": "Practice with realistic mock exams",
+        "description": "Exam system designed based on the structure and difficulty of official JLPT tests, helping you familiarize with the real exam format."
+      },
+      {
+        "title": "Automatic answer explanations with iRIN",
+        "description": "Smart AI analyzes each answer, providing detailed explanations and personalized improvement suggestions."
+      },
+      {
+        "title": "Rich exam and vocabulary library with clear classification",
+        "description": "Diverse exercise library from N5 to N1, categorized by topic and gradually increasing difficulty levels."
+      },
+      {
+        "title": "Detailed learning progress tracking",
+        "description": "Progress reporting system helps you understand your strengths, weaknesses, and personalized learning path."
+      }
+    ]
+  },
+  "whyChooseUs": {
+    "title": "Why Choose JLPT4YOU?",
+    "subtitle": "Solving challenges in your JLPT conquest journey",
+    "problems": [
+      {
+        "problem": "Time-consuming search for quality materials",
+        "solution": "Exam-accurate materials, regularly updated"
+      },
+      {
+        "problem": "Teacher fees of tens of thousands of yen/month",
+        "solution": "24/7 AI guidance for just $1.99/month"
+      },
+      {
+        "problem": "Overwhelming materials, ineffective learning",
+        "solution": "Learn with real JLPT exam structure"
+      }
+    ],
+    "problemLabel": "Problem:",
+    "solutionLabel": "Solution:",
+    "problemTitle": "Learners face",
+    "solutionTitle": "JLPT4YOU provides",
+    "finalProblem": "Struggling with no progress, scattered materials, high costs?",
+    "finalSolution": "JLPT4YOU solves it all with smart AI, quality materials and affordable pricing!",
+    "priceComparison": "Just $1.99/month - cheaper than a bubble tea 🧋"
+  },
+  "pricing": {
+    "title": "Simple Pricing",
+    "subtitle": "Choose the plan that fits your learning needs",
+    "free": {
+      "name": "Free",
+      "price": "$0",
+      "period": "/month",
+      "description": "For beginners",
+      "features": [
+        "5 exams per month",
+        "Basic N5-N4 vocabulary",
+        "N5-N4 grammar",
+        "Basic result reports"
+      ],
+      "limitations": [
+        "No AI explanations",
+        "No progress tracking",
+        "No advanced materials"
+      ],
+      "button": "Start Free"
+    },
+    "premium": {
+      "name": "Premium",
+      "price": "$1.99",
+      "period": "/month",
+      "badge": "RECOMMENDED",
+      "description": "Complete learning experience",
+      "features": [
+        "Unlimited exams",
+        "Complete N5-N1 vocabulary",
+        "Detailed N5-N1 grammar",
+        "iRIN AI explanations",
+        "Detailed progress tracking",
+        "Exclusive materials library",
+        "Priority support"
+      ],
+      "button": "Upgrade to Premium"
+    }
+  },
+  "footer": {
+    "description": "Leading JLPT Japanese learning platform with advanced AI technology, helping you conquer all levels from N5 to N1.",
+    "contact": {
+      "title": "Contact",
+      "email": "support@jlpt4you.com",
+      "chat": "Support Chat"
+    },
+    "links": {
+      "product": {
+        "title": "Product",
+        "features": "Features",
+        "pricing": "Pricing",
+        "aiDemo": "AI Demo",
+        "resources": "Resources"
+      },
+      "jlptLevels": {
+        "title": "JLPT Levels",
+        "n5": "JLPT N5",
+        "n4": "JLPT N4",
+        "n3": "JLPT N3",
+        "n2": "JLPT N2",
+        "n1": "JLPT N1"
+      },
+      "support": {
+        "title": "Support",
+        "helpCenter": "Help Center",
+        "contact": "Contact",
+        "faq": "FAQ",
+        "guide": "Guide"
+      },
+      "legal": {
+        "title": "Legal",
+        "terms": "Terms of Service",
+        "privacy": "Privacy Policy",
+        "refund": "Refund Policy"
+      }
+    },
+    "copyright": "© 2024 JLPT4YOU. All rights reserved.",
+    "madeWithLove": "Made with",
+    "madeWithLoveFor": "for JLPT learners",
+    "trustBadges": {
+      "secure": "SSL Secure",
+      "privacy": "Privacy Protected"
+    }
+  },
+  "aiDemo": {
+    "title": "Experience iRIN AI",
+    "subtitle": "Try our intelligent answer explanation feature with AI",
+    "question": {
+      "level": "N3",
+      "type": "Vocabulary",
+      "instruction": "Choose the best option to fill in the blank from 1・2・3・4.",
+      "sentence": "Yesterday it was raining ( ) heavily.",
+      "furigana": "きのうはあめが（　）ふっていました。",
+      "options": [
+        {
+          "id": "A",
+          "text": "強く",
+          "furigana": "strongly",
+          "isCorrect": true
+        },
+        {
+          "id": "B",
+          "text": "高く",
+          "furigana": "highly",
+          "isCorrect": false
+        },
+        {
+          "id": "C",
+          "text": "早く",
+          "furigana": "quickly",
+          "isCorrect": false
+        },
+        {
+          "id": "D",
+          "text": "近く",
+          "furigana": "closely",
+          "isCorrect": false
+        }
+      ],
+      "explanation": "The correct answer is '強く' (strongly). '雨が強く降る' (rain falls strongly) is a natural Japanese expression. '高く' refers to height, '早く' refers to speed, and '近く' refers to distance, so they are not suitable for expressing the intensity of rain. '強く降る' correctly expresses the force or intensity of rainfall."
+    },
+    "buttons": {
+      "showExplanation": "Explain with iRIN",
+      "tryAgain": "Try Again"
+    },
+    "sensei": "iRIN"
+  },
+  "finalCta": {
+    "title": "Ready to conquer JLPT?",
+    "subtitle": "Join thousands of students who have succeeded with JLPT4YOU",
+    "benefits": [
+      "Effective learning with AI",
+      "Save time and costs",
+      "Achieve high scores in exams"
+    ],
+    "button": "Start your journey",
+    "upgradeButton": "Upgrade Premium",
+    "trustSignal": "✨ No credit card required to start • Cancel anytime"
+  },
+  "auth": {
+    "titles": {
+      "login": "Login",
+      "register": "Create Account",
+      "forgotPassword": "Forgot Password"
+    },
+    "subtitles": {
+      "login": "Welcome back to JLPT4YOU",
+      "register": "Start your Japanese learning journey",
+      "forgotPassword": "Enter your email to receive a password reset link"
+    },
+    "labels": {
+      "email": "Email",
+      "password": "Password",
+      "confirmPassword": "Confirm Password",
+      "acceptTerms": "I agree to the terms of service and privacy policy",
+      "rememberMe": "Remember me",
+      "agreeWith": "I agree with",
+      "and": "and"
+    },
+    "placeholders": {
+      "email": "Enter your email address",
+      "password": "Enter your password",
+      "confirmPassword": "Re-enter your password"
+    },
+    "passwordInput": {
+      "showPassword": "Show password",
+      "hidePassword": "Hide password",
+      "capsLockWarning": "Caps Lock is on",
+      "strengthLabel": "Password strength:",
+      "strengthWeak": "Weak",
+      "strengthFair": "Fair",
+      "strengthGood": "Good",
+      "strengthStrong": "Strong",
+      "strengthVeryStrong": "Very Strong"
+    },
+    "buttons": {
+      "login": "Login",
+      "register": "Create Account",
+      "forgotPassword": "Forgot Password?",
+      "sendResetLink": "Send Reset Link",
+      "sendResetInstructions": "Send Reset Instructions",
+      "backToLogin": "Back to Login",
+      "resendEmail": "Resend Email"
+    },
+    "loading": {
+      "login": "Logging in...",
+      "register": "Creating account...",
+      "forgotPassword": "Sending email...",
+      "sending": "Sending...",
+      "resending": "Resending..."
+    },
+    "validation": {
+      "emailRequired": "Email is required",
+      "emailInvalid": "Invalid email address",
+      "passwordRequired": "Password is required",
+      "passwordTooShort": "Password must be at least 8 characters",
+      "confirmPasswordRequired": "Password confirmation is required",
+      "passwordMismatch": "Passwords do not match",
+      "termsRequired": "You must agree to the terms of service"
+    },
+    "brand": {
+      "tagline": "Learn Japanese effectively, pass JLPT successfully",
+      "testimonial": "Study with ease, succeed effortlessly"
+    },
+    "features": {
+      "comprehensive": "Comprehensive JLPT N1-N5 Practice",
+      "library": "Exclusive Materials Library",
+      "sensei": "Learn with iRIN",
+      "interface": "User-Friendly Interface"
+    },
+    "messages": {
+      "noAccount": "Don't have an account?",
+      "hasAccount": "Already have an account?",
+      "signUpNow": "Sign up now",
+      "loginNow": "Login now",
+      "forgotPasswordText": "Forgot password?",
+      "resetPasswordSent": "Password reset email has been sent",
+      "resetPasswordInstructions": "Please check your email and follow the instructions to reset your password",
+      "registrationSuccess": "Registration successful! Please check your email to confirm your account."
+    },
+    "social": {
+      "googleLogin": "Login with Google",
+      "continueWith": "Or continue with"
+    },
+    "links": {
+      "forgotPassword": "Forgot Password?",
+      "terms": "Terms",
+      "privacy": "Privacy Policy"
+    },
+    "forgotPassword": {
+      "instructions": "Enter your email and we'll send you reset instructions.",
+      "emailSent": "Email Sent!",
+      "instructionsSent": "We've sent password reset instructions to:",
+      "checkEmail": "Check your email:",
+      "clickLink": "Click the link in the email to reset your password",
+      "linkExpiry": "Link expires in 15 minutes",
+      "checkSpam": "Check your spam folder if you don't see the email"
+    },
+    "errors": {
+      "general": "An error occurred. Please try again.",
+      "loginFailed": "Incorrect username or password",
+      "invalidCredentials": "Incorrect username or password",
+      "emailExists": "This email is already in use",
+      "resendFailed": "Failed to resend email. Please try again.",
+      "registrationError": "An error occurred during registration. Please try again.",
+      "loginError": "An error occurred during login. Please try again.",
+      "logoutError": "An error occurred during logout.",
+      "resetPasswordError": "An error occurred while sending password reset email.",
+      "socialLoginError": "An error occurred during social login.",
+      "invalidCredentials": "Incorrect username or password",
+      "emailAlreadyRegistered": "This email is already registered. Please use a different email or login.",
+      "passwordTooShort": "Password must be at least 6 characters long.",
+      "invalidEmailFormat": "Invalid email format.",
+      "accountNotFound": "No account found with this email.",
+      "emailNotConfirmed": "Please confirm your email before logging in.",
+      "registrationDisabled": "Registration is currently disabled.",
+      "unknownError": "An unknown error occurred. Please try again.",
+      "googleLoginError": "An error occurred while logging in with Google. Please try again."
+    },
+    "success": {
+      "registrationSuccess": "Registration successful! Please check your email to confirm your account.",
+      "emailConfirmationRequired": "Please check your email to confirm your account before logging in."
+    }
+  },
+  "home": {
+    "userGreeting": "Hello, {{name}}! 👋",
+    "userInfo": {
+      "expiryDate": "Expires: {{date}}"
+    },
+    "practiceItems": {
+      "jlpt": {
+        "title": "JLPT Practice",
+        "description": "Japanese proficiency test"
+      },
+      "challenge": {
+        "title": "Challenge",
+        "description": "Serious test mode"
+      },
+      "driving": {
+        "title": "Driving Test",
+        "description": "Practice driving license exam"
+      },
+      "dict": {
+        "title": "Dictionary",
+        "description": "Look up words, kanji, grammar"
+      },
+      "study": {
+        "title": "Study",
+        "description": "Topic-based lessons"
+      },
+      "library": {
+        "title": "Library",
+        "description": "Books and learning materials"
+      },
+      "irin": {
+        "title": "iRIN",
+        "description": "Smart AI assistant"
+      },
+      "upgrade": {
+        "title": "Upgrade",
+        "description": "Upgrade account"
+      },
+      "topup": {
+        "title": "Top Up",
+        "description": "Add credits to account"
+      },
+      "settings": {
+        "title": "Settings",
+        "description": "Account customization"
+      },
+      "resultsDemo": {
+        "title": "Results Demo",
+        "description": "View results page demo"
+      },
+      "reviewDemo": {
+        "title": "Review Demo",
+        "description": "View answer review demo"
+      },
+      "landing": {
+        "title": "Landing Page",
+        "description": "View new landing page"
+      }
+    }
+  },
+  "examResults": {
+    "title": "{examType} Results",
+    "completedAt": "Completed at {time}",
+    "score": {
+      "title": "Score",
+      "percentage": "{percentage}% accuracy",
+      "status": {
+        "excellent": "Excellent",
+        "good": "Good",
+        "average": "Average",
+        "poor": "Poor",
+        "failed": "Failed"
+      }
+    },
+    "stats": {
+      "correctAnswers": "Correct",
+      "incorrectAnswers": "Incorrect",
+      "unansweredQuestions": "Unanswered",
+      "flaggedQuestions": "Flagged Questions",
+      "timeSpent": "Time Spent",
+      "timeEfficiency": "{percentage}% of time",
+      "accuracy": "Accuracy"
+    },
+    "sections": {
+      "title": "Detailed Analysis",
+      "noData": "No section-wise analysis data available",
+      "overallAnalysis": "Overall analysis for driving license test",
+      "overallInsight": "Overall Assessment",
+      "names": {
+        "vocabulary": "Vocabulary",
+        "grammar": "Grammar",
+        "reading": "Reading",
+        "listening": "Listening",
+        "kanji": "Kanji"
+      },
+      "performance": {
+        "excellent": "You performed excellently in most sections. Keep up this great work!",
+        "good": "Good results! Some sections could be improved for even higher scores.",
+        "mixed": "Results vary between sections. Focus on strengthening weaker areas.",
+        "needsImprovement": "Improvement needed in multiple sections. Review thoroughly before retaking."
+      }
+    },
+    "actions": {
+      "viewAnswers": "View Detailed Answers",
+      "retakeTest": "Retake Test",
+      "newTest": "New Test",
+      "backToHome": "Back to Home"
+    },
+    "examTypes": {
+      "jlpt": "JLPT",
+      "challenge": "Challenge",
+      "driving": "Driving"
+    },
+    "noData": "Please take an exam before viewing results."
+  },
+  "reviewAnswers": {
+    "header": {
+      "backToResults": "Back to Results",
+      "title": "View Detailed Answers",
+      "overview": "Results Overview",
+      "accuracy": "{percentage}% accuracy",
+      "questionsCount": "{count} questions"
+    },
+    "filters": {
+      "title": "Filter by Status",
+      "all": "All",
+      "correct": "Correct",
+      "incorrect": "Incorrect",
+      "flagged": "Flagged"
+    },
+    "pagination": {
+      "previous": "Previous",
+      "next": "Next"
+    },
+    "question": {
+      "number": "Question {number}",
+      "details": "Details",
+      "explanation": "Explanation",
+      "status": {
+        "correct": "Correct",
+        "incorrect": "Incorrect",
+        "flagged": "Flagged"
+      }
+    },
+    "pagination": {
+      "showing": "Showing questions {start}-{end} of {total} total",
+      "previous": "Previous",
+      "next": "Next"
+    },
+    "noData": "Please take an exam before viewing detailed answers.",
+    "noQuestionsFound": "No questions found matching the current filter."
+  },
+  "jlpt": {
+    "page": {
+      "title": "Choose JLPT Test Type",
+      "subtitle": "Select the test type that suits your learning needs"
+    },
+    "selectLevel": "Select JLPT Level",
+    "testTypes": {
+      "official": {
+        "title": "JLPT",
+        "description": "Official JLPT Tests",
+        "subtitle": "International standard test"
+      },
+      "custom": {
+        "title": "JLPT4YOU",
+        "description": "Custom tests by our app",
+        "subtitle": "Specially designed tests"
+      }
+    },
+    "custom": {
+      "page": {
+        "title": "JLPT4YOU - Custom Tests",
+        "subtitle": "Specially designed tests with effective learning methods"
+      },
+      "info": {
+        "title": "About JLPT4YOU Tests",
+        "description": "JLPT4YOU tests are carefully compiled, closely following the structure and difficulty of actual JLPT exams. Includes all sections: Vocabulary, Grammar, Reading Comprehension, and Listening Comprehension – correct format, correct focus."
+      }
+    },
+    "official": {
+      "page": {
+        "title": "JLPT - Official Tests",
+        "subtitle": "International standard tests with official format"
+      },
+      "info": {
+        "title": "About Official JLPT Tests",
+        "description": "Official JLPT tests are designed according to the standards of the Japan Foundation. Includes all test sections: Vocabulary, Grammar, Reading Comprehension, and Listening Comprehension with accurate timing and question counts."
+      }
+    },
+    "levelInfo": {
+      "n1": {
+        "title": "JLPT N1 - Advanced",
+        "description": "Highest level Japanese test - 2000 kanji, 10000 vocabulary",
+        "time": "170 minutes",
+        "questions": "~100 questions",
+        "passScore": "100/180"
+      },
+      "n2": {
+        "title": "JLPT N2 - Upper Intermediate",
+        "description": "Upper intermediate Japanese test - 1000 kanji, 6000 vocabulary",
+        "time": "155 minutes",
+        "questions": "~90 questions",
+        "passScore": "90/180"
+      },
+      "n3": {
+        "title": "JLPT N3 - Intermediate",
+        "description": "Intermediate Japanese test - 650 kanji, 3750 vocabulary",
+        "time": "140 minutes",
+        "questions": "~80 questions",
+        "passScore": "95/180"
+      },
+      "n4": {
+        "title": "JLPT N4 - Upper Elementary",
+        "description": "Upper elementary Japanese test - 300 kanji, 1500 vocabulary",
+        "time": "125 minutes",
+        "questions": "~70 questions",
+        "passScore": "90/180"
+      },
+      "n5": {
+        "title": "JLPT N5 - Elementary",
+        "description": "Elementary Japanese test - 100 kanji, 800 vocabulary",
+        "time": "105 minutes",
+        "questions": "~60 questions",
+        "passScore": "80/180"
+      }
+    },
+    "template": {
+      "startTest": "Start Test",
+      "testInfo": "Test Information",
+      "duration": "Duration",
+      "totalQuestions": "Total Questions",
+      "passingScore": "Passing Score",
+      "readyToStart": "Ready to start?",
+      "chooseSection": "Choose test sections and timing that suit your learning goals."
+    }
+  },
+  "challenge": {
+    "page": {
+      "title": "JLPT Challenge",
+      "subtitle": "Test your Japanese proficiency with serious practice exams"
+    },
+    "levels": {
+      "n1": "Advanced",
+      "n2": "Upper Intermediate",
+      "n3": "Intermediate",
+      "n4": "Upper Elementary",
+      "n5": "Elementary"
+    },
+    "info": {
+      "title": "About Challenge Mode",
+      "description": "Challenge Mode is designed to simulate real JLPT exams. The test includes all sections: vocabulary, grammar, reading comprehension, and listening comprehension. Treat this as a real exam and take it seriously."
+    },
+    "setup": {
+      "title": "Challenge {level}",
+      "subtitle": "{description} - Serious Practice Test",
+      "sectionsTitle": "Included Test Sections",
+      "sectionsSubtitle": "Challenge Mode includes all test sections to simulate real JLPT exams",
+      "timeTitle": "Test Duration",
+      "timeStandard": "Standard JLPT Time",
+      "timeDescription": "{minutes} minutes - According to official JLPT regulations",
+      "timeNote": "Challenge Mode uses standard timing to simulate real exams",
+      "startChallenge": "Start Challenge",
+      "sections": {
+        "vocabulary": "Vocabulary",
+        "grammar": "Grammar",
+        "reading": "Reading",
+        "listening": "Listening"
+      },
+      "minutes": "minutes"
+    },
+    "rules": {
+      "title": "Challenge Test Rules",
+      "importantNote": "Important Notice",
+      "importantDescription": "Please take this test seriously and treat it as a real exam. If you want to practice, please select \"JLPT Practice\" from the main screen.",
+      "rulesTitle": "Test Rules",
+      "rule1": {
+        "title": "No dictionary allowed",
+        "description": "Do not use dictionaries, reference books, or any supporting materials"
+      },
+      "rule2": {
+        "title": "No electronic devices",
+        "description": "Do not use phones, tablets, or other electronic devices for assistance"
+      },
+      "rule3": {
+        "title": "Follow time limits",
+        "description": "Complete the test within the specified time, no pausing for breaks"
+      },
+      "aboutTitle": "About Challenge Mode",
+      "aboutDescription": "This mode is designed to simulate the real JLPT exam as closely as possible. The test includes all sections: vocabulary, grammar, reading comprehension, and listening comprehension. The results will accurately reflect your current Japanese proficiency.",
+      "cancel": "Cancel",
+      "accept": "Agree and Start"
+    }
+  },
+  "driving": {
+    "page": {
+      "title": "Choose Driving Test Type",
+      "subtitle": "Select the test type that suits your learning goals"
+    },
+    "testTypes": {
+      "karimen": {
+        "title": "Karimen",
+        "description": "Basic theory test",
+        "subtitle": "Basic traffic knowledge",
+        "details": "Basic traffic rules and road signs"
+      },
+      "honmen": {
+        "title": "Honmen",
+        "description": "Official theory test",
+        "subtitle": "Official test for driver's license",
+        "details": "Comprehensive knowledge of traffic laws"
+      }
+    },
+    "levelInfo": {
+      "karimen": {
+        "title": "Karimen - Basic Theory Test",
+        "description": "Basic traffic knowledge and safety rules",
+        "time": "50 minutes",
+        "questions": "50 questions",
+        "passScore": "45/50"
+      },
+      "honmen": {
+        "title": "Honmen - Official Theory Test",
+        "description": "Comprehensive knowledge of traffic laws for driver's license",
+        "time": "50 minutes",
+        "questions": "95 questions",
+        "passScore": "85/95"
+      }
+    },
+    "template": {
+      "readyToStart": "Ready to start?",
+      "chooseTime": "Choose appropriate test duration and start practicing {level}.",
+      "startTest": "Start Test",
+      "backToSelection": "Back to test type selection",
+      "duration": "Duration",
+      "totalQuestions": "Total Questions",
+      "passingScore": "Passing Score"
+    }
+  },
+  "dict": {
+    "page": {
+      "title": "J4YDict - Japanese Vietnamese Dictionary",
+      "subtitle": "Look up words, kanji, grammar and translation"
+    },
+    "tabs": {
+      "word": "Vocabulary",
+      "kanji": "Kanji",
+      "kanjiWriting": "Kanji Writing",
+      "grammar": "Grammar",
+      "examples": "Examples",
+      "translate": "Translate"
+    },
+    "search": {
+      "placeholder": "Enter search keyword...",
+      "button": "Search",
+      "clear": "Clear",
+      "positions": {
+        "start": "Start",
+        "middle": "Middle",
+        "end": "End"
+      },
+      "types": {
+        "word": "Vocabulary",
+        "grammar": "Grammar"
+      }
+    },
+    "wordDetail": {
+      "level": "JLPT {level}",
+      "relatedWords": "Related Words",
+      "moreWords": "and {count} more words...",
+      "noRelatedWords": "No related words"
+    },
+    "kanjiDetail": {
+      "strokes": "{count} strokes",
+      "radical": "Radical",
+      "meaning": "Meaning",
+      "readings": {
+        "on": "On reading",
+        "kun": "Kun reading"
+      }
+    },
+    "grammarDetail": {
+      "definition": "Definition",
+      "usage": "Usage",
+      "examples": "Examples"
+    },
+    "examplesList": {
+      "title": "Example sentences",
+      "found": "Found {count} examples",
+      "noExamples": "No examples"
+    },
+    "translate": {
+      "sourceLanguage": "Source Language",
+      "targetLanguage": "Target Language",
+      "auto": "Auto",
+      "vietnamese": "Vietnamese",
+      "japanese": "Japanese",
+      "english": "English",
+      "translateButton": "Translate",
+      "swap": "Swap",
+      "copy": "Copy",
+      "clear": "Clear"
+    },
+    "kanjiWriting": {
+      "title": "Kanji Writing",
+      "strokeOrder": "Stroke Order",
+      "practice": "Practice Writing",
+      "noData": "No kanji writing information found for this word"
+    },
+    "errors": {
+      "loadFailed": "Unable to load vocabulary information",
+      "searchFailed": "Search error",
+      "translateFailed": "Translation error",
+      "kanjiSearchFailed": "Kanji search error",
+      "networkError": "Network connection error",
+      "noResults": "No results found"
+    },
+    "loading": {
+      "searching": "Searching...",
+      "translating": "Translating...",
+      "loading": "Loading..."
+    }
+  },
+  "exam": {
+    "interface": {
+      "pause": "Pause",
+      "resume": "Resume",
+      "submit": "Submit",
+      "flagged": "Flagged",
+      "showFlagged": "Show Flagged",
+      "showFlaggedTitle": "Review flagged questions",
+      "question": "Question",
+      "of": "of",
+      "previous": "Previous Question",
+      "next": "Next Question",
+      "flag": "Flag",
+      "unflag": "Unflag",
+      "answered": "Answered",
+      "unanswered": "Unanswered",
+      "timeRemaining": "Time Remaining",
+      "questionList": "Question List",
+      "progress": "Progress",
+      "pausedTitle": "Exam Paused",
+      "pausedDescription": "The timer has been stopped. Click \"Resume\" to continue with your exam."
+    },
+    "sectionSelector": {
+      "title": "Choose Test Sections",
+      "subtitle": "Select the sections you want to practice",
+      "startTest": "Start Test",
+      "selectAtLeastOne": "Please select at least one test section"
+    },
+    "timeSelector": {
+      "title": "Choose Exam Duration",
+      "defaultTime": "Default Time",
+      "defaultTimeDescription": "{minutes} minutes - Standard for each section",
+      "customTime": "Custom Time",
+      "customTimeDescription": "Enter your preferred duration",
+      "unlimitedTime": "Unlimited Time",
+      "unlimitedTimeDescription": "Take the exam without time pressure",
+      "customTimeLabel": "Duration (minutes)",
+      "customTimePlaceholder": "Enter minutes",
+      "minutes": "minutes",
+      "hours": "hours",
+      "seconds": "seconds"
+    },
+    "sections": {
+      "vocabulary": "Vocabulary",
+      "grammar": "Grammar",
+      "reading": "Reading",
+      "listening": "Listening"
+    },
+    "submission": {
+      "confirmTitle": "Confirm Submission",
+      "confirmMessage": "Please review before submitting",
+      "stats": {
+        "total": "Total Questions",
+        "answered": "Answered",
+        "unanswered": "Unanswered",
+        "flagged": "Flagged",
+        "timeLeft": "Time Left"
+      },
+      "readyTitle": "Ready to Submit",
+      "readyMessage": "All questions answered.",
+      "progressLabel": "Progress",
+      "timeRemainingLabel": "Time Remaining",
+      "unansweredWarning": "{count} unanswered question(s) remaining",
+      "flaggedWarning": "{count} flagged question(s)",
+      "confirm": "Submit",
+      "cancel": "Continue"
+    },
+    "timer": {
+      "timeUp": "Time's Up",
+      "autoSubmit": "Auto Submit"
+    },
+    "antiCheat": {
+      "warningBadge": "Warning",
+      "navigationWarning": {
+        "title": "Warning: Leaving Exam!",
+        "description": "You are attempting to leave the exam page. This action will:",
+        "consequences": [
+          "End the exam immediately",
+          "Cannot restore your answers",
+          "Be recorded as a rule violation",
+          "Lose all current progress"
+        ],
+        "confirmQuestion": "⚠️ Are you sure you want to leave the exam?",
+        "stayButton": "Stay and Continue",
+        "leaveButton": "Leave Exam"
+      },
+      "violationWarning": {
+        "title": "Rule Violation!",
+        "titleMaxReached": "Exam Ended!",
+        "maxViolationsMessage": "You have violated the rules too many times",
+        "warningCount": "Warning: {count}/{max}",
+        "remainingWarnings": "{remaining} warnings remaining",
+        "examEndedMessage": "The exam has ended and you will be redirected to the homepage",
+        "continueButton": "Continue Exam",
+        "violations": {
+          "fullscreen_exit": "You exited fullscreen mode",
+          "window_blur": "You switched to another application",
+          "tab_switch": "You switched to another tab",
+          "default": "Rule violation behavior detected"
+        }
+      },
+      "fullscreenRestored": "Returned to fullscreen mode"
+    },
+    "fullscreenModal": {
+      "title": "Fullscreen Mode Required",
+      "mobile": {
+        "detected": "Mobile device detected",
+        "description": "On mobile devices, you can continue without fullscreen mode. However, the system will still monitor other violations.",
+        "warning": "Note: Some features may be limited on mobile devices.",
+        "continueButton": "Continue Exam"
+      },
+      "desktop": {
+        "title": "Activate Fullscreen Mode",
+        "description": "To ensure fairness and integrity of the exam, you need to activate fullscreen mode before starting.",
+        "requirementsTitle": "Requirements during the exam:",
+        "requirements": [
+          "Do not exit fullscreen mode",
+          "Do not switch to other applications or tabs",
+          "Do not use system shortcut keys"
+        ],
+        "importantNote": "Important Note",
+        "warningText": "After activating fullscreen, the system will monitor continuously. All violations will be recorded and warned.",
+        "unsupportedBrowser": "Your browser does not support fullscreen mode. Please use a different browser to take the exam.",
+        "activateButton": "Activate Fullscreen",
+        "activatingButton": "Activating..."
+      },
+      "cancelButton": "Cancel"
+    }
+  },
+  "seo": {
+    "structuredData": {
+      "title": "Online JLPT Practice",
+      "description": "Leading JLPT practice website with AI support"
+    }
+  },
+  "pageTitle": {
+    "home": "Home",
+    "examResults": "Exam Results",
+    "reviewAnswers": "Review Answers",
+    "study": "Study",
+    "studyTheory": "Theory",
+    "studyPractice": "Practice"
+  },
+  "pageDescription": {
+    "home": "Home - Online JLPT practice and driving license test",
+    "examResults": "View exam results and detailed analysis",
+    "reviewAnswers": "Review detailed answers and analyze each question",
+    "study": "Study - Japanese theory and practice",
+    "studyTheory": "Theory - Basic Japanese knowledge",
+    "studyPractice": "Practice - Applied Japanese exercises"
+  },
+  "examTitle": {
+    "challenge": "JLPT Challenge {level}",
+    "honmen": "Honmen - Official Theory Test",
+    "karimen": "Karimen - Basic Theory Test"
+  },
+  "topup": {
+    "steps": {
+      "amount": "Select Amount",
+      "payment": "Payment Method",
+      "confirm": "Confirm"
+    },
+    "selectAmount": "Select Top-up Amount",
+    "selectPayment": "Select Payment Method",
+    "total": "Total Amount:",
+    "amount": "Amount",
+    "method": "Method",
+    "custom": "Custom",
+    "enterAmount": "Enter Custom Amount",
+    "minAmount": "Minimum: $1.00",
+    "maxAmount": "Maximum: $1,000.00",
+    "quickSuggestions": "Quick suggestions:",
+    "validAmount": "Valid amount",
+    "processing": "Processing Payment...",
+    "processingDesc": "Please wait while we process your payment",
+    "payNow": "Pay Now",
+    "popular": "Popular",
+    "instant": "Instant",
+    "businessDays": "1-3 days",
+    "paymentInfo": "Payment Information",
+    "errors": {
+      "tooLow": "Amount must be at least $1.00",
+      "tooHigh": "Amount cannot exceed $1,000.00"
+    },
+    "methods": {
+      "qrVietnam": "QR Việt Nam",
+      "qrVietnameDesc": "VietQR, VNPAY, ZaloPay, MoMo",
+      "paypalDesc": "Secure international payments",
+      "paypayDesc": "Japanese mobile payment",
+      "stripeDesc": "Credit/Debit cards worldwide",
+      "bankTransfer": "Bank Transfer",
+      "bankTransferDesc": "Direct bank account transfer"
+    },
+    "info": {
+      "qrVietnam1": "Scan QR code with your banking app",
+      "qrVietnam2": "Supports all major Vietnamese banks",
+      "qrVietnam3": "Instant processing, no fees",
+      "paypal1": "Login to your PayPal account",
+      "paypal2": "Secure international payments",
+      "paypal3": "Small processing fee may apply",
+      "paypay1": "Use PayPay mobile app",
+      "paypay2": "Popular in Japan",
+      "paypay3": "Instant processing",
+      "stripe1": "Visa, Mastercard, American Express",
+      "stripe2": "Secure SSL encryption",
+      "stripe3": "Instant processing",
+      "bank1": "Transfer to our bank account",
+      "bank2": "Include reference number",
+      "bank3": "Processing: 1-3 business days"
+    }
+  },
+  "pages": {
+    "topup": {
+      "title": "Top Up",
+      "description": "Top up service - Feature under development",
+      "comingSoon": "This page is under construction. Please come back later!"
+    },
+    "payment": {
+      "title": "Upgrade Your Account",
+      "description": "Unlock your full Japanese learning potential with smart AI and exclusive materials",
+      "freePlan": "Free Plan",
+      "freeDescription": "Perfect for getting started",
+      "premiumPlan": "Premium Plan",
+      "premiumDescription": "Unlock all features",
+      "foreverFree": "Forever free",
+      "oneTimePayment": "One-time payment",
+      "upgradeNow": "Upgrade Now",
+      "currentPlan": "Current Plan",
+      "popular": "Popular",
+      "whyUpgrade": "Why Upgrade to Premium?",
+      "benefit1Title": "Comprehensive Learning",
+      "benefit1Description": "Access to all JLPT levels and extensive study materials",
+      "benefit2Title": "AI-Powered Assistance",
+      "benefit2Description": "Get detailed explanations for every question",
+      "benefit3Title": "Progress Tracking",
+      "benefit3Description": "Monitor your improvement with detailed analytics",
+      "freeFeature1": "Limited practice tests",
+      "freeFeature2": "Basic vocabulary lists",
+      "freeFeature3": "Community support",
+      "premiumFeature1": "Unlimited practice tests",
+      "premiumFeature2": "Full vocabulary & grammar database",
+      "premiumFeature3": "AI-powered explanations",
+      "premiumFeature4": "Progress tracking & analytics",
+      "premiumFeature5": "Priority customer support",
+      "premiumFeature6": "Offline access to materials",
+      "thankYou": {
+        "title": "🎉 Congratulations!",
+        "subtitle": "You have successfully upgraded to Premium",
+        "accountTitle": "Premium Account",
+        "duration": "Duration",
+        "months": "months",
+        "expires": "Expires",
+        "amount": "Amount",
+        "transaction": "Transaction ID",
+        "couponApplied": "Coupon applied",
+        "featuresTitle": "✨ Premium features activated",
+        "action": "Start using Premium",
+        "emailSent": "📧 A confirmation email has been sent to"
+      },
+      "checkout": {
+        "save5": "Save 5%",
+        "popular": "Popular",
+        "best": "Best Value",
+        "payment": "Payment",
+        "premiumPlan": "Premium Plan",
+        "yearlyBilling": "Annual billing",
+        "monthlyBilling": "Monthly billing",
+        "selectDuration": "Select usage duration",
+        "savePercent": "Save {percent}%",
+        "balancePayment": "Pay with account balance",
+        "balanceDescription": "Amount will be deducted from your current balance",
+        "apply": "Apply",
+        "enterCoupon": "Please enter coupon code",
+        "invalidCoupon": "Invalid coupon code",
+        "couponError": "Error occurred while validating coupon",
+        "paymentError": "Payment error occurred",
+        "paymentRetry": "Payment error occurred. Please try again.",
+        "insufficientBalance": "Insufficient balance. Need additional ${amount}",
+        "processing": "Processing...",
+        "payNow": "Pay Now",
+        "termsAgreement": "By proceeding with payment, you agree to our",
+        "termsOfService": "Terms of Service",
+        "orderSummary": "Order Summary"
+      }
+    },
+    "settings": {
+      "title": "Account Settings",
+      "description": "Manage your personal information and account security",
+      "sidebar": {
+        "title": "Settings"
+      },
+      "profile": {
+        "title": "Personal Information",
+        "description": "Manage your display information and avatar",
+        "avatar": "Avatar Icon",
+        "avatarDescription": "Choose an icon for your display avatar",
+        "name": "Name",
+        "namePlaceholder": "Enter your name",
+        "nameDescription": "This name will be displayed in the app",
+        "email": "Email",
+        "emailReadonly": "Email cannot be changed",
+        "accountType": "Account Type",
+        "accountTypeFree": "Free Account",
+        "accountTypePremium": "Premium Account",
+        "premiumStatus": "Premium Status",
+        "expiryDate": "Expires",
+        "createdDate": "Created Date",
+        "saveChanges": "Save Changes",
+        "saving": "Saving...",
+        "updateSuccess": "Profile updated successfully!",
+        "updateError": "An error occurred while updating",
+        "unexpectedError": "An unexpected error occurred",
+        "redeemCode": {
+          "title": "Activate Premium",
+          "description": "Enter code to upgrade your account to Premium",
+          "codeLabel": "Premium Code",
+          "placeholder": "Enter code...",
+          "redeemButton": "Activate",
+          "redeeming": "Processing...",
+          "accountType": "Account Type",
+          "expiryDate": "Premium Expires",
+          "thankYou": "Thank you for using our Premium service! 🎉"
+        }
+      },
+      "security": {
+        "title": "Security",
+        "description": "Manage your password and account security",
+        "password": "Password",
+        "lastChanged": "Last changed",
+        "neverChanged": "Never changed",
+        "changePassword": "Change Password",
+        "changing": "Changing...",
+        "currentPassword": "Current Password",
+        "currentPasswordPlaceholder": "Enter current password",
+        "newPassword": "New Password",
+        "newPasswordPlaceholder": "Enter new password",
+        "confirmPassword": "Confirm New Password",
+        "confirmPasswordPlaceholder": "Re-enter new password",
+        "passwordRequirements": "Password must be at least 8 characters",
+        "passwordLength": "Password must be 6-8 characters",
+        "passwordMismatch": "Password confirmation does not match",
+        "changeSuccess": "Password changed successfully!",
+        "changeError": "An error occurred while changing password",
+        "changePasswordSuccess": "Password changed successfully!",
+        "changePasswordError": "An error occurred while changing password",
+        "currentPasswordRequired": "Please enter current password",
+        "newPasswordRequired": "Please enter new password",
+        "passwordTooShort": "Password must be at least 8 characters",
+        "invalidCurrentPassword": "Current password is incorrect"
+      },
+      "iconSelector": {
+        "title": "Choose Avatar Icon",
+        "search": "Search icons...",
+        "noResults": "No matching icons found",
+        "selected": "Selected"
+      }
+    },
+    "upgrade": {
+      "title": "Upgrade",
+      "description": "Account upgrade - Feature under development",
+      "comingSoon": "This page is under construction. Please come back later!"
+    }
+  },
+  "premium": {
+    "noSubscription": "No Premium subscription",
+    "daysLeft": "{days} days of Premium left",
+    "expired": "Premium has expired",
+    "undefinedExpiry": "Premium expiry undefined",
+    "expiryLabel": "Expiry date",
+    "invalidDate": "Invalid",
+    "undefinedDate": "Undefined",
+    "errors": {
+      "invalidData": "Invalid data",
+      "insufficientBalance": "Insufficient balance. You need ${amount} but only have ${balance}",
+      "deductFailed": "Unable to deduct from account",
+      "updateFailed": "Error updating premium information",
+      "paymentError": "Payment error occurred",
+      "paymentRetry": "Payment error occurred. Please try again."
+    }
+  },
+  "balance": {
+    "label": "Balance",
+    "insufficient": "Insufficient balance",
+    "fetchError": "Unable to fetch balance information",
+    "updateError": "Unable to update balance",
+    "internalError": "Internal system error"
+  },
+  "time": {
+    "units": {
+      "day": "day",
+      "days": "days",
+      "week": "week",
+      "weeks": "weeks",
+      "month": "month",
+      "months": "months",
+      "year": "year",
+      "years": "years"
+    },
+    "durations": {
+      "oneDay": "1 day",
+      "oneWeek": "1 week",
+      "oneMonth": "1 month",
+      "threeMonths": "3 months",
+      "sixMonths": "6 months",
+      "oneYear": "1 year"
+    }
+  },
+  "chat": {
+    "welcomeMessage": "Start a conversation to get learning support from iRIN",
+    "inputPlaceholder": "Type a message...",
+    "userLabel": "You",
+    "aiLabel": "iRIN",
+    "newChat": "New Chat",
+    "welcomeTitle": "Welcome to iRIN",
+    "grammarHelp": "Grammar Help",
+    "kanjiPractice": "Kanji Practice",
+    "grammarPrompt": "Explain N3 grammar patterns",
+    "kanjiPrompt": "Help me with kanji practice",
+    "settings": {
+      "title": "AI Chat Settings",
+      "darkMode": "Dark Mode",
+      "apiKey": "Google Gemini API Key",
+      "apiKeyPlaceholder": "Enter your Gemini API key...",
+      "save": "Save",
+      "apiKeyHelper": "Get your API key from Google AI Studio",
+      "aiLanguage": "AI Communication Language",
+      "selectLanguage": "Select language",
+      "customLanguagePlaceholder": "Enter desired language (e.g., Korean, Français, Español...)",
+      "saving": "Saving...",
+      "saved": "Saved",
+      "chatHistory": "Chat History",
+      "clearHistory": "Clear All Chat History",
+      "clearHistoryWarning": "This will permanently delete all your chat conversations",
+      "confirmClear": "Are you sure you want to clear all chat history? This action cannot be undone.",
+      "confirmClearTitle": "Clear All Chat History",
+      "close": "Close",
+      "prompts": {
+        "title": "AI Prompt Settings",
+        "description": "Customize the instructions given to the AI.",
+        "systemPrompt": {
+          "label": "System Prompt",
+          "description": "Core instructions that define the AI's role and personality."
+        },
+        "customInstructions": {
+          "label": "Custom Instructions",
+          "description": "Your specific guidelines for the AI to follow."
+        },
+        "buttons": {
+          "save": "Save Prompts",
+          "reset": "Reset to Default"
+        },
+        "notifications": {
+          "saveSuccess": "Prompts saved successfully.",
+          "saveError": "Error saving prompts.",
+          "resetSuccess": "Prompts have been reset to default.",
+          "resetError": "Error resetting prompts."
+        },
+        "personalization": {
+          "title": "Personalization Settings",
+          "preferredName": {
+            "label": "What should iRIN call you?",
+            "placeholder": "Name or nickname you want iRIN to use"
+          },
+          "desiredTraits": {
+            "label": "What traits do you want iRIN to have?",
+            "placeholder": "Describe the personality and traits you want in iRIN"
+          },
+          "personalInfo": {
+            "label": "What else should iRIN know about you?",
+            "placeholder": "Personal info for iRIN to better assist you (optional)"
+          },
+          "additionalRequests": {
+            "label": "Additional Requests",
+            "placeholder": "Anything else you want iRIN to keep in mind? (optional)"
+          }
+        },
+        "generate": {
+          "title": "Generate Custom Prompt",
+          "description": "Use AI to create a suitable prompt based on your input",
+          "button": "Generate Prompt",
+          "buttonLoading": "Generating..."
+        },
+        "generated": {
+          "title": "Generated Prompt",
+          "description": "This is the custom prompt generated for you"
+        },
+        "footer": {
+          "note": "Settings are saved locally and will persist across sessions"
+        },
+        "resetDialog": {
+          "title": "Reset all prompts and settings",
+          "description": "Are you sure you want to reset all prompts and settings? This will: Delete all custom prompts, Reset AI language settings, Reset the form to default. iRIN's core prompt will be preserved.",
+          "confirm": "Reset All",
+          "successMessage": "✅ Reset successful!\n\n• Custom prompt: Deleted\n• Language settings: Reset\n• Core iRIN: Preserved"
+        }
+      }
+    },
+      "prompts": {
+        "aiLanguage": {
+          "title": "What language should iRIN use to communicate with you?",
+          "placeholder": "Select language",
+          "options": {
+            "auto": "Auto Detect",
+            "vietnamese": "Vietnamese",
+            "english": "English",
+            "japanese": "Japanese",
+            "custom": "Custom"
+          },
+          "customPlaceholder": "Enter desired language (e.g., Korean, French, Spanish...)"
+        },
+        "personalization": {
+          "title": "Personalization Settings",
+          "preferredName": {
+            "label": "What should iRIN call you?",
+            "placeholder": "Name or nickname you want iRIN to use"
+          },
+          "desiredTraits": {
+            "label": "What traits do you want iRIN to have?",
+            "placeholder": "Describe the personality and traits you want in iRIN"
+          },
+          "personalInfo": {
+            "label": "What else should iRIN know about you?",
+            "placeholder": "Personal info for iRIN to better assist you (optional)"
+          },
+          "additionalRequests": {
+            "label": "Additional Requests",
+            "placeholder": "Anything else you want iRIN to keep in mind? (optional)"
+          }
+        },
+        "generate": {
+          "title": "Generate Custom Prompt",
+          "description": "Use AI to create a suitable prompt based on your input",
+          "button": "Generate Prompt",
+          "buttonLoading": "Generating..."
+        },
+        "generated": {
+          "title": "Generated Prompt",
+          "description": "This is the custom prompt generated for you"
+        },
+        "footer": {
+          "note": "Settings are saved locally and will persist across sessions"
+        },
+        "buttons": {
+          "reset": "Reset",
+          "save": "Save"
+        },
+        "resetDialog": {
+          "title": "Reset all prompts and settings",
+          "description": "Are you sure you want to reset all prompts and settings? This will: Delete all custom prompts, Reset AI language settings, Reset the form to default. iRIN's core prompt will be preserved.",
+          "confirm": "Reset All",
+          "successMessage": "✅ Reset successful!\n\n• Custom prompt: Deleted\n• Language settings: Reset\n• Core iRIN: Preserved"
+        }
+      },
+    "loading": "Loading iRIN...",
+    "languages": {
+      "auto": "Auto Detect Language",
+      "vietnamese": "Tiếng Việt",
+      "english": "English",
+      "japanese": "日本語",
+      "custom": "Custom"
+    },
+    "aiResponse": "Hello! I'm iRIN from the JLPT4YOU platform. While my specialty is Japanese language, I can discuss any topic you're interested in. You asked: \"{{question}}\". What would you like to talk about today?",
+    "aiAssistant": "AI Assistant",
+    "noConversations": "No conversations yet",
+    "startNewChat": "Start a new chat to begin",
+    "inputHelper": "Press Enter to send, Shift + Enter for new line",
+    "characterCount": "{{count}} characters",
+
+    "newChatTitle": "New Chat",
+    "generatingTitle": "Generating title...",
+    "editTitle": "Edit title",
+    "deleteChat": "Delete chat",
+    "retry": "Retry",
+    "stopGeneration": "Stop generation",
+    "scrollToBottom": "Scroll to bottom",
+    "navigation": {
+      "home": "Home",
+      "settings": "Settings"
+    },
+    "errors": {
+      "geminiConnection": "Sorry, an error occurred while connecting to Gemini AI. Please try again later.",
+      "pdfProcessing": "Sorry, an error occurred while processing the PDF files. Please try again.",
+      "networkError": "Network connection error. Please check your internet connection.",
+      "apiQuotaExceeded": "API quota exceeded. Please try a different model or try again later.",
+      "validationError": "Invalid input provided. Please check your data and try again."
+    },
+    "keywords": {
+      "programming": ["code", "python", "javascript", "java", "calculate", "compute", "algorithm", "function", "script", "program"]
+    }
+  },
+  "review": {
+    "totalQuestions": "Total Questions",
+    "correctAnswers": "Correct Answers",
+    "incorrectAnswers": "Incorrect Answers",
+    "flaggedAnswers": "Flagged Answers"
+  },
+  "study": {
+    "loadingVocabulary": "Loading vocabulary...",
+    "page": {
+      "title": "Study",
+      "subtitle": "Choose the learning method that suits you"
+    },
+    "selectType": "Select study type",
+    "types": {
+      "theory": {
+        "title": "Theory",
+        "description": "Learn basic knowledge",
+        "subtitle": "Master fundamental grammar and vocabulary"
+      },
+      "practice": {
+        "title": "Practice",
+        "description": "Applied exercises",
+        "subtitle": "Improve skills through practical exercises"
+      }
+    },
+    "theory": {
+      "page": {
+        "title": "Japanese Theory",
+        "subtitle": "Basic knowledge and fundamentals"
+      },
+      "comingSoon": "Feature under development. Please come back later!"
+    },
+    "practice": {
+      "page": {
+        "title": "Japanese Practice",
+        "subtitle": "Applied exercises and training"
+      },
+      "comingSoon": "Feature under development. Please come back later!",
+      "levelTitle": "Practice {level}",
+      "selectType": "Choose the type of exercise you want to practice",
+      "breadcrumbs": {
+        "study": "Study",
+        "practice": "Practice"
+      },
+      "pageTitle": "JLPT {level} {type} Practice",
+      "pageDescription": "Test your knowledge with AI-powered practice exercises",
+      "types": {
+        "vocabulary": "Vocabulary",
+        "grammar": "Grammar",
+        "reading": "Reading Comprehension",
+        "kanji": "Kanji",
+        "listening": "Listening"
+      },
+      "reading": {
+        "title": "Reading Comprehension",
+        "description": "Practice reading comprehension with passages and questions",
+        "passageLength": "Passage Length",
+        "passageLengths": {
+          "short": "Short (50-150 words)",
+          "medium": "Medium (150-300 words)",
+          "long": "Long (300-500 words)"
+        },
+        "numberOfPassages": "Number of Passages",
+        "maxPassages": "Maximum 5 passages",
+        "questionsPerPassage": "3 questions per passage",
+        "instructions": "Read the passage carefully and answer the questions below",
+        "passage": "Passage",
+        "questions": "Questions",
+        "generator": {
+          "title": "Generate AI Reading Comprehension",
+          "description": "AI will create reading passages combining vocabulary and grammar appropriate for your level",
+          "selectLength": "Select passage length",
+          "selectCount": "Select number of passages (1-5)"
+        }
+      },
+      "generator": {
+        "title": "Generate AI-Powered Exercise",
+        "description": "Customize your practice session with AI-generated questions",
+        "questionSelectionMode": "Question Selection Mode",
+        "numberOfQuestions": "Number of Questions",
+        "difficultyLevel": "Difficulty Level",
+        "aiModel": "AI Model",
+        "thinkingMode": "Thinking Mode",
+        "lesson": "Lesson",
+        "materialLimit": "Material Limit",
+        "grammarCount": "Number of Grammar",
+        "vocabularyCount": "Number of Vocabulary",
+        "modes": {
+          "random": "Random",
+          "sequential": "Sequential"
+        },
+        "difficulty": {
+          "easy": "Easy",
+          "medium": "Medium",
+          "hard": "Hard",
+          "extremely_hard": "Extremely Hard"
+        },
+        "thinking": {
+          "off": "Off",
+          "on": "On",
+          "proDefault": "Pro model has thinking mode enabled by default",
+          "description": "Thinking mode: slower generation, higher quality questions"
+        },
+        "sequentialOptions": {
+          "lessonLabel": "Lesson {lesson} (offset: {offset})",
+          "defaultGrammar": "Default: 3",
+          "defaultVocabulary": "Default: 5"
+        },
+        "summary": {
+          "type": "Type",
+          "level": "Level",
+          "questions": "Questions",
+          "difficulty": "Difficulty",
+          "estimatedTime": "Est. Time"
+        },
+        "generateButton": "Generate Exercise",
+        "generating": "Generating Questions...",
+        "loadingMessages": {
+          "analyzing": "Analyzing {count} questions",
+          "thinking": "Deep thinking...",
+          "generating": "Quick generation...",
+          "timeEstimate": "~{time}"
+        },
+        "tips": {
+          "title": "Practice Tips",
+          "tip1": "Start with fewer questions if you're new",
+          "tip2": "Review explanations carefully",
+          "tip3": "Take breaks between sessions",
+          "tip4": "Track your progress over time"
+        }
+      },
+      "exercise": {
+        "questionProgress": "Question {current} of {total}",
+        "multipleChoice": "Multiple Choice",
+        "submitAnswer": "Submit Answer",
+        "skip": "Skip",
+        "previous": "Previous",
+        "next": "Next",
+        "complete": "Complete",
+        "correct": "Correct!",
+        "incorrect": "Incorrect",
+        "explanation": {
+          "correctAnswer": "Correct Answer:",
+          "whyCorrect": "Why This is Correct:",
+          "wrongAnswers": "Why Other Options are Wrong:",
+          "additionalNotes": "Additional Notes:",
+          "exampleUsage": "Example Usage:",
+          "toggle": "Show/Hide Explanation"
+        },
+        "noQuestion": "No question available"
+      },
+      "results": {
+        "title": "Practice Results",
+        "performance": {
+          "excellent": "Excellent!",
+          "good": "Good job!",
+          "keepPracticing": "Keep practicing!",
+          "needMorePractice": "Need more practice"
+        },
+        "questionsCorrect": "Questions Correct",
+        "accuracy": "Accuracy",
+        "time": "Time",
+        "breakdown": {
+          "title": "Performance Breakdown",
+          "correctAnswers": "Correct Answers",
+          "incorrectAnswers": "Incorrect Answers",
+          "timePerQuestion": "Time per Question",
+          "exerciseSetId": "Exercise Set ID"
+        },
+        "answerReview": "Answer Review",
+        "fullReview": "Full Review",
+        "questionNumber": "Question {number}",
+        "correctAnswer": "Correct answer",
+        "yourAnswer": "Your answer",
+        "explanation": "Explanation",
+        "whyCorrect": "Why correct:",
+        "whyWrong": "Why others are wrong:",
+        "notes": "Notes:",
+        "noExplanation": "No explanation provided",
+        "actions": {
+          "retry": "Retry Same Questions",
+          "newExercise": "New Exercise",
+          "exportResults": "Export Results",
+          "backToStudy": "Back to Study"
+        },
+        "confirmExit": {
+          "title": "Exit Exercise",
+          "message": "Are you sure you want to exit this exercise?",
+          "warning": "If you exit, the questions will be deleted and you won't be able to retry them.",
+          "cancel": "Cancel",
+          "confirm": "Exit"
+        },
+        "encouragement": {
+          "lowScore": "Study Tip: Review the explanations for incorrect answers and try again. Practice makes perfect! Consider reviewing the theory section before attempting more exercises.",
+          "highScore": "Great work! You're mastering this topic! Try increasing the difficulty or moving to the next level for a greater challenge."
+        }
+      }
+    },
+    "flashcard": {
+      "title": "Flashcard",
+      "vocabularyTitle": "Vocabulary Flashcard {level}",
+      "grammarTitle": "Grammar Flashcard {level}",
+      "description": {
+        "vocabulary": "Learn vocabulary with interactive flashcards",
+        "grammar": "Learn grammar with interactive flashcards"
+      },
+      "status": {
+        "available": "Available",
+        "comingSoon": "Coming Soon"
+      },
+      "errors": {
+        "noVocabulary": "No vocabulary",
+        "noVocabularyFound": "No vocabulary found for {level} level",
+        "noGrammar": "No grammar",
+        "noGrammarFound": "No grammar found for {level} level"
+      },
+      "actions": {
+        "goBack": "Go Back"
+      }
+    },
+    "vocabulary": {
+      "title": "Vocabulary",
+      "description": "Learn vocabulary by level",
+      "pageTitle": "Study {level} - Vocabulary",
+      "pageSubtitle": "Learn JLPT vocabulary by level. Use search to find specific words.",
+      "search": {
+        "placeholder": "Search word (kanji/hiragana/meaning)",
+        "clear": "Clear",
+        "noResults": "No words found"
+      }
+    },
+    "grammar": {
+      "title": "Grammar",
+      "description": "Learn grammar by level",
+      "pageTitle": "Study {level} - Grammar",
+      "pageSubtitle": "Learn JLPT grammar by level. Use search to find specific patterns or meanings.",
+      "search": {
+        "placeholder": "Search grammar or meaning (JP/EN/VN)",
+        "clear": "Clear",
+        "noResults": "No grammar found"
+      }
+    },
+    "history": {
+      "title": "Test History",
+      "viewHistory": "View Test History",
+      "levelTitle": "{level} Test History",
+      "selectType": "Select test type to view history",
+      "description": "Review and retake completed tests",
+      "pageDescription": "Review your past test results and retake tests to improve your scores",
+      "vocabulary": {
+        "description": "Completed vocabulary test history"
+      },
+      "grammar": {
+        "description": "Completed grammar test history"
+      },
+      "reading": {
+        "description": "Completed reading comprehension test history"
+      },
+      "empty": {
+        "title": "No tests completed yet",
+        "description": "You haven't completed any tests yet. Start practicing now!",
+        "startPractice": "Start Practice"
+      },
+      "card": {
+        "correct": "correct",
+        "retry": "Retry",
+        "delete": "Delete",
+        "confirmDelete": "Confirm Delete",
+        "deleteConfirmText": "Click again to confirm deletion",
+        "timeUnknown": "Unknown",
+        "timeMinutes": "m",
+        "timeSeconds": "s",
+        "testResult": "Test Result"
+      },
+      "errors": {
+        "retryFailed": "Cannot retry this test",
+        "deleteFailed": "Cannot delete this test"
+      }
+    },
+    "exam": {
+      "title": "Take Exam",
+      "pageDescription": "Take exam from pre-generated questions",
+      "noSession": {
+        "title": "No exam available",
+        "description": "No exam found to take. Please create a new exam or view history.",
+        "createNew": "Create New Exam",
+        "viewHistory": "View History"
+      }
+    }
+  },
+  "settings": {
+    "main": {
+      "description": "Customize iRIN’s appearance, behavior, and API configurations."
+    },
+    "tabs": {
+      "general": "General",
+      "prompts": "AI Prompts",
+      "api": "API Keys"
+    },
+    "appearance": {
+      "title": "Appearance",
+      "description": "Customize the look and feel of iRIN"
+    },
+    "fontSize": {
+      "title": "Font Size",
+      "description": "Adjust text size in chat messages",
+      "options": {
+        "small": "Small",
+        "medium": "Medium",
+        "large": "Large",
+        "extraLarge": "Extra Large"
+      }
+    },
+    "chatHistory": {
+      "title": "Chat History",
+      "description": "Manage your conversation history"
+    },
+    "prompts": {
+      "title": "Custom AI Prompts",
+      "description": "Customize how iRIN communicates on any topic while maintaining core identity"
+    },
+    "api": {
+      "title": "Google Gemini API",
+      "description": "Configure your Gemini API key for AI functionality.",
+      "getKey": "Get your key from",
+      "keyLabel": "Gemini API Key"
+    }
+  },
+  "prompts": {
+    "title": "Custom AI Prompt Settings",
+    "description": "Customize how iRIN communicates and responds to any topic while maintaining core identity",
+    "reset": "Reset",
+    "identityPreservation": {
+      "title": "Identity Preservation",
+      "description": "iRIN's core identity as a teacher from JLPT4YOU will always be maintained, while allowing flexible discussions on any topic."
+    },
+    "responseStyle": {
+      "title": "Response Style",
+      "description": "How formal should responses be?",
+      "options": {
+        "formal": "Formal & Professional",
+        "casual": "Friendly & Relaxed",
+        "balanced": "Balanced & Professional"
+      }
+    },
+    "detailLevel": {
+      "title": "Detail Level",
+      "description": "How much detail in explanations?",
+      "options": {
+        "concise": "Concise & Brief",
+        "detailed": "Detailed with Examples",
+        "comprehensive": "Comprehensive & In-depth"
+      }
+    },
+    "communicationApproach": {
+      "title": "Communication Approach",
+      "description": "Preferred communication style",
+      "options": {
+        "structured": "Structured & Organized",
+        "conversational": "Conversational & Interactive",
+        "adaptive": "Adaptive to User Interests"
+      }
+    },
+    "responseLanguage": {
+      "title": "Response Language",
+      "description": "Primary language for responses",
+      "options": {
+        "auto": "Auto-detect",
+        "vietnamese": "Vietnamese",
+        "english": "English",
+        "japanese": "Japanese"
+      }
+    },
+    "focusAreas": {
+      "title": "Preferred Discussion Areas",
+      "description": "Topics and areas where iRIN should focus attention",
+      "options": {
+        "japanese": "Japanese Learning",
+        "general": "General Knowledge",
+        "creative": "Creative Discussions",
+        "technology": "Technology & AI",
+        "culture": "Culture & Travel",
+        "education": "Education & Learning",
+        "lifestyle": "Lifestyle & Hobbies",
+        "problemSolving": "Problem Solving"
+      }
+    },
+    "aiLanguage": {
+      "title": "AI Communication Language",
+      "description": "Language that iRIN will use to respond",
+      "placeholder": "Select language",
+      "options": {
+        "auto": "Auto-detect Language",
+        "vietnamese": "Tiếng Việt",
+        "english": "English",
+        "japanese": "日本語",
+        "custom": "Custom"
+      },
+      "customPlaceholder": "Enter desired language (e.g., Korean, Français, Español...)"
+    },
+    "customInstructions": {
+      "title": "Custom Instructions",
+      "description": "Additional specific instructions for iRIN (optional)",
+      "placeholder": "e.g., Be more creative in discussions, focus on practical examples, use humor when appropriate, etc."
+    },
+    "preview": {
+      "title": "Generated Prompt Preview",
+      "description": "This is how your custom prompt will look"
+    },
+    "footer": {
+      "note": "Settings are saved locally and will persist across sessions"
+    },
+    "saving": "Saving...",
+    "saveSettings": "Save Settings"
+  },
+  "modals": {
+    "confirmation": {
+      "title": "Confirm",
+      "defaultMessage": "Are you sure you want to perform this action?",
+      "confirm": "Confirm",
+      "cancel": "Cancel",
+      "close": "Close",
+      "prompts": {
+        "aiLanguage": {
+          "title": "What language should iRIN use to communicate with you?",
+          "placeholder": "Select language",
+          "options": {
+            "auto": "Auto Detect",
+            "vietnamese": "Vietnamese",
+            "english": "English",
+            "japanese": "Japanese",
+            "custom": "Custom"
+          },
+          "customPlaceholder": "Enter desired language (e.g., Korean, French, Spanish...)"
+        },
+        "personalization": {
+          "title": "Personalization Settings",
+          "preferredName": {
+            "label": "What should iRIN call you?",
+            "placeholder": "Name or nickname you want iRIN to use"
+          },
+          "desiredTraits": {
+            "label": "What traits do you want iRIN to have?",
+            "placeholder": "Describe the personality and traits you want in iRIN"
+          },
+          "personalInfo": {
+            "label": "What else should iRIN know about you?",
+            "placeholder": "Personal info for iRIN to better assist you (optional)"
+          },
+          "additionalRequests": {
+            "label": "Additional Requests",
+            "placeholder": "Anything else you want iRIN to keep in mind? (optional)"
+          }
+        },
+        "generate": {
+          "title": "Generate Custom Prompt",
+          "description": "Use AI to create a suitable prompt based on your input",
+          "button": "Generate Prompt",
+          "buttonLoading": "Generating..."
+        },
+        "generated": {
+          "title": "Generated Prompt",
+          "description": "This is the custom prompt generated for you"
+        },
+        "footer": {
+          "note": "Settings are saved locally and will persist across sessions"
+        },
+        "buttons": {
+          "reset": "Reset",
+          "save": "Save"
+        },
+        "resetDialog": {
+          "title": "Reset all prompts and settings",
+          "description": "Are you sure you want to reset all prompts and settings? This will: Delete all custom prompts, Reset AI language settings, Reset the form to default. iRIN's core prompt will be preserved.",
+          "confirm": "Reset All",
+          "successMessage": "✅ Reset successful!\n\n• Custom prompt: Deleted\n• Language settings: Reset\n• Core iRIN: Preserved"
+        }
+      }
+    },
+    "apiKey": {
+      "title": "API Key Setup",
+      "description": "To use AI chat features, you need to provide a Google Gemini API key",
+      "label": "Google Gemini API Key",
+      "placeholder": "AIzaSy...",
+      "required": "API key is required",
+      "invalidFormat": "API key must start with",
+      "invalid": "API key is invalid or expired",
+      "connectionError": "Connection error. Please try again.",
+      "saveError": "Unable to save API key. Please try again.",
+      "noAccess": "API key is invalid or has no access",
+      "getKey": "Get free API key",
+      "openStudio": "Open Google AI Studio",
+      "skip": "Skip",
+      "validate": "Validate",
+      "validating": "Validating...",
+      "geminiFormat": "Gemini API key must start with",
+      "groqFormat": "Groq API key must start with",
+      "instructions": {
+        "title": "How to get API key",
+        "step1": "Visit Google AI Studio",
+        "step2": "Sign in with Google account",
+        "step3": "Click \"Get API Key\" → \"Create API Key\"",
+        "step4": "Copy and paste API key into the field below"
+      },
+      "security": {
+        "note": "API key is stored securely on your device and is not shared with third parties."
+      }
+    },
+    "settings": {
+      "language": {
+        "title": "What language should iRIN communicate with you in?",
+        "selectLanguage": "Select Language",
+        "autoDetect": "Auto-detect Language",
+        "vietnamese": "Tiếng Việt",
+        "english": "English",
+        "japanese": "日本語",
+        "custom": "Custom",
+        "customPlaceholder": "Enter desired language (e.g., Korean, Français, Español...)"
+      },
+      "profile": {
+        "title": "Personal Information",
+        "subtitle": "Manage your display information and avatar",
+        "displayName": "Display Name",
+        "displayNamePlaceholder": "Enter display name",
+        "avatar": "Avatar",
+        "changeAvatar": "Change avatar",
+        "removeAvatar": "Remove avatar",
+        "save": "Save changes",
+        "saving": "Saving...",
+        "updateSuccess": "Information updated successfully!",
+        "updateError": "Error occurred while updating",
+        "unexpectedError": "An unexpected error occurred"
+      },
+      "security": {
+        "title": "Security",
+        "subtitle": "Manage password and account security",
+        "currentPassword": "Current Password",
+        "newPassword": "New Password",
+        "confirmPassword": "Confirm New Password",
+        "changePassword": "Change Password",
+        "changing": "Changing...",
+        "changeSuccess": "Password changed successfully!",
+        "changeError": "Error occurred while changing password",
+        "unexpectedError": "An unexpected error occurred"
+      }
+    },
+    "common": {
+      "save": "Save",
+      "saving": "Saving...",
+      "saved": "Saved",
+      "cancel": "Cancel",
+      "close": "Close",
+      "confirm": "Confirm",
+      "delete": "Delete",
+      "edit": "Edit",
+      "loading": "Loading...",
+      "success": "Success",
+      "error": "Error",
+      "retry": "Retry"
+    }
+  },
+  "library": {
+    "page": {
+      "title": "Library",
+      "subtitle": "Learning materials and reference books"
+    },
+    "categories": {
+      "jlpt": {
+        "title": "JLPT",
+        "description": "JLPT N1-N5 study materials",
+        "subtitle": "Official JLPT materials library"
+      },
+      "other": {
+        "title": "Other",
+        "description": "Books and materials beyond JLPT",
+        "subtitle": "Diverse Japanese learning resources"
+      }
+    },
+    "jlpt": {
+      "page": {
+        "title": "JLPT Library",
+        "subtitle": "Select JLPT level to view materials"
+      },
+      "books": {
+        "title": "JLPT Books",
+        "subtitle": "JLPT preparation materials for level"
+      },
+      "levels": {
+        "n1": {
+          "title": "JLPT N1",
+          "description": "Highest level - Advanced proficiency",
+          "subtitle": "N1 materials and tests"
+        },
+        "n2": {
+          "title": "JLPT N2",
+          "description": "Upper intermediate - Good proficiency",
+          "subtitle": "N2 materials and tests"
+        },
+        "n3": {
+          "title": "JLPT N3",
+          "description": "Intermediate - Basic communication",
+          "subtitle": "N3 materials and tests"
+        },
+        "n4": {
+          "title": "JLPT N4",
+          "description": "Elementary - Basic understanding",
+          "subtitle": "N4 materials and tests"
+        },
+        "n5": {
+          "title": "JLPT N5",
+          "description": "Beginner - Just starting",
+          "subtitle": "N5 materials and tests"
+        }
+      }
+    },
+    "other": {
+      "page": {
+        "title": "Other Library",
+        "subtitle": "Diverse Japanese learning books and materials"
+      },
+      "books": {
+        "title": "Other Books & Materials",
+        "subtitle": "Diverse Japanese learning resources beyond JLPT"
+      },
+      "upload": {
+        "title": "Upload Materials",
+        "description": "Add your books and materials",
+        "subtitle": "Feature coming soon"
+      }
+    },
+    "books": {
+      "title": "Book Library",
+      "subtitle": "Select books and learning materials",
+      "search": {
+        "placeholder": "Search books, authors..."
+      },
+
+      "noResults": {
+        "title": "No books found",
+        "description": "Try changing search keywords or filters"
+      },
+      "pages": "pages"
+    }
+  }
+}

@@ -1,0 +1,204 @@
+[
+  {
+    "url": "http://localhost:3000/",
+    "timestamp": "2025-08-18T00:58:40.286Z",
+    "scores": {
+      "performance": 74,
+      "accessibility": 92,
+      "best-practices": 96,
+      "seo": 100
+    },
+    "metrics": {},
+    "coreWebVitals": {
+      "lcp": 7506.988100000002,
+      "fid": 102.99999999999955,
+      "cls": 0.01261494195496941,
+      "fcp": 1813.1511,
+      "tti": 7506.988100000003,
+      "tbt": 95.99999999999955
+    },
+    "status": "FAILED",
+    "issues": [
+      "performance: 74/100 (threshold: 85)",
+      "LCP: 7506.988100000002ms (threshold: 2500ms)",
+      "FID: 102.99999999999955ms (threshold: 100ms)",
+      "FCP: 1813.1511ms (threshold: 1800ms)",
+      "TTI: 7506.988100000003ms (threshold: 3800ms)"
+    ],
+    "improvements": [
+      {
+        "id": "unused-css-rules",
+        "title": "Reduce unused CSS",
+        "savings": 400,
+        "displayValue": "Est savings of 62 KiB"
+      },
+      {
+        "id": "unused-javascript",
+        "title": "Reduce unused JavaScript",
+        "savings": 1050,
+        "displayValue": "Est savings of 182 KiB"
+      }
+    ]
+  },
+  {
+    "url": "http://localhost:3000/home",
+    "timestamp": "2025-08-18T00:58:46.978Z",
+    "scores": {
+      "performance": 81,
+      "accessibility": 93,
+      "best-practices": 96,
+      "seo": 66
+    },
+    "metrics": {},
+    "coreWebVitals": {
+      "lcp": 4829.12745,
+      "fid": 50,
+      "cls": 0,
+      "fcp": 1807.94385,
+      "tti": 4829.12745,
+      "tbt": 0
+    },
+    "status": "FAILED",
+    "issues": [
+      "performance: 81/100 (threshold: 85)",
+      "seo: 66/100 (threshold: 80)",
+      "LCP: 4829.12745ms (threshold: 2500ms)",
+      "FCP: 1807.94385ms (threshold: 1800ms)",
+      "TTI: 4829.12745ms (threshold: 3800ms)"
+    ],
+    "improvements": [
+      {
+        "id": "unused-css-rules",
+        "title": "Reduce unused CSS",
+        "savings": 440,
+        "displayValue": "Est savings of 62 KiB"
+      },
+      {
+        "id": "unused-javascript",
+        "title": "Reduce unused JavaScript",
+        "savings": 290,
+        "displayValue": "Est savings of 47 KiB"
+      }
+    ]
+  },
+  {
+    "url": "http://localhost:3000/jlpt",
+    "timestamp": "2025-08-18T00:58:53.622Z",
+    "scores": {
+      "performance": 83,
+      "accessibility": 93,
+      "best-practices": 96,
+      "seo": 100
+    },
+    "metrics": {},
+    "coreWebVitals": {
+      "lcp": 4599.1988,
+      "fid": 51.99999999999909,
+      "cls": 0,
+      "fcp": 1808.1227999999999,
+      "tti": 4599.1988,
+      "tbt": 1.9999999999990905
+    },
+    "status": "FAILED",
+    "issues": [
+      "performance: 83/100 (threshold: 85)",
+      "LCP: 4599.1988ms (threshold: 2500ms)",
+      "FCP: 1808.1227999999999ms (threshold: 1800ms)",
+      "TTI: 4599.1988ms (threshold: 3800ms)"
+    ],
+    "improvements": [
+      {
+        "id": "unused-css-rules",
+        "title": "Reduce unused CSS",
+        "savings": 460,
+        "displayValue": "Est savings of 62 KiB"
+      },
+      {
+        "id": "unused-javascript",
+        "title": "Reduce unused JavaScript",
+        "savings": 160,
+        "displayValue": "Est savings of 47 KiB"
+      }
+    ]
+  },
+  {
+    "url": "http://localhost:3000/challenge",
+    "timestamp": "2025-08-18T00:59:00.236Z",
+    "scores": {
+      "performance": 81,
+      "accessibility": 93,
+      "best-practices": 96,
+      "seo": 100
+    },
+    "metrics": {},
+    "coreWebVitals": {
+      "lcp": 4875.455600000001,
+      "fid": 47,
+      "cls": 0,
+      "fcp": 1806.17085,
+      "tti": 4875.455600000001,
+      "tbt": 0
+    },
+    "status": "FAILED",
+    "issues": [
+      "performance: 81/100 (threshold: 85)",
+      "LCP: 4875.455600000001ms (threshold: 2500ms)",
+      "FCP: 1806.17085ms (threshold: 1800ms)",
+      "TTI: 4875.455600000001ms (threshold: 3800ms)"
+    ],
+    "improvements": [
+      {
+        "id": "unused-css-rules",
+        "title": "Reduce unused CSS",
+        "savings": 590,
+        "displayValue": "Est savings of 62 KiB"
+      },
+      {
+        "id": "unused-javascript",
+        "title": "Reduce unused JavaScript",
+        "savings": 440,
+        "displayValue": "Est savings of 47 KiB"
+      }
+    ]
+  },
+  {
+    "url": "http://localhost:3000/study",
+    "timestamp": "2025-08-18T00:59:06.798Z",
+    "scores": {
+      "performance": 81,
+      "accessibility": 93,
+      "best-practices": 96,
+      "seo": 100
+    },
+    "metrics": {},
+    "coreWebVitals": {
+      "lcp": 4876.456399999998,
+      "fid": 47,
+      "cls": 0,
+      "fcp": 1806.5461500000001,
+      "tti": 4876.456399999999,
+      "tbt": 0
+    },
+    "status": "FAILED",
+    "issues": [
+      "performance: 81/100 (threshold: 85)",
+      "LCP: 4876.456399999998ms (threshold: 2500ms)",
+      "FCP: 1806.5461500000001ms (threshold: 1800ms)",
+      "TTI: 4876.456399999999ms (threshold: 3800ms)"
+    ],
+    "improvements": [
+      {
+        "id": "unused-css-rules",
+        "title": "Reduce unused CSS",
+        "savings": 590,
+        "displayValue": "Est savings of 62 KiB"
+      },
+      {
+        "id": "unused-javascript",
+        "title": "Reduce unused JavaScript",
+        "savings": 440,
+        "displayValue": "Est savings of 47 KiB"
+      }
+    ]
+  }
+]

@@ -1,73 +1,73 @@
 /* ===== PROFESSIONAL HOVER EFFECTS SYSTEM ===== */
-/* GitHub/Discord-inspired hover effects - subtle, professional, consistent */
+/* Material Design & UX-optimized hover effects - subtle, professional, accessible */
 
 /* === CORE HOVER PRINCIPLES === */
-/* 1. Subtle brightness changes (5-10% max) */
-/* 2. No gray transitions - use existing color hierarchy */
-/* 3. Consistent timing and easing */
-/* 4. Maintain perfect contrast ratios */
+/* 1. Use dedicated hover variables for consistent behavior */
+/* 2. 8-16% alpha overlay for subtle feedback */
+/* 3. Consistent timing (150-200ms) and easing */
+/* 4. Maintain WCAG contrast ratios */
 
-/* Base Professional Hover - Universal subtle effect */
-.hover-professional {
-  transition: background-color 0.15s ease-out;
-}
+/* === BUTTON HOVER EFFECTS === */
 
-.hover-professional:hover {
-  background-color: color-mix(in oklch, var(--muted) 95%, var(--foreground) 5%);
-}
-
-/* Primary Button Hover - Subtle darkening */
+/* Primary Button Hover - Background and text color change */
 .hover-primary {
-  transition: background-color 0.15s ease-out;
+  transition: all 0.15s ease-out;
 }
 
 .hover-primary:hover {
-  background-color: color-mix(in oklch, var(--primary) 92%, transparent 8%);
+  background-color: var(--primary-hover);
+  color: var(--primary-hover-foreground);
 }
 
-/* Secondary Surface Hover - Move up hierarchy */
+/* Secondary Button Hover - Background and text color change */
 .hover-secondary {
-  transition: background-color 0.15s ease-out;
+  transition: all 0.15s ease-out;
 }
 
 .hover-secondary:hover {
-  background-color: var(--muted);
+  background-color: var(--secondary-hover);
+  color: var(--secondary-hover-foreground);
 }
 
-/* Muted Surface Hover - Subtle lift */
+/* Muted Surface Hover - Subtle lift with proper text contrast */
 .hover-muted {
-  transition: background-color 0.15s ease-out;
+  transition: all 0.15s ease-out;
 }
 
 .hover-muted:hover {
-  background-color: color-mix(in oklch, var(--muted) 95%, var(--foreground) 5%);
+  background-color: var(--muted);
+  color: var(--muted-foreground);
 }
 
-/* Ghost Button Hover - Gentle background appearance */
+/* Ghost Button Hover - Background appears with proper text */
 .hover-ghost {
-  transition: background-color 0.15s ease-out;
+  transition: all 0.15s ease-out;
 }
 
 .hover-ghost:hover {
   background-color: var(--muted);
+  color: var(--foreground);
 }
 
 /* Interactive Element Hover - For dropdowns, menus */
 .hover-interactive {
-  transition: background-color 0.15s ease-out;
+  transition: all 0.15s ease-out;
 }
 
 .hover-interactive:hover {
   background-color: var(--muted);
+  color: var(--foreground);
 }
 
-/* Destructive Button Hover - Subtle darkening */
+/* Destructive Button Hover - Darker background with proper text */
 .hover-destructive {
-  transition: background-color 0.15s ease-out;
+  transition: all 0.15s ease-out;
 }
 
 .hover-destructive:hover {
-  background-color: color-mix(in oklch, var(--destructive) 92%, transparent 8%);
+  background-color: var(--destructive);
+  color: var(--destructive-foreground);
+  filter: brightness(0.9);
 }
 
 /* === CARD HOVER EFFECTS === */
@@ -78,8 +78,8 @@
 }
 
 .hover-card:hover {
-  background-color: color-mix(in oklch, var(--card) 97%, var(--foreground) 3%);
-  box-shadow: 0 2px 8px color-mix(in oklch, var(--foreground) 8%, transparent 92%);
+  background-color: var(--accent);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 /* Card with Scale - For emphasis */
@@ -88,9 +88,9 @@
 }
 
 .hover-card-scale:hover {
-  background-color: color-mix(in oklch, var(--card) 97%, var(--foreground) 3%);
+  background-color: var(--accent);
   transform: scale(1.01);
-  box-shadow: 0 4px 12px color-mix(in oklch, var(--foreground) 8%, transparent 92%);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 /* === UTILITY HOVER EFFECTS === */
@@ -115,14 +115,132 @@
 
 /* === FOCUS STATES === */
 
-/* Professional Focus Ring */
+/* Professional Focus Ring - Subtle border instead of outline */
 .focus-ring {
   transition: all 0.15s ease-out;
 }
 
 .focus-ring:focus-visible {
-  outline: 2px solid var(--ring);
-  outline-offset: 2px;
+  outline: none;
+  border-color: var(--ring);
+  box-shadow: 0 0 0 1px var(--ring);
+}
+
+/* Input Focus - Clean border highlight */
+.focus-input {
+  transition: border-color 0.15s ease-out, box-shadow 0.15s ease-out;
+}
+
+.focus-input:focus {
+  outline: none;
+  border-color: var(--ring);
+  box-shadow: 0 0 0 1px var(--ring);
+}
+
+/* Chat Input Focus - No visible outline/border */
+.focus-chat-input {
+  transition: border-color 0.15s ease-out;
+}
+
+.focus-chat-input:focus {
+  outline: none;
+  border-color: var(--border);
+}
+
+/* No Focus Effects - Completely invisible focus and border */
+.focus-none {
+  transition: none;
+}
+
+.focus-none:focus {
+  outline: none;
+  border: none;
+  box-shadow: none;
+}
+
+/* Button Focus - Subtle background change */
+.focus-button {
+  transition: all 0.15s ease-out;
+}
+
+.focus-button:focus-visible {
+  outline: none;
+  background-color: var(--primary-hover);
+}
+
+
+
+/* Selected state hover - subtle opacity change to maintain inversion */
+.annotation-tool-selected:hover {
+  background-color: var(--sidebar-foreground) !important;
+  color: var(--sidebar) !important;
+  border-color: var(--sidebar-foreground) !important;
+  opacity: 0.9;
+}
+
+/* === ADVANCED COLOR PICKER === */
+/* Custom styling for hue slider */
+
+.hue-slider::-webkit-slider-thumb {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: white;
+  border: 2px solid #ccc;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.hue-slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: white;
+  border: 2px solid #ccc;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+/* === ERASER VOLUME SLIDER === */
+/* Volume-style slider with circular thumb for eraser size */
+
+.volume-slider {
+  background: var(--sidebar-accent);
+}
+
+.volume-slider::-webkit-slider-thumb {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  background: var(--sidebar-foreground);
+  border: 2px solid var(--sidebar-border);
+  cursor: pointer;
+  transition: all 0.15s ease-out;
+  border-radius: 50%;
+}
+
+.volume-slider::-webkit-slider-thumb:hover {
+  background: var(--sidebar-foreground);
+  border-color: var(--sidebar-accent);
+  transform: scale(1.1);
+}
+
+.volume-slider::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  background: var(--sidebar-foreground);
+  border: 2px solid var(--sidebar-border);
+  cursor: pointer;
+  transition: all 0.15s ease-out;
+  border-radius: 50%;
+  box-sizing: border-box;
+}
+
+.volume-slider::-moz-range-thumb:hover {
+  background: var(--sidebar-foreground);
+  border-color: var(--sidebar-accent);
+  transform: scale(1.1);
 }
 
 /* === LEGACY COMPATIBILITY === */
@@ -141,7 +259,7 @@
 }
 
 .hover-brightness-medium:hover {
-  background-color: color-mix(in oklch, var(--muted) 95%, var(--foreground) 5%);
+  background-color: var(--accent);
 }
 
 .hover-brightness-strong {
@@ -149,5 +267,5 @@
 }
 
 .hover-brightness-strong:hover {
-  background-color: color-mix(in oklch, var(--muted) 90%, var(--foreground) 10%);
+  background-color: var(--secondary);
 }

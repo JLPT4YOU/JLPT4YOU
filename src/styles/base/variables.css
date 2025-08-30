@@ -1,77 +1,72 @@
 :root {
   --radius: 0.75rem;
 
-  /* ===== PROFESSIONAL UNIFIED COLOR SYSTEM 2025 ===== */
-  /* GitHub/Discord-inspired monochromatic excellence */
-  /* Consistent hierarchy, perfect contrast, professional appearance */
+  /* ===== PROFESSIONAL UX/UI COLOR SYSTEM 2025 ===== */
+  /* Material Design & WCAG-compliant color palette */
+  /* Optimized for accessibility, reduced eye strain, professional appearance */
 
-  /* === LIGHT MODE - GitHub-inspired Professional === */
+  /* === LIGHT MODE - Professional UX Standards === */
 
-  /* Core Backgrounds - Pure white with warm undertones */
-  --background: oklch(1 0 0);                    /* Pure white #ffffff */
-  --foreground: oklch(0.15 0.005 240);           /* Dark charcoal #24292f */
+  /* Core Backgrounds - Soft gray instead of pure white */
+  --background: #F7F8FA;           /* Soft gray background - reduces eye strain */
+  --foreground: #1A1A1A;           /* Dark gray text - easier on eyes than pure black */
 
-  /* Surface Hierarchy - 5 distinct levels */
-  --card: oklch(0.98 0.002 240);                 /* Card surface #fafbfc */
-  --card-foreground: oklch(0.15 0.005 240);      /* Card text #24292f */
-  --popover: oklch(1 0 0);                       /* Popover surface #ffffff */
-  --popover-foreground: oklch(0.15 0.005 240);   /* Popover text #24292f */
+  /* Surface Hierarchy - Clear visual separation */
+  --card: #FFFFFF;                 /* Pure white cards on soft gray background */
+  --card-foreground: #1A1A1A;      /* Consistent text color */
+  --popover: #FFFFFF;              /* White popover surface */
+  --popover-foreground: #1A1A1A;   /* Dark gray text */
 
-  /* Interactive Elements - Consistent with foreground */
-  --primary: oklch(0.15 0.005 240);              /* Primary #24292f */
-  --primary-foreground: oklch(1 0 0);            /* Primary text #ffffff */
+  /* Interactive Elements - Pure monochrome */
+  --primary: #1A1A1A;              /* Dark gray primary */
+  --primary-foreground: #FFFFFF;   /* White text on dark gray */
 
-  /* Secondary Surfaces - Subtle differentiation */
-  --secondary: oklch(0.96 0.002 240);            /* Secondary #f6f8fa */
-  --secondary-foreground: oklch(0.15 0.005 240); /* Secondary text #24292f */
+  /* Secondary Surfaces - Light gray */
+  --secondary: #E0E0E0;            /* Light gray secondary */
+  --secondary-foreground: #1A1A1A; /* Dark text on light gray */
 
-  /* Muted Elements - Perfect hierarchy */
-  --muted: oklch(0.96 0.002 240);                /* Muted background #f6f8fa */
-  --muted-foreground: oklch(0.45 0.005 240);     /* Muted text #656d76 */
+  /* Muted Elements - Subtle hierarchy */
+  --muted: #EEEEEE;                /* Light gray for muted backgrounds */
+  --muted-foreground: #4F4F4F;     /* Medium gray for secondary text */
 
-  /* Accent - Same as primary for consistency */
-  --accent: oklch(0.96 0.002 240);               /* Accent background #f6f8fa */
-  --accent-foreground: oklch(0.15 0.005 240);    /* Accent text #24292f */
+  /* Accent - Consistent with background */
+  --accent: #F7F8FA;               /* Accent same as background */
+  --accent-foreground: #1A1A1A;    /* Dark text on light accent */
 
-  /* Destructive - Professional red */
-  --destructive: oklch(0.55 0.22 15);            /* Error red #d1242f */
-  --destructive-foreground: oklch(1 0 0);        /* Error text #ffffff */
+  /* Destructive - Uses error color */
+  --destructive: var(--error);     /* Red for destructive actions */
+  --destructive-foreground: var(--error-foreground); /* White text on red */
 
-  /* Borders & Inputs - Clean definition */
-  --border: oklch(0.92 0.005 240);               /* Border #d0d7de */
-  --input: oklch(0.98 0.002 240);                /* Input background #fafbfc */
-  --ring: oklch(0.15 0.005 240);                 /* Focus ring #24292f */
+  /* Borders & Inputs - Clear definition */
+  --border: #D0D0D0;               /* Medium gray borders for visibility */
+  --input: #FFFFFF;                /* Pure white input backgrounds */
+  --ring: #1A1A1A;                 /* Dark gray focus ring */
   
   /* Chart Colors - Modern grayscale progression */
-  --chart-1: oklch(0.25 0 0);                   /* Dark gray */
-  --chart-2: oklch(0.40 0 0);                   /* Medium-dark gray */
-  --chart-3: oklch(0.55 0 0);                   /* Medium gray */
-  --chart-4: oklch(0.70 0 0);                   /* Light-medium gray */
-  --chart-5: oklch(0.85 0 0);                   /* Light gray */
+  --chart-1: #404040;                   /* Dark gray */
+  --chart-2: #666666;                   /* Medium-dark gray */
+  --chart-3: #8c8c8c;                   /* Medium gray */
+  --chart-4: #b3b3b3;                   /* Light-medium gray */
+  --chart-5: #d9d9d9;                   /* Light gray */
 
-  /* Chat Sidebar Colors - Comfortable sidebar */
-  --sidebar: oklch(0.96 0.002 60);              /* Warm light gray sidebar */
-  --sidebar-foreground: oklch(0.15 0.003 60);   /* Soft dark text */
-  --sidebar-primary: oklch(0.20 0.003 60);      /* Soft dark gray primary */
-  --sidebar-primary-foreground: oklch(0.98 0.002 60); /* Warm off-white text */
-  --sidebar-accent: oklch(0.90 0.002 60);       /* Gentle accent */
-  --sidebar-accent-foreground: oklch(0.15 0.003 60); /* Soft dark text */
-  --sidebar-border: oklch(0.85 0.002 60);       /* Softer borders */
-  --sidebar-ring: oklch(0.25 0.003 60);         /* Gentle focus rings */
+  /* Sidebar Colors - Pure monochrome light mode */
+  --sidebar: #EEEEEE;              /* Light gray sidebar */
+  --sidebar-foreground: #1A1A1A;   /* Dark text */
+  --sidebar-primary: #1A1A1A;      /* Dark gray primary */
+  --sidebar-primary-foreground: #FFFFFF; /* White text */
+  --sidebar-accent: #E0E0E0;       /* Light gray accent */
+  --sidebar-accent-foreground: #1A1A1A; /* Dark text */
+  --sidebar-border: #D0D0D0;       /* Gray borders */
+  --sidebar-ring: #1A1A1A;         /* Dark focus rings */
 
-  /* Chat-specific Colors - Professional chat styling */
-  --chat-user-bg: oklch(0.25 0 0);              /* Dark charcoal user messages */
-  --chat-user-text: oklch(1 0 0);               /* Pure white text */
-  --chat-assistant-bg: oklch(0.97 0.005 100);   /* Light gray AI messages */
-  --chat-assistant-text: oklch(0.25 0 0);       /* Dark charcoal text */
-  --chat-input-bg: oklch(0.97 0.005 100);       /* Light gray input background #f7f7f7 */
-  --chat-input-border: oklch(0.90 0.003 85);    /* Light border */
-  --chat-input-focus: oklch(0.25 0 0);          /* Dark charcoal focus state */
-
-  /* Sidebar Colors - Light gray for better visual separation */
-  --sidebar: oklch(0.97 0.005 100);             /* Light gray sidebar background (#f7f7f7) */
-  --sidebar-border: oklch(0.90 0.003 85);       /* Light border for sidebar */
-  --sidebar-foreground: oklch(0.25 0 0);        /* Dark text on light sidebar */
+  /* Chat-specific Colors - Pure monochrome light chat styling */
+  --chat-user-bg: #EEEEEE;         /* Light gray user messages */
+  --chat-user-text: #1A1A1A;       /* Dark text in light mode */
+  --chat-assistant-bg: #EEEEEE;    /* Light gray AI messages */
+  --chat-assistant-text: #1A1A1A;  /* Dark text */
+  --chat-input-bg: #FFFFFF;        /* White input background */
+  --chat-input-border: #D0D0D0;    /* Gray border */
+  --chat-input-focus: #1A1A1A;     /* Dark focus state */
 
   /* Chat Font Size - Customizable */
   --chat-font-size: 16px;                       /* Default medium font size */
@@ -84,30 +79,42 @@
   --font-weight-semibold: 600;                  /* Tiêu đề phụ (h3, h4) */
   --font-weight-bold: 700;                      /* Tiêu đề chính (h1, h2) */
 
-  /* Code Block Colors - Light theme */
-  --code-block-bg: #f9f9f9;                     /* Light background for code blocks */
+  /* Code Block Colors - Pure monochrome light theme */
+  --code-block-bg: #EEEEEE;                     /* Light gray background for code blocks */
   --code-block-border: rgba(0, 0, 0, 0.1);      /* Subtle dark border */
   --code-block-radius: 0.75rem;                 /* Rounded corners for code blocks */
 
   /* JLPT Level Colors - Grayscale Progression */
-  --jlpt-n5: oklch(0.8 0 0);         /* Light Gray - Beginner */
-  --jlpt-n5-foreground: oklch(0.11 0 0);
-  --jlpt-n4: oklch(0.65 0 0);        /* Medium Gray - Elementary */
-  --jlpt-n4-foreground: oklch(0.99 0 0);
-  --jlpt-n3: oklch(0.5 0 0);         /* Mid Gray - Intermediate */
-  --jlpt-n3-foreground: oklch(0.99 0 0);
-  --jlpt-n2: oklch(0.35 0 0);        /* Dark Gray - Upper Intermediate */
-  --jlpt-n2-foreground: oklch(0.99 0 0);
-  --jlpt-n1: oklch(0.2 0 0);         /* Darker Gray - Advanced */
-  --jlpt-n1-foreground: oklch(0.99 0 0);
+  --jlpt-n5: #cccccc;         /* Light Gray - Beginner */
+  --jlpt-n5-foreground: #1a1a1a;
+  --jlpt-n4: #a6a6a6;        /* Medium Gray - Elementary */
+  --jlpt-n4-foreground: #ffffff;
+  --jlpt-n3: #808080;         /* Mid Gray - Intermediate */
+  --jlpt-n3-foreground: #ffffff;
+  --jlpt-n2: #595959;        /* Dark Gray - Upper Intermediate */
+  --jlpt-n2-foreground: #ffffff;
+  --jlpt-n1: #333333;         /* Darker Gray - Advanced */
+  --jlpt-n1-foreground: #ffffff;
 
-  /* Status Colors - Minimal Red/Green */
-  --success: oklch(0.4 0.15 140);
-  --success-foreground: oklch(0.99 0 0);
-  --warning: oklch(0.6 0.2 70);
-  --warning-foreground: oklch(0.99 0 0);
-  --info: oklch(0.4 0 0);
-  --info-foreground: oklch(0.99 0 0);
+  /* Status Colors - Professional colored system */
+  --success: #27AE60;              /* Green for success */
+  --success-foreground: #FFFFFF;   /* White text (4.6:1 contrast) */
+  --warning: #F39C12;              /* Orange for warning */
+  --warning-foreground: #11181C;   /* Dark text for better contrast */
+  --info: #3498DB;                 /* Blue for info */
+  --info-foreground: #FFFFFF;      /* White text */
+  --error: #E74C3C;                /* Red for error */
+  --error-foreground: #FFFFFF;     /* White text */
+
+  /* Interactive States - Light Mode with proper text contrast */
+  --primary-hover: #000000;        /* Pure black on hover */
+  --primary-hover-foreground: #FFFFFF; /* White text on black hover */
+  --primary-active: #000000;       /* Pure black when active */
+  --secondary-hover: #CCCCCC;      /* Lighter gray on hover */
+  --secondary-hover-foreground: #1A1A1A; /* Dark text on light hover */
+  --secondary-active: #B0B0B0;     /* Medium gray when active */
+  --disabled-bg: #9E9E9E;          /* Disabled background */
+  --disabled-text: rgba(26,26,26,0.5); /* Disabled text - 50% opacity */
 
   /* Global Spacing System */
   --spacing-xs: 0.5rem;      /* 8px */
@@ -120,100 +127,184 @@
 }
 
 .dark {
-  /* === DARK MODE - GitHub/Discord-inspired Professional === */
-  /* Warm dark charcoal, perfect contrast, reduced eye strain */
+  /* === DARK MODE - Material Design Standards === */
+  /* Optimized for reduced eye strain and professional appearance */
 
-  /* Core Backgrounds - Dark charcoal with warm undertones */
-  --background: oklch(0.08 0.005 240);           /* Dark charcoal #0d1117 */
-  --foreground: oklch(0.94 0.002 240);           /* Light text #f0f6fc */
+  /* Core Backgrounds - Material Design dark gray */
+  --background: #121212;           /* Material Design dark background */
+  --foreground: #FFFFFF;           /* Pure white text for maximum contrast */
 
-  /* Surface Hierarchy - 5 distinct levels */
-  --card: oklch(0.11 0.005 240);                 /* Card surface #161b22 */
-  --card-foreground: oklch(0.94 0.002 240);      /* Card text #f0f6fc */
-  --popover: oklch(0.11 0.005 240);              /* Popover surface #161b22 */
-  --popover-foreground: oklch(0.94 0.002 240);   /* Popover text #f0f6fc */
+  /* Surface Hierarchy - Pure monochrome elevated surfaces */
+  --card: #1E1E1E;                 /* Dark gray elevated surface */
+  --card-foreground: #FFFFFF;      /* White text on elevated surface */
+  --popover: #1E1E1E;              /* Dark gray popover surface */
+  --popover-foreground: #FFFFFF;   /* White text on popover */
 
-  /* Interactive Elements - Consistent with foreground */
-  --primary: oklch(0.94 0.002 240);              /* Primary #f0f6fc */
-  --primary-foreground: oklch(0.08 0.005 240);   /* Primary text #0d1117 */
+  /* Interactive Elements - Pure monochrome dark mode */
+  --primary: #FFFFFF;              /* White primary for dark mode */
+  --primary-foreground: #121212;   /* Dark background text */
 
-  /* Secondary Surfaces - Subtle differentiation */
-  --secondary: oklch(0.13 0.005 240);            /* Secondary #21262d */
-  --secondary-foreground: oklch(0.94 0.002 240); /* Secondary text #f0f6fc */
+  /* Secondary Surfaces - Dark gray */
+  --secondary: #404040;            /* Dark gray for secondary elements */
+  --secondary-foreground: #FFFFFF; /* White text on dark gray */
 
-  /* Muted Elements - Perfect hierarchy */
-  --muted: oklch(0.13 0.005 240);                /* Muted background #21262d */
-  --muted-foreground: oklch(0.65 0.005 240);     /* Muted text #8b949e */
+  /* Muted Elements - Subtle hierarchy */
+  --muted: #2A2A2A;                /* Dark gray for muted backgrounds */
+  --muted-foreground: rgba(255,255,255,0.7); /* 70% white for secondary text */
 
-  /* Accent - Same as muted for consistency */
-  --accent: oklch(0.13 0.005 240);               /* Accent background #21262d */
-  --accent-foreground: oklch(0.94 0.002 240);    /* Accent text #f0f6fc */
+  /* Accent - Consistent with background */
+  --accent: #121212;               /* Accent same as background */
+  --accent-foreground: #FFFFFF;    /* White text on accent */
 
-  /* Destructive - Professional red for dark mode */
-  --destructive: oklch(0.55 0.15 15);            /* Error red #da3633 */
-  --destructive-foreground: oklch(0.94 0.002 240); /* Error text #f0f6fc */
+  /* Destructive - Uses error color */
+  --destructive: var(--error);     /* Red for destructive actions */
+  --destructive-foreground: var(--error-foreground); /* White text on red */
 
   /* Borders & Inputs - Clear definition */
-  --border: oklch(0.18 0.005 240);               /* Border #30363d */
-  --input: oklch(0.11 0.005 240);                /* Input background #161b22 */
-  --ring: oklch(0.94 0.002 240);                 /* Focus ring #f0f6fc */
+  --border: rgba(255,255,255,0.2); /* 20% white border for better visibility */
+  --input: #2A2A2A;                /* Dark gray input background */
+  --ring: #FFFFFF;                 /* White focus ring */
 
   /* Chart Colors - Comfortable grayscale progression */
-  --chart-1: oklch(0.75 0.003 240);          /* Lighter, warmer grays */
-  --chart-2: oklch(0.62 0.003 240);
-  --chart-3: oklch(0.48 0.003 240);
-  --chart-4: oklch(0.35 0.003 240);
-  --chart-5: oklch(0.28 0.005 240);
+  --chart-1: #bfbfbf;          /* Lighter, warmer grays */
+  --chart-2: #9d9d9d;
+  --chart-3: #7a7a7a;
+  --chart-4: #595959;
+  --chart-5: #454545;
 
-  /* Sidebar Colors - Consistent with main theme */
-  --sidebar: oklch(0.14 0.005 240);           /* Slightly different from background */
-  --sidebar-foreground: oklch(0.88 0.003 240);
-  --sidebar-primary: oklch(0.85 0.003 240);
-  --sidebar-primary-foreground: oklch(0.12 0.005 240);
-  --sidebar-accent: oklch(0.22 0.005 240);
-  --sidebar-accent-foreground: oklch(0.85 0.003 240);
-  --sidebar-border: oklch(0.25 0.005 240);
-  --sidebar-ring: oklch(0.85 0.003 240);
+  /* Sidebar Colors - Pure monochrome */
+  --sidebar: #1A1A1A;           /* Dark gray sidebar */
+  --sidebar-foreground: #FFFFFF;
+  --sidebar-primary: #FFFFFF;
+  --sidebar-primary-foreground: #121212;
+  --sidebar-accent: #2A2A2A;
+  --sidebar-accent-foreground: #FFFFFF;
+  --sidebar-border: #404040;
+  --sidebar-ring: #FFFFFF;
 
-  /* Chat-specific Colors - Professional dark chat styling */
-  --chat-user-bg: oklch(0.88 0.002 90);       /* Light gray for user messages */
-  --chat-user-text: oklch(0.12 0 0);          /* Dark text on light background */
-  --chat-assistant-bg: oklch(0.18 0.005 240); /* Slightly lighter than background for AI */
-  --chat-assistant-text: oklch(0.88 0.002 90); /* Light gray text */
-  --chat-input-bg: oklch(0.18 0.005 240);     /* Input background */
-  --chat-input-border: oklch(0.28 0.004 240); /* Clear border */
-  --chat-input-focus: oklch(0.88 0.002 90);   /* Light gray focus state */
+  /* Chat-specific Colors - Pure monochrome dark chat styling */
+  --chat-user-bg: #2A2A2A;       /* Dark gray for user messages */
+  --chat-user-text: #FFFFFF;     /* White text in dark mode */
+  --chat-assistant-bg: #2A2A2A; /* Dark gray for AI messages */
+  --chat-assistant-text: #FFFFFF; /* White text */
+  --chat-input-bg: #2A2A2A;     /* Dark gray input background */
+  --chat-input-border: #404040; /* Gray border */
+  --chat-input-focus: #FFFFFF;   /* White focus state */
 
-  /* Sidebar Colors - Keep dark theme unchanged */
-  --sidebar: oklch(0.15 0.005 240);           /* Dark sidebar background */
-  --sidebar-border: oklch(0.28 0.004 240);    /* Dark border for sidebar */
-  --sidebar-foreground: oklch(0.88 0.002 90); /* Light text on dark sidebar */
+  /* Sidebar Colors - Pure monochrome theme */
+  --sidebar: #1A1A1A;           /* Dark gray sidebar background */
+  --sidebar-border: #404040;    /* Gray border for sidebar */
+  --sidebar-foreground: #FFFFFF; /* White text on dark sidebar */
 
   /* Chat Font Size - Inherited from light mode */
   /* --chat-font-size: 16px; (inherited) */
 
-  /* Code Block Colors - Dark theme */
-  --code-block-bg: #212121;                      /* Dark background for code blocks */
-  --code-block-border: rgba(255, 255, 255, 0.1); /* Subtle white border */
+  /* Code Block Colors - Pure monochrome dark theme */
+  --code-block-bg: #1E1E1E;                      /* Dark gray for code blocks */
+  --code-block-border: rgba(255, 255, 255, 0.12); /* Material Design border */
   --code-block-radius: 0.75rem;                  /* Rounded corners for code blocks */
 
-  /* JLPT Level Colors - Comfortable progression with warmth */
-  --jlpt-n5: oklch(0.58 0.003 240);          /* Softer, warmer grays */
-  --jlpt-n5-foreground: oklch(0.12 0.005 240);
-  --jlpt-n4: oklch(0.48 0.003 240);
-  --jlpt-n4-foreground: oklch(0.12 0.005 240);
-  --jlpt-n3: oklch(0.38 0.003 240);
-  --jlpt-n3-foreground: oklch(0.88 0.003 240);
-  --jlpt-n2: oklch(0.32 0.003 240);
-  --jlpt-n2-foreground: oklch(0.88 0.003 240);
-  --jlpt-n1: oklch(0.28 0.005 240);
-  --jlpt-n1-foreground: oklch(0.88 0.003 240);
+  /* JLPT Level Colors - Optimized for dark mode contrast */
+  --jlpt-n5: #B0B0B0;          /* Light gray - good contrast on dark */
+  --jlpt-n5-foreground: #121212;
+  --jlpt-n4: #909090;          /* Medium-light gray */
+  --jlpt-n4-foreground: #121212;
+  --jlpt-n3: #707070;          /* Medium gray */
+  --jlpt-n3-foreground: #FFFFFF;
+  --jlpt-n2: #505050;          /* Medium-dark gray */
+  --jlpt-n2-foreground: #FFFFFF;
+  --jlpt-n1: #404040;          /* Dark gray - advanced level */
+  --jlpt-n1-foreground: #FFFFFF;
 
-  /* Status Colors - Softer, eye-friendly versions */
-  --success: oklch(0.48 0.08 140);            /* Less saturated green */
-  --success-foreground: oklch(0.88 0.003 240);
-  --warning: oklch(0.62 0.12 70);             /* Softer yellow-orange */
-  --warning-foreground: oklch(0.12 0.005 240);
-  --info: oklch(0.58 0.003 240);              /* Neutral info color */
-  --info-foreground: oklch(0.12 0.005 240);
+  /* Status Colors - Professional colored system dark mode */
+  --success: #2ECC71;            /* Lighter green for dark mode */
+  --success-foreground: #11181C; /* Dark text for better visibility */
+  --warning: #E67E22;            /* Softer orange for dark mode */
+  --warning-foreground: #11181C; /* Dark text */
+  --info: #2980B9;               /* Softer blue for dark mode */
+  --info-foreground: #FFFFFF;    /* White text (5.2:1 contrast) */
+  --error: #E74C3C;              /* Same red for error */
+  --error-foreground: #FFFFFF;   /* White text */
+
+  /* Interactive States - Dark Mode with proper text contrast */
+  --primary-hover: #E0E0E0;        /* Light gray on hover */
+  --primary-hover-foreground: #121212; /* Dark text on light hover */
+  --primary-active: #CCCCCC;       /* Medium gray when active */
+  --secondary-hover: #606060;      /* Lighter dark gray on hover */
+  --secondary-hover-foreground: #FFFFFF; /* White text on dark hover */
+  --secondary-active: #808080;     /* Medium gray when active */
+  --disabled-bg: rgba(255,255,255,0.12); /* Disabled background - 12% white */
+  --disabled-text: rgba(255,255,255,0.5); /* Disabled text - 50% white */
+}
+
+/* === ALERT SYSTEM === */
+/* Professional alert components with proper contrast ratios */
+
+/* Light Mode Alerts */
+.alert-success {
+  background-color: var(--success);
+  color: var(--success-foreground);
+  border: 1px solid var(--success);
+}
+
+.alert-error {
+  background-color: var(--error);
+  color: var(--error-foreground);
+  border: 1px solid var(--error);
+}
+
+.alert-warning {
+  background-color: var(--warning);
+  color: var(--warning-foreground);
+  border: 1px solid var(--warning);
+}
+
+.alert-info {
+  background-color: var(--info);
+  color: var(--info-foreground);
+  border: 1px solid var(--info);
+}
+
+/* Alert variants with background opacity */
+.alert-success-soft {
+  background-color: rgba(39, 174, 96, 0.1);
+  color: var(--success);
+  border: 1px solid rgba(39, 174, 96, 0.2);
+}
+
+.alert-error-soft {
+  background-color: rgba(231, 76, 60, 0.1);
+  color: var(--error);
+  border: 1px solid rgba(231, 76, 60, 0.2);
+}
+
+.alert-warning-soft {
+  background-color: rgba(243, 156, 18, 0.1);
+  color: var(--warning);
+  border: 1px solid rgba(243, 156, 18, 0.2);
+}
+
+.alert-info-soft {
+  background-color: rgba(52, 152, 219, 0.1);
+  color: var(--info);
+  border: 1px solid rgba(52, 152, 219, 0.2);
+}
+
+/* Dark mode alert adjustments */
+.dark .alert-success-soft {
+  background-color: rgba(46, 204, 113, 0.1);
+  color: var(--success);
+  border: 1px solid rgba(46, 204, 113, 0.2);
+}
+
+.dark .alert-warning-soft {
+  background-color: rgba(230, 126, 34, 0.1);
+  color: var(--warning);
+  border: 1px solid rgba(230, 126, 34, 0.2);
+}
+
+.dark .alert-info-soft {
+  background-color: rgba(41, 128, 185, 0.1);
+  color: var(--info);
+  border: 1px solid rgba(41, 128, 185, 0.2);
 }

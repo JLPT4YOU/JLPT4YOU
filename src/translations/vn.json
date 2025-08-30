@@ -1,0 +1,1931 @@
+{
+  "apiKeySetup": {
+    "title": "Cài đặt API Key",
+    "description": "Để sử dụng tính năng AI chat, bạn cần cung cấp Google Gemini API key",
+    "instructions": {
+      "title": "Cách lấy API key:",
+      "step1": "Truy cập Google AI Studio",
+      "step2": "Đăng nhập với tài khoản Google",
+      "step3": "Click \"Get API Key\" → \"Create API Key\"",
+      "step4": "Copy và dán API key vào ô bên dưới"
+    },
+    "openAIStudio": "Mở AI Studio",
+    "inputLabel": "Google Gemini API Key",
+    "save": "Lưu & Sử dụng",
+    "skip": "Bỏ qua",
+    "validating": "Đang kiểm tra...",
+    "securityNote": "API key được lưu trữ an toàn trên thiết bị của bạn và không được chia sẻ với bên thứ ba.",
+    "errors": {
+      "required": "API key là bắt buộc",
+      "invalid": "API key phải bắt đầu bằng \"AIza\"",
+      "testFailed": "API key không hợp lệ hoặc đã hết hạn",
+      "networkError": "Lỗi kết nối. Vui lòng thử lại."
+    }
+  },
+  "common": {
+    "appName": "JLPT4YOU",
+    "loading": "Đang tải...",
+    "error": "Đã xảy ra lỗi",
+    "retry": "Thử lại",
+    "close": "Đóng",
+    "back": "Quay lại",
+    "next": "Tiếp theo",
+    "previous": "Trước đó",
+    "save": "Lưu",
+    "cancel": "Hủy",
+    "confirm": "Xác nhận",
+    "continue": "Tiếp tục",
+    "instruction": "Chọn một tùy chọn phía trên để bắt đầu",
+    "preview": "Xem trước",
+    "hide": "Ẩn"
+  },
+  "landingChat": {
+    "bubble": {
+      "openLabel": "Mở chat hỗ trợ",
+      "closeLabel": "Đóng chat"
+    },
+    "interface": {
+      "title": "iRIN Sensei",
+      "subtitle": "Hỗ trợ trực tuyến",
+      "placeholder": "Nhập câu hỏi của bạn...",
+      "typing": "iRIN đang trả lời...",
+      "welcomeMessage": "Xin chào ! Cô là iRIN, giáo viên của nền tảng JLPT4YOU.\nCảm ơn em đã ghé thăm JLPT4YOU !\nNếu có thắc mắc gì cứ hỏi cô nha !",
+      "responses": {
+        "default": "Cảm ơn bạn đã hỏi! Tôi sẽ được cập nhật thêm kiến thức để hỗ trợ bạn tốt hơn trong tương lai. Hiện tại bạn có thể khám phá các tính năng của JLPT4YOU!"
+      },
+      "errorMessage": "Xin lỗi, hiện tại tôi không thể trả lời. Vui lòng thử lại sau!",
+      "rateLimitError": "Bạn đang gửi tin nhắn quá nhanh. Vui lòng chờ {time} trước khi gửi tiếp.",
+      "spamBlockError": "Tài khoản tạm thời bị khóa do spam. Thử lại sau {minutes} phút.",
+      "inputDisabled": "Đã tạm khóa do gửi tin nhắn quá nhanh",
+      "retryIn": "Thử lại sau {time}"
+    }
+  },
+  "header": {
+    "logo": "JLPT4YOU",
+    "themeToggle": "Chuyển đổi chế độ",
+    "login": "Đăng nhập",
+    "register": "Đăng ký",
+    "getStarted": "Bắt đầu ngay",
+    "userMenu": {
+      "profile": "Hồ sơ cá nhân",
+      "settings": "Cài đặt",
+      "statistics": "Thống kê học tập",
+      "logout": "Đăng xuất",
+      "expiryDate": "Hạn sử dụng",
+      "screenReader": "Menu người dùng",
+      "home": "Trang chủ",
+      "unlimited": "Không giới hạn"
+    },
+    "comments": {
+      "logoAndName": "Logo và tên ứng dụng",
+      "languageThemeUser": "Language Switcher, Theme toggle và User menu"
+    }
+  },
+  "hero": {
+    "title": "JLPT4YOU",
+    "subtitle": "Nền tảng luyện thi JLPT tích hợp AI",
+    "description": "JLPT4YOU là nền tảng học tập tiên tiến kết hợp giữa công nghệ AI và giáo trình JLPT chuẩn, giúp bạn từng bước nâng cao năng lực tiếng Nhật – từ vỡ lòng đến trình độ chuyên sâu. Dù bạn đang ở N5 hay nhắm đến N1, chúng tôi đều có lộ trình phù hợp cho bạn.",
+    "ctaButton": "Bắt đầu miễn phí"
+  },
+  "benefits": {
+    "title": "Lợi ích chính",
+    "subtitle": "Những tính năng nổi bật giúp bạn chinh phục JLPT hiệu quả",
+    "items": [
+      {
+        "title": "Luyện đề mô phỏng sát đề thi thật",
+        "description": "Hệ thống đề thi được thiết kế dựa trên cấu trúc và độ khó của JLPT chính thức, giúp bạn làm quen với format thi thật."
+      },
+      {
+        "title": "Giải thích đáp án tự động với iRIN",
+        "description": "AI thông minh phân tích từng câu trả lời, đưa ra lời giải chi tiết và gợi ý cải thiện cá nhân hóa."
+      },
+      {
+        "title": "Kho đề thi và từ vựng phong phú, phân cấp rõ ràng",
+        "description": "Thư viện bài tập đa dạng từ N5 đến N1, được phân loại theo chủ đề và mức độ khó tăng dần."
+      },
+      {
+        "title": "Theo dõi tiến độ học tập chi tiết",
+        "description": "Hệ thống báo cáo tiến độ giúp bạn nắm rõ điểm mạnh, điểm yếu và lộ trình học tập cá nhân hóa."
+      }
+    ]
+  },
+  "whyChooseUs": {
+    "title": "Tại Sao Chọn JLPT4YOU?",
+    "subtitle": "Giải quyết khó khăn trong hành trình chinh phục JLPT",
+    "problems": [
+      {
+        "problem": "Tốn thời gian tìm tài liệu chất lượng",
+        "solution": "Tài liệu sát đề thi, cập nhật định kỳ"
+      },
+      {
+        "problem": "Học phí giáo viên hàng chục ngàn yên/tháng",
+        "solution": "AI hướng dẫn 24/7 chỉ $1.99/tháng"
+      },
+      {
+        "problem": "Tài liệu tràn lan, học không hiệu quả",
+        "solution": "Học đúng cấu trúc đề thi JLPT thật"
+      }
+    ],
+    "problemLabel": "Vấn đề:",
+    "solutionLabel": "Giải pháp:",
+    "problemTitle": "Người học gặp phải",
+    "solutionTitle": "JLPT4YOU mang lại",
+    "finalProblem": "Học hoài không tiến bộ, tài liệu loạn xạ, học phí quá cao?",
+    "finalSolution": "JLPT4YOU giải quyết tất cả với AI thông minh, tài liệu chuẩn và giá cả hợp lý!",
+    "priceComparison": "Chỉ $1.99/tháng - rẻ hơn 1 ly trà sữa 🧋"
+  },
+  "pricing": {
+    "title": "Bảng Giá Đơn Giản",
+    "subtitle": "Chọn gói phù hợp với nhu cầu học tập của bạn",
+    "free": {
+      "name": "Miễn Phí",
+      "price": "$0",
+      "period": "/tháng",
+      "description": "Dành cho người mới bắt đầu",
+      "features": [
+        "5 đề thi mỗi tháng",
+        "Từ vựng N5-N4 cơ bản",
+        "Ngữ pháp N5-N4",
+        "Báo cáo kết quả cơ bản"
+      ],
+      "limitations": [
+        "Không có AI giải thích",
+        "Không theo dõi tiến độ",
+        "Không có tài liệu nâng cao"
+      ],
+      "button": "Bắt đầu miễn phí"
+    },
+    "premium": {
+      "name": "Premium",
+      "price": "$1.99",
+      "period": "/tháng",
+      "badge": "KHUYẾN NGHỊ",
+      "description": "Trải nghiệm học tập hoàn chỉnh",
+      "features": [
+        "Không giới hạn đề thi",
+        "Đầy đủ từ vựng N5-N1",
+        "Ngữ pháp N5-N1 chi tiết",
+        "AI giải thích iRIN",
+        "Theo dõi tiến độ chi tiết",
+        "Thư viện tài liệu độc quyền",
+        "Hỗ trợ ưu tiên"
+      ],
+      "button": "Nâng cấp Premium"
+    }
+  },
+  "footer": {
+    "description": "Nền tảng học tiếng Nhật JLPT hàng đầu với công nghệ AI tiên tiến, giúp bạn chinh phục mọi cấp độ từ N5 đến N1.",
+    "contact": {
+      "title": "Liên hệ",
+      "email": "support@jlpt4you.com",
+      "chat": "Chat hỗ trợ"
+    },
+    "links": {
+      "product": {
+        "title": "Sản phẩm",
+        "features": "Tính năng",
+        "pricing": "Bảng giá",
+        "aiDemo": "AI Demo",
+        "resources": "Tài liệu"
+      },
+      "jlptLevels": {
+        "title": "Cấp độ JLPT",
+        "n5": "JLPT N5",
+        "n4": "JLPT N4",
+        "n3": "JLPT N3",
+        "n2": "JLPT N2",
+        "n1": "JLPT N1"
+      },
+      "support": {
+        "title": "Hỗ trợ",
+        "helpCenter": "Trung tâm trợ giúp",
+        "contact": "Liên hệ",
+        "faq": "FAQ",
+        "guide": "Hướng dẫn"
+      },
+      "legal": {
+        "title": "Pháp lý",
+        "terms": "Điều khoản sử dụng",
+        "privacy": "Chính sách bảo mật",
+        "refund": "Chính sách hoàn tiền"
+      }
+    },
+    "copyright": "© 2024 JLPT4YOU. All rights reserved.",
+    "madeWithLove": "Made with",
+    "madeWithLoveFor": "cho học viên JLPT",
+    "trustBadges": {
+      "secure": "Bảo mật SSL",
+      "privacy": "Riêng tư được bảo vệ"
+    }
+  },
+  "aiDemo": {
+    "title": "Trải nghiệm iRIN AI",
+    "subtitle": "Thử ngay tính năng giải thích đáp án thông minh với AI",
+    "question": {
+      "level": "N3",
+      "type": "Từ vựng",
+      "instruction": "次の文の（　）に入れるのに最もよいものを、1・2・3・4から一つ選びなさい。",
+      "sentence": "昨日は雨が（　）降っていました。",
+      "furigana": "きのうはあめが（　）ふっていました。",
+      "options": [
+        {
+          "id": "A",
+          "text": "強く",
+          "furigana": "つよく",
+          "isCorrect": true
+        },
+        {
+          "id": "B",
+          "text": "高く",
+          "furigana": "たかく",
+          "isCorrect": false
+        },
+        {
+          "id": "C",
+          "text": "早く",
+          "furigana": "はやく",
+          "isCorrect": false
+        },
+        {
+          "id": "D",
+          "text": "近く",
+          "furigana": "ちかく",
+          "isCorrect": false
+        }
+      ],
+      "explanation": "正解は「強く」です。雨が「強く降る」は自然な日本語表現です。「高く」は高さを表し、「早く」は速度を表し、「近く」は距離を表すため、雨の強さを表現するには適していません。「強く降る」は雨の勢いや激しさを表現する正しい使い方です。"
+    },
+    "buttons": {
+      "showExplanation": "Giải thích với cô iRIN",
+      "tryAgain": "Thử lại"
+    },
+    "sensei": "Cô iRIN"
+  },
+  "finalCta": {
+    "title": "Sẵn sàng chinh phục JLPT?",
+    "subtitle": "Tham gia cùng hàng nghìn học viên đã thành công với JLPT4YOU",
+    "benefits": [
+      "Học tập hiệu quả với AI",
+      "Tiết kiệm thời gian và chi phí",
+      "Đạt kết quả cao trong kỳ thi"
+    ],
+    "button": "Bắt đầu hành trình của bạn",
+    "upgradeButton": "Nâng Cấp Premium",
+    "trustSignal": "✨ Không cần thẻ tín dụng để bắt đầu • Hủy bất cứ lúc nào"
+  },
+  "auth": {
+    "titles": {
+      "login": "Đăng nhập",
+      "register": "Tạo tài khoản",
+      "forgotPassword": "Quên mật khẩu"
+    },
+    "subtitles": {
+      "login": "Chào mừng bạn quay trở lại với JLPT4YOU",
+      "register": "Bắt đầu hành trình học tiếng Nhật của bạn",
+      "forgotPassword": "Nhập email để nhận liên kết đặt lại mật khẩu"
+    },
+    "labels": {
+      "email": "Email",
+      "password": "Mật khẩu",
+      "confirmPassword": "Xác nhận mật khẩu",
+      "acceptTerms": "Tôi đồng ý với điều khoản sử dụng và chính sách bảo mật",
+      "rememberMe": "Ghi nhớ đăng nhập",
+      "agreeWith": "Tôi đồng ý với",
+      "and": "và"
+    },
+    "placeholders": {
+      "email": "Nhập địa chỉ email của bạn",
+      "password": "Nhập mật khẩu",
+      "confirmPassword": "Nhập lại mật khẩu"
+    },
+    "passwordInput": {
+      "showPassword": "Hiện mật khẩu",
+      "hidePassword": "Ẩn mật khẩu",
+      "capsLockWarning": "Caps Lock đang bật",
+      "strengthLabel": "Độ mạnh mật khẩu:",
+      "strengthWeak": "Yếu",
+      "strengthFair": "Trung bình",
+      "strengthGood": "Tốt",
+      "strengthStrong": "Mạnh",
+      "strengthVeryStrong": "Rất mạnh"
+    },
+    "buttons": {
+      "login": "Đăng nhập",
+      "register": "Tạo tài khoản",
+      "forgotPassword": "Quên mật khẩu?",
+      "sendResetLink": "Gửi liên kết đặt lại",
+      "sendResetInstructions": "Gửi hướng dẫn đặt lại mật khẩu",
+      "backToLogin": "Quay lại đăng nhập",
+      "resendEmail": "Gửi lại email"
+    },
+    "loading": {
+      "login": "Đang đăng nhập...",
+      "register": "Đang tạo tài khoản...",
+      "forgotPassword": "Đang gửi email...",
+      "sending": "Đang gửi...",
+      "resending": "Đang gửi lại..."
+    },
+    "validation": {
+      "emailRequired": "Email là bắt buộc",
+      "emailInvalid": "Email không hợp lệ",
+      "passwordRequired": "Mật khẩu là bắt buộc",
+      "passwordTooShort": "Mật khẩu phải có ít nhất 8 ký tự",
+      "confirmPasswordRequired": "Xác nhận mật khẩu là bắt buộc",
+      "passwordMismatch": "Mật khẩu xác nhận không khớp",
+      "termsRequired": "Bạn phải đồng ý với điều khoản sử dụng"
+    },
+    "brand": {
+      "tagline": "Học tiếng Nhật hiệu quả, thi JLPT thành công",
+      "testimonial": "Luyện thi nhẹ nhàng, thành công dễ dàng"
+    },
+    "features": {
+      "comprehensive": "Luyện thi JLPT N1-N5 toàn diện",
+      "library": "Thư viện tài liệu độc quyền",
+      "sensei": "Đồng hành cùng cô iRIN",
+      "interface": "Giao diện thân thiện"
+    },
+    "messages": {
+      "noAccount": "Chưa có tài khoản?",
+      "hasAccount": "Đã có tài khoản?",
+      "signUpNow": "Đăng ký ngay",
+      "loginNow": "Đăng nhập ngay",
+      "forgotPasswordText": "Quên mật khẩu?",
+      "resetPasswordSent": "Email đặt lại mật khẩu đã được gửi",
+      "resetPasswordInstructions": "Vui lòng kiểm tra email và làm theo hướng dẫn để đặt lại mật khẩu",
+      "registrationSuccess": "Đăng ký thành công! Vui lòng kiểm tra email để xác nhận tài khoản."
+    },
+    "social": {
+      "googleLogin": "Đăng nhập với Google",
+      "continueWith": "Hoặc tiếp tục với"
+    },
+    "links": {
+      "forgotPassword": "Quên mật khẩu?",
+      "terms": "Điều khoản",
+      "privacy": "Chính sách bảo mật"
+    },
+    "forgotPassword": {
+      "instructions": "Nhập email của bạn và chúng tôi sẽ gửi hướng dẫn đặt lại mật khẩu.",
+      "emailSent": "Email đã được gửi!",
+      "instructionsSent": "Chúng tôi đã gửi hướng dẫn đặt lại mật khẩu đến email:",
+      "checkEmail": "Kiểm tra email của bạn:",
+      "clickLink": "Nhấn vào liên kết trong email để đặt lại mật khẩu",
+      "linkExpiry": "Liên kết có hiệu lực trong 15 phút",
+      "checkSpam": "Kiểm tra cả thư mục spam nếu không thấy email"
+    },
+    "errors": {
+      "general": "Đã xảy ra lỗi. Vui lòng thử lại.",
+      "loginFailed": "Sai tên đăng nhập hoặc mật khẩu",
+      "invalidCredentials": "Sai tên đăng nhập hoặc mật khẩu",
+      "emailExists": "Email này đã được sử dụng",
+      "resendFailed": "Không thể gửi lại email. Vui lòng thử lại.",
+      "registrationError": "Đã xảy ra lỗi trong quá trình đăng ký. Vui lòng thử lại.",
+      "loginError": "Đã xảy ra lỗi trong quá trình đăng nhập. Vui lòng thử lại.",
+      "logoutError": "Đã xảy ra lỗi trong quá trình đăng xuất.",
+      "resetPasswordError": "Đã xảy ra lỗi khi gửi email reset mật khẩu.",
+      "socialLoginError": "Đã xảy ra lỗi trong quá trình đăng nhập với mạng xã hội.",
+      "invalidCredentials": "Sai tên đăng nhập hoặc mật khẩu",
+      "emailAlreadyRegistered": "Email này đã được đăng ký. Vui lòng sử dụng email khác hoặc đăng nhập.",
+      "passwordTooShort": "Mật khẩu phải có ít nhất 6 ký tự.",
+      "invalidEmailFormat": "Định dạng email không hợp lệ.",
+      "accountNotFound": "Không tìm thấy tài khoản với email này.",
+      "emailNotConfirmed": "Vui lòng xác nhận email trước khi đăng nhập.",
+      "registrationDisabled": "Tính năng đăng ký hiện tại đã bị tắt.",
+      "unknownError": "Đã xảy ra lỗi không xác định. Vui lòng thử lại.",
+      "googleLoginError": "Đã xảy ra lỗi khi đăng nhập với Google. Vui lòng thử lại."
+    },
+    "success": {
+      "registrationSuccess": "Đăng ký thành công! Vui lòng kiểm tra email để xác nhận tài khoản.",
+      "emailConfirmationRequired": "Vui lòng kiểm tra email để xác nhận tài khoản trước khi đăng nhập."
+    }
+  },
+  "home": {
+    "userGreeting": "Xin chào, {{name}}! 👋",
+    "userInfo": {
+      "expiryDate": "Hạn sử dụng: {{date}}"
+    },
+    "practiceItems": {
+      "jlpt": {
+        "title": "Giải đề JLPT",
+        "description": "Luyện thi tiếng Nhật"
+      },
+      "challenge": {
+        "title": "Thử thách",
+        "description": "Thi thử nghiêm túc"
+      },
+      "driving": {
+        "title": "Giải đề lái xe",
+        "description": "Thi bằng lái ô tô"
+      },
+      "dict": {
+        "title": "Từ điển",
+        "description": "Tra cứu từ vựng, kanji, ngữ pháp"
+      },
+      "study": {
+        "title": "Học bài",
+        "description": "Bài học theo chủ đề"
+      },
+      "library": {
+        "title": "Thư viện",
+        "description": "Sách và tài liệu học tập"
+      },
+      "irin": {
+        "title": "Cô iRIN",
+        "description": "Trợ lý AI thông minh"
+      },
+      "upgrade": {
+        "title": "Nâng cấp",
+        "description": "Nâng cấp tài khoản"
+      },
+      "topup": {
+        "title": "Nạp tiền",
+        "description": "Nạp tiền vào tài khoản"
+      },
+      "settings": {
+        "title": "Cài đặt",
+        "description": "Tùy chỉnh tài khoản"
+      }
+    }
+  },
+  "jlpt": {
+    "page": {
+      "title": "Chọn loại đề thi JLPT",
+      "subtitle": "Lựa chọn loại bài thi phù hợp với nhu cầu học tập của bạn"
+    },
+    "selectLevel": "Chọn cấp độ JLPT",
+    "testTypes": {
+      "official": {
+        "title": "JLPT",
+        "description": "Đề thi chính thức JLPT",
+        "subtitle": "Bài thi tiêu chuẩn quốc tế"
+      },
+      "custom": {
+        "title": "JLPT4YOU",
+        "description": "Đề thi tự tạo của ứng dụng",
+        "subtitle": "Bài thi được thiết kế riêng"
+      }
+    },
+    "custom": {
+      "page": {
+        "title": "JLPT4YOU - Đề thi tự tạo",
+        "subtitle": "Bài thi được thiết kế riêng với phương pháp học tập hiệu quả"
+      },
+      "info": {
+        "title": "Về đề thi JLPT4YOU",
+        "description": "Đề thi JLPT4YOU được biên soạn công phu, bám sát cấu trúc và độ khó của kỳ thi JLPT thực tế. Bao gồm đầy đủ các phần: Từ vựng, Ngữ pháp, Đọc hiểu và Nghe hiểu – đúng định dạng, đúng trọng tâm."
+      }
+    },
+    "official": {
+      "page": {
+        "title": "JLPT - Đề thi chính thức",
+        "subtitle": "Bài thi tiêu chuẩn quốc tế với định dạng chính thức"
+      },
+      "info": {
+        "title": "Về đề thi JLPT chính thức",
+        "description": "Đề thi JLPT chính thức được thiết kế theo đúng chuẩn của Tổ chức Nhật Bản Foundation. Bao gồm đầy đủ các phần thi: Từ vựng, Ngữ pháp, Đọc hiểu và Nghe hiểu với thời gian và số câu hỏi chính xác."
+      }
+    },
+    "levelInfo": {
+      "n1": {
+        "title": "JLPT N1 - Cao cấp",
+        "description": "Bài thi tiếng Nhật cấp độ cao nhất - 2000 kanji, 10000 từ vựng",
+        "time": "170 phút",
+        "questions": "~100 câu",
+        "passScore": "100/180"
+      },
+      "n2": {
+        "title": "JLPT N2 - Trung cấp cao",
+        "description": "Bài thi tiếng Nhật trung cấp cao - 1000 kanji, 6000 từ vựng",
+        "time": "155 phút",
+        "questions": "~90 câu",
+        "passScore": "90/180"
+      },
+      "n3": {
+        "title": "JLPT N3 - Trung cấp",
+        "description": "Bài thi tiếng Nhật trung cấp - 650 kanji, 3750 từ vựng",
+        "time": "140 phút",
+        "questions": "~80 câu",
+        "passScore": "95/180"
+      },
+      "n4": {
+        "title": "JLPT N4 - Sơ cấp cao",
+        "description": "Bài thi tiếng Nhật sơ cấp cao - 300 kanji, 1500 từ vựng",
+        "time": "125 phút",
+        "questions": "~70 câu",
+        "passScore": "90/180"
+      },
+      "n5": {
+        "title": "JLPT N5 - Sơ cấp",
+        "description": "Bài thi tiếng Nhật sơ cấp - 100 kanji, 800 từ vựng",
+        "time": "105 phút",
+        "questions": "~60 câu",
+        "passScore": "80/180"
+      }
+    },
+    "template": {
+      "startTest": "Bắt đầu làm bài",
+      "testInfo": "Thông tin bài thi",
+      "duration": "Thời gian",
+      "totalQuestions": "Tổng số câu",
+      "passingScore": "Điểm đạt",
+      "readyToStart": "Sẵn sàng bắt đầu?",
+      "chooseSection": "Chọn phần thi và thời gian làm bài phù hợp với mục tiêu học tập của bạn."
+    }
+  },
+  "challenge": {
+    "page": {
+      "title": "Thử thách JLPT",
+      "subtitle": "Kiểm tra khả năng tiếng Nhật của bạn với bài thi thử nghiêm túc"
+    },
+    "levels": {
+      "n1": "Cao cấp",
+      "n2": "Trung cấp cao",
+      "n3": "Trung cấp",
+      "n4": "Sơ cấp cao",
+      "n5": "Sơ cấp"
+    },
+    "info": {
+      "title": "Về chế độ Thử thách",
+      "description": "Chế độ Thử thách được thiết kế để mô phỏng kỳ thi JLPT thật. Bài thi sẽ bao gồm tất cả các phần: từ vựng, ngữ pháp, đọc hiểu và nghe hiểu. Hãy coi đây như một kỳ thi thật và thực hiện một cách nghiêm túc nhất."
+    },
+    "setup": {
+      "title": "Thử thách {level}",
+      "subtitle": "{description} - Thi thử nghiêm túc",
+      "sectionsTitle": "Phần thi được bao gồm",
+      "sectionsSubtitle": "Chế độ Thử thách bao gồm tất cả các phần thi để mô phỏng kỳ thi JLPT thật",
+      "timeTitle": "Thời gian làm bài",
+      "timeStandard": "Thời gian chuẩn JLPT",
+      "timeDescription": "{minutes} phút - Theo quy định chính thức của kỳ thi JLPT",
+      "timeNote": "Chế độ Thử thách sử dụng thời gian chuẩn để mô phỏng kỳ thi thật",
+      "startChallenge": "Bắt đầu thử thách",
+      "sections": {
+        "vocabulary": "Từ vựng",
+        "grammar": "Ngữ pháp",
+        "reading": "Đọc hiểu",
+        "listening": "Nghe hiểu"
+      },
+      "minutes": "phút"
+    },
+    "rules": {
+      "title": "Quy tắc thi Thử thách",
+      "importantNote": "Lưu ý quan trọng",
+      "importantDescription": "Vui lòng nghiêm túc khi thi, hãy xem đây là kì thi thật. Nếu bạn muốn luyện tập vui lòng chọn \"Giải đề JLPT\" ở màn hình chính.",
+      "rulesTitle": "Quy tắc thi",
+      "rule1": {
+        "title": "Không được tra từ điển",
+        "description": "Không sử dụng từ điển, sách tham khảo hoặc bất kỳ tài liệu hỗ trợ nào"
+      },
+      "rule2": {
+        "title": "Không sử dụng thiết bị điện tử",
+        "description": "Không sử dụng điện thoại, máy tính bảng hoặc thiết bị điện tử khác để hỗ trợ"
+      },
+      "rule3": {
+        "title": "Tuân thủ thời gian",
+        "description": "Hoàn thành bài thi trong thời gian quy định, không tạm dừng để nghỉ ngơi"
+      },
+      "aboutTitle": "Về chế độ Thử thách",
+      "aboutDescription": "Chế độ này được thiết kế để mô phỏng kỳ thi JLPT thật nhất có thể. Bài thi bao gồm tất cả các phần: từ vựng, ngữ pháp, đọc hiểu và nghe hiểu. Kết quả sẽ phản ánh chính xác khả năng tiếng Nhật hiện tại của bạn.",
+      "cancel": "Hủy bỏ",
+      "accept": "Đồng ý và bắt đầu"
+    }
+  },
+  "driving": {
+    "page": {
+      "title": "Chọn loại bài thi lái xe",
+      "subtitle": "Lựa chọn bài thi phù hợp với mục tiêu học tập của bạn"
+    },
+    "testTypes": {
+      "karimen": {
+        "title": "Karimen",
+        "description": "Bài thi lý thuyết cơ bản",
+        "subtitle": "Kiến thức giao thông cơ bản",
+        "details": "Các quy tắc giao thông và biển báo cơ bản"
+      },
+      "honmen": {
+        "title": "Honmen",
+        "description": "Bài thi lý thuyết chính thức",
+        "subtitle": "Bài thi chính thức để lấy bằng lái",
+        "details": "Kiến thức toàn diện về luật giao thông"
+      }
+    },
+    "levelInfo": {
+      "karimen": {
+        "title": "Karimen - Bài thi lý thuyết cơ bản",
+        "description": "Kiến thức giao thông cơ bản và các quy tắc an toàn",
+        "time": "50 phút",
+        "questions": "50 câu",
+        "passScore": "45/50"
+      },
+      "honmen": {
+        "title": "Honmen - Bài thi lý thuyết chính thức",
+        "description": "Kiến thức toàn diện về luật giao thông để lấy bằng lái",
+        "time": "50 phút",
+        "questions": "95 câu",
+        "passScore": "85/95"
+      }
+    },
+    "template": {
+      "readyToStart": "Sẵn sàng bắt đầu?",
+      "chooseTime": "Chọn thời gian làm bài phù hợp và bắt đầu luyện thi {level}.",
+      "startTest": "Bắt đầu thi",
+      "backToSelection": "Quay lại chọn loại bài thi",
+      "duration": "Thời gian",
+      "totalQuestions": "Số câu hỏi",
+      "passingScore": "Điểm đạt"
+    }
+  },
+  "dict": {
+    "page": {
+      "title": "J4YDict - Từ điển Nhật Việt",
+      "subtitle": "Tra cứu từ vựng, kanji, ngữ pháp và dịch thuật"
+    },
+    "tabs": {
+      "word": "Từ vựng",
+      "kanji": "Kanji",
+      "kanjiWriting": "Viết kanji",
+      "grammar": "Ngữ pháp",
+      "examples": "Ví dụ",
+      "translate": "Dịch"
+    },
+    "search": {
+      "placeholder": "Nhập từ khóa tìm kiếm...",
+      "button": "Tìm kiếm",
+      "clear": "Xóa",
+      "positions": {
+        "start": "Bắt đầu",
+        "middle": "Giữa",
+        "end": "Kết thúc"
+      },
+      "types": {
+        "word": "Từ vựng",
+        "grammar": "Ngữ pháp"
+      }
+    },
+    "wordDetail": {
+      "level": "JLPT {level}",
+      "relatedWords": "Từ liên quan",
+      "moreWords": "và {count} từ khác...",
+      "noRelatedWords": "Không có từ liên quan"
+    },
+    "kanjiDetail": {
+      "strokes": "{count} nét",
+      "radical": "Bộ",
+      "meaning": "Nghĩa",
+      "readings": {
+        "on": "Âm đọc",
+        "kun": "Huấn đọc"
+      }
+    },
+    "grammarDetail": {
+      "definition": "Định nghĩa",
+      "usage": "Cách sử dụng",
+      "examples": "Ví dụ"
+    },
+    "examplesList": {
+      "title": "Các câu ví dụ",
+      "found": "Tìm thấy {count} ví dụ",
+      "noExamples": "Không có ví dụ"
+    },
+    "translate": {
+      "sourceLanguage": "Ngôn ngữ nguồn",
+      "targetLanguage": "Ngôn ngữ đích",
+      "auto": "Tự động",
+      "vietnamese": "Tiếng Việt",
+      "japanese": "Tiếng Nhật",
+      "english": "Tiếng Anh",
+      "translateButton": "Dịch",
+      "swap": "Hoán đổi",
+      "copy": "Sao chép",
+      "clear": "Xóa"
+    },
+    "kanjiWriting": {
+      "title": "Cách viết kanji",
+      "strokeOrder": "Thứ tự nét",
+      "practice": "Luyện viết",
+      "noData": "Không tìm thấy thông tin viết kanji cho từ này"
+    },
+    "errors": {
+      "loadFailed": "Không thể tải thông tin từ vựng",
+      "searchFailed": "Lỗi khi tìm kiếm",
+      "translateFailed": "Lỗi dịch thuật",
+      "kanjiSearchFailed": "Lỗi khi tìm kiếm kanji",
+      "networkError": "Lỗi kết nối mạng",
+      "noResults": "Không tìm thấy kết quả"
+    },
+    "loading": {
+      "searching": "Đang tìm kiếm...",
+      "translating": "Đang dịch...",
+      "loading": "Đang tải..."
+    }
+  },
+  "examResults": {
+    "title": "Kết quả {examType}",
+    "completedAt": "Hoàn thành lúc {time}",
+    "score": {
+      "title": "Điểm số",
+      "percentage": "{percentage}% chính xác",
+      "status": {
+        "excellent": "Xuất sắc",
+        "good": "Tốt",
+        "average": "Trung bình",
+        "poor": "Yếu",
+        "failed": "Rớt"
+      }
+    },
+    "stats": {
+      "correctAnswers": "Câu đúng",
+      "incorrectAnswers": "Câu sai",
+      "unansweredQuestions": "Câu bỏ trống",
+      "flaggedQuestions": "Câu đánh dấu",
+      "timeSpent": "Thời gian",
+      "timeEfficiency": "{percentage}% thời gian",
+      "accuracy": "Độ chính xác"
+    },
+    "sections": {
+      "title": "Phân tích chi tiết",
+      "noData": "Không có dữ liệu phân tích theo phần thi",
+      "overallAnalysis": "Phân tích tổng thể cho bài thi lái xe",
+      "overallInsight": "Nhận xét tổng quan",
+      "names": {
+        "vocabulary": "Từ vựng",
+        "grammar": "Ngữ pháp",
+        "reading": "Đọc hiểu",
+        "listening": "Nghe hiểu",
+        "kanji": "Kanji"
+      },
+      "performance": {
+        "excellent": "Bạn đã thể hiện xuất sắc ở hầu hết các phần thi. Hãy tiếp tục duy trì phong độ này!",
+        "good": "Kết quả tốt! Một số phần có thể cải thiện thêm để đạt điểm cao hơn.",
+        "mixed": "Kết quả không đồng đều giữa các phần. Hãy tập trung vào những phần còn yếu.",
+        "needsImprovement": "Cần cải thiện ở nhiều phần. Hãy ôn tập kỹ lưỡng trước khi thi lại."
+      }
+    },
+    "actions": {
+      "viewAnswers": "Xem chi tiết đáp án",
+      "retakeTest": "Thi lại",
+      "newTest": "Bài thi mới",
+      "backToHome": "Về trang chủ"
+    },
+    "examTypes": {
+      "jlpt": "JLPT",
+      "challenge": "Challenge",
+      "driving": "Lái xe"
+    },
+    "noData": "Vui lòng thực hiện bài thi trước khi xem kết quả."
+  },
+  "reviewAnswers": {
+    "header": {
+      "backToResults": "Quay lại kết quả",
+      "title": "Xem đáp án chi tiết",
+      "overview": "Tổng quan kết quả",
+      "accuracy": "{percentage}% chính xác",
+      "questionsCount": "{count} câu hỏi"
+    },
+    "filters": {
+      "title": "Lọc theo trạng thái",
+      "all": "Tất cả",
+      "correct": "Đúng",
+      "incorrect": "Sai",
+      "flagged": "Câu đánh dấu"
+    },
+    "pagination": {
+      "previous": "Trước",
+      "next": "Sau"
+    },
+    "question": {
+      "number": "Câu {number}",
+      "details": "Chi tiết",
+      "explanation": "Giải thích",
+      "status": {
+        "correct": "Đúng",
+        "incorrect": "Sai",
+        "flagged": "Đánh dấu"
+      }
+    },
+    "pagination": {
+      "showing": "Hiển thị câu {start}-{end} trong tổng số {total} câu",
+      "previous": "Trước",
+      "next": "Sau"
+    },
+    "noData": "Vui lòng thực hiện bài thi trước khi xem đáp án chi tiết.",
+    "noQuestionsFound": "Không tìm thấy câu hỏi nào phù hợp với bộ lọc hiện tại."
+  },
+  "exam": {
+    "interface": {
+      "pause": "Tạm dừng",
+      "resume": "Tiếp tục",
+      "submit": "Nộp bài",
+      "flagged": "Đã đánh dấu",
+      "showFlagged": "Xem câu đánh dấu",
+      "showFlaggedTitle": "Xem lại câu đánh dấu",
+      "question": "Câu",
+      "of": "của",
+      "previous": "Câu trước",
+      "next": "Câu sau",
+      "flag": "Đánh dấu",
+      "unflag": "Bỏ đánh dấu",
+      "answered": "Đã trả lời",
+      "unanswered": "Chưa trả lời",
+      "timeRemaining": "Thời gian còn lại",
+      "questionList": "Danh sách câu hỏi",
+      "progress": "Tiến độ",
+      "pausedTitle": "Bài thi đã tạm dừng",
+      "pausedDescription": "Thời gian đếm ngược đã được dừng lại. Nhấn \"Tiếp tục\" để quay lại làm bài."
+    },
+    "sectionSelector": {
+      "title": "Chọn phần thi",
+      "subtitle": "Chọn các phần thi bạn muốn luyện tập",
+      "startTest": "Bắt đầu thi",
+      "selectAtLeastOne": "Vui lòng chọn ít nhất một phần thi"
+    },
+    "timeSelector": {
+      "title": "Chọn thời gian làm bài",
+      "defaultTime": "Thời gian mặc định",
+      "defaultTimeDescription": "{minutes} phút - Theo chuẩn của từng phần thi",
+      "customTime": "Tùy chỉnh thời gian",
+      "customTimeDescription": "Nhập số phút bạn muốn",
+      "unlimitedTime": "Không giới hạn thời gian",
+      "unlimitedTimeDescription": "Làm bài không có áp lực thời gian",
+      "customTimeLabel": "Thời gian (phút)",
+      "customTimePlaceholder": "Nhập số phút",
+      "minutes": "phút",
+      "hours": "giờ",
+      "seconds": "giây"
+    },
+    "sections": {
+      "vocabulary": "Từ vựng",
+      "grammar": "Ngữ pháp",
+      "reading": "Đọc hiểu",
+      "listening": "Nghe hiểu"
+    },
+    "submission": {
+      "confirmTitle": "Xác nhận nộp bài",
+      "confirmMessage": "Vui lòng kiểm tra lại trước khi nộp bài",
+      "stats": {
+        "total": "Tổng số câu hỏi",
+        "answered": "Đã trả lời",
+        "unanswered": "Chưa trả lời",
+        "flagged": "Đã đánh dấu",
+        "timeLeft": "Thời gian còn lại"
+      },
+      "readyTitle": "Sẵn sàng nộp bài",
+      "readyMessage": "Tất cả câu hỏi đã được trả lời.",
+      "progressLabel": "Tiến độ",
+      "timeRemainingLabel": "Thời gian còn lại",
+      "unansweredWarning": "Còn {count} câu chưa trả lời",
+      "flaggedWarning": "Có {count} câu đã đánh dấu",
+      "confirm": "Nộp bài",
+      "cancel": "Tiếp tục"
+    },
+    "timer": {
+      "timeUp": "Hết thời gian",
+      "autoSubmit": "Tự động nộp bài"
+    },
+    "antiCheat": {
+      "warningBadge": "Cảnh báo",
+      "navigationWarning": {
+        "title": "Cảnh báo rời khỏi bài thi!",
+        "description": "Bạn đang cố gắng rời khỏi trang thi. Hành động này sẽ:",
+        "consequences": [
+          "Kết thúc bài thi ngay lập tức",
+          "Không thể khôi phục lại bài làm",
+          "Bị tính là vi phạm quy tắc",
+          "Mất toàn bộ tiến độ hiện tại"
+        ],
+        "confirmQuestion": "⚠️ Bạn có chắc chắn muốn rời khỏi bài thi?",
+        "stayButton": "Ở lại tiếp tục",
+        "leaveButton": "Rời khỏi bài thi"
+      },
+      "violationWarning": {
+        "title": "Vi phạm quy tắc thi!",
+        "titleMaxReached": "Bài thi đã kết thúc!",
+        "maxViolationsMessage": "Bạn đã vi phạm quy tắc quá nhiều lần",
+        "warningCount": "Cảnh báo: {count}/{max}",
+        "remainingWarnings": "Còn {remaining} lần cảnh báo",
+        "examEndedMessage": "Bài thi đã kết thúc và bạn sẽ được chuyển về trang chủ",
+        "continueButton": "Tiếp tục làm bài",
+        "violations": {
+          "fullscreen_exit": "Bạn đã thoát khỏi chế độ toàn màn hình",
+          "window_blur": "Bạn đã chuyển sang ứng dụng khác",
+          "tab_switch": "Bạn đã chuyển sang tab khác",
+          "default": "Phát hiện hành vi vi phạm quy tắc thi"
+        }
+      },
+      "fullscreenRestored": "Đã trở lại chế độ toàn màn hình"
+    },
+    "fullscreenModal": {
+      "title": "Yêu cầu chế độ toàn màn hình",
+      "mobile": {
+        "detected": "Thiết bị di động được phát hiện",
+        "description": "Trên thiết bị di động, bạn có thể tiếp tục mà không cần chế độ toàn màn hình. Tuy nhiên, hệ thống vẫn sẽ giám sát các vi phạm khác.",
+        "warning": "Lưu ý: Một số tính năng có thể bị hạn chế trên thiết bị di động.",
+        "continueButton": "Tiếp tục thi"
+      },
+      "desktop": {
+        "title": "Kích hoạt chế độ toàn màn hình",
+        "description": "Để đảm bảo tính công bằng và nghiêm túc của bài thi, bạn cần kích hoạt chế độ toàn màn hình trước khi bắt đầu.",
+        "requirementsTitle": "Yêu cầu trong quá trình thi:",
+        "requirements": [
+          "Không được thoát khỏi chế độ toàn màn hình",
+          "Không được chuyển sang ứng dụng hoặc tab khác",
+          "Không được sử dụng các phím tắt hệ thống"
+        ],
+        "importantNote": "Lưu ý quan trọng",
+        "warningText": "Sau khi kích hoạt toàn màn hình, hệ thống sẽ giám sát liên tục. Mọi vi phạm sẽ được ghi nhận và cảnh báo.",
+        "unsupportedBrowser": "Trình duyệt của bạn không hỗ trợ chế độ toàn màn hình. Vui lòng sử dụng trình duyệt khác để tham gia thi.",
+        "activateButton": "Kích hoạt toàn màn hình",
+        "activatingButton": "Đang kích hoạt..."
+      },
+      "cancelButton": "Hủy bỏ"
+    }
+  },
+  "seo": {
+    "structuredData": {
+      "title": "Luyện thi JLPT Online",
+      "description": "Website luyện thi JLPT hàng đầu với AI hỗ trợ"
+    }
+  },
+  "pageTitle": {
+    "home": "Trang chủ",
+    "examResults": "Kết quả thi",
+    "reviewAnswers": "Xem đáp án",
+    "study": "Học bài",
+    "studyTheory": "Lý thuyết",
+    "studyPractice": "Thực hành"
+  },
+  "pageDescription": {
+    "home": "Trang chủ - Luyện thi JLPT và bằng lái xe online",
+    "examResults": "Xem kết quả thi và phân tích chi tiết",
+    "reviewAnswers": "Xem đáp án chi tiết và phân tích từng câu hỏi",
+    "study": "Học bài - Lý thuyết và thực hành tiếng Nhật",
+    "studyTheory": "Lý thuyết - Kiến thức cơ bản tiếng Nhật",
+    "studyPractice": "Thực hành - Bài tập ứng dụng tiếng Nhật"
+  },
+  "examTitle": {
+    "challenge": "Thử thách JLPT {level}",
+    "honmen": "Honmen - Bài thi lý thuyết chính thức",
+    "karimen": "Karimen - Bài thi lý thuyết cơ bản"
+  },
+  "topup": {
+    "steps": {
+      "amount": "Chọn số tiền",
+      "payment": "Phương thức thanh toán",
+      "confirm": "Xác nhận"
+    },
+    "selectAmount": "Chọn số tiền nạp",
+    "selectPayment": "Chọn phương thức thanh toán",
+    "total": "Tổng số tiền:",
+    "amount": "Số tiền",
+    "method": "Phương thức",
+    "custom": "Tùy chỉnh",
+    "enterAmount": "Nhập số tiền tùy chỉnh",
+    "minAmount": "Tối thiểu: $1.00",
+    "maxAmount": "Tối đa: $1,000.00",
+    "quickSuggestions": "Gợi ý nhanh:",
+    "validAmount": "Số tiền hợp lệ",
+    "processing": "Đang xử lý thanh toán...",
+    "processingDesc": "Vui lòng đợi trong khi chúng tôi xử lý thanh toán",
+    "payNow": "Thanh toán ngay",
+    "popular": "Phổ biến",
+    "instant": "Tức thì",
+    "businessDays": "1-3 ngày",
+    "paymentInfo": "Thông tin thanh toán",
+    "errors": {
+      "tooLow": "Số tiền phải ít nhất $1.00",
+      "tooHigh": "Số tiền không được vượt quá $1,000.00"
+    },
+    "methods": {
+      "qrVietnam": "QR Việt Nam",
+      "qrVietnameDesc": "VietQR, VNPAY, ZaloPay, MoMo",
+      "paypalDesc": "Thanh toán quốc tế an toàn",
+      "paypayDesc": "Thanh toán di động Nhật Bản",
+      "stripeDesc": "Thẻ tín dụng/ghi nợ toàn cầu",
+      "bankTransfer": "Chuyển khoản ngân hàng",
+      "bankTransferDesc": "Chuyển khoản trực tiếp từ tài khoản ngân hàng"
+    },
+    "info": {
+      "qrVietnam1": "Quét mã QR bằng ứng dụng ngân hàng",
+      "qrVietnam2": "Hỗ trợ tất cả ngân hàng lớn tại Việt Nam",
+      "qrVietnam3": "Xử lý tức thì, không phí",
+      "paypal1": "Đăng nhập vào tài khoản PayPal",
+      "paypal2": "Thanh toán quốc tế an toàn",
+      "paypal3": "Có thể áp dụng phí xử lý nhỏ",
+      "paypay1": "Sử dụng ứng dụng PayPay",
+      "paypay2": "Phổ biến tại Nhật Bản",
+      "paypay3": "Xử lý tức thì",
+      "stripe1": "Visa, Mastercard, American Express",
+      "stripe2": "Mã hóa SSL an toàn",
+      "stripe3": "Xử lý tức thì",
+      "bank1": "Chuyển khoản vào tài khoản của chúng tôi",
+      "bank2": "Bao gồm số tham chiếu",
+      "bank3": "Xử lý: 1-3 ngày làm việc"
+    }
+  },
+  "pages": {
+    "topup": {
+      "title": "Nạp tiền"
+    },
+    "payment": {
+      "title": "Nâng cấp tài khoản",
+      "description": "Mở khóa toàn bộ tiềm năng học tiếng Nhật với AI thông minh và tài liệu độc quyền",
+      "freePlan": "Gói miễn phí",
+      "freeDescription": "Hoàn hảo để bắt đầu",
+      "premiumPlan": "Gói Premium",
+      "premiumDescription": "Mở khóa tất cả tính năng",
+      "foreverFree": "Miễn phí mãi mãi",
+      "oneTimePayment": "Thanh toán một lần",
+      "upgradeNow": "Nâng cấp ngay",
+      "whyUpgrade": "Tại sao nên nâng cấp lên Premium?",
+      "benefit1Title": "Học tập toàn diện",
+      "benefit1Description": "Truy cập tất cả các cấp độ JLPT và tài liệu học tập mở rộng",
+      "benefit2Title": "Trợ giúp AI",
+      "benefit2Description": "Nhận giải thích chi tiết cho từng câu hỏi",
+      "benefit3Title": "Theo dõi tiến độ",
+      "benefit3Description": "Giám sát sự cải thiện của bạn với phân tích chi tiết",
+      "freeFeature1": "Đề thi luyện tập giới hạn",
+      "freeFeature2": "Danh sách từ vựng cơ bản",
+      "freeFeature3": "Hỗ trợ cộng đồng",
+      "premiumFeature1": "Đề thi luyện tập không giới hạn",
+      "premiumFeature2": "Cơ sở dữ liệu từ vựng & ngữ pháp đầy đủ",
+      "premiumFeature3": "Giải thích được hỗ trợ bởi AI",
+      "premiumFeature4": "Theo dõi tiến độ & phân tích",
+      "premiumFeature5": "Hỗ trợ khách hàng ưu tiên",
+      "premiumFeature6": "Truy cập ngoại tuyến tài liệu",
+      "thankYou": {
+        "title": "🎉 Chúc mừng!",
+        "subtitle": "Bạn đã nâng cấp Premium thành công",
+        "accountTitle": "Tài khoản Premium",
+        "duration": "Thời hạn",
+        "months": "tháng",
+        "expires": "Hết hạn",
+        "amount": "Số tiền",
+        "transaction": "Mã GD",
+        "couponApplied": "Đã áp dụng mã giảm giá",
+        "featuresTitle": "✨ Tính năng Premium đã được kích hoạt",
+        "action": "Bắt đầu sử dụng Premium",
+        "emailSent": "📧 Email xác nhận đã được gửi tới"
+      },
+      "checkout": {
+        "save5": "Tiết kiệm 5%",
+        "popular": "Phổ biến",
+        "best": "Tốt nhất",
+        "payment": "Thanh toán",
+        "premiumPlan": "Gói Premium",
+        "yearlyBilling": "Thanh toán hàng năm",
+        "monthlyBilling": "Thanh toán hàng tháng",
+        "selectDuration": "Chọn thời gian sử dụng",
+        "savePercent": "Tiết kiệm {percent}%",
+        "balancePayment": "Thanh toán bằng số dư tài khoản",
+        "balanceDescription": "Số tiền sẽ được trừ từ số dư hiện có của bạn",
+        "apply": "Áp dụng",
+        "enterCoupon": "Vui lòng nhập mã giảm giá",
+        "invalidCoupon": "Mã giảm giá không hợp lệ",
+        "couponError": "Có lỗi xảy ra khi kiểm tra mã giảm giá",
+        "paymentError": "Có lỗi xảy ra khi thanh toán",
+        "paymentRetry": "Có lỗi xảy ra khi thanh toán. Vui lòng thử lại.",
+        "insufficientBalance": "Số dư không đủ. Cần thêm ${amount}",
+        "processing": "Đang xử lý...",
+        "payNow": "Thanh toán ngay",
+        "termsAgreement": "Bằng việc thanh toán, bạn đồng ý với",
+        "termsOfService": "Điều khoản dịch vụ",
+        "orderSummary": "Tóm tắt đơn hàng"
+      }
+    },
+    "settings": {
+      "title": "Cài đặt tài khoản",
+      "description": "Quản lý thông tin cá nhân và bảo mật tài khoản của bạn",
+      "sidebar": {
+        "title": "Cài đặt"
+      },
+      "profile": {
+        "title": "Thông tin cá nhân",
+        "description": "Quản lý thông tin hiển thị và avatar của bạn",
+        "avatar": "Avatar Icon",
+        "avatarDescription": "Chọn icon để làm avatar hiển thị",
+        "name": "Tên",
+        "namePlaceholder": "Nhập tên",
+        "nameDescription": "Tên này sẽ được hiển thị trong ứng dụng",
+        "email": "Email",
+        "emailReadonly": "Email không thể thay đổi",
+        "accountType": "Loại tài khoản",
+        "accountTypeFree": "Tài khoản miễn phí",
+        "accountTypePremium": "Tài khoản Premium",
+        "premiumStatus": "Trạng thái Premium",
+        "expiryDate": "Hết hạn",
+        "createdDate": "Ngày tạo",
+        "saveChanges": "Lưu thay đổi",
+        "saving": "Đang lưu...",
+        "updateSuccess": "Cập nhật thông tin thành công!",
+        "updateError": "Có lỗi xảy ra khi cập nhật",
+        "unexpectedError": "Đã xảy ra lỗi không mong muốn",
+        "redeemCode": {
+          "title": "Kích hoạt Premium",
+          "description": "Nhập mã code để nâng cấp tài khoản lên Premium",
+          "codeLabel": "Mã code Premium",
+          "placeholder": "Nhập mã code...",
+          "redeemButton": "Kích hoạt",
+          "redeeming": "Đang xử lý...",
+          "accountType": "Loại tài khoản",
+          "expiryDate": "Hạn Premium",
+          "thankYou": "Cảm ơn bạn đã sử dụng dịch vụ Premium của chúng tôi! 🎉"
+        }
+      },
+      "security": {
+        "title": "Bảo mật",
+        "description": "Quản lý mật khẩu và bảo mật tài khoản",
+        "password": "Mật khẩu",
+        "lastChanged": "Lần cuối thay đổi",
+        "neverChanged": "Chưa từng thay đổi",
+        "changePassword": "Đổi mật khẩu",
+        "changing": "Đang đổi...",
+        "currentPassword": "Mật khẩu hiện tại",
+        "currentPasswordPlaceholder": "Nhập mật khẩu hiện tại",
+        "newPassword": "Mật khẩu mới",
+        "newPasswordPlaceholder": "Nhập mật khẩu mới",
+        "confirmPassword": "Xác nhận mật khẩu mới",
+        "confirmPasswordPlaceholder": "Nhập lại mật khẩu mới",
+        "passwordRequirements": "Mật khẩu phải có ít nhất 8 ký tự",
+        "passwordLength": "Mật khẩu phải có từ 6-8 ký tự",
+        "passwordMismatch": "Mật khẩu xác nhận không khớp",
+        "changeSuccess": "Đổi mật khẩu thành công!",
+        "changeError": "Có lỗi xảy ra khi đổi mật khẩu",
+        "changePasswordSuccess": "Đổi mật khẩu thành công!",
+        "changePasswordError": "Có lỗi xảy ra khi đổi mật khẩu",
+        "currentPasswordRequired": "Vui lòng nhập mật khẩu hiện tại",
+        "newPasswordRequired": "Vui lòng nhập mật khẩu mới",
+        "passwordTooShort": "Mật khẩu phải có ít nhất 8 ký tự",
+        "invalidCurrentPassword": "Mật khẩu hiện tại không đúng"
+      },
+      "iconSelector": {
+        "title": "Chọn Icon Avatar",
+        "search": "Tìm kiếm icon...",
+        "noResults": "Không tìm thấy icon nào phù hợp",
+        "selected": "Đã chọn"
+      }
+    },
+    "upgrade": {
+      "title": "Nâng cấp",
+      "description": "Nâng cấp tài khoản - Tính năng đang được phát triển",
+      "comingSoon": "Trang này đang được xây dựng. Vui lòng quay lại sau!"
+    }
+  },
+  "premium": {
+    "noSubscription": "Chưa có gói Premium",
+    "daysLeft": "Còn {days} ngày Premium",
+    "expired": "Premium đã hết hạn",
+    "undefinedExpiry": "Premium không xác định hạn",
+    "expiryLabel": "Hạn sử dụng",
+    "invalidDate": "Không hợp lệ",
+    "undefinedDate": "Không xác định",
+    "errors": {
+      "invalidData": "Dữ liệu không hợp lệ",
+      "insufficientBalance": "Số dư không đủ. Bạn cần ${amount} nhưng chỉ có ${balance}",
+      "deductFailed": "Không thể trừ tiền từ tài khoản",
+      "updateFailed": "Lỗi khi cập nhật thông tin premium",
+      "paymentError": "Có lỗi xảy ra khi thanh toán",
+      "paymentRetry": "Có lỗi xảy ra khi thanh toán. Vui lòng thử lại."
+    }
+  },
+  "balance": {
+    "label": "Số dư",
+    "insufficient": "Số dư không đủ",
+    "fetchError": "Không thể lấy thông tin số dư",
+    "updateError": "Không thể cập nhật số dư",
+    "internalError": "Lỗi hệ thống nội bộ"
+  },
+  "time": {
+    "units": {
+      "day": "ngày",
+      "days": "ngày",
+      "week": "tuần",
+      "weeks": "tuần",
+      "month": "tháng",
+      "months": "tháng",
+      "year": "năm",
+      "years": "năm"
+    },
+    "durations": {
+      "oneDay": "1 ngày",
+      "oneWeek": "1 tuần",
+      "oneMonth": "1 tháng",
+      "threeMonths": "3 tháng",
+      "sixMonths": "6 tháng",
+      "oneYear": "1 năm"
+    }
+  },
+  "chat": {
+    "welcomeMessage": "Hãy bắt đầu cuộc trò chuyện để nhận được hỗ trợ học tập từ cô iRIN",
+    "inputPlaceholder": "Nhập tin nhắn...",
+    "userLabel": "Em",
+    "aiLabel": "Cô iRIN",
+    "newChat": "Cuộc trò chuyện mới",
+    "welcomeTitle": "Chào mừng em đến với iRIN",
+    "grammarHelp": "Hỗ trợ Ngữ pháp",
+    "kanjiPractice": "Luyện tập Kanji",
+    "grammarPrompt": "Giải thích các mẫu ngữ pháp N3",
+    "kanjiPrompt": "Giúp tôi luyện tập kanji",
+    "settings": {
+      "title": "Cài đặt AI Chat",
+      "darkMode": "Chế độ tối",
+      "apiKey": "Google Gemini API Key",
+      "apiKeyPlaceholder": "Nhập Gemini API key của bạn...",
+      "save": "Lưu",
+      "apiKeyHelper": "Lấy API key từ Google AI Studio",
+      "aiLanguage": "Ngôn ngữ giao tiếp AI",
+      "selectLanguage": "Chọn ngôn ngữ",
+      "customLanguagePlaceholder": "Nhập ngôn ngữ mong muốn (ví dụ: Tiếng Hàn, Français, Español...)",
+      "saving": "Đang lưu...",
+      "saved": "Đã lưu",
+      "chatHistory": "Lịch sử trò chuyện",
+      "clearHistory": "Xóa toàn bộ lịch sử",
+      "clearHistoryWarning": "Thao tác này sẽ xóa vĩnh viễn tất cả cuộc trò chuyện của bạn",
+      "confirmClear": "Bạn có chắc chắn muốn xóa toàn bộ lịch sử trò chuyện? Hành động này không thể hoàn tác.",
+      "confirmClearTitle": "Xóa toàn bộ lịch sử chat",
+      "close": "Đóng",
+      "prompts": {
+        "title": "Cài đặt AI Prompt",
+        "description": "Tùy chỉnh các chỉ dẫn được đưa ra cho AI.",
+        "systemPrompt": {
+          "label": "System Prompt",
+          "description": "Các chỉ dẫn cốt lõi xác định vai trò và tính cách của AI."
+        },
+        "customInstructions": {
+          "label": "Chỉ dẫn tùy chỉnh",
+          "description": "Các hướng dẫn cụ thể của bạn để AI tuân theo."
+        },
+        "buttons": {
+          "save": "Lưu Prompts",
+          "reset": "Đặt lại về mặc định"
+        },
+        "notifications": {
+          "saveSuccess": "Lưu prompts thành công.",
+          "saveError": "Lỗi khi lưu prompts.",
+          "resetSuccess": "Prompts đã được đặt lại về mặc định.",
+          "resetError": "Lỗi khi đặt lại prompts."
+        },
+        "personalization": {
+          "title": "Tùy chỉnh cá nhân hóa",
+          "preferredName": {
+            "label": "iRIN nên gọi bạn là gì?",
+            "placeholder": "Tên hoặc cách gọi mà bạn muốn iRIN sử dụng"
+          },
+          "desiredTraits": {
+            "label": "Bạn muốn iRIN có những đặc điểm gì?",
+            "placeholder": "Mô tả tính cách và đặc điểm mà bạn mong muốn ở iRIN"
+          },
+          "personalInfo": {
+            "label": "Bạn muốn iRIN biết thêm gì về bạn không?",
+            "placeholder": "Thông tin cá nhân để iRIN có thể hỗ trợ bạn tốt hơn (tùy chọn)"
+          },
+          "additionalRequests": {
+            "label": "Yêu cầu bổ sung",
+            "placeholder": "Có điều gì khác bạn muốn iRIN lưu ý không? (tùy chọn)"
+          }
+        },
+        "generate": {
+          "title": "Tạo Prompt Tùy Chỉnh",
+          "description": "Sử dụng AI để tạo prompt phù hợp dựa trên thông tin bạn đã nhập",
+          "button": "Tạo Prompt",
+          "buttonLoading": "Đang tạo..."
+        },
+        "generated": {
+          "title": "Prompt đã tạo",
+          "description": "Đây là prompt tùy chỉnh được tạo cho bạn"
+        },
+        "footer": {
+          "note": "Cài đặt được lưu cục bộ và sẽ tồn tại qua các phiên"
+        },
+        "resetDialog": {
+          "title": "Reset toàn bộ prompt và cài đặt",
+          "description": "Bạn có chắc muốn reset toàn bộ prompt và cài đặt? Hành động này sẽ: Xóa toàn bộ prompt tùy chỉnh, Reset cài đặt ngôn ngữ AI, Đặt lại form về mặc định. Core prompt của iRIN sẽ được giữ nguyên.",
+          "confirm": "Reset toàn bộ",
+          "successMessage": "✅ Đã reset toàn bộ thành công!\n\n• Prompt tùy chỉnh: Đã xóa\n• Cài đặt ngôn ngữ: Đã reset\n• Core iRIN: Vẫn được giữ nguyên"
+        }
+      }
+    },
+    "loading": "Đang tải iRIN...",
+    "languages": {
+      "auto": "Tự động dò ngôn ngữ (Auto Detect)",
+      "vietnamese": "Tiếng Việt",
+      "english": "English",
+      "japanese": "日本語",
+      "custom": "Tùy chọn (Custom)"
+    },
+    "aiResponse": "Xin chào em! Cô là iRIN từ nền tảng JLPT4YOU. Mặc dù chuyên môn của cô là tiếng Nhật, cô có thể thảo luận về bất kỳ chủ đề nào mà em quan tâm. Em đã hỏi: \"{{question}}\". Hôm nay em muốn nói chuyện về gì?",
+    "aiAssistant": "Trợ lý AI",
+    "noConversations": "Chưa có cuộc trò chuyện nào",
+    "startNewChat": "Bắt đầu chat mới để học cùng cô iRIN",
+    "inputHelper": "Nhấn Enter để gửi, Shift + Enter để xuống dòng",
+    "characterCount": "{{count}} ký tự",
+
+    "newChatTitle": "Cuộc trò chuyện mới",
+    "generatingTitle": "Đang tạo tiêu đề...",
+    "editTitle": "Chỉnh sửa tiêu đề",
+    "deleteChat": "Xóa cuộc trò chuyện",
+    "retry": "Thử lại",
+    "stopGeneration": "Dừng tạo nội dung",
+    "scrollToBottom": "Cuộn xuống cuối",
+    "navigation": {
+      "home": "Trang chủ",
+      "settings": "Cài đặt"
+    },
+    "errors": {
+      "geminiConnection": "Xin lỗi, có lỗi xảy ra khi kết nối với Gemini AI. Vui lòng thử lại sau.",
+      "pdfProcessing": "Xin lỗi, có lỗi xảy ra khi xử lý file PDF. Vui lòng thử lại.",
+      "networkError": "Lỗi kết nối mạng. Vui lòng kiểm tra kết nối internet của bạn.",
+      "apiQuotaExceeded": "Đã vượt quá giới hạn API. Vui lòng thử model khác hoặc thử lại sau.",
+      "validationError": "Dữ liệu đầu vào không hợp lệ. Vui lòng kiểm tra và thử lại."
+    },
+    "keywords": {
+      "programming": ["tính toán", "lập trình", "viết code", "chạy code", "thực thi"]
+    }
+  },
+  "review": {
+    "totalQuestions": "Tổng câu hỏi",
+    "correctAnswers": "Câu đúng",
+    "incorrectAnswers": "Câu sai",
+    "flaggedAnswers": "Câu đánh dấu"
+  },
+  "study": {
+    "loadingVocabulary": "Đang tải từ vựng...",
+    "page": {
+      "title": "Học bài",
+      "subtitle": "Chọn phương pháp học phù hợp với bạn"
+    },
+    "selectType": "Chọn loại học tập",
+    "types": {
+      "theory": {
+        "title": "Lý thuyết",
+        "description": "Học kiến thức cơ bản",
+        "subtitle": "Nắm vững nền tảng ngữ pháp và từ vựng"
+      },
+      "practice": {
+        "title": "Thực hành",
+        "description": "Bài tập ứng dụng",
+        "subtitle": "Rèn luyện kỹ năng qua bài tập thực tế"
+      }
+    },
+    "theory": {
+      "page": {
+        "title": "Lý thuyết tiếng Nhật",
+        "subtitle": "Kiến thức cơ bản và nền tảng"
+      },
+      "comingSoon": "Tính năng đang được phát triển. Vui lòng quay lại sau!"
+    },
+    "practice": {
+      "page": {
+        "title": "Thực hành tiếng Nhật",
+        "subtitle": "Bài tập ứng dụng và rèn luyện"
+      },
+      "comingSoon": "Tính năng đang được phát triển. Vui lòng quay lại sau!",
+      "levelTitle": "Luyện tập {level}",
+      "selectType": "Chọn loại bài tập bạn muốn luyện tập",
+      "breadcrumbs": {
+        "study": "Học bài",
+        "practice": "Thực hành"
+      },
+      "pageTitle": "JLPT {level} {type} Thực hành",
+      "pageDescription": "Kiểm tra kiến thức của bạn với bài tập thực hành được tạo bởi AI",
+      "types": {
+        "vocabulary": "Từ vựng",
+        "grammar": "Ngữ pháp",
+        "reading": "Đọc hiểu",
+        "kanji": "Kanji",
+        "listening": "Nghe"
+      },
+      "reading": {
+        "title": "Đọc hiểu",
+        "description": "Luyện tập đọc hiểu với bài đọc và câu hỏi",
+        "passageLength": "Độ dài bài đọc",
+        "passageLengths": {
+          "short": "Ngắn (50-150 từ)",
+          "medium": "Trung bình (150-300 từ)",
+          "long": "Dài (300-500 từ)"
+        },
+        "numberOfPassages": "Số lượng bài đọc",
+        "maxPassages": "Tối đa 5 bài đọc",
+        "questionsPerPassage": "Mỗi bài đọc có 3 câu hỏi",
+        "instructions": "Đọc kỹ bài đọc và trả lời các câu hỏi bên dưới",
+        "passage": "Bài đọc",
+        "questions": "Câu hỏi",
+        "generator": {
+          "title": "Tạo bài đọc hiểu bằng AI",
+          "description": "AI sẽ tạo bài đọc kết hợp từ vựng và ngữ pháp phù hợp với level",
+          "selectLength": "Chọn độ dài bài đọc",
+          "selectCount": "Chọn số lượng bài đọc (1-5)"
+        }
+      },
+      "generator": {
+        "title": "Tạo bài tập thực hành bằng AI",
+        "description": "Tùy chỉnh phiên luyện tập của bạn với câu hỏi được tạo bởi AI",
+        "questionSelectionMode": "Chế độ chọn câu hỏi",
+        "numberOfQuestions": "Số lượng câu hỏi",
+        "difficultyLevel": "Mức độ khó",
+        "aiModel": "Mô hình AI",
+        "thinkingMode": "Chế độ suy nghĩ",
+        "lesson": "Bài học",
+        "materialLimit": "Giới hạn tài liệu",
+        "grammarCount": "Số ngữ pháp",
+        "vocabularyCount": "Số từ vựng",
+        "modes": {
+          "random": "Ngẫu nhiên",
+          "sequential": "Tuần tự"
+        },
+        "difficulty": {
+          "easy": "Dễ",
+          "medium": "Trung bình",
+          "hard": "Khó",
+          "extremely_hard": "Cực khó"
+        },
+        "thinking": {
+          "off": "Tắt",
+          "on": "Bật",
+          "proDefault": "Pro model có chế độ suy nghĩ mặc định",
+          "description": "Chế độ suy nghĩ: tạo chậm hơn, chất lượng câu hỏi cao hơn"
+        },
+        "sequentialOptions": {
+          "lessonLabel": "Bài học {lesson} (offset: {offset})",
+          "defaultGrammar": "Mặc định: 3",
+          "defaultVocabulary": "Mặc định: 5"
+        },
+        "summary": {
+          "type": "Loại",
+          "level": "Cấp độ",
+          "questions": "Câu hỏi",
+          "difficulty": "Độ khó",
+          "estimatedTime": "Thời gian ước tính"
+        },
+        "generateButton": "Tạo bài tập",
+        "generating": "Đang tạo câu hỏi...",
+        "loadingMessages": {
+          "analyzing": "Phân tích {count} câu hỏi",
+          "thinking": "Suy nghĩ sâu...",
+          "generating": "Tạo nhanh...",
+          "timeEstimate": "~{time}"
+        },
+        "tips": {
+          "title": "Mẹo luyện tập",
+          "tip1": "Bắt đầu với ít câu hỏi nếu bạn mới bắt đầu",
+          "tip2": "Xem kỹ phần giải thích",
+          "tip3": "Nghỉ giải lao giữa các phiên",
+          "tip4": "Theo dõi tiến trình theo thời gian"
+        }
+      },
+      "exercise": {
+        "questionProgress": "Câu {current} / {total}",
+        "multipleChoice": "Trắc nghiệm",
+        "submitAnswer": "Gửi đáp án",
+        "skip": "Bỏ qua",
+        "previous": "Trước",
+        "next": "Tiếp theo",
+        "complete": "Hoàn thành",
+        "correct": "Đúng!",
+        "incorrect": "Sai",
+        "explanation": {
+          "correctAnswer": "Đáp án đúng:",
+          "whyCorrect": "Tại sao đúng:",
+          "wrongAnswers": "Tại sao các lựa chọn khác sai:",
+          "additionalNotes": "Ghi chú thêm:",
+          "exampleUsage": "Ví dụ sử dụng:",
+          "toggle": "Hiện/Ẩn giải thích"
+        },
+        "noQuestion": "Không có câu hỏi"
+      },
+      "results": {
+        "title": "Kết quả luyện tập",
+        "performance": {
+          "excellent": "Xuất sắc!",
+          "good": "Làm tốt!",
+          "keepPracticing": "Tiếp tục luyện tập!",
+          "needMorePractice": "Cần luyện tập thêm"
+        },
+        "questionsCorrect": "Câu đúng",
+        "accuracy": "Độ chính xác",
+        "time": "Thời gian",
+        "breakdown": {
+          "title": "Phân tích kết quả",
+          "correctAnswers": "Câu trả lời đúng",
+          "incorrectAnswers": "Câu trả lời sai",
+          "timePerQuestion": "Thời gian mỗi câu",
+          "exerciseSetId": "ID bộ câu hỏi"
+        },
+        "answerReview": "Xem lại đáp án",
+        "fullReview": "Xem lại toàn bộ",
+        "questionNumber": "Câu {number}",
+        "correctAnswer": "Đáp án đúng",
+        "yourAnswer": "Đáp án của bạn",
+        "explanation": "Giải thích",
+        "whyCorrect": "Tại sao đúng:",
+        "whyWrong": "Tại sao các lựa chọn khác sai:",
+        "notes": "Ghi chú:",
+        "noExplanation": "Không có giải thích",
+        "actions": {
+          "retry": "Làm lại câu hỏi cũ",
+          "newExercise": "Bài tập mới",
+          "exportResults": "Xuất kết quả",
+          "backToStudy": "Về trang học"
+        },
+        "confirmExit": {
+          "title": "Thoát bài làm",
+          "message": "Bạn có chắc chắn muốn thoát bài làm này không?",
+          "warning": "Nếu thoát, câu hỏi sẽ bị xóa và bạn sẽ không thể làm lại được.",
+          "cancel": "Hủy",
+          "confirm": "Thoát"
+        },
+        "encouragement": {
+          "lowScore": "Mẹo học tập: Xem lại phần giải thích cho các câu trả lời sai và thử lại. Luyện tập tạo nên sự hoàn hảo! Hãy xem lại phần lý thuyết trước khi làm thêm bài tập.",
+          "highScore": "Làm tốt lắm! Bạn đang thành thạo chủ đề này! Hãy thử tăng độ khó hoặc chuyển sang cấp độ tiếp theo để thử thách bản thân."
+        }
+      }
+    },
+    "flashcard": {
+      "title": "Flashcard",
+      "vocabularyTitle": "Flashcard từ vựng {level}",
+      "grammarTitle": "Flashcard ngữ pháp {level}",
+      "description": {
+        "vocabulary": "Học từ vựng với thẻ ghi nhớ tương tác",
+        "grammar": "Học ngữ pháp với thẻ ghi nhớ tương tác"
+      },
+      "status": {
+        "available": "Có sẵn",
+        "comingSoon": "Sắp ra mắt"
+      },
+      "errors": {
+        "noVocabulary": "Không có từ vựng",
+        "noVocabularyFound": "Không tìm thấy từ vựng cho cấp độ {level}",
+        "noGrammar": "Không có ngữ pháp",
+        "noGrammarFound": "Không tìm thấy ngữ pháp cho cấp độ {level}"
+      },
+      "actions": {
+        "goBack": "Quay lại"
+      }
+    },
+    "vocabulary": {
+      "title": "Từ vựng",
+      "description": "Học từ vựng theo cấp độ",
+      "pageTitle": "Học {level} - Từ vựng",
+      "pageSubtitle": "Học từ vựng JLPT theo cấp độ. Sử dụng tìm kiếm để tìm từ cụ thể.",
+      "search": {
+        "placeholder": "Tìm từ (kanji/hiragana/nghĩa)",
+        "clear": "Xóa",
+        "noResults": "Không tìm thấy từ nào"
+      }
+    },
+    "grammar": {
+      "title": "Ngữ pháp",
+      "description": "Học ngữ pháp theo cấp độ",
+      "pageTitle": "Học {level} - Ngữ pháp",
+      "pageSubtitle": "Học ngữ pháp JLPT theo cấp độ. Sử dụng tìm kiếm để tìm mẫu câu hoặc nghĩa cụ thể.",
+      "search": {
+        "placeholder": "Tìm ngữ pháp hoặc nghĩa (JP/EN/VN)",
+        "clear": "Xóa",
+        "noResults": "Không tìm thấy ngữ pháp nào"
+      }
+    },
+    "history": {
+      "title": "Lịch sử bài thi",
+      "viewHistory": "Xem lịch sử bài thi",
+      "levelTitle": "Lịch sử bài thi {level}",
+      "selectType": "Chọn loại bài thi để xem lịch sử",
+      "description": "Xem lại và làm lại các bài thi đã hoàn thành",
+      "pageDescription": "Xem lại kết quả các bài thi cũ và làm lại để cải thiện điểm số",
+      "vocabulary": {
+        "description": "Lịch sử bài thi từ vựng đã hoàn thành"
+      },
+      "grammar": {
+        "description": "Lịch sử bài thi ngữ pháp đã hoàn thành"
+      },
+      "reading": {
+        "description": "Lịch sử bài thi đọc hiểu đã hoàn thành"
+      },
+      "empty": {
+        "title": "Chưa có bài thi nào",
+        "description": "Bạn chưa hoàn thành bài thi nào. Hãy bắt đầu luyện tập ngay!",
+        "startPractice": "Bắt đầu luyện tập"
+      },
+      "card": {
+        "correct": "đúng",
+        "retry": "Làm lại",
+        "delete": "Xóa",
+        "confirmDelete": "Xác nhận xóa",
+        "deleteConfirmText": "Nhấn lại để xác nhận xóa",
+        "timeUnknown": "Không rõ",
+        "timeMinutes": "p",
+        "timeSeconds": "s",
+        "testResult": "Kết quả bài thi"
+      },
+      "errors": {
+        "retryFailed": "Không thể làm lại bài thi này",
+        "deleteFailed": "Không thể xóa bài thi này"
+      }
+    },
+    "exam": {
+      "title": "Làm bài thi",
+      "pageDescription": "Làm bài thi từ đề đã tạo sẵn",
+      "noSession": {
+        "title": "Không có bài thi nào",
+        "description": "Không tìm thấy bài thi để làm. Hãy tạo bài thi mới hoặc xem lịch sử.",
+        "createNew": "Tạo bài thi mới",
+        "viewHistory": "Xem lịch sử"
+      }
+    }
+  },
+
+  "settings": {
+    "main": {
+      "description": "Tùy chỉnh giao diện, hành vi và cấu hình API của iRIN."
+    },
+    "tabs": {
+      "general": "Chung",
+      "prompts": "Tùy chỉnh AI",
+      "api": "API Keys"
+    },
+    "appearance": {
+      "title": "Giao diện",
+      "description": "Tùy chỉnh giao diện của iRIN"
+    },
+    "fontSize": {
+      "title": "Kích thước chữ",
+      "description": "Điều chỉnh kích thước chữ trong tin nhắn chat",
+      "options": {
+        "small": "Nhỏ",
+        "medium": "Vừa",
+        "large": "Lớn",
+        "extraLarge": "Rất lớn"
+      }
+    },
+    "chatHistory": {
+      "title": "Lịch sử trò chuyện",
+      "description": "Quản lý lịch sử cuộc trò chuyện"
+    },
+    "prompts": {
+      "title": "Tùy chỉnh AI Prompts",
+      "description": "Tùy chỉnh cách iRIN giao tiếp về bất kỳ chủ đề nào trong khi vẫn giữ bản sắc cốt lõi"
+    },
+    "api": {
+      "title": "Google Gemini API",
+      "description": "Cấu hình API key Gemini cho chức năng AI.",
+      "getKey": "Lấy key từ",
+      "keyLabel": "Gemini API Key"
+    }
+  },
+  "prompts": {
+    "title": "Cài đặt AI Prompt tùy chỉnh",
+    "description": "Tùy chỉnh cách iRIN giao tiếp và phản hồi về bất kỳ chủ đề nào trong khi vẫn giữ bản sắc cốt lõi",
+    "reset": "Đặt lại",
+    "identityPreservation": {
+      "title": "Bảo tồn bản sắc",
+      "description": "Bản sắc cốt lõi của iRIN như một giáo viên từ JLPT4YOU sẽ luôn được duy trì, đồng thời cho phép thảo luận linh hoạt về bất kỳ chủ đề nào."
+    },
+    "responseStyle": {
+      "title": "Phong cách phản hồi",
+      "description": "Mức độ trang trọng trong phản hồi?",
+      "options": {
+        "formal": "Trang trọng & Chuyên nghiệp",
+        "casual": "Thân thiện & Thoải mái",
+        "balanced": "Cân bằng & Chuyên nghiệp"
+      }
+    },
+    "detailLevel": {
+      "title": "Mức độ chi tiết",
+      "description": "Mức độ chi tiết trong giải thích?",
+      "options": {
+        "concise": "Ngắn gọn & Súc tích",
+        "detailed": "Chi tiết với Ví dụ",
+        "comprehensive": "Toàn diện & Sâu sắc"
+      }
+    },
+    "communicationApproach": {
+      "title": "Cách tiếp cận giao tiếp",
+      "description": "Phong cách giao tiếp ưa thích",
+      "options": {
+        "structured": "Có cấu trúc & Có tổ chức",
+        "conversational": "Đối thoại & Tương tác",
+        "adaptive": "Thích ứng với Sở thích của Người dùng"
+      }
+    },
+    "responseLanguage": {
+      "title": "Ngôn ngữ phản hồi",
+      "description": "Ngôn ngữ chính cho phản hồi",
+      "options": {
+        "auto": "Tự động phát hiện",
+        "vietnamese": "Tiếng Việt",
+        "english": "Tiếng Anh",
+        "japanese": "Tiếng Nhật"
+      }
+    },
+    "focusAreas": {
+      "title": "Lĩnh vực thảo luận ưa thích",
+      "description": "Các chủ đề và lĩnh vực mà iRIN nên tập trung chú ý",
+      "options": {
+        "japanese": "Học tiếng Nhật",
+        "general": "Kiến thức Tổng quát",
+        "creative": "Thảo luận Sáng tạo",
+        "technology": "Công nghệ & AI",
+        "culture": "Văn hóa & Du lịch",
+        "education": "Giáo dục & Học tập",
+        "lifestyle": "Lối sống & Sở thích",
+        "problemSolving": "Giải quyết Vấn đề"
+      }
+    },
+    "aiLanguage": {
+      "title": "Ngôn ngữ giao tiếp AI",
+      "description": "Ngôn ngữ mà iRIN sẽ sử dụng để phản hồi",
+      "placeholder": "Chọn ngôn ngữ",
+      "options": {
+        "auto": "Tự động dò ngôn ngữ (Auto Detect)",
+        "vietnamese": "Tiếng Việt",
+        "english": "English",
+        "japanese": "日本語",
+        "custom": "Tùy chọn (Custom)"
+      },
+      "customPlaceholder": "Nhập ngôn ngữ mong muốn (ví dụ: Tiếng Hàn, Français, Español...)"
+    },
+    "customInstructions": {
+      "title": "Hướng dẫn tùy chỉnh",
+      "description": "Hướng dẫn cụ thể bổ sung cho iRIN (tùy chọn)",
+      "placeholder": "Ví dụ: Sáng tạo hơn trong thảo luận, tập trung vào ví dụ thực tế, sử dụng hài hước khi phù hợp, v.v."
+    },
+    "preview": {
+      "title": "Xem trước Prompt đã tạo",
+      "description": "Đây là cách prompt tùy chỉnh của bạn sẽ trông như thế nào"
+    },
+    "footer": {
+      "note": "Cài đặt được lưu cục bộ và sẽ tồn tại qua các phiên"
+    },
+    "saving": "Đang lưu...",
+    "saveSettings": "Lưu cài đặt"
+  },
+  "modals": {
+    "confirmation": {
+      "title": "Xác nhận",
+      "defaultMessage": "Bạn có chắc chắn muốn thực hiện hành động này?",
+      "confirm": "Xác nhận",
+      "cancel": "Hủy",
+      "close": "Đóng"
+    },
+    "apiKey": {
+      "title": "Cài đặt API Key",
+      "description": "Để sử dụng tính năng AI chat, bạn cần cung cấp Google Gemini API key",
+      "label": "Google Gemini API Key",
+      "placeholder": "AIzaSy...",
+      "required": "API key là bắt buộc",
+      "invalidFormat": "API key phải bắt đầu bằng",
+      "invalid": "API key không hợp lệ hoặc đã hết hạn",
+      "connectionError": "Lỗi kết nối. Vui lòng thử lại.",
+      "saveError": "Không thể lưu API key. Vui lòng thử lại.",
+      "noAccess": "API key không hợp lệ hoặc không có quyền truy cập",
+      "getKey": "Nhận API key miễn phí",
+      "openStudio": "Mở Google AI Studio",
+      "skip": "Bỏ qua",
+      "validate": "Xác thực",
+      "validating": "Đang xác thực...",
+      "geminiFormat": "Gemini API key phải bắt đầu bằng",
+      "groqFormat": "Groq API key phải bắt đầu bằng",
+      "instructions": {
+        "title": "Cách lấy API key",
+        "step1": "Truy cập Google AI Studio",
+        "step2": "Đăng nhập với tài khoản Google",
+        "step3": "Click \"Get API Key\" → \"Create API Key\"",
+        "step4": "Copy và dán API key vào ô bên dưới"
+      },
+      "security": {
+        "note": "API key được lưu trữ an toàn trên thiết bị của bạn và không được chia sẻ với bên thứ ba."
+      }
+    },
+    "settings": {
+      "language": {
+        "title": "iRIN nên giao tiếp với bạn bằng ngôn ngữ gì?",
+        "selectLanguage": "Chọn ngôn ngữ",
+        "autoDetect": "Tự động dò ngôn ngữ (Auto Detect)",
+        "vietnamese": "Tiếng Việt",
+        "english": "English",
+        "japanese": "日本語",
+        "custom": "Tùy chọn (Custom)",
+        "customPlaceholder": "Nhập ngôn ngữ mong muốn (ví dụ: Tiếng Hàn, Français, Español...)"
+      },
+      "profile": {
+        "title": "Thông tin cá nhân",
+        "subtitle": "Quản lý thông tin hiển thị và avatar của bạn",
+        "displayName": "Tên hiển thị",
+        "displayNamePlaceholder": "Nhập tên hiển thị",
+        "avatar": "Avatar",
+        "changeAvatar": "Thay đổi avatar",
+        "removeAvatar": "Xóa avatar",
+        "save": "Lưu thay đổi",
+        "saving": "Đang lưu...",
+        "updateSuccess": "Cập nhật thông tin thành công!",
+        "updateError": "Có lỗi xảy ra khi cập nhật",
+        "unexpectedError": "Đã xảy ra lỗi không mong muốn"
+      },
+      "security": {
+        "title": "Bảo mật",
+        "subtitle": "Quản lý mật khẩu và bảo mật tài khoản",
+        "currentPassword": "Mật khẩu hiện tại",
+        "newPassword": "Mật khẩu mới",
+        "confirmPassword": "Xác nhận mật khẩu mới",
+        "changePassword": "Đổi mật khẩu",
+        "changing": "Đang đổi...",
+        "changeSuccess": "Đổi mật khẩu thành công!",
+        "changeError": "Có lỗi xảy ra khi đổi mật khẩu",
+        "unexpectedError": "Đã xảy ra lỗi không mong muốn"
+      }
+    },
+    "common": {
+      "save": "Lưu",
+      "saving": "Đang lưu...",
+      "saved": "Đã lưu",
+      "cancel": "Hủy",
+      "close": "Đóng",
+      "confirm": "Xác nhận",
+      "delete": "Xóa",
+      "edit": "Chỉnh sửa",
+      "loading": "Đang tải...",
+      "success": "Thành công",
+      "error": "Lỗi",
+      "retry": "Thử lại"
+    }
+  },
+  "library": {
+    "page": {
+      "title": "Thư viện",
+      "subtitle": "Tài liệu học tập và sách tham khảo"
+    },
+    "categories": {
+      "jlpt": {
+        "title": "JLPT",
+        "description": "Tài liệu luyện thi JLPT N1-N5",
+        "subtitle": "Thư viện tài liệu JLPT chính thức"
+      },
+      "other": {
+        "title": "Khác",
+        "description": "Sách và tài liệu ngoài JLPT",
+        "subtitle": "Tài liệu học tiếng Nhật đa dạng"
+      }
+    },
+    "jlpt": {
+      "page": {
+        "title": "Thư viện JLPT",
+        "subtitle": "Chọn cấp độ JLPT để xem tài liệu"
+      },
+      "books": {
+        "title": "Sách JLPT",
+        "subtitle": "Tài liệu luyện thi JLPT cấp độ"
+      },
+      "levels": {
+        "n1": {
+          "title": "JLPT N1",
+          "description": "Cấp độ cao nhất - Thành thạo",
+          "subtitle": "Tài liệu và đề thi N1"
+        },
+        "n2": {
+          "title": "JLPT N2",
+          "description": "Cấp độ trung cao - Thành thạo tốt",
+          "subtitle": "Tài liệu và đề thi N2"
+        },
+        "n3": {
+          "title": "JLPT N3",
+          "description": "Cấp độ trung bình - Giao tiếp cơ bản",
+          "subtitle": "Tài liệu và đề thi N3"
+        },
+        "n4": {
+          "title": "JLPT N4",
+          "description": "Cấp độ sơ trung - Hiểu cơ bản",
+          "subtitle": "Tài liệu và đề thi N4"
+        },
+        "n5": {
+          "title": "JLPT N5",
+          "description": "Cấp độ cơ bản - Mới bắt đầu",
+          "subtitle": "Tài liệu và đề thi N5"
+        }
+      }
+    },
+    "other": {
+      "page": {
+        "title": "Thư viện khác",
+        "subtitle": "Sách và tài liệu học tiếng Nhật đa dạng"
+      },
+      "books": {
+        "title": "Sách và tài liệu khác",
+        "subtitle": "Tài liệu học tiếng Nhật đa dạng ngoài JLPT"
+      },
+      "upload": {
+        "title": "Tải lên tài liệu",
+        "description": "Thêm sách và tài liệu của bạn",
+        "subtitle": "Tính năng sẽ sớm ra mắt"
+      }
+    },
+    "books": {
+      "title": "Thư viện sách",
+      "subtitle": "Chọn sách và tài liệu học tập",
+      "search": {
+        "placeholder": "Tìm kiếm sách, tác giả..."
+      },
+
+      "noResults": {
+        "title": "Không tìm thấy sách",
+        "description": "Thử thay đổi từ khóa tìm kiếm hoặc bộ lọc"
+      },
+      "pages": "trang"
+    }
+  }
+}

@@ -1,0 +1,95 @@
+{
+  "name": "JLPT4You - Học tiếng Nhật với AI",
+  "short_name": "JLPT4You",
+  "description": "Website luyện thi JLPT hàng đầu Việt Nam với AI hỗ trợ học tập",
+  "start_url": "/auth/vn/landing",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#000000",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "vi-VN",
+  "dir": "ltr",
+  "categories": ["education", "productivity", "utilities"],
+  "icons": [
+    {
+      "src": "/favicon-16x16.svg?v=graduation-cap-2025",
+      "sizes": "16x16",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "/favicon-32x32.svg?v=graduation-cap-2025",
+      "sizes": "32x32",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "/favicon.svg?v=graduation-cap-2025",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Luyện thi JLPT N5",
+      "short_name": "JLPT N5",
+      "description": "Bắt đầu luyện thi JLPT N5 - Trình độ sơ cấp",
+      "url": "/jlpt/custom/n5",
+      "icons": [
+        {
+          "src": "/favicon.svg?v=graduation-cap-2025",
+          "sizes": "any",
+          "type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "name": "Luyện thi JLPT N4",
+      "short_name": "JLPT N4",
+      "description": "Bắt đầu luyện thi JLPT N4 - Trình độ sơ cấp cao",
+      "url": "/jlpt/custom/n4",
+      "icons": [
+        {
+          "src": "/favicon.svg?v=graduation-cap-2025",
+          "sizes": "any",
+          "type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "name": "Luyện thi JLPT N3",
+      "short_name": "JLPT N3",
+      "description": "Bắt đầu luyện thi JLPT N3 - Trình độ trung cấp",
+      "url": "/jlpt/custom/n3",
+      "icons": [
+        {
+          "src": "/favicon.svg?v=graduation-cap-2025",
+          "sizes": "any",
+          "type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "name": "Challenge Mode",
+      "short_name": "Challenge",
+      "description": "Thử thách bản thân với Challenge Mode",
+      "url": "/challenge",
+      "icons": [
+        {
+          "src": "/favicon.svg?v=graduation-cap-2025",
+          "sizes": "any",
+          "type": "image/svg+xml"
+        }
+      ]
+    }
+  ],
+  "screenshots": [],
+  "related_applications": [],
+  "prefer_related_applications": false,
+  "edge_side_panel": {
+    "preferred_width": 400
+  },
+  "launch_handler": {
+    "client_mode": "navigate-existing"
+  }
+}

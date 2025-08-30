@@ -1,0 +1,247 @@
+/* Flashcard Animations - Inspired by modern flashcard apps */
+
+/* 3D Flip Animation */
+.flashcard-container {
+  perspective: 1000px;
+}
+
+.flashcard-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+}
+
+.flashcard-flipped .flashcard-inner {
+  transform: rotateY(180deg);
+}
+
+.flashcard-front,
+.flashcard-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  border-radius: 1rem;
+}
+
+.flashcard-back {
+  transform: rotateY(180deg);
+}
+
+/* Hover Effects */
+.flashcard-hover {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.flashcard-hover:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* Swipe Gestures */
+.flashcard-swipeable {
+  touch-action: pan-y;
+  user-select: none;
+}
+
+.flashcard-swiping {
+  transition: none !important;
+}
+
+.flashcard-swipe-left {
+  transform: translateX(-100px) rotate(-10deg);
+  opacity: 0.7;
+}
+
+.flashcard-swipe-right {
+  transform: translateX(100px) rotate(10deg);
+  opacity: 0.7;
+}
+
+/* Progress Animations */
+.progress-bar {
+  transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.progress-circle {
+  transition: stroke-dashoffset 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Button Animations */
+.flashcard-button {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateZ(0);
+}
+
+.flashcard-button:hover {
+  transform: translateY(-1px);
+}
+
+.flashcard-button:active {
+  transform: translateY(0);
+}
+
+/* Difficulty Indicators */
+.difficulty-easy {
+  background: linear-gradient(135deg, #10b981, #059669);
+  animation: pulse-green 2s infinite;
+}
+
+.difficulty-medium {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  animation: pulse-yellow 2s infinite;
+}
+
+.difficulty-hard {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  animation: pulse-red 2s infinite;
+}
+
+@keyframes pulse-green {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
+  50% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
+}
+
+@keyframes pulse-yellow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4); }
+  50% { box-shadow: 0 0 0 10px rgba(245, 158, 11, 0); }
+}
+
+@keyframes pulse-red {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+  50% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+}
+
+/* Card Entrance Animations */
+.flashcard-enter {
+  animation: slideInUp 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.flashcard-exit {
+  animation: slideOutDown 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes slideInUp {
+  from {
+    transform: translateY(100px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOutDown {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(-100px);
+    opacity: 0;
+  }
+}
+
+/* Success/Error Feedback */
+.feedback-correct {
+  animation: correctFeedback 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.feedback-incorrect {
+  animation: incorrectFeedback 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes correctFeedback {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); background-color: rgba(16, 185, 129, 0.1); }
+  100% { transform: scale(1); }
+}
+
+@keyframes incorrectFeedback {
+  0% { transform: scale(1); }
+  25% { transform: translateX(-5px); background-color: rgba(239, 68, 68, 0.1); }
+  75% { transform: translateX(5px); }
+  100% { transform: scale(1); }
+}
+
+/* Loading States */
+.flashcard-loading {
+  animation: shimmer 1.5s infinite;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* Mobile Optimizations */
+@media (max-width: 768px) {
+  .flashcard-container {
+    perspective: 800px;
+  }
+  
+  .flashcard-inner {
+    transition: transform 0.4s;
+  }
+  
+  .flashcard-hover:hover {
+    transform: none; /* Disable hover effects on mobile */
+  }
+}
+
+/* Dark Mode Adjustments */
+@media (prefers-color-scheme: dark) {
+  .flashcard-loading {
+    background: linear-gradient(90deg, #2a2a2a 25%, #3a3a3a 50%, #2a2a2a 75%);
+    background-size: 200% 100%;
+  }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .flashcard-inner,
+  .flashcard-hover,
+  .progress-bar,
+  .progress-circle,
+  .flashcard-button {
+    transition: none !important;
+  }
+  
+  .flashcard-enter,
+  .flashcard-exit,
+  .feedback-correct,
+  .feedback-incorrect {
+    animation: none !important;
+  }
+}
+
+/* Focus States for Keyboard Navigation */
+.flashcard-focusable:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+.flashcard-focusable:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+  .flashcard-front,
+  .flashcard-back {
+    border: 2px solid currentColor;
+  }
+  
+  .difficulty-easy,
+  .difficulty-medium,
+  .difficulty-hard {
+    background: currentColor !important;
+  }
+}

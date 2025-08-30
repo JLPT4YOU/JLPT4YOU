@@ -1,0 +1,195 @@
+/* Advanced Component Utilities - Phase 3 */
+/* Safe, additive utilities that don't override existing styles */
+
+/* === CARD SYSTEM === */
+/* Base card - extends existing card styling */
+.card-base {
+  @apply bg-background rounded-2xl border border-border;
+}
+
+/* Interactive card - uses centralized hover system */
+.card-interactive {
+  @apply card-base hover-card cursor-pointer;
+}
+
+/* Elevated card - uses centralized hover-brightness for subtle effect */
+.card-elevated {
+  @apply card-base shadow-sm hover-brightness-subtle;
+}
+
+/* Status cards - use existing status system */
+.card-success {
+  @apply card-base status-correct;
+}
+
+.card-error {
+  @apply card-base status-incorrect;
+}
+
+.card-warning {
+  @apply card-base status-flagged;
+}
+
+/* === LAYOUT PATTERNS === */
+/* Common flex patterns - safe utilities */
+.flex-center {
+  @apply flex items-center justify-center;
+}
+
+.flex-between {
+  @apply flex items-center justify-between;
+}
+
+.flex-start {
+  @apply flex items-center gap-3;
+}
+
+.flex-end {
+  @apply flex items-center justify-end gap-3;
+}
+
+/* Grid patterns - responsive by default */
+.grid-responsive {
+  @apply grid grid-cols-2 lg:grid-cols-3 gap-4;
+}
+
+.grid-auto {
+  @apply grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4;
+}
+
+/* === TEXT HIERARCHY === */
+/* Semantic text classes - complement existing typography */
+.text-display {
+  @apply text-4xl font-weight-bold text-foreground leading-tight;
+}
+
+.text-heading-1 {
+  @apply text-3xl font-weight-bold text-foreground leading-tight;
+}
+
+.text-heading-2 {
+  @apply text-2xl font-weight-semibold text-foreground leading-snug;
+}
+
+.text-heading-3 {
+  @apply text-xl font-weight-medium text-foreground leading-snug;
+}
+
+.text-body {
+  @apply text-base font-weight-normal text-foreground leading-relaxed;
+}
+
+.text-caption {
+  @apply text-sm font-weight-normal text-muted-foreground leading-normal;
+}
+
+.text-label {
+  @apply text-sm font-weight-medium text-foreground leading-normal;
+}
+
+/* === BUTTON SYSTEM === */
+/* Button base - safe foundation */
+.btn-base {
+  @apply inline-flex items-center justify-center rounded-lg font-weight-medium transition-all duration-200 focus-ring;
+}
+
+/* Button variants - use existing color system */
+.btn-primary {
+  @apply btn-base bg-primary text-primary-foreground hover-primary;
+}
+
+.btn-secondary {
+  @apply btn-base bg-secondary text-secondary-foreground hover-secondary;
+}
+
+.btn-ghost {
+  @apply btn-base bg-transparent text-foreground hover-ghost;
+}
+
+.btn-success {
+  @apply btn-base status-correct-solid;
+}
+
+.btn-error {
+  @apply btn-base status-incorrect-solid;
+}
+
+/* === SIZE VARIANTS === */
+/* Size utilities - consistent sizing */
+.size-xs {
+  @apply h-6 px-2 text-xs;
+}
+
+.size-sm {
+  @apply h-8 px-3 text-sm;
+}
+
+.size-md {
+  @apply h-10 px-4 text-base;
+}
+
+.size-lg {
+  @apply h-12 px-6 text-lg;
+}
+
+.size-xl {
+  @apply h-14 px-8 text-xl;
+}
+
+/* === SPACING PATTERNS === */
+/* Semantic spacing - use existing spacing system */
+.space-section {
+  @apply app-py-xl;
+}
+
+.space-component {
+  @apply app-py-lg;
+}
+
+.space-element {
+  @apply app-py-md;
+}
+
+.space-tight {
+  @apply app-py-sm;
+}
+
+/* === INTERACTIVE STATES === */
+/* Use centralized hover system instead of inline classes */
+.interactive-base {
+  @apply cursor-pointer;
+}
+
+.interactive-hover {
+  @apply interactive-base hover-ghost;
+}
+
+.interactive-press {
+  @apply interactive-base active-scale;
+}
+
+.interactive-lift {
+  @apply interactive-base hover-card;
+}
+
+/* === BORDER UTILITIES === */
+/* Border patterns - consistent with design system */
+.border-subtle {
+  @apply border border-border/50;
+}
+
+.border-strong {
+  @apply border-2 border-border;
+}
+
+.border-success {
+  @apply border border-success/20;
+}
+
+.border-error {
+  @apply border border-destructive/20;
+}
+
+.border-warning {
+  @apply border border-warning/20;
+}

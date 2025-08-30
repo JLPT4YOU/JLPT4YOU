@@ -1,0 +1,79 @@
+Backup snippets before removing timer/time displays in Practice (/study)
+Date: 2025-08-14
+
+1) src/components/study/practice/ExerciseDisplay.tsx (original excerpts)
+- Imports:
+import { Clock, CheckCircle, XCircle, ChevronLeft, ChevronRight, SkipForward } from 'lucide-react';
+
+- Props interface line excerpt:
+  elapsedTime: number;
+
+- formatTime function:
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+
+- Timer UI inside header:
+  <span className="text-sm text-muted-foreground flex items-center gap-1">
+    <Clock className="h-3 w-3" />
+    {formatTime(elapsedTime)}
+  </span>
+
+2) src/components/study/study-practice-page-content.tsx (original excerpts)
+- Destructure elapsedTime from hook:
+    elapsedTime,
+
+- Pass elapsedTime prop to ExerciseDisplay:
+    elapsedTime={elapsedTime}
+
+3) src/components/study/practice/ExerciseResults.tsx (original excerpts)
+- Imports include Clock:
+import { Trophy, Target, Clock, TrendingUp, RefreshCw, Home, Download } from 'lucide-react';
+
+- timePerQuestion and formatTime:
+  const timePerQuestion = session.timeSpent ? Math.round(session.timeSpent / totalQuestions) : 0;
+  const formatTime = (seconds: number) => {
+    if (seconds < 60) return `${seconds}s`;
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}m ${secs}s`;
+  };
+
+- Time card in statistics grid:
+  <Card>
+    <CardContent className="p-4">
+      <div className="flex items-center gap-2">
+        <Clock className="h-4 w-4 text-muted-foreground" />
+        <span className="text-sm text-muted-foreground">Time</span>
+      </div>
+      <div className="text-2xl font-bold mt-1">
+        {formatTime(session.timeSpent || 0)}
+      </div>
+    </CardContent>
+  </Card>
+
+- Time per question in breakdown:
+  <div className="flex justify-between">
+    <span className="text-muted-foreground">Time per Question</span>
+    <span className="font-medium">{formatTime(timePerQuestion)}</span>
+  </div>
+
+4) src/hooks/usePracticeExercise.ts (original excerpts)
+- Submit answer time usage and save:
+    const questionTime = elapsedTime;
+    ...
+    studyStorage.saveAnswer(
+      currentQuestion.id,
+      state.currentQuestionIndex,
+      answerIndex,
+      currentQuestion.correct,
+      questionTime
+    );
+
+- userAnswer payload includes timeSpent:
+    timeSpent: questionTime,
+
+Note: This backup contains only the relevant original snippets to restore timer/time displays and per-answer time tracking if needed.
+
