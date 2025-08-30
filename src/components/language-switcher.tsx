@@ -8,7 +8,7 @@ import {
   LANGUAGE_METADATA,
   SUPPORTED_LANGUAGES
 } from "@/lib/i18n"
-import { useLanguageContext } from "@/contexts/language-context"
+import { useTranslations } from "@/hooks/use-translations"
 import { useScrollPreservation } from "@/lib/use-scroll-preservation"
 
 interface LanguageSwitcherProps {
@@ -20,7 +20,7 @@ export function LanguageSwitcher({
   className = "",
   variant = "default"
 }: LanguageSwitcherProps) {
-  const { language, switchLanguage, isAuthenticated } = useLanguageContext()
+  const { language, switchLanguage, isAuthenticated } = useTranslations()
   const { saveScrollPosition } = useScrollPreservation()
   const [isOpen, setIsOpen] = useState(false)
 

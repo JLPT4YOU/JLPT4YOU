@@ -154,7 +154,7 @@ export const PromptSettings: React.FC<PromptSettingsProps> = ({
 
     // Show success message (có thể thay bằng toast notification sau)
     setTimeout(() => {
-      alert('✅ Đã reset toàn bộ thành công!\n\n• Prompt tùy chỉnh: Đã xóa\n• Cài đặt ngôn ngữ: Đã reset\n• Core iRIN: Vẫn được giữ nguyên');
+      alert(t('chat.prompts.resetDialog.successMessage'));
     }, 100);
   };
 
@@ -179,29 +179,29 @@ export const PromptSettings: React.FC<PromptSettingsProps> = ({
         <CardHeader className="pb-3">
           <CardTitle className="text-base flex items-center gap-2 text-muted-foreground">
             <Globe className="h-4 w-4 text-muted-foreground" />
-            iRIN nên giao tiếp với bạn bằng ngôn ngữ gì?
+            {t('chat.prompts.aiLanguage.title')}
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
           <Select value={aiLanguage} onValueChange={handleLanguageChange}>
             <SelectTrigger className="rounded-2xl border-0">
-              <SelectValue placeholder={t('prompts.aiLanguage.placeholder') || 'Chọn ngôn ngữ'} />
+              <SelectValue placeholder={t('chat.prompts.aiLanguage.placeholder')} />
             </SelectTrigger>
             <SelectContent className="rounded-2xl border-0">
               <SelectItem value="auto">
-                {t('prompts.aiLanguage.options.auto') || 'Tự động dò ngôn ngữ (Auto Detect)'}
+                {t('chat.prompts.aiLanguage.options.auto')}
               </SelectItem>
               <SelectItem value="vietnamese">
-                {t('prompts.aiLanguage.options.vietnamese') || 'Tiếng Việt'}
+                {t('chat.prompts.aiLanguage.options.vietnamese')}
               </SelectItem>
               <SelectItem value="english">
-                {t('prompts.aiLanguage.options.english') || 'English'}
+                {t('chat.prompts.aiLanguage.options.english')}
               </SelectItem>
               <SelectItem value="japanese">
-                {t('prompts.aiLanguage.options.japanese') || '日本語'}
+                {t('chat.prompts.aiLanguage.options.japanese')}
               </SelectItem>
               <SelectItem value="custom">
-                {t('prompts.aiLanguage.options.custom') || 'Tùy chọn (Custom)'}
+                {t('chat.prompts.aiLanguage.options.custom')}
               </SelectItem>
             </SelectContent>
           </Select>
@@ -209,7 +209,7 @@ export const PromptSettings: React.FC<PromptSettingsProps> = ({
           {/* Custom Language Input */}
           {aiLanguage === 'custom' && (
             <Input
-              placeholder={t('prompts.aiLanguage.customPlaceholder') || 'Nhập ngôn ngữ mong muốn (ví dụ: Tiếng Hàn, Français, Español...)'}
+              placeholder={t('chat.prompts.aiLanguage.customPlaceholder')}
               value={customLanguage}
               onChange={(e) => handleCustomLanguageChange(e.target.value)}
               className="mt-2"
@@ -221,19 +221,19 @@ export const PromptSettings: React.FC<PromptSettingsProps> = ({
       {/* Personalization Form */}
       <div className="space-y-6">
         <div>
-          <h3 className="text-lg font-medium mb-4 text-muted-foreground">Tùy chỉnh cá nhân hóa</h3>
+          <h3 className="text-lg font-medium mb-4 text-muted-foreground">{t('chat.prompts.personalization.title')}</h3>
         </div>
 
         {/* Preferred Name */}
         <Card>
           <CardHeader className="pb-3">
-            <CardTitle className="text-base text-muted-foreground">iRIN nên gọi bạn là gì?</CardTitle>
+            <CardTitle className="text-base text-muted-foreground">{t('chat.prompts.personalization.preferredName.label')}</CardTitle>
           </CardHeader>
           <CardContent>
             <Input
               value={config.preferredName}
               onChange={(e) => setConfig(prev => ({ ...prev, preferredName: e.target.value }))}
-              placeholder="Tên hoặc cách gọi mà bạn muốn iRIN sử dụng"
+              placeholder={t('chat.prompts.personalization.preferredName.placeholder')}
               className="rounded-2xl border-0"
               maxLength={50}
             />
@@ -243,13 +243,13 @@ export const PromptSettings: React.FC<PromptSettingsProps> = ({
         {/* Desired Traits */}
         <Card>
           <CardHeader className="pb-3">
-            <CardTitle className="text-base text-muted-foreground">Bạn muốn iRIN có những đặc điểm gì?</CardTitle>
+            <CardTitle className="text-base text-muted-foreground">{t('chat.prompts.personalization.desiredTraits.label')}</CardTitle>
           </CardHeader>
           <CardContent>
             <Textarea
               value={config.desiredTraits}
               onChange={(e) => setConfig(prev => ({ ...prev, desiredTraits: e.target.value }))}
-              placeholder="Mô tả tính cách và đặc điểm mà bạn mong muốn ở iRIN"
+              placeholder={t('chat.prompts.personalization.desiredTraits.placeholder')}
               className="min-h-[80px] rounded-2xl border-0"
               maxLength={200}
             />
@@ -262,13 +262,13 @@ export const PromptSettings: React.FC<PromptSettingsProps> = ({
         {/* Personal Info */}
         <Card>
           <CardHeader className="pb-3">
-            <CardTitle className="text-base text-muted-foreground">Bạn muốn iRIN biết thêm gì về bạn không?</CardTitle>
+            <CardTitle className="text-base text-muted-foreground">{t('chat.prompts.personalization.personalInfo.label')}</CardTitle>
           </CardHeader>
           <CardContent>
             <Textarea
               value={config.personalInfo}
               onChange={(e) => setConfig(prev => ({ ...prev, personalInfo: e.target.value }))}
-              placeholder="Thông tin cá nhân để iRIN có thể hỗ trợ bạn tốt hơn (tùy chọn)"
+              placeholder={t('chat.prompts.personalization.personalInfo.placeholder')}
               className="min-h-[80px] rounded-2xl border-0"
               maxLength={300}
             />
@@ -281,13 +281,13 @@ export const PromptSettings: React.FC<PromptSettingsProps> = ({
         {/* Additional Requests */}
         <Card>
           <CardHeader className="pb-3">
-            <CardTitle className="text-base text-muted-foreground">Yêu cầu bổ sung</CardTitle>
+            <CardTitle className="text-base text-muted-foreground">{t('chat.prompts.personalization.additionalRequests.label')}</CardTitle>
           </CardHeader>
           <CardContent>
             <Textarea
               value={config.additionalRequests}
               onChange={(e) => setConfig(prev => ({ ...prev, additionalRequests: e.target.value }))}
-              placeholder="Có điều gì khác bạn muốn iRIN lưu ý không? (tùy chọn)"
+              placeholder={t('chat.prompts.personalization.additionalRequests.placeholder')}
               className="min-h-[80px] rounded-2xl border-0"
               maxLength={200}
             />
@@ -302,9 +302,9 @@ export const PromptSettings: React.FC<PromptSettingsProps> = ({
           <CardContent className="pt-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="font-medium text-success">Tạo Prompt Tùy Chỉnh</p>
+                <p className="font-medium text-success">{t('chat.prompts.generate.title')}</p>
                 <p className="text-sm text-success/80 mt-1">
-                  Sử dụng AI để tạo prompt phù hợp dựa trên thông tin bạn đã nhập
+                  {t('chat.prompts.generate.description')}
                 </p>
               </div>
               <Button
@@ -312,7 +312,7 @@ export const PromptSettings: React.FC<PromptSettingsProps> = ({
                 disabled={isGenerating || !config.preferredName.trim()}
                 className="status-correct-solid"
               >
-                {isGenerating ? 'Đang tạo...' : 'Tạo Prompt'}
+                {isGenerating ? t('chat.prompts.generate.buttonLoading') : t('chat.prompts.generate.button')}
               </Button>
             </div>
           </CardContent>
@@ -322,9 +322,9 @@ export const PromptSettings: React.FC<PromptSettingsProps> = ({
         {config.generatedPrompt && (
           <Card>
             <CardHeader className="pb-3">
-              <CardTitle className="text-base">Prompt đã tạo</CardTitle>
+              <CardTitle className="text-base">{t('chat.prompts.generated.title')}</CardTitle>
               <CardDescription>
-                Đây là prompt tùy chỉnh được tạo cho bạn
+                {t('chat.prompts.generated.description')}
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -348,7 +348,7 @@ export const PromptSettings: React.FC<PromptSettingsProps> = ({
         <div className="flex gap-3">
           {onClose && (
             <Button variant="outline" onClick={onClose}>
-              {t ? t('common.cancel') : 'Hủy'}
+              {t('common.cancel')}
             </Button>
           )}
           <Button
@@ -356,7 +356,7 @@ export const PromptSettings: React.FC<PromptSettingsProps> = ({
             onClick={handleResetAllPrompts}
           >
             <RotateCcw className="w-4 h-4 mr-2" />
-            Reset
+            {t('chat.prompts.buttons.reset')}
           </Button>
           <Button
             onClick={handleSave}
@@ -366,12 +366,12 @@ export const PromptSettings: React.FC<PromptSettingsProps> = ({
             {isSaved ? (
               <>
                 <Check className="w-4 h-4 mr-2 text-white" />
-                <span className="text-white">Saved</span>
+                <span className="text-white">{t('common.saved')}</span>
               </>
             ) : (
               <>
                 <Save className="w-4 h-4 mr-2" />
-                {isSaving ? 'Đang lưu...' : 'Save'}
+                {isSaving ? t('common.saving') : t('chat.prompts.buttons.save')}
               </>
             )}
           </Button>

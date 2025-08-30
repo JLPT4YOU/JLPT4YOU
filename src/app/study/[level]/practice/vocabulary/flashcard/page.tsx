@@ -9,24 +9,21 @@ import { FlashcardContainer } from '@/components/flashcard/flashcard-container'
 import { FlashcardData, FlashcardSession } from '@/components/flashcard/flashcard-types'
 import { getWordsByLevel, JLPTWord } from '@/utils/jlptAPI'
 import { BookOpen } from 'lucide-react'
+import { useTranslations } from '@/hooks/use-translations'
+
 
 export default function VocabularyFlashcardPage() {
   return (
     <ProtectedRoute>
       <LanguagePageWrapper>
-        {({ language, translations, t }) => <Content language={language} translations={translations} t={t} />}
+        {() => <Content />}
       </LanguagePageWrapper>
     </ProtectedRoute>
   )
 }
 
-interface ContentProps {
-  language: string
-  translations: any
-  t: (key: string) => string
-}
-
-function Content({ language, translations, t }: ContentProps) {
+function Content() {
+  const { t } = useTranslations();
   const params = useParams<{ level: string }>()
   const router = useRouter()
   const level = (params?.level || 'n5').toLowerCase() as 'n5' | 'n4' | 'n3' | 'n2' | 'n1'
@@ -131,7 +128,7 @@ function Content({ language, translations, t }: ContentProps) {
                   <BookOpen className="w-8 h-8 text-primary animate-pulse" />
                 </div>
                 <div className="text-lg font-medium text-foreground">
-                  Đang tải từ vựng...
+                  {t('study.loadingVocabulary')}
                 </div>
                 <div className="text-muted-foreground">
                   Chuẩn bị flashcard cho {level.toUpperCase()}

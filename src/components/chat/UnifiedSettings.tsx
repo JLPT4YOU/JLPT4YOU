@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -407,6 +407,9 @@ export const UnifiedSettings: React.FC<UnifiedSettingsProps> = ({
             <Settings className="h-5 w-5" />
             {t ? t('chat.settings.title') : 'iRIN Settings'}
           </DialogTitle>
+          <DialogDescription>
+            {t ? t('settings.main.description') : 'Customize iRIN’s appearance, behavior, and API configurations.'}
+          </DialogDescription>
         </DialogHeader>
         
         <Tabs defaultValue={defaultTab} className="w-full">

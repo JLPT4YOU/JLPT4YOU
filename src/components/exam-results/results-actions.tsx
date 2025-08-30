@@ -46,7 +46,7 @@ export function ResultsActions({
       ...(examSubType && { subType: examSubType }),
       ...(demoScenario && { demo: demoScenario })
     })
-    return `/${language}/review-answers?${params.toString()}`
+    return `/review-answers?${params.toString()}`
   }
 
   const handleViewAnswers = () => {

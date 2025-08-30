@@ -186,7 +186,7 @@ export function useAuthForm<T extends AuthFormData>(
                 result.error.includes('invalid login credentials') ||
                 result.error.includes('Invalid credentials') ||
                 result.error.includes('AuthApiError: Invalid login credentials')) {
-              errorMessage = 'Sai tên đăng nhập hoặc mật khẩu'
+              errorMessage = getMessage('general', 'invalidCredentials')
             }
           }
           throw new Error(errorMessage || getMessage('general', 'loginFailed'))

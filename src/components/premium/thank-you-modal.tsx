@@ -12,7 +12,7 @@ import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
 import { CheckCircle, Crown, Gift, ArrowRight, Sparkles } from 'lucide-react'
 import { formatExpiryDate } from '@/lib/premium-utils'
-import { useLanguageContext } from '@/contexts/language-context'
+import { useTranslations } from '@/hooks/use-translations'
 
 interface PurchaseResult {
   success: boolean
@@ -37,7 +37,7 @@ interface ThankYouModalProps {
 }
 
 export function ThankYouModal({ isOpen, onClose, purchaseResult, user }: ThankYouModalProps) {
-  const { t } = useLanguageContext()
+  const { t } = useTranslations()
 
   const confettiVariants = {
     initial: { scale: 0, rotate: 0 },

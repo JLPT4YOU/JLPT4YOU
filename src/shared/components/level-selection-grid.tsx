@@ -243,7 +243,7 @@ export function useLevelConfigs() {
     return levels.map(level => ({
       ...level,
       description: `${translationKey}.${level.id}`,
-      href: `/${language}/driving/${level.id}`
+      href: `/driving/${level.id}`
     }))
   }
 

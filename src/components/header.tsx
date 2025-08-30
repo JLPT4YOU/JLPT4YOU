@@ -14,7 +14,7 @@ import { Button } from "@/components/ui/button"
 import { useNavigationProtection } from "@/components/anti-cheat-system"
 import NotificationButton from "@/components/notifications/NotificationButton"
 
-import { useLanguageContext } from "@/contexts/language-context"
+import { useTranslations } from "@/hooks/use-translations"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -63,7 +63,7 @@ export function Header() {
   const router = useRouter()
 
   // Use language context for consistent translations
-  const { translations, t, language } = useLanguageContext()
+  const { translations, t, language } = useTranslations()
 
   const handleLogout = async () => {
     await signOut() // ✅ FIXED: Use signOut instead of logout

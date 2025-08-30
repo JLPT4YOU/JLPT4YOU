@@ -3,8 +3,7 @@
 import { Button } from '@/components/ui/button'
 import { ChevronLeft, ChevronRight, MoreHorizontal } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { useTranslation } from '@/lib/use-translation'
-import { TranslationData } from '@/lib/i18n'
+import { useTranslations } from '@/hooks/use-translations'
 
 interface QuestionPaginationProps {
   currentPage: number
@@ -12,7 +11,6 @@ interface QuestionPaginationProps {
   questionsPerPage: number
   totalQuestions: number
   onPageChange: (page: number) => void
-  translations?: TranslationData
 }
 
 export function QuestionPagination({
@@ -20,10 +18,9 @@ export function QuestionPagination({
   totalPages,
   questionsPerPage,
   totalQuestions,
-  onPageChange,
-  translations
+  onPageChange
 }: QuestionPaginationProps) {
-  const { t } = useTranslation(translations || {} as any)
+  const { t } = useTranslations()
   const startQuestion = (currentPage - 1) * questionsPerPage + 1
   const endQuestion = Math.min(currentPage * questionsPerPage, totalQuestions)
 

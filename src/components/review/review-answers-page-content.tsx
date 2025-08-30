@@ -160,7 +160,7 @@ export function ReviewAnswersPageContent({ translations, language }: ReviewAnswe
               onPageChange={setCurrentPage}
               questionsPerPage={QUESTIONS_PER_PAGE}
               totalQuestions={filteredQuestions.length}
-              translations={translations}
+
             />
           )}
         </div>

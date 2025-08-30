@@ -4,6 +4,7 @@ import { BookOpen, GraduationCap } from "lucide-react";
 import { useTranslation } from "@/lib/use-translation";
 import { TranslationData, Language } from "@/lib/i18n";
 import { BasePageTemplate } from "@/components/layout/base-page-template";
+import { routes } from "@/shared/constants/routes";
 
 interface DrivingPageContentProps {
   translations: TranslationData;
@@ -27,7 +28,7 @@ function DrivingPageContentInner({ translations, language }: DrivingPageContentP
       subtitle: t('driving.testTypes.karimen.subtitle'),
       details: t('driving.testTypes.karimen.details'),
       icon: BookOpen,
-      href: `/${language}/driving/karimen`,
+      href: routes.drivingType(language, 'karimen'),
       bgColor: "bg-card",
       textColor: "text-foreground"
     },
@@ -38,7 +39,7 @@ function DrivingPageContentInner({ translations, language }: DrivingPageContentP
       subtitle: t('driving.testTypes.honmen.subtitle'),
       details: t('driving.testTypes.honmen.details'),
       icon: GraduationCap,
-      href: `/${language}/driving/honmen`,
+      href: routes.drivingType(language, 'honmen'),
       bgColor: "bg-card",
       textColor: "text-foreground"
     }

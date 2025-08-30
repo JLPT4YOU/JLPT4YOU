@@ -4,7 +4,8 @@ import "./globals.css";
 import "@/components/dictionary/styles.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { AuthProvider } from "@/contexts/auth-context-simple";
-import { LanguageProvider } from "@/contexts/language-context";
+
+import { TranslationsProvider } from "@/contexts/translations-context";
 import { LoadingProvider } from "@/contexts/loading-context";
 import { ToastProvider } from "@/components/ui/toast";
 import { Header } from "@/components/header";
@@ -149,34 +150,34 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <LanguageProvider>
-            <LoadingProvider>
-              <AuthProvider>
-                <ToastProvider>
-                  <NavigationProtectionWrapper>
-                  <PageTransitionWrapper>
-                    <DictionaryProvider>
-                      <ConditionalHeaderWrapper>
-                        <Header />
-                      </ConditionalHeaderWrapper>
-                      <main>
-                        <Suspense fallback={<div className="min-h-screen bg-background" />}>
-                          {children}
-                        </Suspense>
-                      </main>
-                    </DictionaryProvider>
-                  </PageTransitionWrapper>
-                  </NavigationProtectionWrapper>
+            <TranslationsProvider>
+              <LoadingProvider>
+                <AuthProvider>
+                  <ToastProvider>
+                    <NavigationProtectionWrapper>
+                    <PageTransitionWrapper>
+                      <DictionaryProvider>
+                        <ConditionalHeaderWrapper>
+                          <Header />
+                        </ConditionalHeaderWrapper>
+                        <main>
+                          <Suspense fallback={<div className="min-h-screen bg-background" />}>
+                            {children}
+                          </Suspense>
+                        </main>
+                      </DictionaryProvider>
+                    </PageTransitionWrapper>
+                    </NavigationProtectionWrapper>
 
-                  {/* Global Loading Overlay */}
-                  <GlobalLoadingOverlay />
-                </ToastProvider>
-              </AuthProvider>
-            </LoadingProvider>
+                    {/* Global Loading Overlay */}
+                    <GlobalLoadingOverlay />
+                  </ToastProvider>
+                </AuthProvider>
+              </LoadingProvider>
 
-            {/* Performance monitoring for Core Web Vitals - Console logging disabled */}
-            {process.env.NODE_ENV === 'production' && <ComprehensivePerformanceMonitor />}
-          </LanguageProvider>
+              {/* Performance monitoring for Core Web Vitals - Console logging disabled */}
+              {process.env.NODE_ENV === 'production' && <ComprehensivePerformanceMonitor />}
+            </TranslationsProvider>
         </ThemeProvider>
 
         {/* Critical performance scripts */}

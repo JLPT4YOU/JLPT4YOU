@@ -27,7 +27,7 @@ import {
 } from 'lucide-react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useAuth } from '@/contexts/auth-context-simple'
-import { useLanguageContext } from '@/contexts/language-context'
+import { useTranslations } from '@/hooks/use-translations'
 import { cn } from '@/lib/utils'
 import { premiumService } from '@/lib/premium-service'
 import { ThankYouModal } from './thank-you-modal'
@@ -42,7 +42,7 @@ export function ModernCheckout({ translations }: ModernCheckoutProps) {
   const router = useRouter()
   const searchParams = useSearchParams()
   const { user, refreshUser } = useAuth()
-  const { t } = useLanguageContext()
+  const { t } = useTranslations()
   
   // Get plan details from URL params
   const selectedPlan = searchParams.get('plan') || 'premium'

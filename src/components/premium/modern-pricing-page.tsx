@@ -26,7 +26,7 @@ import {
 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/auth-context-simple'
-import { useLanguageContext } from '@/contexts/language-context'
+import { useTranslations } from '@/hooks/use-translations'
 import { cn } from '@/lib/utils'
 
 interface ModernPricingPageProps {
@@ -36,7 +36,7 @@ interface ModernPricingPageProps {
 export function ModernPricingPage({ translations }: ModernPricingPageProps) {
   const router = useRouter()
   const { user } = useAuth()
-  const { t } = useLanguageContext()
+  const { t } = useTranslations()
   // Removed billing period toggle - going directly to checkout
 
   // Pricing data

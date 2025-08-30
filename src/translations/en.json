@@ -375,6 +375,7 @@
     "errors": {
       "general": "An error occurred. Please try again.",
       "loginFailed": "Incorrect username or password",
+      "invalidCredentials": "Incorrect username or password",
       "emailExists": "This email is already in use",
       "resendFailed": "Failed to resend email. Please try again.",
       "registrationError": "An error occurred during registration. Please try again.",
@@ -475,6 +476,7 @@
       "correctAnswers": "Correct",
       "incorrectAnswers": "Incorrect",
       "unansweredQuestions": "Unanswered",
+      "flaggedQuestions": "Flagged Questions",
       "timeSpent": "Time Spent",
       "timeEfficiency": "{percentage}% of time",
       "accuracy": "Accuracy"
@@ -525,6 +527,10 @@
       "correct": "Correct",
       "incorrect": "Incorrect",
       "flagged": "Flagged"
+    },
+    "pagination": {
+      "previous": "Previous",
+      "next": "Next"
     },
     "question": {
       "number": "Question {number}",
@@ -1250,8 +1256,124 @@
       "clearHistoryWarning": "This will permanently delete all your chat conversations",
       "confirmClear": "Are you sure you want to clear all chat history? This action cannot be undone.",
       "confirmClearTitle": "Clear All Chat History",
-      "close": "Close"
+      "close": "Close",
+      "prompts": {
+        "title": "AI Prompt Settings",
+        "description": "Customize the instructions given to the AI.",
+        "systemPrompt": {
+          "label": "System Prompt",
+          "description": "Core instructions that define the AI's role and personality."
+        },
+        "customInstructions": {
+          "label": "Custom Instructions",
+          "description": "Your specific guidelines for the AI to follow."
+        },
+        "buttons": {
+          "save": "Save Prompts",
+          "reset": "Reset to Default"
+        },
+        "notifications": {
+          "saveSuccess": "Prompts saved successfully.",
+          "saveError": "Error saving prompts.",
+          "resetSuccess": "Prompts have been reset to default.",
+          "resetError": "Error resetting prompts."
+        },
+        "personalization": {
+          "title": "Personalization Settings",
+          "preferredName": {
+            "label": "What should iRIN call you?",
+            "placeholder": "Name or nickname you want iRIN to use"
+          },
+          "desiredTraits": {
+            "label": "What traits do you want iRIN to have?",
+            "placeholder": "Describe the personality and traits you want in iRIN"
+          },
+          "personalInfo": {
+            "label": "What else should iRIN know about you?",
+            "placeholder": "Personal info for iRIN to better assist you (optional)"
+          },
+          "additionalRequests": {
+            "label": "Additional Requests",
+            "placeholder": "Anything else you want iRIN to keep in mind? (optional)"
+          }
+        },
+        "generate": {
+          "title": "Generate Custom Prompt",
+          "description": "Use AI to create a suitable prompt based on your input",
+          "button": "Generate Prompt",
+          "buttonLoading": "Generating..."
+        },
+        "generated": {
+          "title": "Generated Prompt",
+          "description": "This is the custom prompt generated for you"
+        },
+        "footer": {
+          "note": "Settings are saved locally and will persist across sessions"
+        },
+        "resetDialog": {
+          "title": "Reset all prompts and settings",
+          "description": "Are you sure you want to reset all prompts and settings? This will: Delete all custom prompts, Reset AI language settings, Reset the form to default. iRIN's core prompt will be preserved.",
+          "confirm": "Reset All",
+          "successMessage": "✅ Reset successful!\n\n• Custom prompt: Deleted\n• Language settings: Reset\n• Core iRIN: Preserved"
+        }
+      }
     },
+      "prompts": {
+        "aiLanguage": {
+          "title": "What language should iRIN use to communicate with you?",
+          "placeholder": "Select language",
+          "options": {
+            "auto": "Auto Detect",
+            "vietnamese": "Vietnamese",
+            "english": "English",
+            "japanese": "Japanese",
+            "custom": "Custom"
+          },
+          "customPlaceholder": "Enter desired language (e.g., Korean, French, Spanish...)"
+        },
+        "personalization": {
+          "title": "Personalization Settings",
+          "preferredName": {
+            "label": "What should iRIN call you?",
+            "placeholder": "Name or nickname you want iRIN to use"
+          },
+          "desiredTraits": {
+            "label": "What traits do you want iRIN to have?",
+            "placeholder": "Describe the personality and traits you want in iRIN"
+          },
+          "personalInfo": {
+            "label": "What else should iRIN know about you?",
+            "placeholder": "Personal info for iRIN to better assist you (optional)"
+          },
+          "additionalRequests": {
+            "label": "Additional Requests",
+            "placeholder": "Anything else you want iRIN to keep in mind? (optional)"
+          }
+        },
+        "generate": {
+          "title": "Generate Custom Prompt",
+          "description": "Use AI to create a suitable prompt based on your input",
+          "button": "Generate Prompt",
+          "buttonLoading": "Generating..."
+        },
+        "generated": {
+          "title": "Generated Prompt",
+          "description": "This is the custom prompt generated for you"
+        },
+        "footer": {
+          "note": "Settings are saved locally and will persist across sessions"
+        },
+        "buttons": {
+          "reset": "Reset",
+          "save": "Save"
+        },
+        "resetDialog": {
+          "title": "Reset all prompts and settings",
+          "description": "Are you sure you want to reset all prompts and settings? This will: Delete all custom prompts, Reset AI language settings, Reset the form to default. iRIN's core prompt will be preserved.",
+          "confirm": "Reset All",
+          "successMessage": "✅ Reset successful!\n\n• Custom prompt: Deleted\n• Language settings: Reset\n• Core iRIN: Preserved"
+        }
+      },
     "loading": "Loading iRIN...",
     "languages": {
       "auto": "Auto Detect Language",
@@ -1296,6 +1418,7 @@
     "flaggedAnswers": "Flagged Answers"
   },
   "study": {
+    "loadingVocabulary": "Loading vocabulary...",
     "page": {
       "title": "Study",
       "subtitle": "Choose the learning method that suits you"
@@ -1579,6 +1702,9 @@
     }
   },
   "settings": {
+    "main": {
+      "description": "Customize iRIN’s appearance, behavior, and API configurations."
+    },
     "tabs": {
       "general": "General",
       "prompts": "AI Prompts",
@@ -1706,7 +1832,63 @@
       "defaultMessage": "Are you sure you want to perform this action?",
       "confirm": "Confirm",
       "cancel": "Cancel",
-      "close": "Close"
+      "close": "Close",
+      "prompts": {
+        "aiLanguage": {
+          "title": "What language should iRIN use to communicate with you?",
+          "placeholder": "Select language",
+          "options": {
+            "auto": "Auto Detect",
+            "vietnamese": "Vietnamese",
+            "english": "English",
+            "japanese": "Japanese",
+            "custom": "Custom"
+          },
+          "customPlaceholder": "Enter desired language (e.g., Korean, French, Spanish...)"
+        },
+        "personalization": {
+          "title": "Personalization Settings",
+          "preferredName": {
+            "label": "What should iRIN call you?",
+            "placeholder": "Name or nickname you want iRIN to use"
+          },
+          "desiredTraits": {
+            "label": "What traits do you want iRIN to have?",
+            "placeholder": "Describe the personality and traits you want in iRIN"
+          },
+          "personalInfo": {
+            "label": "What else should iRIN know about you?",
+            "placeholder": "Personal info for iRIN to better assist you (optional)"
+          },
+          "additionalRequests": {
+            "label": "Additional Requests",
+            "placeholder": "Anything else you want iRIN to keep in mind? (optional)"
+          }
+        },
+        "generate": {
+          "title": "Generate Custom Prompt",
+          "description": "Use AI to create a suitable prompt based on your input",
+          "button": "Generate Prompt",
+          "buttonLoading": "Generating..."
+        },
+        "generated": {
+          "title": "Generated Prompt",
+          "description": "This is the custom prompt generated for you"
+        },
+        "footer": {
+          "note": "Settings are saved locally and will persist across sessions"
+        },
+        "buttons": {
+          "reset": "Reset",
+          "save": "Save"
+        },
+        "resetDialog": {
+          "title": "Reset all prompts and settings",
+          "description": "Are you sure you want to reset all prompts and settings? This will: Delete all custom prompts, Reset AI language settings, Reset the form to default. iRIN's core prompt will be preserved.",
+          "confirm": "Reset All",
+          "successMessage": "✅ Reset successful!\n\n• Custom prompt: Deleted\n• Language settings: Reset\n• Core iRIN: Preserved"
+        }
+      }
     },
     "apiKey": {
       "title": "API Key Setup",

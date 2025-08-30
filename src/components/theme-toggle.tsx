@@ -4,11 +4,11 @@ import * as React from "react"
 import { Moon, Sun } from "lucide-react"
 import { useTheme } from "next-themes"
 import { Button } from "@/components/ui/button"
-import { useLanguageContext } from "@/contexts/language-context"
+import { useTranslations } from "@/hooks/use-translations"
 
 export function ThemeToggle() {
   const { theme, setTheme } = useTheme()
-  const { t } = useLanguageContext()
+  const { t } = useTranslations()
   const [mounted, setMounted] = React.useState(false)
 
   // Ensure component is mounted before rendering to avoid hydration mismatch

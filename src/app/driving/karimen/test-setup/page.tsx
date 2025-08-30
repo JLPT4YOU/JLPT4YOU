@@ -2,25 +2,12 @@
 
 import { TestSectionSelector } from "@/components/test-section-selector"
 import { useRouter } from "next/navigation"
-import { useEffect, useState } from "react"
-import { loadTranslation, DEFAULT_LANGUAGE, TranslationData } from "@/lib/i18n"
+import { TranslationData } from "@/lib/i18n"
+import { useTranslations } from "@/hooks/use-translations"
 
 export default function KarimenTestSetupPage() {
   const router = useRouter()
-  const [translations, setTranslations] = useState<TranslationData | null>(null)
-
-  // Load translations
-  useEffect(() => {
-    const loadTranslations = async () => {
-      try {
-        const translationData = await loadTranslation(DEFAULT_LANGUAGE)
-        setTranslations(translationData)
-      } catch (error) {
-        console.error('Failed to load translations:', error)
-      }
-    }
-    loadTranslations()
-  }, [])
+  const { translations } = useTranslations()
 
   const handleStartTest = (
     _selectedSections: string[],

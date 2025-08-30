@@ -1,7 +1,7 @@
 "use client"
 
 import React, { Suspense } from 'react'
-import { useLanguageContext } from '@/contexts/language-context'
+import { useTranslations } from '@/hooks/use-translations'
 import { Language, TranslationData } from '@/lib/i18n'
 
 // Props for the render function
@@ -107,7 +107,7 @@ function LanguagePageWrapperInner({
     t,
     error,
     retryLoadTranslations
-  } = useLanguageContext()
+  } = useTranslations()
 
   // Handle error state
   if (error) {
@@ -166,7 +166,7 @@ export function withLanguagePage<P extends object>(
 
 // Hook version for functional components that need language context
 export function useLanguagePage() {
-  const context = useLanguageContext()
+  const context = useTranslations()
   
   return {
     language: context.language,

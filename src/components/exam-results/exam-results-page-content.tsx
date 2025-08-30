@@ -52,7 +52,7 @@ export function ExamResultsPageContent({ translations, language }: ExamResultsPa
     } else if (examResult.examType === 'challenge') {
       router.push(`/${language}/challenge/${examResult.level}`)
     } else {
-      router.push(`/${language}/driving/${examResult.level}/test-setup`)
+      router.push(`/driving/${examResult.level}/test-setup`)
     }
   }
 
@@ -65,7 +65,7 @@ export function ExamResultsPageContent({ translations, language }: ExamResultsPa
     } else if (examResult.examType === 'challenge') {
       router.push(`/${language}/challenge`)
     } else {
-      router.push(`/${language}/driving`)
+      router.push(`/driving`)
     }
   }
 

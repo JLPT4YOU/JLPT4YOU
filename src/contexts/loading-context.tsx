@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useState, useCallback } from "react"
 
+import { useTranslations } from '@/hooks/use-translations'
 interface LoadingContextType {
   isGlobalLoading: boolean
   startGlobalLoading: () => void
@@ -18,7 +19,8 @@ interface LoadingProviderProps {
 
 export function LoadingProvider({ children }: LoadingProviderProps) {
   const [isGlobalLoading, setIsGlobalLoading] = useState(false)
-  const [loadingMessage, setLoadingMessage] = useState("Đang tải...")
+  const { t } = useTranslations()
+  const [loadingMessage, setLoadingMessage] = useState(t('common.loading'))
 
   const startGlobalLoading = useCallback(() => {
     setIsGlobalLoading(true)

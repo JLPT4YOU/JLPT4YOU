@@ -375,6 +375,7 @@
     "errors": {
       "general": "Đã xảy ra lỗi. Vui lòng thử lại.",
       "loginFailed": "Sai tên đăng nhập hoặc mật khẩu",
+      "invalidCredentials": "Sai tên đăng nhập hoặc mật khẩu",
       "emailExists": "Email này đã được sử dụng",
       "resendFailed": "Không thể gửi lại email. Vui lòng thử lại.",
       "registrationError": "Đã xảy ra lỗi trong quá trình đăng ký. Vui lòng thử lại.",
@@ -785,6 +786,10 @@
       "correct": "Đúng",
       "incorrect": "Sai",
       "flagged": "Câu đánh dấu"
+    },
+    "pagination": {
+      "previous": "Trước",
+      "next": "Sau"
     },
     "question": {
       "number": "Câu {number}",
@@ -1235,7 +1240,67 @@
       "clearHistoryWarning": "Thao tác này sẽ xóa vĩnh viễn tất cả cuộc trò chuyện của bạn",
       "confirmClear": "Bạn có chắc chắn muốn xóa toàn bộ lịch sử trò chuyện? Hành động này không thể hoàn tác.",
       "confirmClearTitle": "Xóa toàn bộ lịch sử chat",
-      "close": "Đóng"
+      "close": "Đóng",
+      "prompts": {
+        "title": "Cài đặt AI Prompt",
+        "description": "Tùy chỉnh các chỉ dẫn được đưa ra cho AI.",
+        "systemPrompt": {
+          "label": "System Prompt",
+          "description": "Các chỉ dẫn cốt lõi xác định vai trò và tính cách của AI."
+        },
+        "customInstructions": {
+          "label": "Chỉ dẫn tùy chỉnh",
+          "description": "Các hướng dẫn cụ thể của bạn để AI tuân theo."
+        },
+        "buttons": {
+          "save": "Lưu Prompts",
+          "reset": "Đặt lại về mặc định"
+        },
+        "notifications": {
+          "saveSuccess": "Lưu prompts thành công.",
+          "saveError": "Lỗi khi lưu prompts.",
+          "resetSuccess": "Prompts đã được đặt lại về mặc định.",
+          "resetError": "Lỗi khi đặt lại prompts."
+        },
+        "personalization": {
+          "title": "Tùy chỉnh cá nhân hóa",
+          "preferredName": {
+            "label": "iRIN nên gọi bạn là gì?",
+            "placeholder": "Tên hoặc cách gọi mà bạn muốn iRIN sử dụng"
+          },
+          "desiredTraits": {
+            "label": "Bạn muốn iRIN có những đặc điểm gì?",
+            "placeholder": "Mô tả tính cách và đặc điểm mà bạn mong muốn ở iRIN"
+          },
+          "personalInfo": {
+            "label": "Bạn muốn iRIN biết thêm gì về bạn không?",
+            "placeholder": "Thông tin cá nhân để iRIN có thể hỗ trợ bạn tốt hơn (tùy chọn)"
+          },
+          "additionalRequests": {
+            "label": "Yêu cầu bổ sung",
+            "placeholder": "Có điều gì khác bạn muốn iRIN lưu ý không? (tùy chọn)"
+          }
+        },
+        "generate": {
+          "title": "Tạo Prompt Tùy Chỉnh",
+          "description": "Sử dụng AI để tạo prompt phù hợp dựa trên thông tin bạn đã nhập",
+          "button": "Tạo Prompt",
+          "buttonLoading": "Đang tạo..."
+        },
+        "generated": {
+          "title": "Prompt đã tạo",
+          "description": "Đây là prompt tùy chỉnh được tạo cho bạn"
+        },
+        "footer": {
+          "note": "Cài đặt được lưu cục bộ và sẽ tồn tại qua các phiên"
+        },
+        "resetDialog": {
+          "title": "Reset toàn bộ prompt và cài đặt",
+          "description": "Bạn có chắc muốn reset toàn bộ prompt và cài đặt? Hành động này sẽ: Xóa toàn bộ prompt tùy chỉnh, Reset cài đặt ngôn ngữ AI, Đặt lại form về mặc định. Core prompt của iRIN sẽ được giữ nguyên.",
+          "confirm": "Reset toàn bộ",
+          "successMessage": "✅ Đã reset toàn bộ thành công!\n\n• Prompt tùy chỉnh: Đã xóa\n• Cài đặt ngôn ngữ: Đã reset\n• Core iRIN: Vẫn được giữ nguyên"
+        }
+      }
     },
     "loading": "Đang tải iRIN...",
     "languages": {
@@ -1281,6 +1346,7 @@
     "flaggedAnswers": "Câu đánh dấu"
   },
   "study": {
+    "loadingVocabulary": "Đang tải từ vựng...",
     "page": {
       "title": "Học bài",
       "subtitle": "Chọn phương pháp học phù hợp với bạn"
@@ -1565,6 +1631,9 @@
   },
 
   "settings": {
+    "main": {
+      "description": "Tùy chỉnh giao diện, hành vi và cấu hình API của iRIN."
+    },
     "tabs": {
       "general": "Chung",
       "prompts": "Tùy chỉnh AI",

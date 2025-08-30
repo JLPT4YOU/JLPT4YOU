@@ -375,6 +375,7 @@
     "errors": {
       "general": "エラーが発生しました。もう一度お試しください。",
       "loginFailed": "ユーザー名またはパスワードが正しくありません",
+      "invalidCredentials": "ユーザー名またはパスワードが正しくありません",
       "emailExists": "このメールアドレスは既に使用されています",
       "resendFailed": "メールの再送信に失敗しました。もう一度お試しください。",
       "registrationError": "登録中にエラーが発生しました。もう一度お試しください。",
@@ -475,6 +476,7 @@
       "correctAnswers": "正解数",
       "incorrectAnswers": "不正解数",
       "unansweredQuestions": "未回答",
+      "flaggedQuestions": "チェックした問題",
       "timeSpent": "所要時間",
       "timeEfficiency": "{percentage}%の時間",
       "accuracy": "正解率"
@@ -525,6 +527,10 @@
       "correct": "正解",
       "incorrect": "不正解",
       "flagged": "フラグ付き"
+    },
+    "pagination": {
+      "previous": "前へ",
+      "next": "次へ"
     },
     "question": {
       "number": "問題{number}",
@@ -1251,7 +1257,124 @@
       "clearHistoryWarning": "すべてのチャット会話が永続的に削除されます",
       "confirmClear": "すべてのチャット履歴を削除してもよろしいですか？この操作は元に戻せません。",
       "confirmClearTitle": "全チャット履歴を削除",
-      "close": "閉じる"
+      "close": "閉じる",
+      "prompts": {
+        "title": "AIプロンプト設定",
+        "description": "AIに与える指示をカスタマイズします。",
+        "systemPrompt": {
+          "label": "システムプロンプト",
+          "description": "AIの役割と個性を定義するコアな指示。"
+        },
+        "customInstructions": {
+          "label": "カスタム指示",
+          "description": "AIが従うべきあなたの具体的なガイドライン。"
+        },
+        "buttons": {
+          "save": "プロンプトを保存",
+          "reset": "デフォルトにリセット"
+        },
+        "notifications": {
+          "saveSuccess": "プロンプトが正常に保存されました。",
+          "saveError": "プロンプトの保存中にエラーが発生しました。",
+          "resetSuccess": "プロンプトがデフォルトにリセットされました。",
+          "resetError": "プロンプトのリセット中にエラーが発生しました。"
+        },
+        "personalization": {
+          "title": "パーソナライゼーション設定",
+          "preferredName": {
+            "label": "iRINに何と呼ばれたいですか？",
+            "placeholder": "iRINに使ってほしい名前やニックネーム"
+          },
+          "desiredTraits": {
+            "label": "iRINにどのような特性を持たせたいですか？",
+            "placeholder": "iRINに期待する性格や特徴を説明してください"
+          },
+          "personalInfo": {
+            "label": "iRINに他に知っておいてほしいことはありますか？",
+            "placeholder": "iRINがより良くサポートするための個人情報（任意）"
+          },
+          "additionalRequests": {
+            "label": "追加のリクエスト",
+            "placeholder": "その他にiRINに留意してほしいことはありますか？（任意）"
+          }
+        },
+        "generate": {
+          "title": "カスタムプロンプトを生成",
+          "description": "入力に基づいて適切なプロンプトをAIで作成します",
+          "button": "プロンプトを生成",
+          "buttonLoading": "生成中..."
+        },
+        "generated": {
+          "title": "生成されたプロンプト",
+          "description": "あなたのために生成されたカスタムプロンプトです"
+        },
+        "footer": {
+          "note": "設定はローカルに保存され、セッション間で維持されます"
+        },
+        "resetDialog": {
+          "title": "すべてのプロンプトと設定をリセット",
+          "description": "すべてのプロンプトと設定をリセットしてもよろしいですか？この操作により、すべてのカスタムプロンプトが削除され、AI言語設定がリセットされ、フォームがデフォルトにリセットされます。iRINのコアプロンプトは保持されます。",
+          "confirm": "すべてリセット",
+          "successMessage": "✅ リセットが正常に完了しました！\n\n• カスタムプロンプト: 削除済み\n• 言語設定: リセット済み\n• コアiRIN: 保持"
+        }
+      }
+,
+      "prompts": {
+        "aiLanguage": {
+          "title": "iRINはどの言語でやり取りすればよいですか？",
+          "placeholder": "言語を選択",
+          "options": {
+            "auto": "自動検出",
+            "vietnamese": "Tiếng Việt",
+            "english": "English",
+            "japanese": "日本語",
+            "custom": "カスタム"
+          },
+          "customPlaceholder": "希望する言語を入力（例：韓国語、フランス語、スペイン語 など）"
+        },
+        "personalization": {
+          "title": "パーソナライズ設定",
+          "preferredName": {
+            "label": "iRINに何と呼ばれたいですか？",
+            "placeholder": "iRINに使ってほしい名前やニックネーム"
+          },
+          "desiredTraits": {
+            "label": "iRINにどのような特性を持たせたいですか？",
+            "placeholder": "iRINに期待する性格や特徴を説明してください"
+          },
+          "personalInfo": {
+            "label": "iRINに他に知っておいてほしいことはありますか？",
+            "placeholder": "iRINがより良くサポートするための個人情報（任意）"
+          },
+          "additionalRequests": {
+            "label": "追加のリクエスト",
+            "placeholder": "その他にiRINに留意してほしいことはありますか？（任意）"
+          }
+        },
+        "generate": {
+          "title": "カスタムプロンプトを生成",
+          "description": "入力内容に基づいて適切なプロンプトをAIが作成します",
+          "button": "プロンプトを生成",
+          "buttonLoading": "生成中..."
+        },
+        "generated": {
+          "title": "生成されたプロンプト",
+          "description": "あなたのために生成されたカスタムプロンプトです"
+        },
+        "footer": {
+          "note": "設定はローカルに保存され、セッション間で維持されます"
+        },
+        "buttons": {
+          "reset": "リセット",
+          "save": "保存"
+        },
+        "resetDialog": {
+          "title": "すべてのプロンプトと設定をリセット",
+          "description": "すべてのプロンプトと設定をリセットしますか？ この操作により、カスタムプロンプトの削除、AI言語設定のリセット、フォームの初期化が行われます。iRINのコアプロンプトは保持されます。",
+          "confirm": "すべてリセット",
+          "successMessage": "✅ 正常にリセットされました！\n\n• カスタムプロンプト: 削除\n• 言語設定: リセット\n• コアiRIN: 保持"
+        }
+      }
     },
     "loading": "iRIN先生を読み込み中...",
     "languages": {
@@ -1297,6 +1420,7 @@
     "flaggedAnswers": "フラグ付き問題"
   },
   "study": {
+    "loadingVocabulary": "語彙を読み込み中...",
     "page": {
       "title": "学習",
       "subtitle": "あなたに適した学習方法を選択してください"
@@ -1580,6 +1704,9 @@
     }
   },
   "settings": {
+    "main": {
+      "description": "iRINの外観、動作、API設定をカスタマイズします。"
+    },
     "tabs": {
       "general": "一般",
       "prompts": "AIプロンプト",
