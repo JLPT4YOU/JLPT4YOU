@@ -40,7 +40,7 @@ export function ForgotPasswordForm({
     language
   })
 
-  const { t } = useTranslation(translations)
+  const { t } = useTranslation(translations || ({} as TranslationData))
 
 
 

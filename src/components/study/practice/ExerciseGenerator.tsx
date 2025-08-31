@@ -234,7 +234,7 @@ export function ExerciseGenerator({
                 </SelectContent>
               </Select>
             </div>
-            <p className="text-xs text-blue-600">
+            <p className="text-xs text-black dark:text-white">
               {isProModel
                 ? `🔒 ${t('study.practice.generator.thinking.proDefault')}`
                 : `💡 ${t('study.practice.generator.thinking.description')}`

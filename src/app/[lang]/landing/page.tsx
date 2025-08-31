@@ -12,8 +12,11 @@ interface LandingPageProps {
 }
 
 // Generate metadata with localized titles and SEO
-export async function generateMetadata({ params }: LandingPageProps): Promise<Metadata> {
-  const language = getLanguageFromCode(params.lang);
+export async function generateMetadata(
+  { params }: { params: Promise<{ lang: string }> }
+): Promise<Metadata> {
+  const { lang } = await params;
+  const language = getLanguageFromCode(lang);
   if (!language) {
     return {};
   }
@@ -44,7 +47,7 @@ export async function generateMetadata({ params }: LandingPageProps): Promise<Me
     manifest: '/site.webmanifest',
     openGraph: {
       type: 'website',
-      locale: language === 'vi' ? 'vi_VN' : (language === 'jp' ? 'ja_JP' : 'en_US'),
+      locale: language === 'vn' ? 'vi_VN' : (language === 'jp' ? 'ja_JP' : 'en_US'),
       url: `${baseUrl}/${language}`,
       siteName: 'JLPT4You',
       title: t('seo.title'),
@@ -67,10 +70,10 @@ export async function generateMetadata({ params }: LandingPageProps): Promise<Me
     alternates: {
       canonical: `${baseUrl}/${language}`,
       languages: {
-        'vi-VN': `${baseUrl}/vi`,
+        'vi-VN': `${baseUrl}/vn`,
         'en-US': `${baseUrl}/en`,
         'ja-JP': `${baseUrl}/jp`,
-        'x-default': `${baseUrl}/vi`
+        'x-default': `${baseUrl}/vn`
       },
     },
   };
@@ -78,15 +81,17 @@ export async function generateMetadata({ params }: LandingPageProps): Promise<Me
 
 
 
-export default async function LandingPage({ params }: LandingPageProps) {
-  const { lang } = params
-  const language = getLanguageFromCode(lang)
-  
+export default async function LandingPage(
+  { params }: { params: Promise<{ lang: string }> }
+) {
+  const { lang } = await params;
+  const language = getLanguageFromCode(lang);
+
   if (!language) {
-    notFound()
+    notFound();
   }
 
-  const translations = await loadTranslation(language)
+  const translations = await loadTranslation(language);
 
   return <LandingPageComponent translations={translations} language={language} />
 }

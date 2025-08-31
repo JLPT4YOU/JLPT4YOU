@@ -82,7 +82,7 @@ function Content({ language, translations, t }: ContentProps) {
 
             {/* Selection Cards */}
             <main className="flex justify-center app-space-xl" role="main">
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 place-items-center w-max">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 items-stretch justify-items-center">
                 {practiceTypes.map((practiceType, index) => (
                   <PracticeTypeCard
                     key={index}

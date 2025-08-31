@@ -52,7 +52,7 @@ export function RedeemCodeSection({ className }: RedeemCodeSectionProps) {
         await refreshUser() // Refresh user data to get updated premium status
 
         const successMessage = t
-          ? t('pages.settings.profile.redeemCode.success', { days: result.premium_days_added })
+          ? t('pages.settings.profile.redeemCode.success').replace('{{days}}', String(result.premium_days_added))
           : `Đã kích hoạt thành công ${result.premium_days_added} ngày Premium!`
 
         setRedeemMessage({
@@ -66,7 +66,7 @@ export function RedeemCodeSection({ className }: RedeemCodeSectionProps) {
         setRedeemCode('') // Clear the input
 
         // Show success toast
-        toast.success(t ? t('pages.settings.profile.redeemCode.successToast', { days: result.premium_days_added }) : `Đã thêm ${result.premium_days_added} ngày Premium vào tài khoản của bạn!`)
+        toast.success(t ? t('pages.settings.profile.redeemCode.successToast').replace('{{days}}', String(result.premium_days_added)) : `Đã thêm ${result.premium_days_added} ngày Premium vào tài khoản của bạn!`)
       } else {
         // Error case
         setRedeemMessage({

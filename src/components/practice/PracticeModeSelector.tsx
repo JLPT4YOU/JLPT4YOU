@@ -66,7 +66,7 @@ export function PracticeModeSelector({
 
             {/* Selection Cards */}
             <main className="flex justify-center app-space-xl" role="main">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 md:gap-8 place-items-center w-max">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 md:gap-8 items-stretch justify-items-center">
                 {modes.map((mode) => {
                   const colors = colorClasses[mode.color]
                   const ModeIcon = mode.icon
@@ -75,10 +75,10 @@ export function PracticeModeSelector({
                     <Link
                       key={mode.type}
                       href={`${basePath}/${mode.type}`}
-                      className="block w-full max-w-[320px] group focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-2xl"
+                      className="block w-full max-w-[360px] h-full group focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-2xl"
                       aria-label={mode.ariaLabel}
                     >
-                      <article className="bg-muted/10 rounded-2xl p-6 md:p-8 text-center transition-all duration-200 hover:bg-muted/30 border border-border/20 group-hover:scale-105">
+                      <article className="bg-muted/10 rounded-2xl p-6 md:p-8 text-center transition-all duration-200 hover:bg-muted/30 border border-border/20 group-hover:scale-105 h-full flex flex-col justify-center min-h-[260px]">
                         <div className={`w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-4 group-hover:scale-105 transition-transform duration-200 ${colors.bg}`}>
                           <ModeIcon className={`w-8 h-8 ${colors.text}`} />
                         </div>

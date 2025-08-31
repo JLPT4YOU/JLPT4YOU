@@ -46,7 +46,7 @@ export function RegisterForm({
     language
   })
 
-  const { t } = useTranslation(translations)
+  const { t } = useTranslation(translations || ({} as TranslationData))
 
 
 
