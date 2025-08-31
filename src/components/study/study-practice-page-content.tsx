@@ -32,7 +32,7 @@ export function StudyPracticePageContent({ level, type }: StudyPracticePageConte
     { label: `N${level}`, href: `/study/n${level}` },
     { label: t('study.practice.breadcrumbs.practice'), href: `/study/n${level}/practice` },
     { label: formatType(type), href: `/study/n${level}/practice/${type}` },
-    { label: 'Bài tập', href: '#' }
+    { label: t('study.practice.exercise.title'), href: '#' }
   ]
   
   // Use practice exercise hook

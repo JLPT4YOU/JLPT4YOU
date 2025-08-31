@@ -279,6 +279,49 @@
       "register": "アカウント作成",
       "forgotPassword": "パスワードを忘れた場合"
     },
+    "labels": {
+      "email": "メールアドレス",
+      "password": "パスワード",
+      "rememberMe": "ログイン状態を維持する",
+      "agreeWith": "",
+      "and": "と"
+    },
+    "placeholders": {
+      "email": "メールアドレスを入力",
+      "password": "パスワードを入力"
+    },
+    "buttons": {
+      "login": "ログイン",
+      "register": "アカウント作成",
+      "sendResetInstructions": "再設定手順を送信",
+      "resendEmail": "メールを再送信",
+      "googleLogin": "Googleでサインイン"
+    },
+    "loading": {
+      "login": "ログイン中...",
+      "register": "アカウント作成中...",
+      "sending": "送信中...",
+      "resending": "再送信中..."
+    },
+    "links": {
+      "forgotPassword": "パスワードをお忘れですか？",
+      "terms": "利用規約",
+      "privacy": "プライバシーポリシーに同意します"
+    },
+    "messages": {
+      "registrationSuccess": "登録が成功しました！アカウントを確認するためにメールを確認してください。",
+      "noAccount": "アカウントをお持ちでないですか？",
+      "signUpNow": "今すぐ登録",
+      "hasAccount": "すでにアカウントをお持ちですか？",
+      "loginNow": "今すぐログイン"
+    },
+    "forgotPassword": {
+      "checkEmail": "メールを確認してください：",
+      "clickLink": "メール内のリンクをクリックしてパスワードをリセットしてください",
+      "linkExpiry": "リンクは15分間有効です",
+      "checkSpam": "メールが見当たらない場合は、迷惑メールフォルダも確認してください",
+      "instructions": "メールアドレスを入力してください。パスワードをリセットするための手順をお送りします。"
+    },
     "subtitles": {
       "login": "JLPT4YOUへようこそ",
       "register": "日本語学習の旅を始めましょう",
@@ -2000,5 +2043,100 @@
       },
       "pages": "ページ"
     }
+  },
+  "errors": {
+    "AUTH_INVALID_CREDENTIALS": "ユーザー名またはパスワードが正しくありません",
+    "AUTH_TOKEN_EXPIRED": "セッションが期限切れです。再度ログインしてください",
+    "AUTH_UNAUTHORIZED": "このリソースにアクセスする権限がありません",
+    "AUTH_FORBIDDEN": "アクセスが拒否されました",
+    "AUTH_USER_NOT_FOUND": "ユーザーが見つかりません",
+    "AUTH_EMAIL_ALREADY_EXISTS": "このメールアドレスは既に使用されています",
+    "AUTH_WEAK_PASSWORD": "パスワードが弱すぎます。より強いパスワードを選択してください",
+    "AUTH_INVALID_EMAIL": "メールアドレスの形式が正しくありません",
+    "EXAM_NOT_FOUND": "試験が見つかりません",
+    "EXAM_ALREADY_SUBMITTED": "試験は既に提出されています",
+    "EXAM_TIME_EXPIRED": "試験時間が終了しました",
+    "EXAM_INVALID_ANSWER": "無効な回答です",
+    "EXAM_SAVE_FAILED": "試験の進捗を保存できませんでした",
+    "EXAM_LOAD_FAILED": "試験を読み込めませんでした",
+    "EXAM_VIOLATION_LIMIT_EXCEEDED": "違反回数の上限を超えました",
+    "EXAM_FULLSCREEN_REQUIRED": "続行するにはフルスクリーンモードを有効にしてください",
+    "NETWORK_CONNECTION_FAILED": "サーバーに接続できませんでした",
+    "NETWORK_TIMEOUT": "接続がタイムアウトしました",
+    "NETWORK_SERVER_ERROR": "サーバーエラーです。後でもう一度お試しください",
+    "NETWORK_BAD_REQUEST": "不正なリクエストです",
+    "NETWORK_NOT_FOUND": "リソースが見つかりません",
+    "NETWORK_RATE_LIMITED": "リクエストが多すぎます。後でもう一度お試しください",
+    "VALIDATION_REQUIRED_FIELD": "この項目は必須です",
+    "VALIDATION_INVALID_FORMAT": "形式が正しくありません",
+    "VALIDATION_MIN_LENGTH": "最小文字数に達していません",
+    "VALIDATION_MAX_LENGTH": "最大文字数を超えています",
+    "VALIDATION_INVALID_EMAIL": "メールアドレスが正しくありません",
+    "VALIDATION_PASSWORDS_DONT_MATCH": "パスワードが一致しません",
+    "STORAGE_QUOTA_EXCEEDED": "ストレージ容量を超えました",
+    "STORAGE_ACCESS_DENIED": "ストレージへのアクセスが拒否されました",
+    "STORAGE_CORRUPTED_DATA": "データが破損しています",
+    "STORAGE_SAVE_FAILED": "データの保存に失敗しました",
+    "STORAGE_LOAD_FAILED": "データの読み込みに失敗しました",
+    "TRANSLATION_LOAD_FAILED": "翻訳の読み込みに失敗しました",
+    "TRANSLATION_MISSING_KEY": "翻訳キーが見つかりません",
+    "TRANSLATION_INVALID_LANGUAGE": "無効な言語です",
+    "GENERIC_UNKNOWN_ERROR": "不明なエラーが発生しました",
+    "GENERIC_OPERATION_FAILED": "操作に失敗しました",
+    "GENERIC_INVALID_INPUT": "無効な入力です",
+    "GENERIC_PERMISSION_DENIED": "この操作を実行する権限がありません"
+  },
+  "notifications": {
+    "button": {
+      "ariaLabel": "通知",
+      "dialogTitle": "通知センター"
+    },
+    "inbox": {
+      "title": "受信トレイ",
+      "filters": {
+        "all": "すべて",
+        "unread": "未読",
+        "important": "重要"
+      },
+      "search": {
+        "placeholder": "通知を検索..."
+      },
+      "actions": {
+        "refresh": "通知を更新",
+        "refreshing": "更新中...",
+        "markAllRead": "すべて既読にする",
+        "delete": "削除",
+        "close": "閉じる"
+      },
+      "states": {
+        "loading": "読み込み中...",
+        "noNotifications": "通知がありません",
+        "selectNotification": "通知を選択して詳細を表示"
+      },
+      "details": {
+        "title": "通知詳細",
+        "important": "重要",
+        "metadata": {
+          "title": "詳細",
+          "amount": "金額:",
+          "plan": "プラン:",
+          "planMonthly": "月額",
+          "planYearly": "年額",
+          "code": "コード:",
+          "status": "ステータス:"
+        }
+      },
+      "comments": {
+        "mobileModal": "モバイルではサイドバーではなくモーダルを開く",
+        "closeSidebarAfterSelect": "選択後にモバイルでサイドバーを閉じる",
+        "searchAndFilter": "トグルボタン付き検索・フィルターバー",
+        "outlookStylePreview": "Outlookスタイルのメッセージプレビュー（レスポンシブ対応）",
+        "tooltipRefresh": "12時間待つ代わりに新しい通知をすぐに確認"
+      }
+    }
+  },
+  "seo": {
+    "title": "無料JLPT練習問題 N1-N5 | JLPT4YOU - AI日本語学習",
+    "description": "JLPT（日本語能力試験）N5〜N1対応のオンライン練習問題サイト。数千問、解答と詳しい解説付きの無料模擬試験。JLPT4YOUで、今日から合格を目指しましょう！"
   }
 }

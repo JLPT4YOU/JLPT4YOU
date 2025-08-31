@@ -42,7 +42,7 @@ function Content() {
         
         const flashcardData: FlashcardData[] = response.grammar.map((grammar: JLPTGrammar) => {
           // Build comprehensive back content
-          let backContent = grammar.meaning_vn || grammar.meaning_en || 'Không có nghĩa'
+          let backContent = grammar.meaning_vn || grammar.meaning_en || t('study.flashcard.noMeaning')
 
           // Add English meaning if Vietnamese is primary
           if (grammar.meaning_vn && grammar.meaning_en) {
@@ -51,19 +51,19 @@ function Content() {
 
           // Add structure if available
           if (grammar.structure) {
-            backContent += `\n\nCấu trúc: ${grammar.structure}`
+            backContent += `\n\n${t('study.flashcard.structure')}: ${grammar.structure}`
           }
 
           // Add usage note if available
           if ((grammar as any).usage) {
-            backContent += `\n\nCách dùng: ${(grammar as any).usage}`
+            backContent += `\n\n${t('study.flashcard.usage')}: ${(grammar as any).usage}`
           }
 
           // Add first example only if available
           if (grammar.examples && grammar.examples.length > 0) {
             const firstExample = grammar.examples[0]
             if (firstExample.jp) {
-              backContent += `\n\nVí dụ: ${firstExample.jp}`
+              backContent += `\n\n${t('study.flashcard.example')}: ${firstExample.jp}`
               if (firstExample.vn) {
                 backContent += `\n${firstExample.vn}`
               }
@@ -94,7 +94,7 @@ function Content() {
         setFlashcards(flashcardData)
       } catch (err) {
         console.error('Error loading grammar:', err)
-        setError('Không thể tải ngữ pháp. Vui lòng thử lại.')
+        setError(t('study.flashcard.error.loadGrammar'))
       } finally {
         setLoading(false)
       }
@@ -108,7 +108,7 @@ function Content() {
     console.log('Session completed:', session)
     
     // Show completion message and redirect
-    alert(`Hoàn thành! Bạn đã học ${session.cards.length} ngữ pháp với độ chính xác ${Math.round((session.correctAnswers / session.totalAnswers) * 100)}%`)
+    alert(t('study.flashcard.sessionComplete.grammar', { count: session.cards.length, accuracy: Math.round((session.correctAnswers / session.totalAnswers) * 100) }))
     router.push(`/study/${level}/practice/grammar`)
   }
 
@@ -133,7 +133,7 @@ function Content() {
                   {t('study.loadingGrammar')}
                 </div>
                 <div className="text-muted-foreground">
-                  Chuẩn bị flashcard cho {level.toUpperCase()}
+                  {t('study.flashcard.preparingGrammar', { level: level.toUpperCase() })}
                 </div>
               </div>
             </div>
@@ -154,7 +154,7 @@ function Content() {
             <div className="flex items-center justify-center min-h-[400px]">
               <div className="text-center space-y-4">
                 <div className="text-lg font-medium text-destructive">
-                  Có lỗi xảy ra
+                  {t('common.error')}
                 </div>
                 <div className="text-muted-foreground">
                   {error}
@@ -163,7 +163,7 @@ function Content() {
                   onClick={() => window.location.reload()}
                   className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90"
                 >
-                  Thử lại
+                  {t('common.retry')}
                 </button>
               </div>
             </div>
@@ -184,16 +184,16 @@ function Content() {
             <div className="flex items-center justify-center min-h-[400px]">
               <div className="text-center space-y-4">
                 <div className="text-lg font-medium text-foreground">
-                  Không có ngữ pháp
+                  {t('study.flashcard.noGrammar')}
                 </div>
                 <div className="text-muted-foreground">
-                  Không tìm thấy ngữ pháp cho cấp độ {level.toUpperCase()}
+                  {t('study.flashcard.noGrammarForLevel', { level: level.toUpperCase() })}
                 </div>
                 <Link
                   href={`/study/${level}/practice/grammar`}
                   className="inline-block px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90"
                 >
-                  Quay lại
+                  {t('common.back')}
                 </Link>
               </div>
             </div>
@@ -211,7 +211,7 @@ function Content() {
             {/* Header */}
             <div className="text-center">
               <h1 className="text-2xl font-bold text-foreground">
-                Flashcard ngữ pháp {level.toUpperCase()}
+                {t('study.flashcard.grammarTitle', { level: level.toUpperCase() })}
               </h1>
             </div>
 

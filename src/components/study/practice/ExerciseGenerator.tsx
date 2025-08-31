@@ -118,7 +118,7 @@ export function ExerciseGenerator({
                   <SelectContent>
                     {[1,2,3,4,5].map(v => (
                       <SelectItem key={v} value={String(v)}>
-                        {v} {v === 1 ? 'bài đọc' : 'bài đọc'} ({v * 3} câu hỏi)
+                        {v} {t('study.practice.reading.passageUnit')} ({v * 3} {t('study.practice.reading.questionUnit')})
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -255,10 +255,10 @@ export function ExerciseGenerator({
               </div>
               <div className="text-center">
                 <div className="text-muted-foreground text-xs">
-                  {type === 'reading' ? 'Bài đọc' : t('study.practice.generator.summary.questions')}
+                  {type === 'reading' ? t('study.practice.reading.readingPassage') : t('study.practice.generator.summary.questions')}
                 </div>
                 <div className="font-medium">
-                  {type === 'reading' ? `${numberOfPassages} (${numberOfPassages * 3} câu hỏi)` : questionCount}
+                  {type === 'reading' ? `${numberOfPassages} (${numberOfPassages * 3} ${t('study.practice.reading.questionUnit')})` : questionCount}
                 </div>
               </div>
               <div className="text-center">

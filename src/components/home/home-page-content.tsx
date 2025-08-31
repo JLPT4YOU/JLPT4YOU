@@ -180,7 +180,7 @@ function HomeContent({ t, language }: HomeContentProps) {
                     if (expiryText === 'unlimited') {
                       return (
                         <div className={`flex items-center gap-2 text-sm ${expiryColor}`}>
-                          <span>Hạn sử dụng:</span>
+                          <span>{t('header.userMenu.expiryDate')}:</span>
                           <Infinity className="w-5 h-5 flex-shrink-0 mt-1" />
                         </div>
                       )

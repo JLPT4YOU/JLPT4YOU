@@ -6,6 +6,8 @@
 import { formatDateYMD } from './role-utils'
 
 // Translation function type
+import { Language } from './i18n-types'
+
 type TranslationFunction = (key: string, params?: Record<string, any>) => string
 
 /**
@@ -105,19 +107,25 @@ export function formatPremiumInfo(
  */
 export function formatExpiryDate(
   expiryDate: string | undefined,
-  locale: string = 'vi-VN',
+  language: Language = 'vn',
   t?: TranslationFunction
 ): string {
-  if (!expiryDate) return t?.('premium.undefinedDate') || 'Không xác định'
+  if (!expiryDate) return t?.('premium.undefinedDate') || 'Không xác định';
+
+  const localeMap = {
+    vn: 'vi-VN',
+    en: 'en-US',
+    jp: 'ja-JP',
+  };
 
   try {
-    const date = new Date(expiryDate)
-    return date.toLocaleDateString(locale, {
+    const date = new Date(expiryDate);
+    return date.toLocaleDateString(localeMap[language], {
       year: 'numeric',
       month: 'long',
-      day: 'numeric'
-    })
+      day: 'numeric',
+    });
   } catch {
-    return t?.('premium.invalidDate') || 'Không hợp lệ'
+    return t?.('premium.invalidDate') || 'Không hợp lệ';
   }
 }

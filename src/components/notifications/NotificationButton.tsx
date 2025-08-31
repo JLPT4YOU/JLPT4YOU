@@ -13,6 +13,7 @@ import {
 import { Bell, BellDot } from 'lucide-react';
 import { notificationService } from '@/services/notification-service';
 import { useAuth } from '@/contexts/auth-context-simple';
+import { useTranslations } from '@/hooks/use-translations';
 import NotificationInbox from './NotificationInbox';
 import { NotificationPollingManager, createPollingConfig } from '@/utils/notification-polling';
 
@@ -20,6 +21,7 @@ import { NotificationPollingManager, createPollingConfig } from '@/utils/notific
 
 const NotificationButton: React.FC = () => {
   const { user } = useAuth();
+  const { t } = useTranslations();
   const [unreadCount, setUnreadCount] = useState(0);
   const [showInbox, setShowInbox] = useState(false);
 
@@ -86,7 +88,7 @@ const NotificationButton: React.FC = () => {
             variant="ghost"
             size="icon"
             className="h-8 w-8 bg-background/80 border border-border/50 text-foreground hover-brightness-light focus-button relative"
-            aria-label="Thông báo"
+            aria-label={t('notifications.button.ariaLabel')}
             onClick={handleOpenInbox}
           >
             {unreadCount > 0 ? (
@@ -107,7 +109,7 @@ const NotificationButton: React.FC = () => {
       <Dialog open={showInbox} onOpenChange={setShowInbox}>
         <DialogContent className="max-w-[1200px] h-[80vh] p-0">
           <DialogHeader className="px-6 py-4 border-b">
-            <DialogTitle>Trung tâm thông báo</DialogTitle>
+            <DialogTitle>{t('notifications.button.dialogTitle')}</DialogTitle>
           </DialogHeader>
           <div className="flex-1 overflow-hidden">
             <NotificationInbox onClose={handleCloseInbox} />

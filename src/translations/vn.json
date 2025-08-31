@@ -279,6 +279,49 @@
       "register": "Tạo tài khoản",
       "forgotPassword": "Quên mật khẩu"
     },
+    "labels": {
+      "email": "Email",
+      "password": "Mật khẩu",
+      "rememberMe": "Nhớ đăng nhập",
+      "agreeWith": "Tôi đồng ý với",
+      "and": "và"
+    },
+    "placeholders": {
+      "email": "Nhập email của bạn",
+      "password": "Nhập mật khẩu"
+    },
+    "buttons": {
+      "login": "Đăng nhập",
+      "register": "Tạo tài khoản",
+      "sendResetInstructions": "Gửi hướng dẫn đặt lại mật khẩu",
+      "resendEmail": "Gửi lại email",
+      "googleLogin": "Đăng nhập với Google"
+    },
+    "loading": {
+      "login": "Đang đăng nhập...",
+      "register": "Đang tạo tài khoản...",
+      "sending": "Đang gửi...",
+      "resending": "Đang gửi lại..."
+    },
+    "links": {
+      "forgotPassword": "Quên mật khẩu?",
+      "terms": "Điều khoản",
+      "privacy": "Chính sách bảo mật"
+    },
+    "messages": {
+      "registrationSuccess": "Đăng ký thành công! Vui lòng kiểm tra email để xác nhận tài khoản.",
+      "noAccount": "Chưa có tài khoản?",
+      "signUpNow": "Đăng ký ngay",
+      "hasAccount": "Đã có tài khoản?",
+      "loginNow": "Đăng nhập ngay"
+    },
+    "forgotPassword": {
+      "checkEmail": "Kiểm tra email của bạn:",
+      "clickLink": "Nhấn vào liên kết trong email để đặt lại mật khẩu",
+      "linkExpiry": "Liên kết có hiệu lực trong 15 phút",
+      "checkSpam": "Kiểm tra cả thư mục spam nếu không thấy email",
+      "instructions": "Nhập email của bạn và chúng tôi sẽ gửi hướng dẫn đặt lại mật khẩu."
+    },
     "subtitles": {
       "login": "Chào mừng bạn quay trở lại với JLPT4YOU",
       "register": "Bắt đầu hành trình học tiếng Nhật của bạn",
@@ -717,6 +760,96 @@
       "loading": "Đang tải..."
     }
   },
+,
+  "study": {
+
+    "types": {
+      "theory": {
+        "title": "Lý thuyết",
+        "description": "Học kiến thức cơ bản"
+      },
+      "practice": {
+        "title": "Thực hành",
+        "description": "Bài tập ứng dụng"
+      }
+    },
+    "selectType": "Chọn loại học tập",
+    "practice": {
+      "exercise": {
+
+        "title": "Bài tập",
+
+        "selectMethodGrammar": "Chọn phương thức học ngữ pháp",
+        "grammarFlashcardAria": "Flashcard học ngữ pháp",
+        "flashcardDescriptionGrammar": "Học ngữ pháp qua thẻ ghi nhớ tương tác",
+        "aiQuizAriaGrammar": "Trắc nghiệm AI ngữ pháp",
+        "aiQuizTitle": "Trắc nghiệm AI",
+        "aiQuizDescription": "Luyện tập với câu hỏi do AI tạo ra",
+,
+        "selectMethodVocabulary": "Chọn phương thức học từ vựng",
+        "vocabularyFlashcardAria": "Flashcard học từ vựng",
+        "flashcardDescriptionVocabulary": "Học từ vựng qua thẻ ghi nhớ tương tác",
+        "aiQuizAriaVocabulary": "Trắc nghiệm AI từ vựng"
+        "feedback": {
+          "correct": "Bạn đã trả lời đúng",
+          "incorrect": "Bạn đã trả lời sai"
+        },
+        "explanation": {
+          "correctAnswer": "Đáp án đúng",
+          "translation": "Dịch nghĩa",
+          "whyCorrect": "Tại sao đúng",
+          "whyOthersWrong": "Tại sao các lựa chọn khác sai",
+          "additionalNotes": "Ghi chú thêm",
+          "exampleUsage": "Ví dụ sử dụng"
+        },
+      "flashcard": {
+        "noMeaning": "Không có nghĩa",
+        "structure": "Cấu trúc",
+        "usage": "Cách dùng",
+        "example": "Ví dụ",
+        "error": {
+          "loadGrammar": "Không thể tải ngữ pháp. Vui lòng thử lại."
+        },
+        "sessionComplete": {
+          "grammar": "Hoàn thành! Bạn đã học {{count}} ngữ pháp với độ chính xác {{accuracy}}%"
+        },
+        "preparingGrammar": "Chuẩn bị flashcard cho {{level}}",
+        "noGrammar": "Không có ngữ pháp",
+,
+    "reading": {
+      "passageUnit": "bài đọc",
+      "questionUnit": "câu hỏi",
+      "readingPassage": "Bài đọc"
+
+    }
+    "theory": {
+      "vocabularyAriaLabel": "Học từ vựng cấp độ {{level}}",
+      "grammarAriaLabel": "Học ngữ pháp cấp độ {{level}}",
+      "comingSoonDescription": "Chúng tôi đang phát triển tính năng này để mang đến trải nghiệm học tập tốt nhất cho bạn."
+    }
+    "vocabulary": {
+        "title": "Từ vựng",
+        "description": "Học từ vựng theo cấp độ"
+    },
+    "grammar": {
+        "title": "Ngữ pháp",
+        "description": "Học ngữ pháp theo cấp độ"
+    }
+        "noGrammarForLevel": "Không tìm thấy ngữ pháp cho cấp độ {{level}}",
+        "grammarTitle": "Flashcard ngữ pháp {{level}}",
+        "reading": "Đọc",
+        "partOfSpeech": "Loại từ",
+        "error": {
+          "loadVocabulary": "Không thể tải từ vựng. Vui lòng thử lại."
+        },
+        "sessionComplete": {
+          "vocabulary": "Hoàn thành! Bạn đã học {{count}} từ vựng với độ chính xác {{accuracy}}%"
+        },
+        "preparingVocabulary": "Chuẩn bị flashcard cho {{level}}"
+      }
+      }
+    }
+  }
   "examResults": {
     "title": "Kết quả {examType}",
     "completedAt": "Hoàn thành lúc {time}",
@@ -1126,7 +1259,12 @@
           "redeeming": "Đang xử lý...",
           "accountType": "Loại tài khoản",
           "expiryDate": "Hạn Premium",
-          "thankYou": "Cảm ơn bạn đã sử dụng dịch vụ Premium của chúng tôi! 🎉"
+          "thankYou": "Cảm ơn bạn đã sử dụng dịch vụ Premium của chúng tôi! 🎉",
+          "success": "Đã kích hoạt thành công {{days}} ngày Premium!",
+          "successToast": "Đã thêm {{days}} ngày Premium vào tài khoản của bạn!",
+          "invalidError": "Code không hợp lệ hoặc đã được sử dụng",
+          "redeemError": "Không thể kích hoạt code",
+          "genericError": "Đã xảy ra lỗi khi kích hoạt code"
         }
       },
       "security": {
@@ -1927,5 +2065,100 @@
       },
       "pages": "trang"
     }
+  },
+  "errors": {
+    "AUTH_INVALID_CREDENTIALS": "Sai tên đăng nhập hoặc mật khẩu",
+    "AUTH_TOKEN_EXPIRED": "Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại",
+    "AUTH_UNAUTHORIZED": "Bạn không có quyền truy cập",
+    "AUTH_FORBIDDEN": "Truy cập bị từ chối",
+    "AUTH_USER_NOT_FOUND": "Không tìm thấy người dùng",
+    "AUTH_EMAIL_ALREADY_EXISTS": "Email này đã được sử dụng",
+    "AUTH_WEAK_PASSWORD": "Mật khẩu quá yếu, vui lòng chọn mật khẩu mạnh hơn",
+    "AUTH_INVALID_EMAIL": "Định dạng email không hợp lệ",
+    "EXAM_NOT_FOUND": "Không tìm thấy bài thi",
+    "EXAM_ALREADY_SUBMITTED": "Bài thi đã được nộp",
+    "EXAM_TIME_EXPIRED": "Thời gian làm bài đã hết",
+    "EXAM_INVALID_ANSWER": "Câu trả lời không hợp lệ",
+    "EXAM_SAVE_FAILED": "Không thể lưu tiến độ bài thi",
+    "EXAM_LOAD_FAILED": "Không thể tải bài thi",
+    "EXAM_VIOLATION_LIMIT_EXCEEDED": "Đã vượt quá số lần vi phạm cho phép",
+    "EXAM_FULLSCREEN_REQUIRED": "Vui lòng bật chế độ toàn màn hình để tiếp tục",
+    "NETWORK_CONNECTION_FAILED": "Không thể kết nối đến máy chủ",
+    "NETWORK_TIMEOUT": "Kết nối bị timeout",
+    "NETWORK_SERVER_ERROR": "Lỗi máy chủ, vui lòng thử lại sau",
+    "NETWORK_BAD_REQUEST": "Yêu cầu không hợp lệ",
+    "NETWORK_NOT_FOUND": "Không tìm thấy tài nguyên",
+    "NETWORK_RATE_LIMITED": "Quá nhiều yêu cầu, vui lòng thử lại sau",
+    "VALIDATION_REQUIRED_FIELD": "Trường này là bắt buộc",
+    "VALIDATION_INVALID_FORMAT": "Định dạng không hợp lệ",
+    "VALIDATION_MIN_LENGTH": "Độ dài tối thiểu không đạt",
+    "VALIDATION_MAX_LENGTH": "Vượt quá độ dài tối đa",
+    "VALIDATION_INVALID_EMAIL": "Email không hợp lệ",
+    "VALIDATION_PASSWORDS_DONT_MATCH": "Mật khẩu không khớp",
+    "STORAGE_QUOTA_EXCEEDED": "Hết dung lượng lưu trữ",
+    "STORAGE_ACCESS_DENIED": "Không thể truy cập bộ nhớ",
+    "STORAGE_CORRUPTED_DATA": "Dữ liệu bị hỏng",
+    "STORAGE_SAVE_FAILED": "Không thể lưu dữ liệu",
+    "STORAGE_LOAD_FAILED": "Không thể tải dữ liệu",
+    "TRANSLATION_LOAD_FAILED": "Không thể tải bản dịch",
+    "TRANSLATION_MISSING_KEY": "Thiếu khóa dịch",
+    "TRANSLATION_INVALID_LANGUAGE": "Ngôn ngữ không hợp lệ",
+    "GENERIC_UNKNOWN_ERROR": "Đã xảy ra lỗi không xác định",
+    "GENERIC_OPERATION_FAILED": "Thao tác thất bại",
+    "GENERIC_INVALID_INPUT": "Dữ liệu đầu vào không hợp lệ",
+    "GENERIC_PERMISSION_DENIED": "Không có quyền thực hiện thao tác này"
+  },
+  "notifications": {
+    "button": {
+      "ariaLabel": "Thông báo",
+      "dialogTitle": "Trung tâm thông báo"
+    },
+    "inbox": {
+      "title": "Hộp thư đến",
+      "filters": {
+        "all": "Tất cả",
+        "unread": "Chưa đọc",
+        "important": "Quan trọng"
+      },
+      "search": {
+        "placeholder": "Tìm kiếm thông báo..."
+      },
+      "actions": {
+        "refresh": "Cập nhật thông báo",
+        "refreshing": "Đang cập nhật...",
+        "markAllRead": "Đánh dấu tất cả đã đọc",
+        "delete": "Xóa",
+        "close": "Đóng"
+      },
+      "states": {
+        "loading": "Đang tải...",
+        "noNotifications": "Không có thông báo nào",
+        "selectNotification": "Chọn một thông báo để xem chi tiết"
+      },
+      "details": {
+        "title": "Chi tiết thông báo",
+        "important": "Quan trọng",
+        "metadata": {
+          "title": "Chi tiết",
+          "amount": "Số tiền:",
+          "plan": "Gói:",
+          "planMonthly": "Tháng",
+          "planYearly": "Năm",
+          "code": "Mã:",
+          "status": "Trạng thái:"
+        }
+      },
+      "comments": {
+        "mobileModal": "Trên mobile, mở modal thay vì hiển thị trong sidebar",
+        "closeSidebarAfterSelect": "Đóng sidebar trên mobile sau khi chọn",
+        "searchAndFilter": "Search and Filter Bar với Toggle Button",
+        "outlookStylePreview": "Message Preview - Outlook style với responsive",
+        "tooltipRefresh": "Kiểm tra thông báo mới ngay lập tức thay vì đợi 12 tiếng"
+      }
+    }
+  },
+  "seo": {
+    "title": "Luyện thi JLPT Online N1-N5 Miễn Phí | JLPT4YOU - Học Tiếng Nhật với AI",
+    "description": "Luyện thi JLPT online từ N5 đến N1 với hàng ngàn câu hỏi, đề thi thử miễn phí có đáp án và giải thích chi tiết. Bắt đầu chinh phục JLPT cùng JLPT4YOU ngay hôm nay!"
   }
 }

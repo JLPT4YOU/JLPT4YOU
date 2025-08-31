@@ -40,10 +40,7 @@ export function ForgotPasswordForm({
     language
   })
 
-  // Translation helper - always call hook, but conditionally use result
-  const translationHook = useTranslation(translations || {} as TranslationData)
-  const t = translations ? translationHook.t : null
-  const getText = (key: string, fallback: string) => t ? t(key) : fallback
+  const { t } = useTranslation(translations)
 
 
 
@@ -60,10 +57,10 @@ export function ForgotPasswordForm({
         {/* Success Message */}
         <div className="space-y-2">
           <h3 className="text-xl font-semibold text-foreground">
-            {getText('auth.forgotPassword.emailSent', 'Email sent!')}
+            {t('auth.forgotPassword.emailSent')}
           </h3>
           <p className="text-muted-foreground">
-            {getText('auth.forgotPassword.instructionsSent', 'We have sent password reset instructions to your email:')}
+            {t('auth.forgotPassword.instructionsSent')}
           </p>
           <p className="font-medium text-foreground">{formData.email}</p>
         </div>
@@ -73,11 +70,11 @@ export function ForgotPasswordForm({
           <div className="flex items-start app-gap-sm">
             <Mail className="h-5 w-5 text-muted-foreground mt-0.5 flex-shrink-0" />
             <div className="space-y-2 text-sm">
-              <p className="font-medium text-foreground">{getText('auth.forgotPassword.checkEmail', 'Kiểm tra email của bạn:')}</p>
+              <p className="font-medium text-foreground">{t('auth.forgotPassword.checkEmail')}</p>
               <ul className="space-y-1 text-muted-foreground">
-                <li>• {getText('auth.forgotPassword.clickLink', 'Nhấn vào liên kết trong email để đặt lại mật khẩu')}</li>
-                <li>• {getText('auth.forgotPassword.linkExpiry', 'Liên kết có hiệu lực trong 15 phút')}</li>
-                <li>• {getText('auth.forgotPassword.checkSpam', 'Kiểm tra cả thư mục spam nếu không thấy email')}</li>
+                <li>• {t('auth.forgotPassword.clickLink')}</li>
+                <li>• {t('auth.forgotPassword.linkExpiry')}</li>
+                <li>• {t('auth.forgotPassword.checkSpam')}</li>
               </ul>
             </div>
           </div>
@@ -91,9 +88,9 @@ export function ForgotPasswordForm({
             className="w-full"
             disabled={isLoading}
           >
-            {isLoading ? getText('auth.loading.resending', 'Đang gửi lại...') : getText('auth.buttons.resendEmail', 'Gửi lại email')}
+            {isLoading ? t('auth.loading.resending') : t('auth.buttons.resendEmail')}
           </Button>
-          
+
 
         </div>
       </div>
@@ -114,14 +111,14 @@ export function ForgotPasswordForm({
         {/* Instructions */}
         <div className="space-y-2">
           <p className="text-sm text-muted-foreground">
-            {getText('auth.forgotPassword.instructions', 'Nhập email của bạn và chúng tôi sẽ gửi hướng dẫn đặt lại mật khẩu.')}
+            {t('auth.forgotPassword.instructions')}
           </p>
         </div>
 
         {/* Email Field */}
         <div className="space-y-2 md:space-y-3">
           <Label htmlFor="email" className="text-sm md:text-base">
-            {getText('auth.labels.email', 'Email')}
+            {t('auth.labels.email')}
           </Label>
           <Input
             id="email"
@@ -130,7 +127,7 @@ export function ForgotPasswordForm({
             value={formData.email}
             onChange={(e) => handleInputChange('email', e.target.value)}
             onBlur={() => handleBlur('email')}
-            placeholder={getText('auth.placeholders.email', 'Nhập email của bạn')}
+            placeholder={t('auth.placeholders.email')}
             className={cn(errors.email && "border-destructive focus-visible:ring-destructive")}
             disabled={isLoading}
           />
@@ -145,7 +142,7 @@ export function ForgotPasswordForm({
           className="w-full bg-primary hover:bg-primary/90 h-10 md:h-12 text-sm md:text-base"
           disabled={isLoading}
         >
-          {isLoading ? getText('auth.loading.sending', 'Đang gửi...') : getText('auth.buttons.sendResetInstructions', 'Gửi hướng dẫn đặt lại mật khẩu')}
+          {isLoading ? t('auth.loading.sending') : t('auth.buttons.sendResetInstructions')}
         </Button>
       </form>
     </div>

@@ -1,6 +1,6 @@
 /**
  * Icon Selector Component
- * Cho phép user chọn icon từ lucide-react để làm avatar
+ * Allows users to select icons from lucide-react to use as avatar
  */
 
 "use client"
@@ -9,15 +9,16 @@ import { useState } from 'react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { 
-  Dialog, 
-  DialogContent, 
-  DialogHeader, 
-  DialogTitle, 
-  DialogTrigger 
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger
 } from '@/components/ui/dialog'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Search, X } from 'lucide-react'
+import { useTranslations } from '@/hooks/use-translations'
 
 // Import popular icons from lucide-react
 import {
@@ -36,7 +37,7 @@ import {
   Shield, Sword, Gem, Key, Lock
 } from "lucide-react"
 
-// Icon mapping với tên và component
+// Icon mapping with names and components
 export const AVAILABLE_ICONS = {
   // User icons
   User, UserCircle, UserCheck, UserX, Users,
@@ -75,6 +76,7 @@ interface IconSelectorProps {
 }
 
 export function IconSelector({ selectedIcon, onIconSelect, className }: IconSelectorProps) {
+  const { t } = useTranslations()
   const [isOpen, setIsOpen] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
 
@@ -84,7 +86,7 @@ export function IconSelector({ selectedIcon, onIconSelect, className }: IconSele
   )
 
   // Get current selected icon component
-  const SelectedIconComponent = selectedIcon && selectedIcon in AVAILABLE_ICONS 
+  const SelectedIconComponent = selectedIcon && selectedIcon in AVAILABLE_ICONS
     ? AVAILABLE_ICONS[selectedIcon as IconName]
     : User
 
@@ -111,16 +113,15 @@ export function IconSelector({ selectedIcon, onIconSelect, className }: IconSele
       <DialogContent className="max-w-2xl max-h-[80vh]">
         <DialogHeader>
           <DialogTitle>
-            {/* TODO: Add translation support */}
-            Chọn Icon Avatar
+            {t ? t('pages.settings.iconSelector.title') : 'Chọn Icon Avatar'}
           </DialogTitle>
         </DialogHeader>
-        
+
         {/* Search */}
         <div className="relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <Input
-            placeholder="Tìm kiếm icon..."
+            placeholder={t ? t('pages.settings.iconSelector.search') : 'Tìm kiếm icon...'}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="pl-10 pr-10"
@@ -160,19 +161,21 @@ export function IconSelector({ selectedIcon, onIconSelect, className }: IconSele
               )
             })}
           </div>
-          
+
           {filteredIcons.length === 0 && (
             <div className="text-center py-8 text-muted-foreground">
-              Không tìm thấy icon nào phù hợp
+              {t ? t('pages.settings.iconSelector.noResults') : 'Không tìm thấy icon nào phù hợp'}
             </div>
           )}
         </ScrollArea>
-        
+
         {/* Selected icon info */}
         {selectedIcon && (
           <div className="flex items-center gap-2 p-3 bg-muted/20 rounded-lg">
             <SelectedIconComponent className="w-5 h-5" />
-            <span className="text-sm font-medium">Đã chọn: {selectedIcon}</span>
+            <span className="text-sm font-medium">
+              {t ? t('pages.settings.iconSelector.selected') : 'Đã chọn'}: {selectedIcon}
+            </span>
           </div>
         )}
       </DialogContent>

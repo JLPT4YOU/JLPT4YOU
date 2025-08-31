@@ -8,6 +8,7 @@ import { AuthProvider } from "@/contexts/auth-context-simple";
 import { TranslationsProvider } from "@/contexts/translations-context";
 import { LoadingProvider } from "@/contexts/loading-context";
 import { ToastProvider } from "@/components/ui/toast";
+
 import { Header } from "@/components/header";
 import { NavigationProtectionWrapper } from "@/components/navigation-protection-wrapper";
 import { ConditionalHeaderWrapper } from "@/components/conditional-header-wrapper";

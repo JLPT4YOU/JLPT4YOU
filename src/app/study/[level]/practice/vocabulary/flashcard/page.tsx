@@ -49,11 +49,11 @@ function Content() {
 
         const flashcardData: FlashcardData[] = response.words.map((word: JLPTWord) => {
           // Build comprehensive back content
-          let backContent = word.vn || 'Không có nghĩa'
+          let backContent = word.vn || t('study.flashcard.noMeaning')
 
           // Add reading if available
           if (word.Hiragana) {
-            backContent += `\n\nĐọc: ${word.Hiragana}`
+            backContent += `\n\n${t('study.flashcard.reading')}: ${word.Hiragana}`
           }
 
           // Add English translation if available
@@ -63,12 +63,12 @@ function Content() {
 
           // Add part of speech if available
           if ((word as any).pos) {
-            backContent += `\n\nLoại từ: ${(word as any).pos}`
+            backContent += `\n\n${t('study.flashcard.partOfSpeech')}: ${(word as any).pos}`
           }
 
           // Add example if available (field name is 'vd' in API)
           if (word.vd) {
-            backContent += `\n\nVí dụ: ${word.vd}`
+            backContent += `\n\n${t('study.flashcard.example')}: ${word.vd}`
           }
 
           return {
@@ -92,7 +92,7 @@ function Content() {
         setFlashcards(flashcardData)
       } catch (err) {
         console.error('Error loading vocabulary:', err)
-        setError('Không thể tải từ vựng. Vui lòng thử lại.')
+        setError(t('study.flashcard.error.loadVocabulary'))
       } finally {
         setLoading(false)
       }
@@ -106,7 +106,7 @@ function Content() {
     console.log('Session completed:', session)
     
     // Show completion message and redirect
-    alert(`Hoàn thành! Bạn đã học ${session.cards.length} từ vựng với độ chính xác ${Math.round((session.correctAnswers / session.totalAnswers) * 100)}%`)
+    alert(t('study.flashcard.sessionComplete.vocabulary', { count: session.cards.length, accuracy: Math.round((session.correctAnswers / session.totalAnswers) * 100) }))
     router.push(`/study/${level}/practice/vocabulary`)
   }
 
@@ -131,7 +131,7 @@ function Content() {
                   {t('study.loadingVocabulary')}
                 </div>
                 <div className="text-muted-foreground">
-                  Chuẩn bị flashcard cho {level.toUpperCase()}
+                  {t('study.flashcard.preparingVocabulary', { level: level.toUpperCase() })}
                 </div>
               </div>
             </div>
@@ -152,7 +152,7 @@ function Content() {
             <div className="flex items-center justify-center min-h-[400px]">
               <div className="text-center space-y-4">
                 <div className="text-lg font-medium text-destructive">
-                  Có lỗi xảy ra
+                  {t('common.error')}
                 </div>
                 <div className="text-muted-foreground">
                   {error}
@@ -161,7 +161,7 @@ function Content() {
                   onClick={() => window.location.reload()}
                   className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90"
                 >
-                  Thử lại
+                  {t('common.retry')}
                 </button>
               </div>
             </div>

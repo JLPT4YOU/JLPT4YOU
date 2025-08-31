@@ -40,7 +40,7 @@ function Content({ language, translations, t }: ContentProps) {
                 {t('study.vocabulary.title')} {level.toUpperCase()}
               </h1>
               <p className="text-lg sm:text-xl text-muted-foreground mt-4">
-                Chọn phương thức học từ vựng
+                {t('study.practice.selectMethodVocabulary')}
               </p>
             </header>
 
@@ -53,14 +53,14 @@ function Content({ language, translations, t }: ContentProps) {
                 <Link
                   href={`/study/${level}/practice/vocabulary/flashcard`}
                   className="block w-full max-w-[320px] group focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-2xl"
-                  aria-label="Flashcard học từ vựng"
+                  aria-label={t('study.practice.vocabularyFlashcardAria')}
                 >
                   <article className="bg-muted/10 rounded-2xl p-6 md:p-8 text-center transition-all duration-200 hover:bg-muted/30 border border-border/20 group-hover:scale-105">
                     <div className="w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-4 group-hover:scale-105 transition-transform duration-200 bg-blue-500/10 group-hover:bg-blue-500/20">
                       <BookOpen className="w-8 h-8 text-blue-500" />
                     </div>
                     <h2 className="font-semibold text-foreground mb-2 text-xl">Flashcard</h2>
-                    <p className="text-muted-foreground text-sm">Học từ vựng qua thẻ ghi nhớ tương tác</p>
+                    <p className="text-muted-foreground text-sm">{t('study.practice.flashcardDescriptionVocabulary')}</p>
                   </article>
                 </Link>
 
@@ -68,14 +68,14 @@ function Content({ language, translations, t }: ContentProps) {
                 <Link
                   href={`/study/${level}/practice/vocabulary/quiz`}
                   className="block w-full max-w-[320px] group focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-2xl"
-                  aria-label="Trắc nghiệm AI từ vựng"
+                  aria-label={t('study.practice.aiQuizAriaVocabulary')}
                 >
                   <article className="bg-muted/10 rounded-2xl p-6 md:p-8 text-center transition-all duration-200 hover:bg-muted/30 border border-border/20 group-hover:scale-105">
                     <div className="w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-4 group-hover:scale-105 transition-transform duration-200 bg-purple-500/10 group-hover:bg-purple-500/20">
                       <Brain className="w-8 h-8 text-purple-500" />
                     </div>
-                    <h2 className="font-semibold text-foreground mb-2 text-xl">Trắc nghiệm AI</h2>
-                    <p className="text-muted-foreground text-sm">Luyện tập với câu hỏi do AI tạo ra</p>
+                    <h2 className="font-semibold text-foreground mb-2 text-xl">{t('study.practice.aiQuizTitle')}</h2>
+                    <p className="text-muted-foreground text-sm">{t('study.practice.aiQuizDescription')}</p>
                   </article>
                 </Link>
               </div>
