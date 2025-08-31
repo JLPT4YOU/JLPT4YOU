@@ -279,49 +279,13 @@
       "register": "アカウント作成",
       "forgotPassword": "パスワードを忘れた場合"
     },
-    "labels": {
-      "email": "メールアドレス",
-      "password": "パスワード",
-      "rememberMe": "ログイン状態を維持する",
-      "agreeWith": "",
-      "and": "と"
-    },
-    "placeholders": {
-      "email": "メールアドレスを入力",
-      "password": "パスワードを入力"
-    },
-    "buttons": {
-      "login": "ログイン",
-      "register": "アカウント作成",
-      "sendResetInstructions": "再設定手順を送信",
-      "resendEmail": "メールを再送信",
-      "googleLogin": "Googleでサインイン"
-    },
-    "loading": {
-      "login": "ログイン中...",
-      "register": "アカウント作成中...",
-      "sending": "送信中...",
-      "resending": "再送信中..."
-    },
-    "links": {
-      "forgotPassword": "パスワードをお忘れですか？",
-      "terms": "利用規約",
-      "privacy": "プライバシーポリシーに同意します"
-    },
-    "messages": {
-      "registrationSuccess": "登録が成功しました！アカウントを確認するためにメールを確認してください。",
-      "noAccount": "アカウントをお持ちでないですか？",
-      "signUpNow": "今すぐ登録",
-      "hasAccount": "すでにアカウントをお持ちですか？",
-      "loginNow": "今すぐログイン"
-    },
-    "forgotPassword": {
-      "checkEmail": "メールを確認してください：",
-      "clickLink": "メール内のリンクをクリックしてパスワードをリセットしてください",
-      "linkExpiry": "リンクは15分間有効です",
-      "checkSpam": "メールが見当たらない場合は、迷惑メールフォルダも確認してください",
-      "instructions": "メールアドレスを入力してください。パスワードをリセットするための手順をお送りします。"
-    },
+
+
+
+
+
+
+
     "subtitles": {
       "login": "JLPT4YOUへようこそ",
       "register": "日本語学習の旅を始めましょう",
@@ -359,7 +323,8 @@
       "sendResetLink": "リセットリンクを送信",
       "sendResetInstructions": "リセット手順を送信",
       "backToLogin": "ログインに戻る",
-      "resendEmail": "メールを再送信"
+      "resendEmail": "メールを再送信",
+      "googleLogin": "Googleでサインイン"
     },
     "loading": {
       "login": "ログイン中...",
@@ -418,7 +383,7 @@
     "errors": {
       "general": "エラーが発生しました。もう一度お試しください。",
       "loginFailed": "ユーザー名またはパスワードが正しくありません",
-      "invalidCredentials": "ユーザー名またはパスワードが正しくありません",
+
       "emailExists": "このメールアドレスは既に使用されています",
       "resendFailed": "メールの再送信に失敗しました。もう一度お試しください。",
       "registrationError": "登録中にエラーが発生しました。もう一度お試しください。",
@@ -571,10 +536,7 @@
       "incorrect": "不正解",
       "flagged": "フラグ付き"
     },
-    "pagination": {
-      "previous": "前へ",
-      "next": "次へ"
-    },
+
     "question": {
       "number": "問題{number}",
       "details": "詳細",
@@ -994,12 +956,7 @@
       "cancelButton": "キャンセル"
     }
   },
-  "seo": {
-    "structuredData": {
-      "title": "オンラインJLPT対策",
-      "description": "AIサポート付き最高のJLPT対策サイト"
-    }
-  },
+
   "pageTitle": {
     "home": "ホーム",
     "examResults": "試験結果",
@@ -1361,63 +1318,7 @@
           "successMessage": "✅ リセットが正常に完了しました！\n\n• カスタムプロンプト: 削除済み\n• 言語設定: リセット済み\n• コアiRIN: 保持"
         }
       }
-,
-      "prompts": {
-        "aiLanguage": {
-          "title": "iRINはどの言語でやり取りすればよいですか？",
-          "placeholder": "言語を選択",
-          "options": {
-            "auto": "自動検出",
-            "vietnamese": "Tiếng Việt",
-            "english": "English",
-            "japanese": "日本語",
-            "custom": "カスタム"
-          },
-          "customPlaceholder": "希望する言語を入力（例：韓国語、フランス語、スペイン語 など）"
-        },
-        "personalization": {
-          "title": "パーソナライズ設定",
-          "preferredName": {
-            "label": "iRINに何と呼ばれたいですか？",
-            "placeholder": "iRINに使ってほしい名前やニックネーム"
-          },
-          "desiredTraits": {
-            "label": "iRINにどのような特性を持たせたいですか？",
-            "placeholder": "iRINに期待する性格や特徴を説明してください"
-          },
-          "personalInfo": {
-            "label": "iRINに他に知っておいてほしいことはありますか？",
-            "placeholder": "iRINがより良くサポートするための個人情報（任意）"
-          },
-          "additionalRequests": {
-            "label": "追加のリクエスト",
-            "placeholder": "その他にiRINに留意してほしいことはありますか？（任意）"
-          }
-        },
-        "generate": {
-          "title": "カスタムプロンプトを生成",
-          "description": "入力内容に基づいて適切なプロンプトをAIが作成します",
-          "button": "プロンプトを生成",
-          "buttonLoading": "生成中..."
-        },
-        "generated": {
-          "title": "生成されたプロンプト",
-          "description": "あなたのために生成されたカスタムプロンプトです"
-        },
-        "footer": {
-          "note": "設定はローカルに保存され、セッション間で維持されます"
-        },
-        "buttons": {
-          "reset": "リセット",
-          "save": "保存"
-        },
-        "resetDialog": {
-          "title": "すべてのプロンプトと設定をリセット",
-          "description": "すべてのプロンプトと設定をリセットしますか？ この操作により、カスタムプロンプトの削除、AI言語設定のリセット、フォームの初期化が行われます。iRINのコアプロンプトは保持されます。",
-          "confirm": "すべてリセット",
-          "successMessage": "✅ 正常にリセットされました！\n\n• カスタムプロンプト: 削除\n• 言語設定: リセット\n• コアiRIN: 保持"
-        }
-      }
+
     },
     "loading": "iRIN先生を読み込み中...",
     "languages": {
@@ -1498,7 +1399,8 @@
       "selectType": "練習したい練習タイプを選択してください",
       "breadcrumbs": {
         "study": "学習",
-        "practice": "実践"
+        "practice": "実践",
+        "exercise": "練習問題"
       },
       "pageTitle": "JLPT {level} {type} 実践",
       "pageDescription": "AI搭載の実践練習で知識をテストしましょう",
@@ -1531,6 +1433,25 @@
           "selectCount": "文章数を選択 (1-5)"
         }
       },
+      "modes": {
+        "selectMethod": {
+          "vocabulary": "語彙学習方法を選択",
+          "grammar": "文法学習方法を選択"
+        },
+        "flashcard": {
+          "vocabulary": "インタラクティブなフラッシュカードで語彙を学習",
+          "grammar": "インタラクティブなフラッシュカードで文法を学習",
+          "vocabularyAriaLabel": "語彙フラッシュカード",
+          "grammarAriaLabel": "文法フラッシュカード"
+        },
+        "quiz": {
+          "title": "AIクイズ",
+          "description": "AI生成問題で練習",
+          "vocabularyAriaLabel": "AI語彙クイズ",
+          "grammarAriaLabel": "AI文法クイズ"
+        }
+      },
+
       "generator": {
         "title": "AI搭載練習問題生成",
         "description": "AI生成問題で練習セッションをカスタマイズ",
@@ -1587,7 +1508,21 @@
           "tip4": "時間をかけて進歩を追跡しましょう"
         }
       },
+
       "exercise": {
+        "feedback": {
+          "correct": "正解です",
+          "incorrect": "不正解です"
+        },
+        "explanation": {
+          "correctAnswer": "正解：",
+          "translation": "翻訳：",
+          "whyCorrect": "なぜ正解か：",
+          "wrongAnswers": "他の選択肢が間違っている理由：",
+          "additionalNotes": "追加メモ：",
+          "exampleUsage": "使用例：",
+          "toggle": "解説表示/非表示"
+        },
         "questionProgress": "問題 {current} / {total}",
         "multipleChoice": "多肢選択",
         "submitAnswer": "解答提出",
@@ -1597,14 +1532,6 @@
         "complete": "完了",
         "correct": "正解！",
         "incorrect": "不正解",
-        "explanation": {
-          "correctAnswer": "正解：",
-          "whyCorrect": "なぜ正解か：",
-          "wrongAnswers": "他の選択肢が間違っている理由：",
-          "additionalNotes": "追加メモ：",
-          "exampleUsage": "使用例：",
-          "toggle": "解説表示/非表示"
-        },
         "noQuestion": "問題がありません"
       },
       "results": {
@@ -2137,6 +2064,10 @@
   },
   "seo": {
     "title": "無料JLPT練習問題 N1-N5 | JLPT4YOU - AI日本語学習",
-    "description": "JLPT（日本語能力試験）N5〜N1対応のオンライン練習問題サイト。数千問、解答と詳しい解説付きの無料模擬試験。JLPT4YOUで、今日から合格を目指しましょう！"
+    "description": "JLPT（日本語能力試験）N5〜N1対応のオンライン練習問題サイト。数千問、解答と詳しい解説付きの無料模擬試験。JLPT4YOUで、今日から合格を目指しましょう！",
+    "structuredData": {
+      "title": "オンラインJLPT対策",
+      "description": "AIサポート付き最高のJLPT対策サイト"
+    }
   }
 }

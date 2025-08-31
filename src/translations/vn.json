@@ -279,49 +279,13 @@
       "register": "Tạo tài khoản",
       "forgotPassword": "Quên mật khẩu"
     },
-    "labels": {
-      "email": "Email",
-      "password": "Mật khẩu",
-      "rememberMe": "Nhớ đăng nhập",
-      "agreeWith": "Tôi đồng ý với",
-      "and": "và"
-    },
-    "placeholders": {
-      "email": "Nhập email của bạn",
-      "password": "Nhập mật khẩu"
-    },
-    "buttons": {
-      "login": "Đăng nhập",
-      "register": "Tạo tài khoản",
-      "sendResetInstructions": "Gửi hướng dẫn đặt lại mật khẩu",
-      "resendEmail": "Gửi lại email",
-      "googleLogin": "Đăng nhập với Google"
-    },
-    "loading": {
-      "login": "Đang đăng nhập...",
-      "register": "Đang tạo tài khoản...",
-      "sending": "Đang gửi...",
-      "resending": "Đang gửi lại..."
-    },
-    "links": {
-      "forgotPassword": "Quên mật khẩu?",
-      "terms": "Điều khoản",
-      "privacy": "Chính sách bảo mật"
-    },
-    "messages": {
-      "registrationSuccess": "Đăng ký thành công! Vui lòng kiểm tra email để xác nhận tài khoản.",
-      "noAccount": "Chưa có tài khoản?",
-      "signUpNow": "Đăng ký ngay",
-      "hasAccount": "Đã có tài khoản?",
-      "loginNow": "Đăng nhập ngay"
-    },
-    "forgotPassword": {
-      "checkEmail": "Kiểm tra email của bạn:",
-      "clickLink": "Nhấn vào liên kết trong email để đặt lại mật khẩu",
-      "linkExpiry": "Liên kết có hiệu lực trong 15 phút",
-      "checkSpam": "Kiểm tra cả thư mục spam nếu không thấy email",
-      "instructions": "Nhập email của bạn và chúng tôi sẽ gửi hướng dẫn đặt lại mật khẩu."
-    },
+
+
+
+
+
+
+
     "subtitles": {
       "login": "Chào mừng bạn quay trở lại với JLPT4YOU",
       "register": "Bắt đầu hành trình học tiếng Nhật của bạn",
@@ -359,7 +323,8 @@
       "sendResetLink": "Gửi liên kết đặt lại",
       "sendResetInstructions": "Gửi hướng dẫn đặt lại mật khẩu",
       "backToLogin": "Quay lại đăng nhập",
-      "resendEmail": "Gửi lại email"
+      "resendEmail": "Gửi lại email",
+      "googleLogin": "Đăng nhập với Google"
     },
     "loading": {
       "login": "Đang đăng nhập...",
@@ -418,7 +383,7 @@
     "errors": {
       "general": "Đã xảy ra lỗi. Vui lòng thử lại.",
       "loginFailed": "Sai tên đăng nhập hoặc mật khẩu",
-      "invalidCredentials": "Sai tên đăng nhập hoặc mật khẩu",
+
       "emailExists": "Email này đã được sử dụng",
       "resendFailed": "Không thể gửi lại email. Vui lòng thử lại.",
       "registrationError": "Đã xảy ra lỗi trong quá trình đăng ký. Vui lòng thử lại.",
@@ -489,6 +454,7 @@
       }
     }
   },
+
   "jlpt": {
     "page": {
       "title": "Chọn loại đề thi JLPT",
@@ -760,96 +726,6 @@
       "loading": "Đang tải..."
     }
   },
-,
-  "study": {
-
-    "types": {
-      "theory": {
-        "title": "Lý thuyết",
-        "description": "Học kiến thức cơ bản"
-      },
-      "practice": {
-        "title": "Thực hành",
-        "description": "Bài tập ứng dụng"
-      }
-    },
-    "selectType": "Chọn loại học tập",
-    "practice": {
-      "exercise": {
-
-        "title": "Bài tập",
-
-        "selectMethodGrammar": "Chọn phương thức học ngữ pháp",
-        "grammarFlashcardAria": "Flashcard học ngữ pháp",
-        "flashcardDescriptionGrammar": "Học ngữ pháp qua thẻ ghi nhớ tương tác",
-        "aiQuizAriaGrammar": "Trắc nghiệm AI ngữ pháp",
-        "aiQuizTitle": "Trắc nghiệm AI",
-        "aiQuizDescription": "Luyện tập với câu hỏi do AI tạo ra",
-,
-        "selectMethodVocabulary": "Chọn phương thức học từ vựng",
-        "vocabularyFlashcardAria": "Flashcard học từ vựng",
-        "flashcardDescriptionVocabulary": "Học từ vựng qua thẻ ghi nhớ tương tác",
-        "aiQuizAriaVocabulary": "Trắc nghiệm AI từ vựng"
-        "feedback": {
-          "correct": "Bạn đã trả lời đúng",
-          "incorrect": "Bạn đã trả lời sai"
-        },
-        "explanation": {
-          "correctAnswer": "Đáp án đúng",
-          "translation": "Dịch nghĩa",
-          "whyCorrect": "Tại sao đúng",
-          "whyOthersWrong": "Tại sao các lựa chọn khác sai",
-          "additionalNotes": "Ghi chú thêm",
-          "exampleUsage": "Ví dụ sử dụng"
-        },
-      "flashcard": {
-        "noMeaning": "Không có nghĩa",
-        "structure": "Cấu trúc",
-        "usage": "Cách dùng",
-        "example": "Ví dụ",
-        "error": {
-          "loadGrammar": "Không thể tải ngữ pháp. Vui lòng thử lại."
-        },
-        "sessionComplete": {
-          "grammar": "Hoàn thành! Bạn đã học {{count}} ngữ pháp với độ chính xác {{accuracy}}%"
-        },
-        "preparingGrammar": "Chuẩn bị flashcard cho {{level}}",
-        "noGrammar": "Không có ngữ pháp",
-,
-    "reading": {
-      "passageUnit": "bài đọc",
-      "questionUnit": "câu hỏi",
-      "readingPassage": "Bài đọc"
-
-    }
-    "theory": {
-      "vocabularyAriaLabel": "Học từ vựng cấp độ {{level}}",
-      "grammarAriaLabel": "Học ngữ pháp cấp độ {{level}}",
-      "comingSoonDescription": "Chúng tôi đang phát triển tính năng này để mang đến trải nghiệm học tập tốt nhất cho bạn."
-    }
-    "vocabulary": {
-        "title": "Từ vựng",
-        "description": "Học từ vựng theo cấp độ"
-    },
-    "grammar": {
-        "title": "Ngữ pháp",
-        "description": "Học ngữ pháp theo cấp độ"
-    }
-        "noGrammarForLevel": "Không tìm thấy ngữ pháp cho cấp độ {{level}}",
-        "grammarTitle": "Flashcard ngữ pháp {{level}}",
-        "reading": "Đọc",
-        "partOfSpeech": "Loại từ",
-        "error": {
-          "loadVocabulary": "Không thể tải từ vựng. Vui lòng thử lại."
-        },
-        "sessionComplete": {
-          "vocabulary": "Hoàn thành! Bạn đã học {{count}} từ vựng với độ chính xác {{accuracy}}%"
-        },
-        "preparingVocabulary": "Chuẩn bị flashcard cho {{level}}"
-      }
-      }
-    }
-  }
   "examResults": {
     "title": "Kết quả {examType}",
     "completedAt": "Hoàn thành lúc {time}",
@@ -920,10 +796,7 @@
       "incorrect": "Sai",
       "flagged": "Câu đánh dấu"
     },
-    "pagination": {
-      "previous": "Trước",
-      "next": "Sau"
-    },
+
     "question": {
       "number": "Câu {number}",
       "details": "Chi tiết",
@@ -1071,12 +944,7 @@
       "cancelButton": "Hủy bỏ"
     }
   },
-  "seo": {
-    "structuredData": {
-      "title": "Luyện thi JLPT Online",
-      "description": "Website luyện thi JLPT hàng đầu với AI hỗ trợ"
-    }
-  },
+
   "pageTitle": {
     "home": "Trang chủ",
     "examResults": "Kết quả thi",
@@ -1519,7 +1387,8 @@
       "selectType": "Chọn loại bài tập bạn muốn luyện tập",
       "breadcrumbs": {
         "study": "Học bài",
-        "practice": "Thực hành"
+        "practice": "Thực hành",
+        "exercise": "Bài tập"
       },
       "pageTitle": "JLPT {level} {type} Thực hành",
       "pageDescription": "Kiểm tra kiến thức của bạn với bài tập thực hành được tạo bởi AI",
@@ -1552,6 +1421,25 @@
           "selectCount": "Chọn số lượng bài đọc (1-5)"
         }
       },
+      "modes": {
+        "selectMethod": {
+          "vocabulary": "Chọn phương thức học từ vựng",
+          "grammar": "Chọn phương thức học ngữ pháp"
+        },
+        "flashcard": {
+          "vocabulary": "Học từ vựng qua thẻ ghi nhớ tương tác",
+          "grammar": "Học ngữ pháp qua thẻ ghi nhớ tương tác",
+          "vocabularyAriaLabel": "Flashcard học từ vựng",
+          "grammarAriaLabel": "Flashcard học ngữ pháp"
+        },
+        "quiz": {
+          "title": "Trắc nghiệm AI",
+          "description": "Luyện tập với câu hỏi do AI tạo ra",
+          "vocabularyAriaLabel": "Trắc nghiệm AI từ vựng",
+          "grammarAriaLabel": "Trắc nghiệm AI ngữ pháp"
+        }
+      },
+
       "generator": {
         "title": "Tạo bài tập thực hành bằng AI",
         "description": "Tùy chỉnh phiên luyện tập của bạn với câu hỏi được tạo bởi AI",
@@ -1608,7 +1496,21 @@
           "tip4": "Theo dõi tiến trình theo thời gian"
         }
       },
+
       "exercise": {
+        "feedback": {
+          "correct": "Bạn đã trả lời đúng",
+          "incorrect": "Bạn đã trả lời sai"
+        },
+        "explanation": {
+          "correctAnswer": "Đáp án đúng:",
+          "translation": "Dịch nghĩa:",
+          "whyCorrect": "Tại sao đúng:",
+          "wrongAnswers": "Tại sao các lựa chọn khác sai:",
+          "additionalNotes": "Ghi chú thêm:",
+          "exampleUsage": "Ví dụ sử dụng:",
+          "toggle": "Hiện/Ẩn giải thích"
+        },
         "questionProgress": "Câu {current} / {total}",
         "multipleChoice": "Trắc nghiệm",
         "submitAnswer": "Gửi đáp án",
@@ -1618,14 +1520,6 @@
         "complete": "Hoàn thành",
         "correct": "Đúng!",
         "incorrect": "Sai",
-        "explanation": {
-          "correctAnswer": "Đáp án đúng:",
-          "whyCorrect": "Tại sao đúng:",
-          "wrongAnswers": "Tại sao các lựa chọn khác sai:",
-          "additionalNotes": "Ghi chú thêm:",
-          "exampleUsage": "Ví dụ sử dụng:",
-          "toggle": "Hiện/Ẩn giải thích"
-        },
         "noQuestion": "Không có câu hỏi"
       },
       "results": {
@@ -2159,6 +2053,10 @@
   },
   "seo": {
     "title": "Luyện thi JLPT Online N1-N5 Miễn Phí | JLPT4YOU - Học Tiếng Nhật với AI",
-    "description": "Luyện thi JLPT online từ N5 đến N1 với hàng ngàn câu hỏi, đề thi thử miễn phí có đáp án và giải thích chi tiết. Bắt đầu chinh phục JLPT cùng JLPT4YOU ngay hôm nay!"
+    "description": "Luyện thi JLPT online từ N5 đến N1 với hàng ngàn câu hỏi, đề thi thử miễn phí có đáp án và giải thích chi tiết. Bắt đầu chinh phục JLPT cùng JLPT4YOU ngay hôm nay!",
+    "structuredData": {
+      "title": "Luyện thi JLPT Online",
+      "description": "Website luyện thi JLPT hàng đầu với AI hỗ trợ"
+    }
   }
 }

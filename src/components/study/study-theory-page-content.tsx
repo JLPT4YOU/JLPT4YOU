@@ -54,7 +54,7 @@ function StudyTheoryContent({ t }: StudyTheoryContentProps) {
                   🚧 {t('study.theory.comingSoon')}
                 </div>
                 <div className="text-sm sm:text-base text-muted-foreground">
-                  {t('study.theory.comingSoonDescription')}
+                  {t('study.theory.comingSoonMessage')}
                 </div>
               </div>
             </div>

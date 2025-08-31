@@ -49,8 +49,9 @@ export function ExerciseDisplay({
   onToggleExplanation,
   isLastQuestion
 }: ExerciseDisplayProps) {
-  const [selectedAnswer, setSelectedAnswer] = React.useState<string>('')
   const { t } = useTranslations();
+  const [selectedAnswer, setSelectedAnswer] = React.useState<string>('')
+
 
   // Format time display
   const formatTime = (seconds: number) => {
@@ -244,28 +245,28 @@ export function ExerciseDisplay({
                 <div className="space-y-4">
                   {/* Correct Answer Explanation */}
                   <div>
-                    <h4 className="font-bold text-green-600 dark:text-green-400 mb-2">✓ {t('study.practice.exercise.explanation.correctAnswer')}:</h4>
+                    <h4 className="font-bold text-green-600 dark:text-green-400 mb-2">✓ {t('study.practice.exercise.explanation.correctAnswer')}</h4>
                     <RenderHTML content={question.explanation.correct_answer} as="div" className="text-base text-foreground" />
                   </div>
 
                   {/* Translation */}
                   {question.explanation.translation && (
                     <div>
-                      <h4 className="font-bold text-cyan-600 dark:text-cyan-400 mb-2">🌐 {t('study.practice.exercise.explanation.translation')}:</h4>
+                      <h4 className="font-bold text-cyan-600 dark:text-cyan-400 mb-2">🌐 {t('study.practice.exercise.explanation.translation')}</h4>
                       <RenderHTML content={question.explanation.translation} as="div" className="text-base text-foreground font-medium" />
                     </div>
                   )}
 
                   {/* Why Correct */}
                   <div>
-                    <h4 className="font-bold text-blue-600 dark:text-blue-400 mb-2">📚 {t('study.practice.exercise.explanation.whyCorrect')}:</h4>
+                    <h4 className="font-bold text-blue-600 dark:text-blue-400 mb-2">📚 {t('study.practice.exercise.explanation.whyCorrect')}</h4>
                     <RenderHTML content={question.explanation.why_correct} as="div" className="text-base text-foreground" />
                   </div>
 
                   {/* Wrong Answers Explanation */}
                   {question.explanation.wrong_answers && Object.keys(question.explanation.wrong_answers).length > 0 && (
                     <div>
-                      <h4 className="font-bold text-red-600 dark:text-red-400 mb-2">❌ {t('study.practice.exercise.explanation.whyOthersWrong')}:</h4>
+                      <h4 className="font-bold text-red-600 dark:text-red-400 mb-2">❌ {t('study.practice.exercise.explanation.wrongAnswers')}</h4>
                       <div className="space-y-2">
                         {Object.entries(question.explanation.wrong_answers).map(([optionKey, explanation]) => {
                           const optionIndex = parseInt(optionKey.split('_')[1]);
@@ -288,7 +289,7 @@ export function ExerciseDisplay({
                   {/* Additional Notes */}
                   {question.explanation.additional_notes && (
                     <div>
-                      <h4 className="font-bold text-purple-600 dark:text-purple-400 mb-2">💡 {t('study.practice.exercise.explanation.additionalNotes')}:</h4>
+                      <h4 className="font-bold text-purple-600 dark:text-purple-400 mb-2">💡 {t('study.practice.exercise.explanation.additionalNotes')}</h4>
                       <RenderHTML content={question.explanation.additional_notes} as="div" className="text-base text-foreground" />
                     </div>
                   )}
@@ -296,7 +297,7 @@ export function ExerciseDisplay({
                   {/* Example Usage */}
                   {question.explanation.example_usage && (
                     <div>
-                      <h4 className="font-bold text-orange-600 dark:text-orange-400 mb-2">📝 {t('study.practice.exercise.explanation.exampleUsage')}:</h4>
+                      <h4 className="font-bold text-orange-600 dark:text-orange-400 mb-2">📝 {t('study.practice.exercise.explanation.exampleUsage')}</h4>
                       <RenderHTML content={question.explanation.example_usage} as="div" className="text-base text-foreground italic" />
                     </div>
                   )}
@@ -314,14 +315,14 @@ export function ExerciseDisplay({
                       if (content.includes('引き出す') || content.includes('銀行') || content.includes('お金')) {
                         return (
                           <div key={index}>
-                            <h4 className="font-bold text-purple-600 dark:text-purple-400 mb-2">💡 {t('study.practice.exercise.explanation.additionalNotes')}:</h4>
+                            <h4 className="font-bold text-purple-600 dark:text-purple-400 mb-2">💡 {t('study.practice.exercise.explanation.additionalNotes')}</h4>
                             <p className="text-base text-foreground">{content}</p>
                           </div>
                         );
                       } else {
                         return (
                           <div key={index}>
-                            <h4 className="font-bold text-orange-600 dark:text-orange-400 mb-2">📝 {t('study.practice.exercise.explanation.exampleUsage')}:</h4>
+                            <h4 className="font-bold text-orange-600 dark:text-orange-400 mb-2">📝 {t('study.practice.exercise.explanation.exampleUsage')}</h4>
                             <p className="text-base text-foreground italic">{content}</p>
                           </div>
                         );

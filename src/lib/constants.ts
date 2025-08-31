@@ -135,9 +135,7 @@ export {
 
 export {
   ERROR_CODES,
-  ERROR_MESSAGES_VN,
-  ERROR_MESSAGES_EN,
-  ERROR_MESSAGES_JP,
+
   ERROR_SEVERITY,
   ERROR_CATEGORIES,
   type ErrorSeverity,

@@ -279,49 +279,13 @@
       "register": "Create Account",
       "forgotPassword": "Forgot Password"
     },
-    "labels": {
-      "email": "Email",
-      "password": "Password",
-      "rememberMe": "Remember me",
-      "agreeWith": "I agree with the",
-      "and": "and"
-    },
-    "placeholders": {
-      "email": "Enter your email",
-      "password": "Enter your password"
-    },
-    "buttons": {
-      "login": "Login",
-      "register": "Create Account",
-      "sendResetInstructions": "Send Reset Instructions",
-      "resendEmail": "Resend Email",
-      "googleLogin": "Sign in with Google"
-    },
-    "loading": {
-      "login": "Logging in...",
-      "register": "Creating account...",
-      "sending": "Sending...",
-      "resending": "Resending..."
-    },
-    "links": {
-      "forgotPassword": "Forgot password?",
-      "terms": "Terms of Service",
-      "privacy": "Privacy Policy"
-    },
-    "messages": {
-      "registrationSuccess": "Registration successful! Please check your email to confirm your account.",
-      "noAccount": "Don't have an account?",
-      "signUpNow": "Sign up now",
-      "hasAccount": "Already have an account?",
-      "loginNow": "Login now"
-    },
-    "forgotPassword": {
-      "checkEmail": "Check your email:",
-      "clickLink": "Click the link in the email to reset your password",
-      "linkExpiry": "The link is valid for 15 minutes",
-      "checkSpam": "Also check your spam folder if you don't see the email",
-      "instructions": "Enter your email and we will send you instructions to reset your password."
-    },
+
+
+
+
+
+
+
     "subtitles": {
       "login": "Welcome back to JLPT4YOU",
       "register": "Start your Japanese learning journey",
@@ -359,7 +323,8 @@
       "sendResetLink": "Send Reset Link",
       "sendResetInstructions": "Send Reset Instructions",
       "backToLogin": "Back to Login",
-      "resendEmail": "Resend Email"
+      "resendEmail": "Resend Email",
+      "googleLogin": "Sign in with Google"
     },
     "loading": {
       "login": "Logging in...",
@@ -418,7 +383,7 @@
     "errors": {
       "general": "An error occurred. Please try again.",
       "loginFailed": "Incorrect username or password",
-      "invalidCredentials": "Incorrect username or password",
+
       "emailExists": "This email is already in use",
       "resendFailed": "Failed to resend email. Please try again.",
       "registrationError": "An error occurred during registration. Please try again.",
@@ -571,10 +536,7 @@
       "incorrect": "Incorrect",
       "flagged": "Flagged"
     },
-    "pagination": {
-      "previous": "Previous",
-      "next": "Next"
-    },
+
     "question": {
       "number": "Question {number}",
       "details": "Details",
@@ -864,95 +826,6 @@
       "loading": "Loading..."
     }
   },
-,
-
-    "types": {
-      "theory": {
-        "title": "Theory",
-        "description": "Learn basic knowledge"
-      },
-      "practice": {
-        "title": "Practice",
-        "description": "Application exercises"
-      }
-    },
-    "selectType": "Select study type",
-  "study": {
-    "practice": {
-      "exercise": {
-
-        "title": "Exercise",
-
-        "selectMethodGrammar": "Select a grammar learning method",
-        "grammarFlashcardAria": "Grammar learning flashcard",
-        "flashcardDescriptionGrammar": "Learn grammar through interactive flashcards",
-        "aiQuizAriaGrammar": "AI Grammar Quiz",
-        "aiQuizTitle": "AI Quiz",
-        "aiQuizDescription": "Practice with AI-generated questions",
-,
-        "selectMethodVocabulary": "Select a vocabulary learning method",
-        "vocabularyFlashcardAria": "Vocabulary learning flashcard",
-        "flashcardDescriptionVocabulary": "Learn vocabulary through interactive flashcards",
-        "aiQuizAriaVocabulary": "AI Vocabulary Quiz"
-        "feedback": {
-          "correct": "You answered correctly",
-          "incorrect": "You answered incorrectly"
-        },
-        "explanation": {
-          "correctAnswer": "Correct Answer",
-          "translation": "Translation",
-          "whyCorrect": "Why it's correct",
-          "whyOthersWrong": "Why other options are wrong",
-          "additionalNotes": "Additional Notes",
-          "exampleUsage": "Example Usage"
-        },
-      "flashcard": {
-        "noMeaning": "No meaning available",
-        "structure": "Structure",
-        "usage": "Usage",
-        "example": "Example",
-        "error": {
-          "loadGrammar": "Could not load grammar. Please try again."
-        },
-        "sessionComplete": {
-          "grammar": "Complete! You have studied {{count}} grammar points with an accuracy of {{accuracy}}%"
-        },
-        "preparingGrammar": "Preparing flashcards for {{level}}",
-        "noGrammar": "No grammar available",
-,
-    "reading": {
-      "passageUnit": "passage(s)",
-      "questionUnit": "questions",
-      "readingPassage": "Reading Passage"
-    }
-    "theory": {
-      "vocabularyAriaLabel": "Learn vocabulary level {{level}}",
-      "grammarAriaLabel": "Learn grammar level {{level}}",
-      "comingSoonDescription": "We are developing this feature to provide the best learning experience for you."
-    },
-    "vocabulary": {
-        "title": "Vocabulary",
-        "description": "Learn vocabulary by level"
-    },
-    "grammar": {
-        "title": "Grammar",
-        "description": "Learn grammar by level"
-    }
-        "noGrammarForLevel": "No grammar found for level {{level}}",
-        "grammarTitle": "Grammar Flashcards {{level}}",
-        "reading": "Reading",
-        "partOfSpeech": "Part of Speech",
-        "error": {
-          "loadVocabulary": "Could not load vocabulary. Please try again."
-        },
-        "sessionComplete": {
-          "vocabulary": "Complete! You have studied {{count}} words with an accuracy of {{accuracy}}%"
-        },
-        "preparingVocabulary": "Preparing flashcards for {{level}}"
-      }
-      }
-    }
-  }
   "exam": {
     "interface": {
       "pause": "Pause",
@@ -1082,12 +955,7 @@
       "cancelButton": "Cancel"
     }
   },
-  "seo": {
-    "structuredData": {
-      "title": "Online JLPT Practice",
-      "description": "Leading JLPT practice website with AI support"
-    }
-  },
+
   "pageTitle": {
     "home": "Home",
     "examResults": "Exam Results",
@@ -1585,7 +1453,8 @@
       "selectType": "Choose the type of exercise you want to practice",
       "breadcrumbs": {
         "study": "Study",
-        "practice": "Practice"
+        "practice": "Practice",
+        "exercise": "Exercise"
       },
       "pageTitle": "JLPT {level} {type} Practice",
       "pageDescription": "Test your knowledge with AI-powered practice exercises",
@@ -1618,6 +1487,25 @@
           "selectCount": "Select number of passages (1-5)"
         }
       },
+      "modes": {
+        "selectMethod": {
+          "vocabulary": "Choose vocabulary learning method",
+          "grammar": "Choose grammar learning method"
+        },
+        "flashcard": {
+          "vocabulary": "Learn vocabulary through interactive flashcards",
+          "grammar": "Learn grammar through interactive flashcards",
+          "vocabularyAriaLabel": "Vocabulary flashcards",
+          "grammarAriaLabel": "Grammar flashcards"
+        },
+        "quiz": {
+          "title": "AI Quiz",
+          "description": "Practice with AI-generated questions",
+          "vocabularyAriaLabel": "AI vocabulary quiz",
+          "grammarAriaLabel": "AI grammar quiz"
+        }
+      },
+
       "generator": {
         "title": "Generate AI-Powered Exercise",
         "description": "Customize your practice session with AI-generated questions",
@@ -1674,7 +1562,21 @@
           "tip4": "Track your progress over time"
         }
       },
+
       "exercise": {
+        "feedback": {
+          "correct": "You answered correctly",
+          "incorrect": "You answered incorrectly"
+        },
+        "explanation": {
+          "correctAnswer": "Correct Answer:",
+          "translation": "Translation:",
+          "whyCorrect": "Why This is Correct:",
+          "wrongAnswers": "Why Other Options are Wrong:",
+          "additionalNotes": "Additional Notes:",
+          "exampleUsage": "Example Usage:",
+          "toggle": "Show/Hide Explanation"
+        },
         "questionProgress": "Question {current} of {total}",
         "multipleChoice": "Multiple Choice",
         "submitAnswer": "Submit Answer",
@@ -1684,14 +1586,6 @@
         "complete": "Complete",
         "correct": "Correct!",
         "incorrect": "Incorrect",
-        "explanation": {
-          "correctAnswer": "Correct Answer:",
-          "whyCorrect": "Why This is Correct:",
-          "wrongAnswers": "Why Other Options are Wrong:",
-          "additionalNotes": "Additional Notes:",
-          "exampleUsage": "Example Usage:",
-          "toggle": "Show/Hide Explanation"
-        },
         "noQuestion": "No question available"
       },
       "results": {
@@ -2280,6 +2174,10 @@
   },
   "seo": {
     "title": "Free JLPT Practice Test N1-N5 | JLPT4YOU - AI Japanese Learning",
-    "description": "Free online JLPT practice tests for N5 to N1. Thousands of questions, mock exams with instant scoring, and detailed explanations. Start mastering the JLPT with JLPT4YOU today!"
+    "description": "Free online JLPT practice tests for N5 to N1. Thousands of questions, mock exams with instant scoring, and detailed explanations. Start mastering the JLPT with JLPT4YOU today!",
+    "structuredData": {
+      "title": "Online JLPT Practice",
+      "description": "Leading JLPT practice website with AI support"
+    }
   }
 }
