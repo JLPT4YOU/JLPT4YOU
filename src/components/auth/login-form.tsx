@@ -55,11 +55,8 @@ function LoginFormContent({
     language
   })
 
-  // Translation helper - always call hook, but conditionally use result
-  const translationHook = useTranslation(translations || {} as TranslationData)
-  const t = translations ? translationHook.t : null
-  const getText = (key: string, fallback: string) => t ? t(key) : fallback
-  
+  const { t } = useTranslation(translations || {} as TranslationData)
+
   const [showRegistrationSuccess, setShowRegistrationSuccess] = useState(false)
 
   // Check if user just registered
@@ -77,11 +74,12 @@ function LoginFormContent({
 
   return (
     <div className={cn("space-y-6 md:space-y-8", className)}>
+
       <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
         {/* Registration Success Message */}
         {showRegistrationSuccess && (
           <div className="p-3 text-sm text-green-700 bg-green-50 border border-green-200 rounded-md dark:text-green-400 dark:bg-green-950 dark:border-green-800">
-            {getText('auth.messages.registrationSuccess', 'Đăng ký thành công! Vui lòng kiểm tra email để xác nhận tài khoản.')}
+            {t('auth.messages.registrationSuccess')}
           </div>
         )}
         
@@ -95,7 +93,7 @@ function LoginFormContent({
         {/* Email Field */}
         <div className="space-y-2 md:space-y-3">
           <Label htmlFor="email" className="text-sm md:text-base">
-            {getText('auth.labels.email', 'Email')}
+            {t('auth.labels.email')}
           </Label>
           <Input
             id="email"
@@ -104,7 +102,7 @@ function LoginFormContent({
             value={formData.email}
             onChange={(e) => handleInputChange('email', e.target.value)}
             onBlur={() => handleBlur('email')}
-            placeholder={getText('auth.placeholders.email', 'Enter your email')}
+            placeholder={t('auth.placeholders.email')}
             className={cn(errors.email && "border-destructive focus-visible:ring-destructive")}
             disabled={isLoading}
           />
@@ -116,7 +114,7 @@ function LoginFormContent({
         {/* Password Field */}
         <div className="space-y-2 md:space-y-3">
           <Label htmlFor="password" className="text-sm md:text-base">
-            {getText('auth.labels.password', 'Password')}
+            {t('auth.labels.password')}
           </Label>
           <PasswordInput
             id="password"
@@ -124,7 +122,7 @@ function LoginFormContent({
             value={formData.password}
             onChange={(value) => handleInputChange('password', value)}
             error={errors.password}
-            placeholder={getText('auth.placeholders.password', 'Enter password')}
+            placeholder={t('auth.placeholders.password')}
             showCapsLockWarning={true}
           />
         </div>
@@ -138,14 +136,14 @@ function LoginFormContent({
               onCheckedChange={(checked) => handleCheckboxChange('rememberMe', checked as boolean)}
               disabled={isLoading}
             />
-            <Label 
-              htmlFor="remember" 
+            <Label
+              htmlFor="remember"
               className="text-sm font-normal cursor-pointer"
             >
-              {getText('auth.labels.rememberMe', 'Nhớ đăng nhập')}
+              {t('auth.labels.rememberMe')}
             </Label>
           </div>
-          
+
           <Button
             type="button"
             variant="link"
@@ -153,7 +151,7 @@ function LoginFormContent({
             onClick={navigateToForgotPassword}
             disabled={isLoading}
           >
-            {getText('auth.links.forgotPassword', 'Forgot password?')}
+            {t('auth.links.forgotPassword')}
           </Button>
         </div>
 
@@ -163,7 +161,7 @@ function LoginFormContent({
           className="w-full bg-primary hover:bg-primary/90 h-10 md:h-12 text-sm md:text-base"
           disabled={isLoading}
         >
-          {isLoading ? getText('auth.loading.login', 'Đang đăng nhập...') : getText('auth.buttons.login', 'Đăng nhập')}
+          {isLoading ? t('auth.loading.login') : t('auth.buttons.login')}
         </Button>
       </form>
 
@@ -177,7 +175,7 @@ function LoginFormContent({
       {/* Switch to Register */}
       <div className="text-center">
         <p className="text-sm text-muted-foreground">
-          {getText('auth.messages.noAccount', 'Chưa có tài khoản?')}{" "}
+          {t('auth.messages.noAccount')}{" "}
           <Button
             type="button"
             variant="link"
@@ -185,7 +183,7 @@ function LoginFormContent({
             onClick={onSwitchToRegister}
             disabled={isLoading}
           >
-            {getText('auth.messages.signUpNow', 'Đăng ký ngay')}
+            {t('auth.messages.signUpNow')}
           </Button>
         </p>
       </div>

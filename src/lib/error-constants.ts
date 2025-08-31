@@ -3,6 +3,8 @@
  * Centralized location for error codes, messages, and error handling configuration
  */
 
+import { TFunction } from 'i18next';
+
 // Error codes
 export const ERROR_CODES = {
   // Authentication errors
@@ -68,176 +70,11 @@ export const ERROR_CODES = {
   }
 } as const
 
-// Error messages (Vietnamese)
-export const ERROR_MESSAGES_VN = {
-  // Authentication errors
-  [ERROR_CODES.AUTH.INVALID_CREDENTIALS]: 'Sai tên đăng nhập hoặc mật khẩu',
-  [ERROR_CODES.AUTH.TOKEN_EXPIRED]: 'Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại',
-  [ERROR_CODES.AUTH.UNAUTHORIZED]: 'Bạn không có quyền truy cập',
-  [ERROR_CODES.AUTH.FORBIDDEN]: 'Truy cập bị từ chối',
-  [ERROR_CODES.AUTH.USER_NOT_FOUND]: 'Không tìm thấy người dùng',
-  [ERROR_CODES.AUTH.EMAIL_ALREADY_EXISTS]: 'Email này đã được sử dụng',
-  [ERROR_CODES.AUTH.WEAK_PASSWORD]: 'Mật khẩu quá yếu, vui lòng chọn mật khẩu mạnh hơn',
-  [ERROR_CODES.AUTH.INVALID_EMAIL]: 'Định dạng email không hợp lệ',
 
-  // Exam errors
-  [ERROR_CODES.EXAM.NOT_FOUND]: 'Không tìm thấy bài thi',
-  [ERROR_CODES.EXAM.ALREADY_SUBMITTED]: 'Bài thi đã được nộp',
-  [ERROR_CODES.EXAM.TIME_EXPIRED]: 'Thời gian làm bài đã hết',
-  [ERROR_CODES.EXAM.INVALID_ANSWER]: 'Câu trả lời không hợp lệ',
-  [ERROR_CODES.EXAM.SAVE_FAILED]: 'Không thể lưu tiến độ bài thi',
-  [ERROR_CODES.EXAM.LOAD_FAILED]: 'Không thể tải bài thi',
-  [ERROR_CODES.EXAM.VIOLATION_LIMIT_EXCEEDED]: 'Đã vượt quá số lần vi phạm cho phép',
-  [ERROR_CODES.EXAM.FULLSCREEN_REQUIRED]: 'Vui lòng bật chế độ toàn màn hình để tiếp tục',
 
-  // Network errors
-  [ERROR_CODES.NETWORK.CONNECTION_FAILED]: 'Không thể kết nối đến máy chủ',
-  [ERROR_CODES.NETWORK.TIMEOUT]: 'Kết nối bị timeout',
-  [ERROR_CODES.NETWORK.SERVER_ERROR]: 'Lỗi máy chủ, vui lòng thử lại sau',
-  [ERROR_CODES.NETWORK.BAD_REQUEST]: 'Yêu cầu không hợp lệ',
-  [ERROR_CODES.NETWORK.NOT_FOUND]: 'Không tìm thấy tài nguyên',
-  [ERROR_CODES.NETWORK.RATE_LIMITED]: 'Quá nhiều yêu cầu, vui lòng thử lại sau',
 
-  // Validation errors
-  [ERROR_CODES.VALIDATION.REQUIRED_FIELD]: 'Trường này là bắt buộc',
-  [ERROR_CODES.VALIDATION.INVALID_FORMAT]: 'Định dạng không hợp lệ',
-  [ERROR_CODES.VALIDATION.MIN_LENGTH]: 'Độ dài tối thiểu không đạt',
-  [ERROR_CODES.VALIDATION.MAX_LENGTH]: 'Vượt quá độ dài tối đa',
-  [ERROR_CODES.VALIDATION.INVALID_EMAIL]: 'Email không hợp lệ',
-  [ERROR_CODES.VALIDATION.PASSWORDS_DONT_MATCH]: 'Mật khẩu không khớp',
 
-  // Storage errors
-  [ERROR_CODES.STORAGE.QUOTA_EXCEEDED]: 'Hết dung lượng lưu trữ',
-  [ERROR_CODES.STORAGE.ACCESS_DENIED]: 'Không thể truy cập bộ nhớ',
-  [ERROR_CODES.STORAGE.CORRUPTED_DATA]: 'Dữ liệu bị hỏng',
-  [ERROR_CODES.STORAGE.SAVE_FAILED]: 'Không thể lưu dữ liệu',
-  [ERROR_CODES.STORAGE.LOAD_FAILED]: 'Không thể tải dữ liệu',
 
-  // Translation errors
-  [ERROR_CODES.TRANSLATION.LOAD_FAILED]: 'Không thể tải bản dịch',
-  [ERROR_CODES.TRANSLATION.MISSING_KEY]: 'Thiếu khóa dịch',
-  [ERROR_CODES.TRANSLATION.INVALID_LANGUAGE]: 'Ngôn ngữ không hợp lệ',
-
-  // Generic errors
-  [ERROR_CODES.GENERIC.UNKNOWN_ERROR]: 'Đã xảy ra lỗi không xác định',
-  [ERROR_CODES.GENERIC.OPERATION_FAILED]: 'Thao tác thất bại',
-  [ERROR_CODES.GENERIC.INVALID_INPUT]: 'Dữ liệu đầu vào không hợp lệ',
-  [ERROR_CODES.GENERIC.PERMISSION_DENIED]: 'Không có quyền thực hiện thao tác này'
-} as const
-
-// Error messages (English)
-export const ERROR_MESSAGES_EN = {
-  // Authentication errors
-  [ERROR_CODES.AUTH.INVALID_CREDENTIALS]: 'Incorrect username or password',
-  [ERROR_CODES.AUTH.TOKEN_EXPIRED]: 'Session expired, please login again',
-  [ERROR_CODES.AUTH.UNAUTHORIZED]: 'You are not authorized to access this resource',
-  [ERROR_CODES.AUTH.FORBIDDEN]: 'Access denied',
-  [ERROR_CODES.AUTH.USER_NOT_FOUND]: 'User not found',
-  [ERROR_CODES.AUTH.EMAIL_ALREADY_EXISTS]: 'This email is already in use',
-  [ERROR_CODES.AUTH.WEAK_PASSWORD]: 'Password is too weak, please choose a stronger password',
-  [ERROR_CODES.AUTH.INVALID_EMAIL]: 'Invalid email format',
-
-  // Exam errors
-  [ERROR_CODES.EXAM.NOT_FOUND]: 'Exam not found',
-  [ERROR_CODES.EXAM.ALREADY_SUBMITTED]: 'Exam has already been submitted',
-  [ERROR_CODES.EXAM.TIME_EXPIRED]: 'Exam time has expired',
-  [ERROR_CODES.EXAM.INVALID_ANSWER]: 'Invalid answer',
-  [ERROR_CODES.EXAM.SAVE_FAILED]: 'Failed to save exam progress',
-  [ERROR_CODES.EXAM.LOAD_FAILED]: 'Failed to load exam',
-  [ERROR_CODES.EXAM.VIOLATION_LIMIT_EXCEEDED]: 'Violation limit exceeded',
-  [ERROR_CODES.EXAM.FULLSCREEN_REQUIRED]: 'Please enable fullscreen mode to continue',
-
-  // Network errors
-  [ERROR_CODES.NETWORK.CONNECTION_FAILED]: 'Failed to connect to server',
-  [ERROR_CODES.NETWORK.TIMEOUT]: 'Connection timeout',
-  [ERROR_CODES.NETWORK.SERVER_ERROR]: 'Server error, please try again later',
-  [ERROR_CODES.NETWORK.BAD_REQUEST]: 'Bad request',
-  [ERROR_CODES.NETWORK.NOT_FOUND]: 'Resource not found',
-  [ERROR_CODES.NETWORK.RATE_LIMITED]: 'Too many requests, please try again later',
-
-  // Validation errors
-  [ERROR_CODES.VALIDATION.REQUIRED_FIELD]: 'This field is required',
-  [ERROR_CODES.VALIDATION.INVALID_FORMAT]: 'Invalid format',
-  [ERROR_CODES.VALIDATION.MIN_LENGTH]: 'Minimum length not met',
-  [ERROR_CODES.VALIDATION.MAX_LENGTH]: 'Maximum length exceeded',
-  [ERROR_CODES.VALIDATION.INVALID_EMAIL]: 'Invalid email',
-  [ERROR_CODES.VALIDATION.PASSWORDS_DONT_MATCH]: 'Passwords do not match',
-
-  // Storage errors
-  [ERROR_CODES.STORAGE.QUOTA_EXCEEDED]: 'Storage quota exceeded',
-  [ERROR_CODES.STORAGE.ACCESS_DENIED]: 'Storage access denied',
-  [ERROR_CODES.STORAGE.CORRUPTED_DATA]: 'Corrupted data',
-  [ERROR_CODES.STORAGE.SAVE_FAILED]: 'Failed to save data',
-  [ERROR_CODES.STORAGE.LOAD_FAILED]: 'Failed to load data',
-
-  // Translation errors
-  [ERROR_CODES.TRANSLATION.LOAD_FAILED]: 'Failed to load translations',
-  [ERROR_CODES.TRANSLATION.MISSING_KEY]: 'Missing translation key',
-  [ERROR_CODES.TRANSLATION.INVALID_LANGUAGE]: 'Invalid language',
-
-  // Generic errors
-  [ERROR_CODES.GENERIC.UNKNOWN_ERROR]: 'An unknown error occurred',
-  [ERROR_CODES.GENERIC.OPERATION_FAILED]: 'Operation failed',
-  [ERROR_CODES.GENERIC.INVALID_INPUT]: 'Invalid input',
-  [ERROR_CODES.GENERIC.PERMISSION_DENIED]: 'Permission denied'
-} as const
-
-// Error messages (Japanese)
-export const ERROR_MESSAGES_JP = {
-  // Authentication errors
-  [ERROR_CODES.AUTH.INVALID_CREDENTIALS]: 'ユーザー名またはパスワードが正しくありません',
-  [ERROR_CODES.AUTH.TOKEN_EXPIRED]: 'セッションが期限切れです。再度ログインしてください',
-  [ERROR_CODES.AUTH.UNAUTHORIZED]: 'このリソースにアクセスする権限がありません',
-  [ERROR_CODES.AUTH.FORBIDDEN]: 'アクセスが拒否されました',
-  [ERROR_CODES.AUTH.USER_NOT_FOUND]: 'ユーザーが見つかりません',
-  [ERROR_CODES.AUTH.EMAIL_ALREADY_EXISTS]: 'このメールアドレスは既に使用されています',
-  [ERROR_CODES.AUTH.WEAK_PASSWORD]: 'パスワードが弱すぎます。より強いパスワードを選択してください',
-  [ERROR_CODES.AUTH.INVALID_EMAIL]: 'メールアドレスの形式が正しくありません',
-
-  // Exam errors
-  [ERROR_CODES.EXAM.NOT_FOUND]: '試験が見つかりません',
-  [ERROR_CODES.EXAM.ALREADY_SUBMITTED]: '試験は既に提出されています',
-  [ERROR_CODES.EXAM.TIME_EXPIRED]: '試験時間が終了しました',
-  [ERROR_CODES.EXAM.INVALID_ANSWER]: '無効な回答です',
-  [ERROR_CODES.EXAM.SAVE_FAILED]: '試験の進捗を保存できませんでした',
-  [ERROR_CODES.EXAM.LOAD_FAILED]: '試験を読み込めませんでした',
-  [ERROR_CODES.EXAM.VIOLATION_LIMIT_EXCEEDED]: '違反回数の上限を超えました',
-  [ERROR_CODES.EXAM.FULLSCREEN_REQUIRED]: '続行するにはフルスクリーンモードを有効にしてください',
-
-  // Network errors
-  [ERROR_CODES.NETWORK.CONNECTION_FAILED]: 'サーバーに接続できませんでした',
-  [ERROR_CODES.NETWORK.TIMEOUT]: '接続がタイムアウトしました',
-  [ERROR_CODES.NETWORK.SERVER_ERROR]: 'サーバーエラーです。後でもう一度お試しください',
-  [ERROR_CODES.NETWORK.BAD_REQUEST]: '不正なリクエストです',
-  [ERROR_CODES.NETWORK.NOT_FOUND]: 'リソースが見つかりません',
-  [ERROR_CODES.NETWORK.RATE_LIMITED]: 'リクエストが多すぎます。後でもう一度お試しください',
-
-  // Validation errors
-  [ERROR_CODES.VALIDATION.REQUIRED_FIELD]: 'この項目は必須です',
-  [ERROR_CODES.VALIDATION.INVALID_FORMAT]: '形式が正しくありません',
-  [ERROR_CODES.VALIDATION.MIN_LENGTH]: '最小文字数に達していません',
-  [ERROR_CODES.VALIDATION.MAX_LENGTH]: '最大文字数を超えています',
-  [ERROR_CODES.VALIDATION.INVALID_EMAIL]: 'メールアドレスが正しくありません',
-  [ERROR_CODES.VALIDATION.PASSWORDS_DONT_MATCH]: 'パスワードが一致しません',
-
-  // Storage errors
-  [ERROR_CODES.STORAGE.QUOTA_EXCEEDED]: 'ストレージ容量を超えました',
-  [ERROR_CODES.STORAGE.ACCESS_DENIED]: 'ストレージへのアクセスが拒否されました',
-  [ERROR_CODES.STORAGE.CORRUPTED_DATA]: 'データが破損しています',
-  [ERROR_CODES.STORAGE.SAVE_FAILED]: 'データの保存に失敗しました',
-  [ERROR_CODES.STORAGE.LOAD_FAILED]: 'データの読み込みに失敗しました',
-
-  // Translation errors
-  [ERROR_CODES.TRANSLATION.LOAD_FAILED]: '翻訳の読み込みに失敗しました',
-  [ERROR_CODES.TRANSLATION.MISSING_KEY]: '翻訳キーが見つかりません',
-  [ERROR_CODES.TRANSLATION.INVALID_LANGUAGE]: '無効な言語です',
-
-  // Generic errors
-  [ERROR_CODES.GENERIC.UNKNOWN_ERROR]: '不明なエラーが発生しました',
-  [ERROR_CODES.GENERIC.OPERATION_FAILED]: '操作に失敗しました',
-  [ERROR_CODES.GENERIC.INVALID_INPUT]: '無効な入力です',
-  [ERROR_CODES.GENERIC.PERMISSION_DENIED]: 'この操作を実行する権限がありません'
-} as const
 
 // Error severity levels
 export const ERROR_SEVERITY = {
@@ -262,17 +99,20 @@ export type ErrorCategory = typeof ERROR_CATEGORIES[keyof typeof ERROR_CATEGORIE
 
 // Helper functions
 export function getErrorMessage(
+  t: TFunction,
   errorCode: string,
-  language: 'vn' | 'en' | 'jp' = 'vn'
 ): string {
-  const messages = {
-    vn: ERROR_MESSAGES_VN,
-    en: ERROR_MESSAGES_EN,
-    jp: ERROR_MESSAGES_JP
+  const key = `errors.${errorCode}`;
+  const message = t(key);
+
+  // i18next returns the key if it's not found, so we check for that.
+  // If the message is the same as the key, it means the translation is missing.
+  if (message === key) {
+    // Fallback to a generic unknown error message.
+    return t(`errors.${ERROR_CODES.GENERIC.UNKNOWN_ERROR}`);
   }
 
-  return messages[language][errorCode as keyof typeof messages[typeof language]] || 
-         messages[language][ERROR_CODES.GENERIC.UNKNOWN_ERROR]
+  return message;
 }
 
 export function isAuthError(errorCode: string): boolean {

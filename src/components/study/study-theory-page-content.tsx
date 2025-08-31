@@ -54,7 +54,7 @@ function StudyTheoryContent({ t }: StudyTheoryContentProps) {
                   🚧 {t('study.theory.comingSoon')}
                 </div>
                 <div className="text-sm sm:text-base text-muted-foreground">
-                  {t('common.instruction') || 'Chúng tôi đang phát triển tính năng này để mang đến trải nghiệm học tập tốt nhất cho bạn.'}
+                  {t('study.theory.comingSoonMessage')}
                 </div>
               </div>
             </div>

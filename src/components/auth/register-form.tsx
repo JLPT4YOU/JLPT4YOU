@@ -46,10 +46,7 @@ export function RegisterForm({
     language
   })
 
-  // Translation helper - always call hook, but conditionally use result
-  const translationHook = useTranslation(translations || {} as TranslationData)
-  const t = translations ? translationHook.t : null
-  const getText = (key: string, fallback: string) => t ? t(key) : fallback
+  const { t } = useTranslation(translations || ({} as TranslationData))
 
 
 
@@ -68,7 +65,7 @@ export function RegisterForm({
         {/* Email Field */}
         <div className="space-y-2 md:space-y-3">
           <Label htmlFor="email" className="text-sm md:text-base">
-            {getText('auth.labels.email', 'Email')}
+            {t('auth.labels.email')}
           </Label>
           <Input
             id="email"
@@ -77,7 +74,7 @@ export function RegisterForm({
             value={formData.email}
             onChange={(e) => handleInputChange('email', e.target.value)}
             onBlur={() => handleBlur('email')}
-            placeholder={getText('auth.placeholders.email', 'Enter your email')}
+            placeholder={t('auth.placeholders.email')}
             className={cn(errors.email && "border-destructive focus-visible:ring-destructive")}
             disabled={isLoading}
           />
@@ -89,7 +86,7 @@ export function RegisterForm({
         {/* Password Field */}
         <div className="space-y-2 md:space-y-3">
           <Label htmlFor="password" className="text-sm md:text-base">
-            {getText('auth.labels.password', 'Password')}
+            {t('auth.labels.password')}
           </Label>
           <PasswordInput
             id="password"
@@ -98,7 +95,7 @@ export function RegisterForm({
             onChange={(value) => handleInputChange('password', value)}
             onBlur={() => handleBlur('password')}
             error={errors.password}
-            placeholder={getText('auth.placeholders.password', 'Enter password')}
+            placeholder={t('auth.placeholders.password')}
             showStrengthMeter={true}
             showCapsLockWarning={true}
           />
@@ -107,7 +104,7 @@ export function RegisterForm({
         {/* Confirm Password Field */}
         <div className="space-y-2 md:space-y-3">
           <Label htmlFor="confirmPassword" className="text-sm md:text-base">
-            {getText('auth.labels.confirmPassword', 'Confirm Password')}
+            {t('auth.labels.confirmPassword')}
           </Label>
           <PasswordInput
             id="confirmPassword"
@@ -118,7 +115,7 @@ export function RegisterForm({
             error={errors.confirmPassword}
             showStrengthMeter={false}
             showCapsLockWarning={false}
-            placeholder={getText('auth.placeholders.confirmPassword', 'Confirm password')}
+            placeholder={t('auth.placeholders.confirmPassword')}
           />
         </div>
 
@@ -137,23 +134,23 @@ export function RegisterForm({
               className="text-xs md:text-sm font-normal cursor-pointer leading-tight flex-1"
             >
               <span className="block">
-                {getText('auth.labels.agreeWith', 'Tôi đồng ý với')}{" "}
+                {t('auth.labels.agreeWith')}{" "}
                 <Button
                   type="button"
                   variant="link"
                   className="px-0 h-auto font-normal text-xs md:text-sm underline inline"
                   onClick={() => window.open("/terms", "_blank")}
                 >
-                  {getText('auth.links.terms', 'Điều khoản')}
+                  {t('auth.links.terms')}
                 </Button>
-                {" "}{getText('auth.labels.and', 'và')}{" "}
+                {" "}{t('auth.labels.and')}{" "}
                 <Button
                   type="button"
                   variant="link"
                   className="px-0 h-auto font-normal text-xs md:text-sm underline inline"
                   onClick={() => window.open("/privacy", "_blank")}
                 >
-                  {getText('auth.links.privacy', 'Chính sách bảo mật')}
+                  {t('auth.links.privacy')}
                 </Button>
               </span>
             </Label>
@@ -169,7 +166,7 @@ export function RegisterForm({
           className="w-full bg-primary h-10 md:h-12 text-sm md:text-base"
           disabled={isLoading}
         >
-          {isLoading ? getText('auth.loading.register', 'Đang tạo tài khoản...') : getText('auth.buttons.register', 'Tạo tài khoản')}
+          {isLoading ? t('auth.loading.register') : t('auth.buttons.register')}
         </Button>
       </form>
 
@@ -183,7 +180,7 @@ export function RegisterForm({
       {/* Switch to Login */}
       <div className="text-center">
         <p className="text-sm text-muted-foreground">
-          {getText('auth.messages.hasAccount', 'Đã có tài khoản?')}{" "}
+          {t('auth.messages.hasAccount')}{" "}
           <Button
             type="button"
             variant="link"
@@ -191,7 +188,7 @@ export function RegisterForm({
             onClick={onSwitchToLogin}
             disabled={isLoading}
           >
-            {getText('auth.messages.loginNow', 'Đăng nhập ngay')}
+            {t('auth.messages.loginNow')}
           </Button>
         </p>
       </div>

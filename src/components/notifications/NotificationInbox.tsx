@@ -31,6 +31,7 @@ import {
 import { notificationService } from '@/services/notification-service';
 import { Notification, NotificationType } from '@/types/notification';
 import { useAuth } from '@/contexts/auth-context-simple';
+import { useTranslations } from '@/hooks/use-translations';
 import { formatDistanceToNow } from 'date-fns';
 import { vi } from 'date-fns/locale';
 
@@ -40,6 +41,7 @@ interface NotificationInboxProps {
 
 const NotificationInbox: React.FC<NotificationInboxProps> = ({ onClose }) => {
   const { user } = useAuth();
+  const { t } = useTranslations();
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [filteredNotifications, setFilteredNotifications] = useState<Notification[]>([]);
   const [selectedNotification, setSelectedNotification] = useState<Notification | null>(null);
@@ -184,7 +186,7 @@ const NotificationInbox: React.FC<NotificationInboxProps> = ({ onClose }) => {
     setSelectedNotification(notification);
     handleMarkAsRead(notification);
 
-    // Trên mobile, mở modal thay vì hiển thị trong sidebar
+    // {t('notifications.inbox.comments.mobileModal')}
     if (window.innerWidth < 1024) {
       // Modal sẽ được handle bởi state selectedNotification
     }
@@ -212,7 +214,7 @@ const NotificationInbox: React.FC<NotificationInboxProps> = ({ onClose }) => {
         <div className="p-4 border-b flex items-center justify-between">
           <h2 className="font-semibold text-lg flex items-center gap-2">
             <Inbox className="w-5 h-5" />
-            Hộp thư đến
+            {t('notifications.inbox.title')}
           </h2>
           {/* Close button for mobile */}
           <Button
@@ -231,12 +233,12 @@ const NotificationInbox: React.FC<NotificationInboxProps> = ({ onClose }) => {
             className="w-full justify-start text-sm"
             onClick={() => {
               setActiveFilter('all');
-              // Đóng sidebar trên mobile sau khi chọn
+              // {t('notifications.inbox.comments.closeSidebarAfterSelect')}
               if (window.innerWidth < 1024) setSidebarOpen(false);
             }}
           >
             <Mail className="mr-2 h-4 w-4" />
-            Tất cả
+            {t('notifications.inbox.filters.all')}
             {notifications.length > 0 && (
               <Badge variant="secondary" className="ml-auto">
                 {notifications.length}
@@ -253,7 +255,7 @@ const NotificationInbox: React.FC<NotificationInboxProps> = ({ onClose }) => {
             }}
           >
             <AlertCircle className="mr-2 h-4 w-4" />
-            Chưa đọc
+            {t('notifications.inbox.filters.unread')}
             {unreadCount > 0 && (
               <Badge variant="destructive" className="ml-auto">
                 {unreadCount}
@@ -270,13 +272,13 @@ const NotificationInbox: React.FC<NotificationInboxProps> = ({ onClose }) => {
             }}
           >
             <Star className="mr-2 h-4 w-4" />
-            Quan trọng
+            {t('notifications.inbox.filters.important')}
           </Button>
         </div>
 
         <div className="mt-auto p-4 border-t space-y-2">
           <Tooltip
-            content="Kiểm tra thông báo mới ngay lập tức thay vì đợi 12 tiếng"
+            content={t('notifications.inbox.comments.tooltipRefresh')}
             side="top"
           >
             <Button
@@ -287,7 +289,7 @@ const NotificationInbox: React.FC<NotificationInboxProps> = ({ onClose }) => {
               disabled={refreshing}
             >
               <RefreshCw className={`mr-2 h-4 w-4 ${refreshing ? 'animate-spin' : ''}`} />
-              {refreshing ? 'Đang cập nhật...' : 'Cập nhật thông báo'}
+              {refreshing ? t('notifications.inbox.actions.refreshing') : t('notifications.inbox.actions.refresh')}
             </Button>
           </Tooltip>
 
@@ -299,7 +301,7 @@ const NotificationInbox: React.FC<NotificationInboxProps> = ({ onClose }) => {
             disabled={unreadCount === 0}
           >
             <CheckCheck className="mr-2 h-4 w-4" />
-            Đánh dấu tất cả đã đọc
+            {t('notifications.inbox.actions.markAllRead')}
           </Button>
         </div>
       </div>
@@ -307,7 +309,7 @@ const NotificationInbox: React.FC<NotificationInboxProps> = ({ onClose }) => {
       {/* Message List - Outlook style */}
       <div className="flex-1 flex">
         <div className="w-full lg:w-[350px] border-r flex flex-col">
-          {/* Search and Filter Bar với Toggle Button */}
+          {/* {t('notifications.inbox.comments.searchAndFilter')} */}
           <div className="p-3 border-b space-y-2">
             <div className="flex items-center gap-2">
               {/* Toggle Sidebar Button - chỉ hiện trên mobile/tablet */}
@@ -323,7 +325,7 @@ const NotificationInbox: React.FC<NotificationInboxProps> = ({ onClose }) => {
               <div className="relative flex-1">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
                 <Input
-                  placeholder="Tìm kiếm thông báo..."
+                  placeholder={t('notifications.inbox.search.placeholder')}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="pl-9"
@@ -336,11 +338,11 @@ const NotificationInbox: React.FC<NotificationInboxProps> = ({ onClose }) => {
           <ScrollArea className="flex-1">
             {loading ? (
               <div className="p-4 text-center text-muted-foreground">
-                Đang tải...
+                {t('notifications.inbox.states.loading')}
               </div>
             ) : filteredNotifications.length === 0 ? (
               <div className="p-4 text-center text-muted-foreground">
-                Không có thông báo nào
+                {t('notifications.inbox.states.noNotifications')}
               </div>
             ) : (
               <div className="divide-y">
@@ -386,7 +388,7 @@ const NotificationInbox: React.FC<NotificationInboxProps> = ({ onClose }) => {
           </ScrollArea>
         </div>
 
-        {/* Message Preview - Outlook style với responsive */}
+        {/* {t('notifications.inbox.comments.outlookStylePreview')} */}
         <div className="hidden lg:flex flex-1 flex-col bg-background">
           {selectedNotification ? (
             <>
@@ -406,7 +408,7 @@ const NotificationInbox: React.FC<NotificationInboxProps> = ({ onClose }) => {
                   </div>
                   <div className="flex items-center gap-2">
                     {selectedNotification.is_important && (
-                      <Badge variant="default">Quan trọng</Badge>
+                      <Badge variant="default">{t('notifications.inbox.details.important')}</Badge>
                     )}
                     <Button
                       variant="ghost"
@@ -429,25 +431,25 @@ const NotificationInbox: React.FC<NotificationInboxProps> = ({ onClose }) => {
                   {/* Metadata Display */}
                   {selectedNotification.metadata && Object.keys(selectedNotification.metadata).length > 0 && (
                     <div className="mt-6 p-4 bg-muted/50 rounded-lg">
-                      <h3 className="text-sm font-semibold mb-2">Chi tiết</h3>
+                      <h3 className="text-sm font-semibold mb-2">{t('notifications.inbox.details.metadata.title')}</h3>
                       <dl className="space-y-1">
                         {selectedNotification.metadata.amount && (
                           <div className="flex justify-between text-sm">
-                            <dt className="text-muted-foreground">Số tiền:</dt>
+                            <dt className="text-muted-foreground">{t('notifications.inbox.details.metadata.amount')}</dt>
                             <dd className="font-medium">${selectedNotification.metadata.amount.toFixed(2)}</dd>
                           </div>
                         )}
                         {selectedNotification.metadata.plan_type && (
                           <div className="flex justify-between text-sm">
-                            <dt className="text-muted-foreground">Gói:</dt>
+                            <dt className="text-muted-foreground">{t('notifications.inbox.details.metadata.plan')}</dt>
                             <dd className="font-medium">
-                              {selectedNotification.metadata.plan_type === 'monthly' ? 'Tháng' : 'Năm'}
+                              {selectedNotification.metadata.plan_type === 'monthly' ? t('notifications.inbox.details.metadata.planMonthly') : t('notifications.inbox.details.metadata.planYearly')}
                             </dd>
                           </div>
                         )}
                         {selectedNotification.metadata.code && (
                           <div className="flex justify-between text-sm">
-                            <dt className="text-muted-foreground">Mã:</dt>
+                            <dt className="text-muted-foreground">{t('notifications.inbox.details.metadata.code')}</dt>
                             <dd className="font-mono font-medium">{selectedNotification.metadata.code}</dd>
                           </div>
                         )}
@@ -461,7 +463,7 @@ const NotificationInbox: React.FC<NotificationInboxProps> = ({ onClose }) => {
             <div className="flex-1 flex items-center justify-center text-muted-foreground">
               <div className="text-center">
                 <Mail className="w-12 h-12 mx-auto mb-4 opacity-20" />
-                <p>Chọn một thông báo để xem chi tiết</p>
+                <p>{t('notifications.inbox.states.selectNotification')}</p>
               </div>
             </div>
           )}
@@ -474,7 +476,7 @@ const NotificationInbox: React.FC<NotificationInboxProps> = ({ onClose }) => {
           <div className="bg-background w-full max-h-[90vh] rounded-t-lg overflow-hidden">
             {/* Modal Header */}
             <div className="p-4 border-b flex items-center justify-between">
-              <h3 className="font-semibold">Chi tiết thông báo</h3>
+              <h3 className="font-semibold">{t('notifications.inbox.details.title')}</h3>
               <Button
                 variant="ghost"
                 size="sm"
@@ -498,7 +500,7 @@ const NotificationInbox: React.FC<NotificationInboxProps> = ({ onClose }) => {
                       {new Date(selectedNotification.created_at).toLocaleString('vi-VN')}
                     </p>
                     {selectedNotification.is_important && (
-                      <Badge variant="default" className="mt-2">Quan trọng</Badge>
+                      <Badge variant="default" className="mt-2">{t('notifications.inbox.details.important')}</Badge>
                     )}
                   </div>
                 </div>
@@ -511,23 +513,23 @@ const NotificationInbox: React.FC<NotificationInboxProps> = ({ onClose }) => {
                 {/* Metadata Display */}
                 {selectedNotification.metadata && Object.keys(selectedNotification.metadata).length > 0 && (
                   <div className="p-4 bg-muted/50 rounded-lg">
-                    <h3 className="text-sm font-semibold mb-2">Chi tiết</h3>
+                    <h3 className="text-sm font-semibold mb-2">{t('notifications.inbox.details.metadata.title')}</h3>
                     <dl className="space-y-1">
                       {selectedNotification.metadata.amount && (
                         <div className="flex justify-between text-sm">
-                          <dt>Số tiền:</dt>
+                          <dt>{t('notifications.inbox.details.metadata.amount')}</dt>
                           <dd className="font-medium">{selectedNotification.metadata.amount}</dd>
                         </div>
                       )}
                       {selectedNotification.metadata.code && (
                         <div className="flex justify-between text-sm">
-                          <dt>Mã:</dt>
+                          <dt>{t('notifications.inbox.details.metadata.code')}</dt>
                           <dd className="font-mono">{selectedNotification.metadata.code}</dd>
                         </div>
                       )}
                       {selectedNotification.metadata.status && (
                         <div className="flex justify-between text-sm">
-                          <dt>Trạng thái:</dt>
+                          <dt>{t('notifications.inbox.details.metadata.status')}</dt>
                           <dd>{selectedNotification.metadata.status}</dd>
                         </div>
                       )}
@@ -544,7 +546,7 @@ const NotificationInbox: React.FC<NotificationInboxProps> = ({ onClose }) => {
                     className="flex-1"
                   >
                     <Trash2 className="w-4 h-4 mr-2" />
-                    Xóa
+                    {t('notifications.inbox.actions.delete')}
                   </Button>
                   <Button
                     variant="default"
@@ -552,7 +554,7 @@ const NotificationInbox: React.FC<NotificationInboxProps> = ({ onClose }) => {
                     onClick={() => setSelectedNotification(null)}
                     className="flex-1"
                   >
-                    Đóng
+                    {t('notifications.inbox.actions.close')}
                   </Button>
                 </div>
               </div>

@@ -39,8 +39,8 @@ function StudyLevelContent({ t, language, translations }: StudyLevelContentProps
   const studyTypeCards: CardItem[] = [
     {
       id: 'theory',
-      title: t('study.types.theory.title') || 'Lý thuyết',
-      description: t('study.types.theory.description') || 'Học kiến thức cơ bản',
+      title: t('study.types.theory.title'),
+      description: t('study.types.theory.description'),
       subtitle: '',
       icon: BookOpen,
       href: `/study/${level}/theory`,
@@ -49,8 +49,8 @@ function StudyLevelContent({ t, language, translations }: StudyLevelContentProps
     },
     {
       id: 'practice',
-      title: t('study.types.practice.title') || 'Thực hành',
-      description: t('study.types.practice.description') || 'Bài tập ứng dụng',
+      title: t('study.types.practice.title'),
+      description: t('study.types.practice.description'),
       subtitle: '',
       icon: Target,
       href: `/study/${level}/practice`,
@@ -62,7 +62,7 @@ function StudyLevelContent({ t, language, translations }: StudyLevelContentProps
   return (
     <BasePageTemplate
       title={`${t('study.page.title')} - ${level.toUpperCase()}`}
-      subtitle={t('study.selectType') || 'Chọn loại học tập'}
+      subtitle={t('study.selectType')}
       cards={studyTypeCards}
       translations={translations}
       language={language}

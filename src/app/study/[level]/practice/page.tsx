@@ -5,6 +5,7 @@ import { useParams } from 'next/navigation'
 import { BookOpen, Target, FileText, History } from 'lucide-react'
 import { ProtectedRoute } from '@/components/auth/protected-route'
 import { LanguagePageWrapper } from '@/components/language-page-wrapper'
+import { PracticeTypeCard } from '@/components/practice/PracticeTypeCard'
 
 export default function StudyPracticeByLevelPage() {
   return (
@@ -25,6 +26,30 @@ interface ContentProps {
 function Content({ language, translations, t }: ContentProps) {
   const params = useParams<{ level: string }>()
   const level = (params?.level || 'n5').toLowerCase()
+
+  const practiceTypes = [
+    {
+      href: `/study/${level}/practice/vocabulary`,
+      title: t('study.vocabulary.title'),
+      description: t('study.vocabulary.description'),
+      Icon: BookOpen,
+      ariaLabel: `${t('study.vocabulary.title')} ${level.toUpperCase()}`
+    },
+    {
+      href: `/study/${level}/practice/grammar`,
+      title: t('study.grammar.title'),
+      description: t('study.grammar.description'),
+      Icon: Target,
+      ariaLabel: `${t('study.grammar.title')} ${level.toUpperCase()}`
+    },
+    {
+      href: `/study/${level}/practice/reading`,
+      title: t('study.practice.reading.title'),
+      description: t('study.practice.reading.description'),
+      Icon: FileText,
+      ariaLabel: `${t('study.practice.types.reading')} ${level.toUpperCase()}`
+    }
+  ]
 
   return (
     <div className="min-h-screen bg-background">
@@ -57,51 +82,18 @@ function Content({ language, translations, t }: ContentProps) {
 
             {/* Selection Cards */}
             <main className="flex justify-center app-space-xl" role="main">
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 place-items-center w-max">
-                {/* Vocabulary Card */}
-                <Link
-                  href={`/study/${level}/practice/vocabulary`}
-                  className="block w-full max-w-[320px] h-full group focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-2xl"
-                  aria-label={`${t('study.vocabulary.title')} ${level.toUpperCase()}`}
-                >
-                  <article className="bg-muted/10 rounded-2xl p-6 md:p-8 text-center transition-all duration-200 hover:bg-muted/30 border border-border/20 group-hover:scale-105 h-full flex flex-col justify-center min-h-[200px]">
-                    <div className="w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-4 group-hover:scale-105 transition-transform duration-200 bg-primary/10 group-hover:bg-primary/20">
-                      <BookOpen className="w-8 h-8 text-primary" />
-                    </div>
-                    <h2 className="font-semibold text-foreground mb-2 text-xl">{t('study.vocabulary.title')}</h2>
-                    <p className="text-muted-foreground text-sm">{t('study.vocabulary.description')}</p>
-                  </article>
-                </Link>
-
-                {/* Grammar Card */}
-                <Link
-                  href={`/study/${level}/practice/grammar`}
-                  className="block w-full max-w-[320px] h-full group focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-2xl"
-                  aria-label={`${t('study.grammar.title')} ${level.toUpperCase()}`}
-                >
-                  <article className="bg-muted/10 rounded-2xl p-6 md:p-8 text-center transition-all duration-200 hover:bg-muted/30 border border-border/20 group-hover:scale-105 h-full flex flex-col justify-center min-h-[200px]">
-                    <div className="w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-4 group-hover:scale-105 transition-transform duration-200 bg-primary/10 group-hover:bg-primary/20">
-                      <Target className="w-8 h-8 text-primary" />
-                    </div>
-                    <h2 className="font-semibold text-foreground mb-2 text-xl">{t('study.grammar.title')}</h2>
-                    <p className="text-muted-foreground text-sm">{t('study.grammar.description')}</p>
-                  </article>
-                </Link>
-
-                {/* Reading Card */}
-                <Link
-                  href={`/study/${level}/practice/reading`}
-                  className="block w-full max-w-[320px] h-full group focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-2xl"
-                  aria-label={`${t('study.practice.types.reading')} ${level.toUpperCase()}`}
-                >
-                  <article className="bg-muted/10 rounded-2xl p-6 md:p-8 text-center transition-all duration-200 hover:bg-muted/30 border border-border/20 group-hover:scale-105 h-full flex flex-col justify-center min-h-[200px]">
-                    <div className="w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-4 group-hover:scale-105 transition-transform duration-200 bg-primary/10 group-hover:bg-primary/20">
-                      <FileText className="w-8 h-8 text-primary" />
-                    </div>
-                    <h2 className="font-semibold text-foreground mb-2 text-xl">{t('study.practice.reading.title')}</h2>
-                    <p className="text-muted-foreground text-sm">{t('study.practice.reading.description')}</p>
-                  </article>
-                </Link>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 items-stretch justify-items-center">
+                {practiceTypes.map((practiceType, index) => (
+                  <PracticeTypeCard
+                    key={index}
+                    href={practiceType.href}
+                    title={practiceType.title}
+                    description={practiceType.description}
+                    Icon={practiceType.Icon}
+                    level={level}
+                    ariaLabel={practiceType.ariaLabel}
+                  />
+                ))}
               </div>
             </main>
           </div>

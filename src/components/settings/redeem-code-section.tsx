@@ -50,36 +50,40 @@ export function RedeemCodeSection({ className }: RedeemCodeSectionProps) {
       if (result.success) {
         // Success case
         await refreshUser() // Refresh user data to get updated premium status
-        
+
+        const successMessage = t
+          ? t('pages.settings.profile.redeemCode.success').replace('{{days}}', String(result.premium_days_added))
+          : `Đã kích hoạt thành công ${result.premium_days_added} ngày Premium!`
+
         setRedeemMessage({
           type: 'success',
-          text: result.message || `Đã kích hoạt thành công ${result.premium_days_added} ngày Premium!`,
+          text: result.message || successMessage,
           premiumInfo: {
             expiryDate: result.new_expiry || (user as any)?.expiryDate,
             accountType: 'Premium'
           }
         })
         setRedeemCode('') // Clear the input
-        
+
         // Show success toast
-        toast.success(`Đã thêm ${result.premium_days_added} ngày Premium vào tài khoản của bạn!`)
+        toast.success(t ? t('pages.settings.profile.redeemCode.successToast').replace('{{days}}', String(result.premium_days_added)) : `Đã thêm ${result.premium_days_added} ngày Premium vào tài khoản của bạn!`)
       } else {
         // Error case
         setRedeemMessage({
           type: 'error',
-          text: result.error || 'Code không hợp lệ hoặc đã được sử dụng'
+          text: result.error || (t ? t('pages.settings.profile.redeemCode.invalidError') : 'Code không hợp lệ hoặc đã được sử dụng')
         })
-        
+
         // Show error toast
-        toast.error(result.error || 'Không thể kích hoạt code')
+        toast.error(result.error || (t ? t('pages.settings.profile.redeemCode.redeemError') : 'Không thể kích hoạt code'))
       }
     } catch (error) {
       // Network or other errors
       setRedeemMessage({
         type: 'error',
-        text: 'Đã xảy ra lỗi khi kích hoạt code'
+        text: t ? t('pages.settings.profile.redeemCode.genericError') : 'Đã xảy ra lỗi khi kích hoạt code'
       })
-      toast.error('Đã xảy ra lỗi khi kích hoạt code')
+      toast.error(t ? t('pages.settings.profile.redeemCode.genericError') : 'Đã xảy ra lỗi khi kích hoạt code')
     }
 
     setIsRedeeming(false)

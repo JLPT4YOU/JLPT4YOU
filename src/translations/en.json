@@ -279,6 +279,13 @@
       "register": "Create Account",
       "forgotPassword": "Forgot Password"
     },
+
+
+
+
+
+
+
     "subtitles": {
       "login": "Welcome back to JLPT4YOU",
       "register": "Start your Japanese learning journey",
@@ -316,7 +323,8 @@
       "sendResetLink": "Send Reset Link",
       "sendResetInstructions": "Send Reset Instructions",
       "backToLogin": "Back to Login",
-      "resendEmail": "Resend Email"
+      "resendEmail": "Resend Email",
+      "googleLogin": "Sign in with Google"
     },
     "loading": {
       "login": "Logging in...",
@@ -375,7 +383,7 @@
     "errors": {
       "general": "An error occurred. Please try again.",
       "loginFailed": "Incorrect username or password",
-      "invalidCredentials": "Incorrect username or password",
+
       "emailExists": "This email is already in use",
       "resendFailed": "Failed to resend email. Please try again.",
       "registrationError": "An error occurred during registration. Please try again.",
@@ -528,10 +536,7 @@
       "incorrect": "Incorrect",
       "flagged": "Flagged"
     },
-    "pagination": {
-      "previous": "Previous",
-      "next": "Next"
-    },
+
     "question": {
       "number": "Question {number}",
       "details": "Details",
@@ -950,12 +955,7 @@
       "cancelButton": "Cancel"
     }
   },
-  "seo": {
-    "structuredData": {
-      "title": "Online JLPT Practice",
-      "description": "Leading JLPT practice website with AI support"
-    }
-  },
+
   "pageTitle": {
     "home": "Home",
     "examResults": "Exam Results",
@@ -1453,7 +1453,8 @@
       "selectType": "Choose the type of exercise you want to practice",
       "breadcrumbs": {
         "study": "Study",
-        "practice": "Practice"
+        "practice": "Practice",
+        "exercise": "Exercise"
       },
       "pageTitle": "JLPT {level} {type} Practice",
       "pageDescription": "Test your knowledge with AI-powered practice exercises",
@@ -1486,6 +1487,25 @@
           "selectCount": "Select number of passages (1-5)"
         }
       },
+      "modes": {
+        "selectMethod": {
+          "vocabulary": "Choose vocabulary learning method",
+          "grammar": "Choose grammar learning method"
+        },
+        "flashcard": {
+          "vocabulary": "Learn vocabulary through interactive flashcards",
+          "grammar": "Learn grammar through interactive flashcards",
+          "vocabularyAriaLabel": "Vocabulary flashcards",
+          "grammarAriaLabel": "Grammar flashcards"
+        },
+        "quiz": {
+          "title": "AI Quiz",
+          "description": "Practice with AI-generated questions",
+          "vocabularyAriaLabel": "AI vocabulary quiz",
+          "grammarAriaLabel": "AI grammar quiz"
+        }
+      },
+
       "generator": {
         "title": "Generate AI-Powered Exercise",
         "description": "Customize your practice session with AI-generated questions",
@@ -1542,7 +1562,21 @@
           "tip4": "Track your progress over time"
         }
       },
+
       "exercise": {
+        "feedback": {
+          "correct": "You answered correctly",
+          "incorrect": "You answered incorrectly"
+        },
+        "explanation": {
+          "correctAnswer": "Correct Answer:",
+          "translation": "Translation:",
+          "whyCorrect": "Why This is Correct:",
+          "wrongAnswers": "Why Other Options are Wrong:",
+          "additionalNotes": "Additional Notes:",
+          "exampleUsage": "Example Usage:",
+          "toggle": "Show/Hide Explanation"
+        },
         "questionProgress": "Question {current} of {total}",
         "multipleChoice": "Multiple Choice",
         "submitAnswer": "Submit Answer",
@@ -1552,14 +1586,6 @@
         "complete": "Complete",
         "correct": "Correct!",
         "incorrect": "Incorrect",
-        "explanation": {
-          "correctAnswer": "Correct Answer:",
-          "whyCorrect": "Why This is Correct:",
-          "wrongAnswers": "Why Other Options are Wrong:",
-          "additionalNotes": "Additional Notes:",
-          "exampleUsage": "Example Usage:",
-          "toggle": "Show/Hide Explanation"
-        },
         "noQuestion": "No question available"
       },
       "results": {
@@ -2053,6 +2079,105 @@
         "description": "Try changing search keywords or filters"
       },
       "pages": "pages"
+    }
+  },
+  "errors": {
+    "AUTH_INVALID_CREDENTIALS": "Incorrect username or password",
+    "AUTH_TOKEN_EXPIRED": "Session expired, please login again",
+    "AUTH_UNAUTHORIZED": "You are not authorized to access this resource",
+    "AUTH_FORBIDDEN": "Access denied",
+    "AUTH_USER_NOT_FOUND": "User not found",
+    "AUTH_EMAIL_ALREADY_EXISTS": "This email is already in use",
+    "AUTH_WEAK_PASSWORD": "Password is too weak, please choose a stronger password",
+    "AUTH_INVALID_EMAIL": "Invalid email format",
+    "EXAM_NOT_FOUND": "Exam not found",
+    "EXAM_ALREADY_SUBMITTED": "Exam has already been submitted",
+    "EXAM_TIME_EXPIRED": "Exam time has expired",
+    "EXAM_INVALID_ANSWER": "Invalid answer",
+    "EXAM_SAVE_FAILED": "Failed to save exam progress",
+    "EXAM_LOAD_FAILED": "Failed to load exam",
+    "EXAM_VIOLATION_LIMIT_EXCEEDED": "Violation limit exceeded",
+    "EXAM_FULLSCREEN_REQUIRED": "Please enable fullscreen mode to continue",
+    "NETWORK_CONNECTION_FAILED": "Failed to connect to server",
+    "NETWORK_TIMEOUT": "Connection timeout",
+    "NETWORK_SERVER_ERROR": "Server error, please try again later",
+    "NETWORK_BAD_REQUEST": "Bad request",
+    "NETWORK_NOT_FOUND": "Resource not found",
+    "NETWORK_RATE_LIMITED": "Too many requests, please try again later",
+    "VALIDATION_REQUIRED_FIELD": "This field is required",
+    "VALIDATION_INVALID_FORMAT": "Invalid format",
+    "VALIDATION_MIN_LENGTH": "Minimum length not met",
+    "VALIDATION_MAX_LENGTH": "Maximum length exceeded",
+    "VALIDATION_INVALID_EMAIL": "Invalid email",
+    "VALIDATION_PASSWORDS_DONT_MATCH": "Passwords do not match",
+    "STORAGE_QUOTA_EXCEEDED": "Storage quota exceeded",
+    "STORAGE_ACCESS_DENIED": "Storage access denied",
+    "STORAGE_CORRUPTED_DATA": "Corrupted data",
+    "STORAGE_SAVE_FAILED": "Failed to save data",
+    "STORAGE_LOAD_FAILED": "Failed to load data",
+    "TRANSLATION_LOAD_FAILED": "Failed to load translations",
+    "TRANSLATION_MISSING_KEY": "Missing translation key",
+    "TRANSLATION_INVALID_LANGUAGE": "Invalid language",
+    "GENERIC_UNKNOWN_ERROR": "An unknown error occurred",
+    "GENERIC_OPERATION_FAILED": "Operation failed",
+    "GENERIC_INVALID_INPUT": "Invalid input",
+    "GENERIC_PERMISSION_DENIED": "Permission denied"
+  },
+  "notifications": {
+    "button": {
+      "ariaLabel": "Notifications",
+      "dialogTitle": "Notification Center"
+    },
+    "inbox": {
+      "title": "Inbox",
+      "filters": {
+        "all": "All",
+        "unread": "Unread",
+        "important": "Important"
+      },
+      "search": {
+        "placeholder": "Search notifications..."
+      },
+      "actions": {
+        "refresh": "Refresh notifications",
+        "refreshing": "Refreshing...",
+        "markAllRead": "Mark all as read",
+        "delete": "Delete",
+        "close": "Close"
+      },
+      "states": {
+        "loading": "Loading...",
+        "noNotifications": "No notifications",
+        "selectNotification": "Select a notification to view details"
+      },
+      "details": {
+        "title": "Notification Details",
+        "important": "Important",
+        "metadata": {
+          "title": "Details",
+          "amount": "Amount:",
+          "plan": "Plan:",
+          "planMonthly": "Monthly",
+          "planYearly": "Yearly",
+          "code": "Code:",
+          "status": "Status:"
+        }
+      },
+      "comments": {
+        "mobileModal": "On mobile, open modal instead of displaying in sidebar",
+        "closeSidebarAfterSelect": "Close sidebar on mobile after selection",
+        "searchAndFilter": "Search and Filter Bar with Toggle Button",
+        "outlookStylePreview": "Message Preview - Outlook style with responsive",
+        "tooltipRefresh": "Check for new notifications immediately instead of waiting 12 hours"
+      }
+    }
+  },
+  "seo": {
+    "title": "Free JLPT Practice Test N1-N5 | JLPT4YOU - AI Japanese Learning",
+    "description": "Free online JLPT practice tests for N5 to N1. Thousands of questions, mock exams with instant scoring, and detailed explanations. Start mastering the JLPT with JLPT4YOU today!",
+    "structuredData": {
+      "title": "Online JLPT Practice",
+      "description": "Leading JLPT practice website with AI support"
     }
   }
 }

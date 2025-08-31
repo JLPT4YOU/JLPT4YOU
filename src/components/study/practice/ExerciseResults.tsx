@@ -292,7 +292,7 @@ export function ExerciseResults({
           <Download className="h-4 w-4 mr-2" />
           {t('study.practice.results.actions.exportResults')}
         </Button>
-        <Link href={`/study/n${level}`} className="flex-1">
+        <Link href={`/study/${level}`} className="flex-1">
           <Button variant="outline" size="sm" className="w-full">
             <Home className="h-4 w-4 mr-2" />
             {t('study.practice.results.actions.backToStudy')}

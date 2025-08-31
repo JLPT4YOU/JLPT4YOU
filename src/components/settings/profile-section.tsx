@@ -28,7 +28,7 @@ interface ProfileSectionProps {
 export function ProfileSection({ className }: ProfileSectionProps) {
   const { user, updateUser, refreshUser } = useAuth()
   const { userData, loading: userDataLoading } = useUserData() // ✅ ADDED: Get user data
-  const { t } = useTranslations()
+  const { t, language } = useTranslations()
   const router = useRouter()
 
   const [isLoading, setIsLoading] = useState(false)
@@ -240,7 +240,7 @@ export function ProfileSection({ className }: ProfileSectionProps) {
                     </p>
                     {displayUser.expiryDate && ( // ✅ FIXED
                       <p className="text-xs text-muted-foreground mt-1">
-                        {t ? t('pages.settings.profile.expiryDate') : 'Hết hạn'}: {formatExpiryDate(displayUser.expiryDate)} {/* ✅ FIXED */}
+                        {t ? t('pages.settings.profile.expiryDate') : 'Hết hạn'}: {formatExpiryDate(displayUser.expiryDate, language)} {/* ✅ FIXED */}
                       </p>
                     )}
                   </div>
