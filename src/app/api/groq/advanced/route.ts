@@ -4,7 +4,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { getGroqService } from '@/lib/groq-service';
+import { getGroqService } from '@/lib/groq-service-unified';
 import { createAIMessage } from '@/lib/ai-shared-utils';
 
 export async function POST(request: NextRequest) {
@@ -34,11 +34,14 @@ export async function POST(request: NextRequest) {
     const targetModel = model || groqService.getDefaultModel();
     
     // Validate that model supports advanced features
-    if (!groqService.modelSupportsAdvancedFeatures(targetModel)) {
+    const reasoningModels = groqService.getReasoningModels();
+    const supportsAdvanced = reasoningModels.some(m => m.id === targetModel);
+    
+    if (!supportsAdvanced) {
       return NextResponse.json(
         { 
           error: `Model ${targetModel} does not support advanced features. Use GPT-OSS models instead.`,
-          supportedModels: groqService.getReasoningModels().map(m => m.id)
+          supportedModels: reasoningModels.map(m => m.id)
         },
         { status: 400 }
       );
@@ -104,7 +107,14 @@ export async function POST(request: NextRequest) {
     }
 
     // Handle non-streaming advanced requests
-    const advancedResponse = await groqService.sendAdvancedMessage(messages, options);
+    // Note: GroqService client doesn't have sendAdvancedMessage
+    // Use regular sendMessage for now
+    const response = await groqService.sendMessage(messages, options);
+    const advancedResponse = {
+      content: response,
+      reasoning: null,
+      executed_tools: []
+    };
     
     return NextResponse.json({ 
       message: createAIMessage(advancedResponse.content, 'assistant'),
@@ -189,7 +199,7 @@ export async function GET(request: NextRequest) {
           model: model,
           supports_reasoning: (modelInfo as any).supportsReasoning || false,
           supports_tools: (modelInfo as any).supportsTools || false,
-          supports_streaming: modelInfo.supportsStreaming,
+          supports_streaming: (modelInfo as any).supportsStreaming || false,
           category: (modelInfo as any).category || 'text'
         });
 

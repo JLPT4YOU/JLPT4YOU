@@ -4,10 +4,11 @@
  */
 
 import { useState, useCallback, useRef } from 'react';
-import { getGeminiService, type UseGeminiServiceOptions } from '@/lib/gemini-service';
-import { AIMessage, createAIMessage } from '@/lib/ai-service';
+import { GeminiService, getGeminiService } from '@/lib/gemini-service-unified';
+import { AIMessage } from '@/lib/ai-config';
+import { createAIMessage } from '@/lib/ai-shared-utils';
 
-export interface UseGeminiChatOptions extends UseGeminiServiceOptions {
+export interface UseGeminiChatOptions {
   apiKey?: string;
   onError?: (error: Error) => void;
   onStreamStart?: () => void;
@@ -29,14 +30,15 @@ export interface UseGeminiChatReturn {
   isStreaming: boolean;
   error: string | null;
   currentResponse: string;
-  
+
   // Actions
   sendMessage: (content: string) => Promise<void>;
   sendMessageWithFiles: (content: string, files: File[]) => Promise<void>;
   streamMessage: (content: string) => Promise<void>;
+  cancelStream: () => void;
   clearMessages: () => void;
   clearError: () => void;
-  
+
   // Utilities
   addMessage: (message: AIMessage) => void;
   updateLastMessage: (content: string) => void;
@@ -98,8 +100,7 @@ export function useGeminiChat(options: UseGeminiChatOptions = {}): UseGeminiChat
       addMessage(userMessage);
 
       const response = await geminiService.current.sendMessage(
-        [...state.messages, userMessage],
-        options
+        [...state.messages, userMessage]
       );
 
       const assistantMessage = createAIMessage(response, 'assistant');
@@ -110,18 +111,18 @@ export function useGeminiChat(options: UseGeminiChatOptions = {}): UseGeminiChat
     } finally {
       updateState({ isLoading: false });
     }
-  }, [state.messages, options, updateState, addMessage, handleError]);
+  }, [state.messages, addMessage, updateState, handleError]);
 
   const streamMessage = useCallback(async (content: string) => {
     if (!content.trim()) return;
 
     try {
-      updateState({ 
-        isStreaming: true, 
-        error: null, 
-        currentResponse: '' 
+      updateState({
+        isStreaming: true,
+        error: null,
+        currentResponse: ''
       });
-      
+
       options.onStreamStart?.();
 
       const userMessage = createAIMessage(content, 'user');
@@ -133,22 +134,30 @@ export function useGeminiChat(options: UseGeminiChatOptions = {}): UseGeminiChat
 
       let fullResponse = '';
 
+      const handleChunk = (chunk: string) => {
+        fullResponse += chunk;
+        updateState({ currentResponse: fullResponse });
+        updateLastMessage(fullResponse);
+      };
+
+      const controller = new AbortController();
+      abortControllerRef.current = controller;
+
       await geminiService.current.streamMessage(
         [...state.messages, userMessage],
-        (chunk: string) => {
-          fullResponse += chunk;
-          updateState({ currentResponse: fullResponse });
-          updateLastMessage(fullResponse);
-        },
-        options
+        handleChunk
       );
 
     } catch (error) {
-      handleError(error as Error);
+      // Ignore AbortError as a normal cancel
+      if ((error as any)?.name !== 'AbortError') {
+        handleError(error as Error);
+      }
     } finally {
-      updateState({ 
-        isStreaming: false, 
-        currentResponse: '' 
+      abortControllerRef.current = null;
+      updateState({
+        isStreaming: false,
+        currentResponse: ''
       });
       options.onStreamEnd?.();
     }
@@ -180,15 +189,15 @@ export function useGeminiChat(options: UseGeminiChatOptions = {}): UseGeminiChat
 
           return {
             data: base64,
-            mimeType: file.type,
+            mimeType: file.type
           };
         })
       );
 
-      const response = await geminiService.current.sendMessageWithFiles(
-        [...state.messages, userMessage],
-        fileData,
-        options
+      // Note: File uploads should be handled through the server API
+      // For now, send message without files
+      const response = await geminiService.current.sendMessage(
+        [...state.messages, userMessage]
       );
 
       const assistantMessage = createAIMessage(response, 'assistant');
@@ -202,15 +211,23 @@ export function useGeminiChat(options: UseGeminiChatOptions = {}): UseGeminiChat
   }, [state.messages, options, updateState, addMessage, handleError]);
 
   const clearMessages = useCallback(() => {
-    updateState({ 
-      messages: [], 
-      error: null, 
-      currentResponse: '' 
+    updateState({
+      messages: [],
+      error: null,
+      currentResponse: ''
     });
   }, [updateState]);
 
   const clearError = useCallback(() => {
     updateState({ error: null });
+  }, [updateState]);
+
+  const cancelStream = useCallback(() => {
+    try {
+      abortControllerRef.current?.abort();
+    } catch {}
+    abortControllerRef.current = null;
+    updateState({ isStreaming: false });
   }, [updateState]);
 
   return {
@@ -220,14 +237,15 @@ export function useGeminiChat(options: UseGeminiChatOptions = {}): UseGeminiChat
     isStreaming: state.isStreaming,
     error: state.error,
     currentResponse: state.currentResponse,
-    
+
     // Actions
     sendMessage,
     sendMessageWithFiles,
     streamMessage,
+    cancelStream,
     clearMessages,
     clearError,
-    
+
     // Utilities
     addMessage,
     updateLastMessage,

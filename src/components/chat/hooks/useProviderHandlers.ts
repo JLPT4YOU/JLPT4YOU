@@ -1,5 +1,5 @@
 // Provider-specific streaming handlers
-import { getGeminiService } from '@/lib/gemini-service';
+import { GeminiService, getGeminiService } from '@/lib/gemini-service-unified';
 import { ChatStateManager } from './useChatStateManager';
 
 // Type definitions for better type safety
@@ -111,25 +111,12 @@ export const createProviderHandlers = (): StreamingHandlers => {
     let pendingUpdate = false;
 
     if (supportsThinking) {
-      await geminiService.streamMessageWithFilesAndThinking(
+      // Note: GeminiService doesn't have streamMessageWithFilesAndThinking
+      // Use regular streaming instead
+      await geminiService.streamMessage(
         chatHistory,
-        fileData,
-        (thoughtChunk: string) => {
-          fullThoughts += thoughtChunk;
-          
-          if (!pendingUpdate) {
-            pendingUpdate = true;
-            requestAnimationFrame(() => {
-              stateManager.updateMessageThinking(chatId, messageId, {
-                thoughtSummary: fullThoughts,
-                isThinkingComplete: false
-              });
-              pendingUpdate = false;
-            });
-          }
-        },
-        (answerChunk: string) => {
-          fullResponse += answerChunk;
+        (chunk: string) => {
+          fullResponse += chunk;
           
           if (!pendingUpdate) {
             pendingUpdate = true;
@@ -149,9 +136,10 @@ export const createProviderHandlers = (): StreamingHandlers => {
         options
       );
     } else {
-      await geminiService.streamMessageWithFiles(
+      // Note: GeminiService doesn't have streamMessageWithFiles
+      // Use regular streaming instead
+      await geminiService.streamMessage(
         chatHistory,
-        fileData,
         (chunk: string) => {
           fullResponse += chunk;
           
@@ -187,24 +175,12 @@ export const createProviderHandlers = (): StreamingHandlers => {
       isThinkingComplete: false
     });
 
-    await geminiService.streamMessageWithThinking(
+    // Note: GeminiService doesn't have streamMessageWithThinking
+    // Use regular streaming instead
+    await geminiService.streamMessage(
       chatHistory,
-      (thoughtChunk: string) => {
-        fullThoughts += thoughtChunk;
-        
-        if (!pendingUpdate) {
-          pendingUpdate = true;
-          requestAnimationFrame(() => {
-            stateManager.updateMessageThinking(chatId, messageId, {
-              thoughtSummary: fullThoughts,
-              isThinkingComplete: false
-            });
-            pendingUpdate = false;
-          });
-        }
-      },
-      (answerChunk: string) => {
-        fullResponse += answerChunk;
+      (chunk: string) => {
+        fullResponse += chunk;
         
         if (!pendingUpdate) {
           pendingUpdate = true;

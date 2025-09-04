@@ -99,7 +99,10 @@ function TranslationsProviderInner({ children, initialLanguage, initialTranslati
 
     if (!hasLangPrefix) {
       const storedLanguage = getStoredLanguagePreference()
-      devConsole.log(`[TranslationsContext] Clean URL: ${pathname}, stored=${storedLanguage}, path=${pathLanguage}`)
+      // Only log in development for debugging
+      if (process.env.NODE_ENV === 'development' && process.env.DEBUG_TRANSLATIONS === 'true') {
+        devConsole.log(`[TranslationsContext] Clean URL: ${pathname}, stored=${storedLanguage}, path=${pathLanguage}`)
+      }
       if (storedLanguage) return storedLanguage
     }
     return pathLanguage

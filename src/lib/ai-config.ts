@@ -46,7 +46,6 @@ export const DEFAULT_AI_SETTINGS = {
   systemPrompt: `You are iRIN, an AI assistant and teacher from the JLPT4YOU learning platform.
 
 While your specialty is Japanese language learning and JLPT exam preparation, you are a versatile AI who can discuss and help with any topic. You can engage in conversations about:
-- Japanese language learning (your specialty)
 - General knowledge and various subjects
 - Creative discussions and problem-solving
 - Educational support across different topics
@@ -99,25 +98,26 @@ export abstract class BaseAIService implements AIService {
   /**
    * Get API key from localStorage with provider-specific key
    */
-  /**
-   * Previously read API key from browser localStorage. For security reasons we no
-   * longer persist API keys on the client – they live only on the server,
-   * encrypted at rest. Always return null on the client.
-   */
   protected getApiKeyFromStorage(): string | null {
-    return null;
+    if (typeof window === 'undefined') return null;
+    try {
+      const key = localStorage.getItem(`ai:${this.storageKeyPrefix}:apiKey`);
+      return key || null;
+    } catch {
+      return null;
+    }
   }
 
   /**
    * Save API key to localStorage with provider-specific key
    */
-  /**
-   * NO-OP – we intentionally do NOT write API keys to localStorage anymore.
-   * Keys are stored encrypted in Supabase and retrieved only on the server.
-   */
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   protected saveApiKeyToStorage(apiKey: string): void {
-    /* intentionally empty */
+    if (typeof window === 'undefined') return;
+    try {
+      localStorage.setItem(`ai:${this.storageKeyPrefix}:apiKey`, apiKey);
+    } catch {
+      // ignore write errors (private mode, quotas, policies)
+    }
   }
 
   /**

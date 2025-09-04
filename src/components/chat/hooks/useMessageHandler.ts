@@ -206,14 +206,17 @@ export const useMessageHandler = (props: UseMessageHandlerProps): UseMessageHand
 
       if (isGPTOSS) {
         // Always enable tools for GPT-OSS models
-        groqOptions.enable_code_interpreter = true;
-        groqOptions.enable_browser_search = true;
+        groqOptions.tools = [
+          { type: 'code_interpreter' },
+          { type: 'browser_search' }
+        ];
 
         // Add reasoning effort if thinking is enabled
         if (enableThinking) {
+          groqOptions.include_reasoning = true; // Enable reasoning for GPT-OSS models
           groqOptions.reasoning_effort = advancedFeatures?.reasoningEffort || 'medium';
+          groqOptions.enableThinking = true; // Flag for streaming handler
           // Note: reasoning_format is NOT supported by OpenAI GPT-OSS models
-          // Only add for other models that support it
           if (!modelToUse.includes('openai/gpt-oss')) {
             groqOptions.reasoning_format = 'raw';
           }
@@ -265,39 +268,41 @@ export const useMessageHandler = (props: UseMessageHandlerProps): UseMessageHand
       // Prepare provider settings
       const { currentService, currentProviderType, modelToUse } = prepareProviderSettings();
 
-      // Check if any message has files
+      // Check if any message has files and convert them
       const hasFiles = fileProcessor.hasFiles(messages);
-
+      let fileData: any[] = [];
+      
+      if (hasFiles) {
+        // Convert files to base64 for sending
+        fileData = await fileProcessor.convertFilesToBase64(messages);
+      }
 
       // Prepare chat history for AI
       const chatHistory = prepareChatHistory(messages);
 
       // Create options based on current provider
       const options = prepareProviderOptions(messages, currentProviderType, modelToUse);
+      
+      // Add files to options for Gemini provider
+      if (currentProviderType === 'gemini' && fileData.length > 0) {
+        options.files = fileData;
+      }
 
       // Check if current provider and model supports thinking
       const supportsThinkingFeature = aiProviderManager.current.supportsFeature('thinking');
       const modelInfo = currentProviderType === 'gemini' ? getModelInfo(selectedModel) : null;
       const supportsThinkingMode = Boolean(supportsThinkingFeature && modelInfo?.supportsThinking && enableThinking);
 
-      // Handle files if present (only for Gemini)
-      if (hasFiles && currentProviderType === 'gemini') {
-        if (process.env.NODE_ENV === 'development') {
-
-        }
-        if (!modelInfo) {
-          throw new Error(`Model info not found for ${selectedModel}`);
-        }
-        const fileData = await fileProcessor.processFilesForGemini(messages, modelInfo, modelToUse);
-        await streamingHandlers.handleGeminiWithFiles(chatId, aiMessage, chatHistory, fileData, options, supportsThinkingMode, chatStateManager);
-        return; // Exit early after handling files
-      }
-
-      if (supportsThinkingMode && currentProviderType === 'gemini') {
-        await streamingHandlers.handleGeminiThinking(chatId, aiMessage, chatHistory, options, chatStateManager);
-      } else {
-        await streamingHandlers.handleRegularStreaming(chatId, aiMessage, chatHistory, options, currentService, chatStateManager);
-      } // End of else block for regular streaming
+      // Unified streaming path via backend proxy (handles both regular and thinking modes server-side)
+      await streamingHandlers.handleRegularStreaming(
+        chatId,
+        aiMessage,
+        chatHistory,
+        options,
+        currentService,
+        chatStateManager,
+        fileData
+      )
 
     } catch (error) {
       if (process.env.NODE_ENV === 'development') {

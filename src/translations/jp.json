@@ -28,6 +28,8 @@
     "error": "エラーが発生しました",
     "retry": "再試行",
     "close": "閉じる",
+    "saving": "保存中...",
+    "saved": "保存しました！",
     "back": "戻る",
     "next": "次へ",
     "previous": "前へ",
@@ -37,7 +39,8 @@
     "continue": "続行",
     "instruction": "上記のオプションから選択して開始してください",
     "preview": "プレビュー",
-    "hide": "非表示"
+    "hide": "非表示",
+    "limit": "件数"
   },
   "landingChat": {
     "bubble": {
@@ -119,7 +122,7 @@
       },
       {
         "problem": "講師料金が月数万円",
-        "solution": "月額わずか$1.99で24/7 AIガイダンス"
+        "solution": "AI指導24/7でたった$2.49/月"
       },
       {
         "problem": "教材が多すぎて効果的でない学習",
@@ -132,7 +135,7 @@
     "solutionTitle": "JLPT4YOUが提供する解決策",
     "finalProblem": "勉強しても上達しない、教材が散乱、学費が高い？",
     "finalSolution": "JLPT4YOUがスマートAI、質の高い教材、手頃な価格ですべて解決！",
-    "priceComparison": "月額わずか$1.99 - タピオカドリンク1杯より安い 🧋"
+    "priceComparison": "たった$2.49/月 - タピオカティーより安い 🧋"
   },
   "pricing": {
     "title": "シンプルな料金体系",
@@ -140,35 +143,37 @@
     "free": {
       "name": "無料",
       "price": "$0",
-      "period": "/月",
-      "description": "初心者向け",
+      "period": "/生涯",
+      "description": "基本コンテンツへの生涯アクセス",
       "features": [
-        "月5回の試験",
-        "基本的なN5-N4語彙",
-        "N5-N4文法",
-        "基本的な結果レポート"
+        "N5-N4全コンテンツ生涯利用",
+        "JLPT N5-N4完全試験",
+        "N5-N4語彙詳細",
+        "N5-N4文法完全版",
+        "N5-N4教科書"
       ],
       "limitations": [
-        "AI解説なし",
-        "進捗追跡なし",
-        "上級教材なし"
+        "AIサポートなし",
+        "独占映画コンテンツなし",
+        "運転免許試験練習なし"
       ],
       "button": "無料で始める"
     },
     "premium": {
       "name": "プレミアム",
-      "price": "$1.99",
+      "price": "$2.49",
       "period": "/月",
       "badge": "おすすめ",
       "description": "完全な学習体験",
       "features": [
-        "無制限の試験",
-        "完全なN5-N1語彙",
-        "詳細なN5-N1文法",
-        "iRIN先生AI解説",
-        "詳細な進捗追跡",
-        "独占教材ライブラリ",
-        "優先サポート"
+        "N5からN1まで全コンテンツ",
+        "無制限iRIN AI",
+        "JLPT N5-N1完全試験",
+        "日本運転免許試験練習",
+        "独占映画コンテンツ",
+        "継続的に更新される教科書",
+        "N5-N1語彙・文法詳細",
+        "24/7優先サポート"
       ],
       "button": "プレミアムにアップグレード"
     }
@@ -279,13 +284,6 @@
       "register": "アカウント作成",
       "forgotPassword": "パスワードを忘れた場合"
     },
-
-
-
-
-
-
-
     "subtitles": {
       "login": "JLPT4YOUへようこそ",
       "register": "日本語学習の旅を始めましょう",
@@ -383,7 +381,6 @@
     "errors": {
       "general": "エラーが発生しました。もう一度お試しください。",
       "loginFailed": "ユーザー名またはパスワードが正しくありません",
-
       "emailExists": "このメールアドレスは既に使用されています",
       "resendFailed": "メールの再送信に失敗しました。もう一度お試しください。",
       "registrationError": "登録中にエラーが発生しました。もう一度お試しください。",
@@ -450,7 +447,11 @@
       },
       "settings": {
         "title": "設定",
-        "description": "アカウント設定"
+        "description": "アカウントのカスタマイズ"
+      },
+      "movie": {
+        "title": "映画",
+        "description": "日本語学習映画を見る"
       },
       "resultsDemo": {
         "title": "結果デモ",
@@ -536,7 +537,6 @@
       "incorrect": "不正解",
       "flagged": "フラグ付き"
     },
-
     "question": {
       "number": "問題{number}",
       "details": "詳細",
@@ -563,8 +563,8 @@
     "selectLevel": "JLPTレベルを選択",
     "testTypes": {
       "official": {
-        "title": "JLPT",
-        "description": "公式JLPTテスト",
+        "title": "JLPT4YOU - 日本語能力試験 N5 N4 N3 N2 N1 無料練習問題",
+        "description": "AI搭載の最先端JLPT学習プラットフォーム。全レベル対応の完全無料オンライン日本語学習サイト。詳細な解説付き。",
         "subtitle": "国際標準テスト"
       },
       "custom": {
@@ -893,7 +893,6 @@
       "confirm": "提出する",
       "cancel": "続行"
     },
-
     "timer": {
       "timeUp": "時間切れ",
       "autoSubmit": "自動提出"
@@ -956,14 +955,14 @@
       "cancelButton": "キャンセル"
     }
   },
-
   "pageTitle": {
-    "home": "ホーム",
+    "home": "JLPT練習問題オンライン - ホーム",
     "examResults": "試験結果",
     "reviewAnswers": "解答確認",
-    "study": "学習",
-    "studyTheory": "理論",
-    "studyPractice": "実践"
+    "study": "日本語オンライン学習 - 漢字・文法・語彙",
+    "jlptExercise": "JLPT練習問題 N5 N4 N3 N2 N1 - 問題集",
+    "jlptTestHistory": "JLPT学習履歴 - 進捗管理",
+    "drivingTestHistory": "日本運転免許試験履歴"
   },
   "pageDescription": {
     "home": "ホーム - オンラインJLPT対策と運転免許試験",
@@ -1230,6 +1229,53 @@
     }
   },
   "chat": {
+    "prompts": {
+      "aiLanguage": {
+        "title": "AI言語",
+        "placeholder": "AI言語を選択",
+        "customPlaceholder": "希望の言語を入力（例：スペイン語、フランス語、ドイツ語）",
+        "options": {
+          "auto": "自動",
+          "vietnamese": "ベトナム語",
+          "english": "英語",
+          "japanese": "日本語",
+          "custom": "カスタム"
+        }
+      },
+      "personalization": {
+        "title": "パーソナライゼーション",
+        "preferredName": {
+          "label": "希望する名前",
+          "placeholder": "希望する名前を入力してください"
+        },
+        "desiredTraits": {
+          "label": "望ましい特性",
+          "placeholder": "例：フレンドリー、ユーモラス、フォーマル"
+        },
+        "personalInfo": {
+          "label": "個人情報",
+          "placeholder": "より良い応答のために個人情報を共有してください"
+        },
+        "additionalRequests": {
+          "label": "追加のリクエスト",
+          "placeholder": "AIへのその他のリクエスト"
+        }
+      },
+      "generate": {
+        "title": "プロンプトを生成",
+        "description": "設定に基づいてプロンプトを生成します。",
+        "button": "生成",
+        "buttonLoading": "生成中..."
+      },
+      "generated": {
+        "title": "生成されたプロンプト",
+        "description": "設定に基づいて生成されたプロンプトはこちらです。"
+      },
+      "buttons": {
+        "reset": "リセット",
+        "save": "保存"
+      }
+    },
     "welcomeMessage": "iRIN先生からJLPT学習サポートを受けるために会話を始めてください",
     "inputPlaceholder": "メッセージを入力...",
     "userLabel": "あなた",
@@ -1318,7 +1364,6 @@
           "successMessage": "✅ リセットが正常に完了しました！\n\n• カスタムプロンプト: 削除済み\n• 言語設定: リセット済み\n• コアiRIN: 保持"
         }
       }
-
     },
     "loading": "iRIN先生を読み込み中...",
     "languages": {
@@ -1334,7 +1379,6 @@
     "startNewChat": "新しいチャットを始めてください",
     "inputHelper": "Enterで送信、Shift + Enterで改行",
     "characterCount": "{{count}}文字",
-
     "newChatTitle": "新しいチャット",
     "generatingTitle": "タイトルを生成中...",
     "editTitle": "タイトルを編集",
@@ -1354,7 +1398,15 @@
       "validationError": "無効な入力が提供されました。データを確認してもう一度お試しください。"
     },
     "keywords": {
-      "programming": ["コード", "プログラミング", "計算", "アルゴリズム", "関数", "スクリプト", "プログラム"]
+      "programming": [
+        "コード",
+        "プログラミング",
+        "計算",
+        "アルゴリズム",
+        "関数",
+        "スクリプト",
+        "プログラム"
+      ]
     }
   },
   "review": {
@@ -1387,7 +1439,42 @@
         "title": "日本語理論",
         "subtitle": "基礎知識と基本"
       },
-      "comingSoon": "機能開発中です。後でお戻りください！"
+      "comingSoon": "機能開発中です。後でお戻りください！",
+      "vocabulary": {
+        "title": "語彙",
+        "description": "レベル別に語彙を学ぶ",
+        "card": {
+          "ariaLabel": "語彙レベル {level} を学ぶ"
+        },
+        "pageTitle": "JLPT {level} 語彙",
+        "pageSubtitle": "レベル別に語彙を学ぶ",
+        "search": {
+          "placeholder": "語彙または意味を検索 (JP/EN/VN)",
+          "clear": "クリア",
+          "noResults": "語彙が見つかりません"
+        }
+      },
+      "grammar": {
+        "title": "文法",
+        "description": "レベル別に文法を学ぶ",
+        "card": {
+          "ariaLabel": "文法レベル {level} を学ぶ",
+          "clickForDetails": "詳細を見る"
+        },
+        "pageTitle": "JLPT {level} 文法",
+        "pageSubtitle": "レベル別に文法パターンを学ぶ",
+        "search": {
+          "placeholder": "文法または意味を検索 (JP/EN/VN)",
+          "clear": "クリア",
+          "noResults": "文法が見つかりません"
+        },
+        "detail": {
+          "structure": "構造",
+          "vietnameseMeaning": "ベトナム語の意味",
+          "englishMeaning": "英語の意味",
+          "examples": "例文"
+        }
+      }
     },
     "practice": {
       "page": {
@@ -1451,7 +1538,6 @@
           "grammarAriaLabel": "AI文法クイズ"
         }
       },
-
       "generator": {
         "title": "AI搭載練習問題生成",
         "description": "AI生成問題で練習セッションをカスタマイズ",
@@ -1472,7 +1558,8 @@
           "easy": "易しい",
           "medium": "普通",
           "hard": "難しい",
-          "extremely_hard": "超難問"
+          "extremely_hard": "超難しい",
+          "extremely": "極めて"
         },
         "thinking": {
           "off": "オフ",
@@ -1508,7 +1595,6 @@
           "tip4": "時間をかけて進歩を追跡しましょう"
         }
       },
-
       "exercise": {
         "feedback": {
           "correct": "正解です",
@@ -1963,7 +2049,6 @@
       "search": {
         "placeholder": "書籍、著者を検索..."
       },
-
       "noResults": {
         "title": "書籍が見つかりません",
         "description": "検索キーワードやフィルターを変更してください"
@@ -2063,11 +2148,78 @@
     }
   },
   "seo": {
-    "title": "無料JLPT練習問題 N1-N5 | JLPT4YOU - AI日本語学習",
-    "description": "JLPT（日本語能力試験）N5〜N1対応のオンライン練習問題サイト。数千問、解答と詳しい解説付きの無料模擬試験。JLPT4YOUで、今日から合格を目指しましょう！",
+    "title": "JLPT練習問題 N5 N4 N3 N2 N1 無料オンライン | 日本語能力試験対策 - JLPT4YOU",
+    "description": "日本語能力試験(JLPT) N5からN1まで完全無料オンライン学習。10,000問以上、過去問、漢字、文法、語彙、読解、聴解。AI講師による詳細解説、合格率アップ。今すぐ無料体験！",
+    "keywords": "jlpt 練習問題, jlpt n5 n4 n3 n2 n1, 日本語能力試験, jlpt 過去問, 日本語学習 オンライン, jlpt 漢字, jlpt 文法, jlpt 語彙, jlpt4you, 日本語試験対策",
     "structuredData": {
       "title": "オンラインJLPT対策",
       "description": "AIサポート付き最高のJLPT対策サイト"
     }
+  },
+  "irin": {
+    "aiLanguage": {
+      "title": "iRINにどの言語でコミュニケーションを取ってほしいですか？",
+      "placeholder": "言語を選択",
+      "options": {
+        "auto": "自動検出",
+        "vietnamese": "ベトナム語",
+        "english": "英語",
+        "japanese": "日本語",
+        "custom": "カスタム"
+      },
+      "customPlaceholder": "希望する言語を入力（例：韓国語、フランス語、スペイン語...）"
+    },
+    "personalization": {
+      "title": "パーソナライゼーション設定",
+      "preferredName": {
+        "label": "iRINにどう呼ばれたいですか？",
+        "placeholder": "iRINに使ってほしい名前またはニックネーム"
+      },
+      "desiredTraits": {
+        "label": "iRINにどんな特徴を持たせたいですか？",
+        "placeholder": "iRINに望む性格や特徴を説明してください"
+      },
+      "personalInfo": {
+        "label": "iRINに他に知っておいてほしいことは？",
+        "placeholder": "より良いサポートのための個人情報（任意）"
+      },
+      "additionalRequests": {
+        "label": "追加のリクエスト",
+        "placeholder": "iRINに覚えておいてほしいことは他にありますか？（任意）"
+      }
+    },
+    "generate": {
+      "title": "カスタムプロンプトを生成",
+      "description": "入力内容に基づいて適切なプロンプトをAIが作成します",
+      "button": "プロンプトを生成",
+      "buttonLoading": "生成中..."
+    },
+    "generated": {
+      "title": "生成されたプロンプト",
+      "description": "これはあなた用に生成されたカスタムプロンプトです"
+    },
+    "footer": {
+      "note": "設定はローカルに保存され、セッション間で保持されます"
+    },
+    "buttons": {
+      "reset": "リセット",
+      "save": "保存"
+    },
+    "resetDialog": {
+      "title": "すべてのプロンプトと設定をリセット",
+      "description": "すべてのプロンプトと設定をリセットしてもよろしいですか？これにより：すべてのカスタムプロンプトが削除され、AI言語設定がリセットされ、フォームがデフォルトに戻ります。iRINのコアプロンプトは保持されます。",
+      "confirm": "すべてリセット",
+      "successMessage": "✅ リセット成功！\n\n• カスタムプロンプト：削除済み\n• 言語設定：リセット済み\n• コアiRIN：保持"
+    },
+    "loading": "iRINを読み込み中...",
+    "languages": {
+      "auto": "言語を自動検出",
+      "vietnamese": "ベトナム語",
+      "english": "英語",
+      "japanese": "日本語",
+      "custom": "カスタム"
+    },
+    "aiResponse": "こんにちは！JLPT4YOUプラットフォームのiRINです。私の専門は日本語ですが、あなたが興味のあるどんな話題でも話すことができます。「{{question}}」とお聞きになりましたね。今日は何について話しましょうか？",
+    "aiAssistant": "AIアシスタント"
   }
 }

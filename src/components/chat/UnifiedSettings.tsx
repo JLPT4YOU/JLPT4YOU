@@ -31,7 +31,7 @@ import { hasCustomPrompt } from '@/lib/prompt-storage';
 import { cn } from '@/lib/utils';
 import { ConfirmationDialog } from '@/components/ui/confirmation-dialog';
 import { createClient } from '@/utils/supabase/client';
-import { createSecureApiPayload, isWebCryptoSupported } from '@/lib/client-crypto-utils';
+
 
 // ✅ FIXED: Create supabase client instance
 const supabase = createClient();
@@ -67,8 +67,7 @@ export const UnifiedSettings: React.FC<UnifiedSettingsProps> = ({
     groq: 'idle'
   });
 
-  const [isSaving, setIsSaving] = useState(false);
-  const [showSavedMessage, setShowSavedMessage] = useState(false);
+
   const [fontSize, setFontSize] = useState<'small' | 'medium' | 'large' | 'extraLarge'>('medium');
   const { theme, setTheme } = useTheme();
   const { t } = useTranslations();
@@ -112,6 +111,8 @@ export const UnifiedSettings: React.FC<UnifiedSettingsProps> = ({
         // ✅ SECURITY FIX: Do NOT fetch decrypted keys on page load
         // This was causing API keys to appear in network traffic
         // Instead, we only load the status (whether keys exist or not)
+
+
       }
     } catch (error) {
       console.error('Failed to load key status:', error);
@@ -156,82 +157,7 @@ export const UnifiedSettings: React.FC<UnifiedSettingsProps> = ({
     setKeyValidationStatus(prev => ({ ...prev, [provider]: 'idle' }));
   };
 
-  const handleSave = async () => {
-    setIsSaving(true);
-    try {
-      const { data: { session } } = await supabase.auth.getSession();
 
-      if (!session?.user) {
-        throw new Error('User not authenticated');
-      }
-
-      // Save API keys to server
-      for (const provider of ['gemini', 'groq'] as ProviderType[]) {
-        const key = apiKeys[provider];
-        if (key.trim()) {
-          const headers: HeadersInit = {
-            'Content-Type': 'application/json'
-          };
-
-          if (session?.access_token) {
-            headers['Authorization'] = `Bearer ${session.access_token}`;
-          }
-
-          let requestBody: any;
-
-          // Try to use client-side encryption if supported
-          if (isWebCryptoSupported() && session.user.email) {
-            try {
-              const securePayload = await createSecureApiPayload(
-                key.trim(),
-                provider as 'gemini' | 'groq',
-                session.user.id,
-                session.user.email
-              );
-
-              requestBody = {
-                encryptedKey: securePayload.encryptedKey,
-                checksum: securePayload.checksum,
-                timestamp: securePayload.timestamp
-              };
-            } catch (encryptError) {
-              requestBody = { key: key.trim() };
-            }
-          } else {
-            requestBody = { key: key.trim() };
-          }
-
-          const res = await fetch(`/api/user/keys/${provider}`, {
-            method: 'PUT',
-            headers,
-            body: JSON.stringify(requestBody)
-          });
-
-          if (res.ok) {
-            // ✅ SECURITY: Do NOT configure provider with API key here
-            // This would store the key in memory. Instead, just mark as valid.
-            // The AI service will fetch the key when actually needed for requests.
-
-            // Clear plaintext value from state once validated & configured
-            setApiKeys(prev => ({ ...prev, [provider]: '' }));
-            setKeyValidationStatus(prev => ({ ...prev, [provider]: 'valid' }));
-          } else {
-            const errorData = await res.text();
-            console.error(`API Error (${res.status}):`, errorData);
-            throw new Error(`Không thể lưu ${provider} key: ${res.status} - ${errorData}`);
-          }
-        }
-      }
-
-      // Show success message
-      setShowSavedMessage(true);
-      setTimeout(() => setShowSavedMessage(false), 2000);
-    } catch (error) {
-      console.error('Failed to save settings:', error);
-    } finally {
-      setIsSaving(false);
-    }
-  };
 
   const validateApiKey = async (provider: ProviderType, key: string) => {
     if (!key.trim()) {
@@ -261,29 +187,7 @@ export const UnifiedSettings: React.FC<UnifiedSettingsProps> = ({
           headers['Authorization'] = `Bearer ${session.access_token}`;
         }
 
-        let requestBody: any;
-
-        // Try to use client-side encryption if supported
-        if (isWebCryptoSupported() && session.user.email) {
-          try {
-            const securePayload = await createSecureApiPayload(
-              key.trim(),
-              provider as 'gemini' | 'groq',
-              session.user.id,
-              session.user.email
-            );
-
-            requestBody = {
-              encryptedKey: securePayload.encryptedKey,
-              checksum: securePayload.checksum,
-              timestamp: securePayload.timestamp
-            };
-          } catch (encryptError) {
-            requestBody = { key: key.trim() };
-          }
-        } else {
-          requestBody = { key: key.trim() };
-        }
+        const requestBody = { key: key.trim() };
 
         const res = await fetch(`/api/user/keys/${provider}`, {
           method: 'PUT',
@@ -295,6 +199,11 @@ export const UnifiedSettings: React.FC<UnifiedSettingsProps> = ({
           // ✅ SECURITY: Do NOT configure provider with API key here
           // This would store the key in memory. Instead, just mark as valid.
           setKeyValidationStatus(prev => ({ ...prev, [provider]: 'valid' }));
+
+          // ✅ FIX: Re-configure provider with the new key
+          const aiProviderManager = getAIProviderManager();
+          aiProviderManager.configureProvider(provider, key);
+
         } else {
           const errorData = await res.text();
           console.error(`API Error (${res.status}):`, errorData);
@@ -645,13 +554,7 @@ export const UnifiedSettings: React.FC<UnifiedSettingsProps> = ({
 
         {/* Footer */}
         <div className="flex items-center justify-between pt-4 border-t">
-          {/* Save Success Message */}
-          {showSavedMessage && (
-            <div className="flex items-center gap-2 text-sm text-green-600">
-              <div className="w-2 h-2 bg-green-600 rounded-full"></div>
-              {t ? t('chat.settings.saved') : 'Đã lưu'}
-            </div>
-          )}
+
         </div>
       </DialogContent>
 

@@ -72,7 +72,7 @@ export default function NotFound() {
       <div className="relative text-center max-w-2xl mx-auto w-full">
         {/* Large 404 */}
         <div className="mb-4 sm:mb-8">
-          <h1 className="text-[6rem] xs:text-[8rem] sm:text-[12rem] md:text-[16rem] lg:text-[20rem] font-black text-[#212121]/10 dark:text-[#E0E0E0]/10 leading-none select-none">
+          <h1 className="text-[6rem] xs:text-[8rem] sm:text-[12rem] md:text-[16rem] lg:text-[20rem] font-black text-foreground/10 leading-none select-none">
             404
           </h1>
         </div>
@@ -80,12 +80,12 @@ export default function NotFound() {
         {/* Content */}
         <div className="relative -mt-16 xs:-mt-20 sm:-mt-32 md:-mt-40 lg:-mt-48">
           {/* Title */}
-          <h2 className="text-xl xs:text-2xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-[#212121] dark:text-[#E0E0E0] mb-3 sm:mb-4 px-2">
+          <h2 className="text-xl xs:text-2xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-foreground mb-3 sm:mb-4 px-2">
             Có vẻ bạn đi nhấm hương thì phải! 🍃
           </h2>
 
           {/* Description */}
-          <p className="text-base xs:text-lg sm:text-lg md:text-xl text-[#666666] dark:text-white/60 mb-6 sm:mb-8 leading-relaxed px-2">
+          <p className="text-base xs:text-lg sm:text-lg md:text-xl text-muted-foreground mb-6 sm:mb-8 leading-relaxed px-2">
             Quay lại và cùng JLPT4YOU chinh phục N1 thôi nào! 📚✨
           </p>
 

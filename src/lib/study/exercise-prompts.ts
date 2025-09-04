@@ -20,11 +20,13 @@ interface ExercisePromptParams {
 export function generateExercisePrompt(params: ExercisePromptParams): string {
   const { level, type, count, difficulty = 'medium', materials, tags, explanationLanguage } = params;
 
-  // Get explanation language from settings or use override
-  const explainLanguage = explanationLanguage || getAICommunicationLanguage();
+  // Use provided language (from server) - no client-side fallback
+  const explainLanguage = explanationLanguage || 'auto';
+  console.log('[Exercise Prompt] Explanation language from server:', explainLanguage);
 
   // Map language to instruction text (shared)
   const languageInstruction = mapLanguageInstruction(explainLanguage);
+  console.log('[Exercise Prompt] Language instruction:', languageInstruction);
 
   // Format materials for the prompt
   const materialsText = materials.slice(0, 20).map(m => {
@@ -516,7 +518,7 @@ EXAMPLE (Few-shot) — DO NOT COPY, CREATE NEW PASSAGES:
     "correct": 0,
     "explanation": {
       "correct_answer": "段落全体が『毎朝〜通勤』について述べているため『筆者の朝の通勤習慣』が適切。",
-      "translation": "Chủ đề là thói quen đi làm buổi sáng của người viết.",
+      "translation": "(Question + correct option) translated to ${explainLanguage}",
       "why_correct": "キーワード『毎朝』『バス停』『会社に電話』が通勤習慣を示す。",
       "wrong_answers": {
         "option_0": "",
@@ -539,7 +541,7 @@ EXAMPLE (Few-shot) — DO NOT COPY, CREATE NEW PASSAGES:
     "correct": 0,
     "explanation": {
       "correct_answer": "文中の理由は『昨日は雨だったので』に対応。",
-      "translation": "Vì hôm qua trời mưa nên tôi ra khỏi nhà sớm hơn một chút.",
+      "translation": "(Question + correct option) translated to ${explainLanguage}",
       "why_correct": "接続表現『〜ので』が理由を明示。",
       "wrong_answers": {
         "option_0": "",
@@ -562,7 +564,7 @@ EXAMPLE (Few-shot) — DO NOT COPY, CREATE NEW PASSAGES:
     "correct": 0,
     "explanation": {
       "correct_answer": "『バスが遅れるときは、会社に電話して状況を伝えます。』とある。",
-      "translation": "Khi xe buýt trễ, tác giả gọi điện cho công ty để thông báo tình hình.",
+      "translation": "(Question + correct option) translated to ${explainLanguage}",
       "why_correct": "本文の明示情報に基づく。",
       "wrong_answers": {
         "option_0": "",
@@ -732,7 +734,7 @@ EXAMPLES (Few-shot) — DO NOT COPY, CREATE NEW QUESTIONS:
   "correct": 0,
   "explanation": {
     "correct_answer": "文脈規定（語彙の意味）。『上着を持って行けばよかった』→『寒い』が適切。",
-    "translation": "Hôm qua rất lạnh nên ước gì đã mang áo khoác.",
+    "translation": "(Question + correct option) translated to ${explainLanguage}",
     "why_correct": "『寒い』は気温の低さを表す形容詞で、上着と連動する自然な文脈。",
     "wrong_answers": {
       "option_0": "",
@@ -753,7 +755,7 @@ EXAMPLES (Few-shot) — DO NOT COPY, CREATE NEW QUESTIONS:
   "correct": 0,
   "explanation": {
     "correct_answer": "『資料』の一般的な読みは『しりょう』。",
-    "translation": "Hôm qua tôi quên tài liệu quan trọng của cuộc họp.",
+    "translation": "(Question + correct option) translated to ${explainLanguage}",
     "why_correct": "N3〜N2で頻出の語彙で、読みは固定的。",
     "wrong_answers": {
       "option_0": "",
@@ -854,7 +856,7 @@ EXAMPLES (Few-shot) — DO NOT COPY, CREATE NEW QUESTIONS:
   "correct": 0,
   "explanation": {
     "correct_answer": "『駅で待ち合わせる』場所＋『友だちと待ち合わせる』相手→『で／と』が自然。",
-    "translation": "Hẹn gặp bạn tại nhà ga.",
+    "translation": "(Question + correct option) translated to ${explainLanguage}",
     "why_correct": "助詞の用法（場所はで／相手はと）。",
     "wrong_answers": {
       "option_0": "",
@@ -875,7 +877,7 @@ EXAMPLES (Few-shot) — DO NOT COPY, CREATE NEW QUESTIONS:
   "correct": 0,
   "explanation": {
     "correct_answer": "『～て間もない』＝動作後の期間が短い。文脈と自然に合う。",
-    "translation": "Anh ấy quyết định du học không lâu sau khi đến Nhật.",
+    "translation": "(Question + correct option) translated to ${explainLanguage}",
     "why_correct": "文法形式の判断（文末と意味制約）。",
     "wrong_answers": {
       "option_0": "",

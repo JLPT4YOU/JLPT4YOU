@@ -12,7 +12,8 @@ import {
   Settings,
   Trophy,
   Infinity,
-  Book
+  Book,
+  Film
 } from "lucide-react";
 import { useAuth } from '@/contexts/auth-context-simple';
 import { useUserData } from '@/hooks/use-user-data'; // ✅ ADDED: Import user data hook
@@ -144,6 +145,14 @@ function HomeContent({ t, language }: HomeContentProps) {
       key: "settings",
       icon: Settings,
       href: "/settings",
+      bgColor: "bg-card",
+      textColor: "text-foreground"
+    },
+    {
+      id: 11,
+      key: "movie",
+      icon: Film,
+      href: "https://movie.jlpt4you.com",
       bgColor: "bg-card",
       textColor: "text-foreground"
     },

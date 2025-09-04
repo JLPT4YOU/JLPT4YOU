@@ -10,6 +10,7 @@ import { useTranslations } from '@/hooks/use-translations';
 import { GraduationCap, ChevronDown } from 'lucide-react';
 import { Message } from './index';
 import { Button } from '@/components/ui/button';
+import { getAIProviderManager } from '@/lib/ai-provider-manager';
 
 interface ChatInterfaceProps {
   className?: string;
@@ -47,6 +48,9 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const isUserAtBottomRef = useRef(true);
+
+
+
   const [showScrollButton, setShowScrollButton] = useState(false);
 
   const scrollToBottom = (behavior: ScrollBehavior = 'smooth') => {

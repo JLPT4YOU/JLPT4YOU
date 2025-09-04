@@ -119,7 +119,8 @@ export const createChatStateManager = (
   ) => {
     updateMessageInChat(chatId, messageId, msg => ({
       ...msg,
-      thinking: { ...msg.thinking, ...thinking }
+      thinking: { ...msg.thinking, ...thinking },
+      isStreaming: !thinking.isThinkingComplete
     }));
   };
 

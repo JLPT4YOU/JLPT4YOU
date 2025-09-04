@@ -70,18 +70,18 @@ export function ModernPricingPage({ translations }: ModernPricingPageProps) {
       name: t('pricing.premium.name'),
       description: t('pricing.premium.description'),
       price: {
-        monthly: 1.99,
-        yearly: 19.99 // Save ~17%
+        monthly: 2.49,
+        yearly: 24.99
       },
       originalPrice: {
         monthly: null,
-        yearly: 23.88
+        yearly: null
       },
       features: [
-        { text: t('pricing.premium.features.0'), included: true, highlight: true },
-        { text: t('pricing.premium.features.1'), included: true, highlight: true },
+        { text: t('pricing.premium.features.0'), included: true, highlight: false },
+        { text: t('pricing.premium.features.1'), included: true, highlight: false },
         { text: t('pricing.premium.features.2'), included: true, highlight: false },
-        { text: t('pricing.premium.features.3'), included: true, highlight: true },
+        { text: t('pricing.premium.features.3'), included: true, highlight: false },
         { text: t('pricing.premium.features.4'), included: true, highlight: false },
         { text: t('pricing.premium.features.5'), included: true, highlight: false },
         { text: t('pricing.premium.features.6'), included: true, highlight: false },
@@ -97,26 +97,6 @@ export function ModernPricingPage({ translations }: ModernPricingPageProps) {
     }
   ]
 
-  const testimonials = [
-    {
-      name: 'Nguyễn Văn A',
-      role: 'Đã đạt N2',
-      content: 'Premium giúp tôi tiết kiệm rất nhiều thời gian học tập với AI giải thích chi tiết.',
-      rating: 5
-    },
-    {
-      name: 'Trần Thị B',
-      role: 'Đang học N3',
-      content: 'Tài liệu độc quyền và không giới hạn bài thi thực sự đáng giá.',
-      rating: 5
-    },
-    {
-      name: 'Lê Văn C',
-      role: 'Mới bắt đầu',
-      content: 'iRIN AI như một gia sư riêng, giúp tôi hiểu sâu mọi câu hỏi.',
-      rating: 5
-    }
-  ]
 
   const handlePlanSelect = (planId: string) => {
     if (!user) {
@@ -367,48 +347,6 @@ export function ModernPricingPage({ translations }: ModernPricingPageProps) {
         </div>
       </div>
 
-      {/* Testimonials */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-24 pb-24">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-12"
-        >
-          <Badge variant="secondary" className="mb-4">
-            <Star className="w-3 h-3 mr-1" />
-            Người dùng yêu thích
-          </Badge>
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Hơn 10,000+ người học tin tưởng
-          </h2>
-        </motion.div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {testimonials.map((testimonial, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
-              className="rounded-xl p-6 bg-card border border-border/50"
-            >
-              <div className="flex gap-1 mb-4">
-                {[...Array(testimonial.rating)].map((_, i) => (
-                  <Star key={i} className="w-4 h-4 fill-yellow-500 text-yellow-500" />
-                ))}
-              </div>
-              <p className="text-sm mb-4 text-muted-foreground">
-                "{testimonial.content}"
-              </p>
-              <div>
-                <p className="font-semibold text-sm">{testimonial.name}</p>
-                <p className="text-xs text-muted-foreground">{testimonial.role}</p>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      </div>
     </div>
   )
 }

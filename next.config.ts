@@ -75,6 +75,13 @@ const nextConfig: NextConfig = {
     optimizeServerReact: true,
   },
 
+  // Reduce development noise
+  logging: {
+    fetches: {
+      fullUrl: process.env.NODE_ENV === 'production'
+    }
+  },
+
   // Image optimization for better Core Web Vitals
   images: {
     formats: ['image/webp', 'image/avif'],

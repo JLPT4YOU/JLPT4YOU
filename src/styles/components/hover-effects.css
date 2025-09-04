@@ -158,14 +158,15 @@
   box-shadow: none;
 }
 
-/* Button Focus - Subtle background change */
+/* Button Focus - Accessible ring, no background override to avoid contrast issues */
 .focus-button {
   transition: all 0.15s ease-out;
 }
 
 .focus-button:focus-visible {
   outline: none;
-  background-color: var(--primary-hover);
+  box-shadow: 0 0 0 2px var(--ring);
+  border-color: var(--ring);
 }
 
 

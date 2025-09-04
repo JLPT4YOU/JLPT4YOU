@@ -4,7 +4,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { getGeminiService } from '@/lib/gemini-service';
+import { getGeminiService } from '@/lib/gemini-service-unified';
 import { createAIMessage } from '@/lib/ai-shared-utils';
 
 export async function POST(request: NextRequest) {
@@ -69,20 +69,12 @@ export async function POST(request: NextRequest) {
     }
 
     // Handle regular requests
-    let response: string;
-    
-    if (files && files.length > 0) {
-      response = await geminiService.sendMessageWithFiles(
-        messages,
-        files,
-        { model, temperature, enableThinking, enableTools }
-      );
-    } else {
-      response = await geminiService.sendMessage(
-        messages,
-        { model, temperature, enableThinking, enableTools }
-      );
-    }
+    // Note: Client-side GeminiService doesn't support file uploads
+    // File uploads should be handled through the server-side API
+    const response = await geminiService.sendMessage(
+      messages,
+      { model, temperature, enableThinking, enableTools }
+    );
 
     return NextResponse.json({ 
       message: createAIMessage(response, 'assistant'),

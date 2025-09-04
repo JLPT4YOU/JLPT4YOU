@@ -14,16 +14,5 @@ export type { AIMessage } from './ai-config';
 // PlaceholderAIService removed - not used in production
 // Moved to trash: trash/ai-optimization-20250721-222554/unused-code/
 
-// Utility functions for AI integration
-export const createAIMessage = (content: string, role: 'user' | 'assistant' | 'system' = 'user'): AIMessage => ({
-  role,
-  content,
-  timestamp: new Date()
-});
-
-export const formatMessagesForAPI = (messages: AIMessage[]): any[] => {
-  return messages.map(msg => ({
-    role: msg.role,
-    content: msg.content
-  }));
-};
+// Re-export utility functions from ai-shared-utils to maintain backward compatibility
+export { createAIMessage, formatMessagesForAPI } from './ai-shared-utils';

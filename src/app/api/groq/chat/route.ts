@@ -4,7 +4,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { getGroqService } from '@/lib/groq-service';
+import { getGroqService } from '@/lib/groq-service-unified';
 import { createAIMessage } from '@/lib/ai-shared-utils';
 
 export async function POST(request: NextRequest) {
@@ -87,28 +87,14 @@ export async function POST(request: NextRequest) {
     // Handle regular requests
     let response: string;
     
-    // Check if model supports advanced features
-    if (groqService.modelSupportsAdvancedFeatures(model || groqService.getDefaultModel())) {
-      // Use advanced message method for GPT-OSS models
-      const advancedResponse = await groqService.sendAdvancedMessage(messages, options);
-      
-      return NextResponse.json({ 
-        message: createAIMessage(advancedResponse.content, 'assistant'),
-        reasoning: advancedResponse.reasoning,
-        executed_tools: advancedResponse.executed_tools,
-        model: model || groqService.getDefaultModel(),
-        advanced_features: true
-      });
-    } else {
-      // Use regular method for other models
-      response = await groqService.sendMessage(messages, options);
-      
-      return NextResponse.json({ 
-        message: createAIMessage(response, 'assistant'),
-        model: model || groqService.getDefaultModel(),
-        advanced_features: false
-      });
-    }
+    // Use regular message method (client-side GroqService doesn't have advanced features)
+    response = await groqService.sendMessage(messages, options);
+    
+    return NextResponse.json({ 
+      message: createAIMessage(response, 'assistant'),
+      model: model || groqService.getDefaultModel(),
+      advanced_features: false
+    });
 
   } catch (error) {
     console.error('Groq API route error:', error);
@@ -159,9 +145,12 @@ export async function GET(request: NextRequest) {
           );
         }
         
+        const reasoningModels = groqService.getReasoningModels();
+        const supportsAdvanced = reasoningModels.some(m => m.id === model);
+        
         return NextResponse.json({
           model,
-          supportsAdvancedFeatures: groqService.modelSupportsAdvancedFeatures(model)
+          supportsAdvancedFeatures: supportsAdvanced
         });
 
       default:

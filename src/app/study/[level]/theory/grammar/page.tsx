@@ -129,8 +129,9 @@ function Content({ language, translations, t }: ContentProps) {
             setQuery={setQuery}
             limit={limit}
             setLimit={onChangeLimit}
+            t={t}
           />
-          <GrammarGrid items={items} loading={loading} error={error} onItemClick={setSelectedGrammar} />
+          <GrammarGrid items={items} loading={loading} error={error} onItemClick={setSelectedGrammar} t={t} />
           <FooterControls
             loading={loading}
             hasNext={hasNext}
@@ -143,11 +144,13 @@ function Content({ language, translations, t }: ContentProps) {
               void (isSearchMode ? fetchSearchGrammar(true) : fetchLevelGrammar(true))
             }}
             onNext={() => onLoadMore()}
+            t={t}
           />
           {selectedGrammar && (
             <GrammarDetailModal
               grammar={selectedGrammar}
               onClose={() => setSelectedGrammar(null)}
+              t={t}
             />
           )}
         </div>
@@ -178,12 +181,14 @@ function Controls({
   query,
   setQuery,
   limit,
-  setLimit
+  setLimit,
+  t
 }: {
   query: string
   setQuery: (v: string) => void
   limit: number
   setLimit: (n: number) => void
+  t: (key: string) => string
 }) {
   return (
     <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 mb-6">
@@ -191,7 +196,7 @@ function Controls({
         <input
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search grammar or meaning (JP/EN/VN)"
+          placeholder={t('study.grammar.search.placeholder')}
           className="w-full px-4 py-2 rounded-xl bg-card text-foreground placeholder:text-muted-foreground/70 border border-border"
         />
         {query && (
@@ -199,12 +204,12 @@ function Controls({
             className="px-3 py-2 rounded-xl bg-muted text-foreground border border-border"
             onClick={() => setQuery('')}
           >
-            Clear
+            {t('study.grammar.search.clear')}
           </button>
         )}
       </div>
       <div className="flex items-center gap-2">
-        <label className="text-sm text-muted-foreground">Limit</label>
+        <label className="text-sm text-muted-foreground">{t('common.limit')}</label>
         <select
           value={limit}
           onChange={(e) => setLimit(Number(e.target.value))}
@@ -219,17 +224,18 @@ function Controls({
   )
 }
 
-function GrammarGrid({ items, loading, error, onItemClick }: {
+function GrammarGrid({ items, loading, error, onItemClick, t }: {
   items: JLPTGrammar[];
   loading: boolean;
   error: string | null;
-  onItemClick: (item: JLPTGrammar) => void
+  onItemClick: (item: JLPTGrammar) => void;
+  t: (key: string) => string
 }) {
   if (error) return <div className="text-center text-destructive">{error}</div>
   return (
     <>
       {items.length === 0 && !loading ? (
-        <div className="text-center text-muted-foreground">No grammar found</div>
+        <div className="text-center text-muted-foreground">{t('study.grammar.search.noResults')}</div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-6">
           {items.map((g, idx) => (
@@ -246,21 +252,21 @@ function GrammarGrid({ items, loading, error, onItemClick }: {
               </div>
               <div className="flex items-center justify-between">
                 <div className="text-xs bg-muted rounded-full px-2 py-1">{g.level}</div>
-                <div className="text-xs text-muted-foreground">Click for details</div>
+                <div className="text-xs text-muted-foreground">{t('study.grammar.card.clickForDetails')}</div>
               </div>
             </div>
           ))}
         </div>
       )}
       {loading && (
-        <div className="text-center text-muted-foreground mb-6">Loading...</div>
+        <div className="text-center text-muted-foreground mb-6">{t('common.loading')}</div>
       )}
     </>
   )
 }
 
-function FooterControls({ loading, hasNext, page, limit, total, onPrev, onNext }:
-  { loading: boolean; hasNext: boolean; page: number; limit: number; total: number | null; onPrev: () => void; onNext: () => void }) {
+function FooterControls({ loading, hasNext, page, limit, total, onPrev, onNext, t }:
+  { loading: boolean; hasNext: boolean; page: number; limit: number; total: number | null; onPrev: () => void; onNext: () => void; t: (key: string) => string }) {
   return (
     <div className="flex items-center justify-center gap-3">
       <button
@@ -268,7 +274,7 @@ function FooterControls({ loading, hasNext, page, limit, total, onPrev, onNext }
         onClick={onPrev}
         className="px-5 py-2 rounded-xl bg-card border border-border text-foreground disabled:opacity-50"
       >
-        Previous
+        {t('common.previous')}
       </button>
       <div className="text-sm text-muted-foreground">
         Page {Math.max(1, page || 1)}{total ? ` • ~${total} items` : ''} • {limit} / page
@@ -278,13 +284,13 @@ function FooterControls({ loading, hasNext, page, limit, total, onPrev, onNext }
         onClick={onNext}
         className="px-5 py-2 rounded-xl bg-card border border-border text-foreground disabled:opacity-50"
       >
-        Next
+        {t('common.next')}
       </button>
     </div>
   )
 }
 
-function GrammarDetailModal({ grammar, onClose }: { grammar: JLPTGrammar; onClose: () => void }) {
+function GrammarDetailModal({ grammar, onClose, t }: { grammar: JLPTGrammar; onClose: () => void; t: (key: string) => string }) {
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-[9999]">
       <div className="bg-background rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
@@ -302,7 +308,7 @@ function GrammarDetailModal({ grammar, onClose }: { grammar: JLPTGrammar; onClos
           {/* Basic Info */}
           <div className="space-y-4">
             <div>
-              <h3 className="text-lg font-semibold mb-2">Structure</h3>
+              <h3 className="text-lg font-semibold mb-2">{t('study.grammar.detail.structure')}</h3>
               <div className="bg-muted/50 rounded-xl p-4 font-mono text-lg">
                 {grammar.structure || '—'}
               </div>
@@ -310,13 +316,13 @@ function GrammarDetailModal({ grammar, onClose }: { grammar: JLPTGrammar; onClos
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <h3 className="text-lg font-semibold mb-2">Vietnamese Meaning</h3>
+                <h3 className="text-lg font-semibold mb-2">{t('study.grammar.detail.vietnameseMeaning')}</h3>
                 <div className="bg-card rounded-xl p-4 border border-border">
                   {grammar.meaning_vn || '—'}
                 </div>
               </div>
               <div>
-                <h3 className="text-lg font-semibold mb-2">English Meaning</h3>
+                <h3 className="text-lg font-semibold mb-2">{t('study.grammar.detail.englishMeaning')}</h3>
                 <div className="bg-card rounded-xl p-4 border border-border">
                   {grammar.meaning_en || '—'}
                 </div>
@@ -327,7 +333,7 @@ function GrammarDetailModal({ grammar, onClose }: { grammar: JLPTGrammar; onClos
           {/* Examples */}
           {grammar.examples && grammar.examples.length > 0 && (
             <div>
-              <h3 className="text-lg font-semibold mb-4">Examples ({grammar.examples.length})</h3>
+              <h3 className="text-lg font-semibold mb-4">{t('study.grammar.detail.examples')} ({grammar.examples.length})</h3>
               <div className="space-y-4">
                 {grammar.examples.map((example, idx) => (
                   <div key={idx} className="bg-card rounded-xl p-4 border border-border space-y-2">
@@ -350,7 +356,7 @@ function GrammarDetailModal({ grammar, onClose }: { grammar: JLPTGrammar; onClos
               onClick={onClose}
               className="px-6 py-2 bg-primary text-primary-foreground rounded-xl hover:bg-primary/90 transition-colors"
             >
-              Close
+              {t('common.close')}
             </button>
           </div>
         </div>

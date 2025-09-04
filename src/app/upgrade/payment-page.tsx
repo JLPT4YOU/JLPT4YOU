@@ -18,7 +18,7 @@ export default function PaymentPage() {
   const [userBalance, setUserBalance] = useState<number>(0)
 
   // Premium price constant
-  const PREMIUM_PRICE = 1.99
+  const PREMIUM_PRICE = 2.49
 
   // Free plan features
   const freeFeatures = [

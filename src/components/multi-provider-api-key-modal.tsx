@@ -44,24 +44,20 @@ export function MultiProviderApiKeyModal({
   const { t } = useTranslations()
   const aiProviderManager = getAIProviderManager()
 
-  // Load existing API keys and check status
+  // Load existing API keys and check status from client-side services
   useEffect(() => {
     if (isOpen) {
-      loadKeyStatus()
+      try {
+        const status = {
+          gemini: aiProviderManager.isProviderConfigured('gemini'),
+          groq: aiProviderManager.isProviderConfigured('groq')
+        }
+        setProviderStatus(status)
+      } catch (error) {
+        console.error('Failed to read provider status:', error)
+      }
     }
   }, [isOpen])
-
-  const loadKeyStatus = async () => {
-    try {
-      const res = await fetch('/api/user/keys')
-      if (res.ok) {
-        const status = await res.json()
-        setProviderStatus(status)
-      }
-    } catch (error) {
-      console.error('Failed to load key status:', error)
-    }
-  }
 
   const validateApiKey = async (provider: ProviderType, apiKey: string): Promise<boolean> => {
     if (!apiKey.trim()) {
@@ -94,30 +90,15 @@ export function MultiProviderApiKeyModal({
 
     try {
       const isValid = await aiProviderManager.validateApiKey(provider, apiKey.trim())
-      
+
       if (isValid) {
-        // Save to server
-        const saveRes = await fetch(`/api/user/keys/${provider}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ key: apiKey.trim() })
-        })
-        
-        if (saveRes.ok) {
-          // Configure the provider
-          aiProviderManager.configureProvider(provider, apiKey.trim())
-          
-          // Update status
-          setProviderStatus(prev => ({ ...prev, [provider]: true }))
-          
-          return true
-        } else {
-          setValidationErrors(prev => ({
-            ...prev,
-            [provider]: t('modals.apiKey.saveError')
-          }))
-          return false
-        }
+        // Configure the provider, which will also save the key to localStorage
+        aiProviderManager.configureProvider(provider, apiKey.trim())
+
+        // Update status
+        setProviderStatus(prev => ({ ...prev, [provider]: true }))
+
+        return true
       } else {
         setValidationErrors(prev => ({
           ...prev,

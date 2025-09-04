@@ -89,8 +89,11 @@ export const useUIState = (selectedModel: string): UseUIStateReturn => {
   const [isLoading, setIsLoading] = useState(false);
   const [lastFailedMessage, setLastFailedMessage] = useState<string | null>(null);
   
-  // Thinking mode
-  const [enableThinking, setEnableThinking] = useState(false);
+  // Thinking mode - load initial value from localStorage
+  const [enableThinking, setEnableThinking] = useState(() => {
+    const savedThinking = SafeLocalStorage.get('enable_thinking');
+    return savedThinking === 'true';
+  });
   
   // Cleanup refs
   const errorTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -102,12 +105,6 @@ export const useUIState = (selectedModel: string): UseUIStateReturn => {
     setIsSidebarOpen(isLargeScreen);
     // Initialize previous screen size reference
     previousIsLargeScreenRef.current = isLargeScreen;
-
-    // Load thinking mode setting
-    const savedThinking = SafeLocalStorage.get('enable_thinking');
-    if (savedThinking !== null) {
-      setEnableThinking(savedThinking === 'true');
-    }
   }, []); // Only run on mount
 
   // Handle screen size changes separately to avoid interfering with user's sidebar state

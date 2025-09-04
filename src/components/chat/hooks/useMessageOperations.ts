@@ -104,30 +104,29 @@ export const useMessageOperations = (props: MessageOperationsProps): MessageOper
         setCurrentChatId(chatId);
         setIsSidebarOpen(false);
 
-        // Generate AI title in background using current provider
-        if (process.env.NODE_ENV === 'development') {
-          
-        }
-        aiProviderManager.current.generateChatTitle(content).then((aiTitle: string) => {
-          if (process.env.NODE_ENV === 'development') {
-            
+        // Generate AI title in background via secure backend endpoint
+        (async () => {
+          try {
+            const res = await fetch('/api/ai-proxy/generate-title', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ firstMessage: content })
+            });
+            if (!res.ok) {
+              throw new Error(`Title API ${res.status}`);
+            }
+            const data = await res.json();
+            const aiTitle = (data?.title || '').toString().trim();
+            if (aiTitle && chatId) {
+              chatStateManager.updateChatTitle(chatId, aiTitle);
+            }
+          } catch (error) {
+            if (process.env.NODE_ENV === 'development') {
+              console.error('Failed to generate title:', error);
+            }
+            // Fallback already set on creation; optionally refine here if needed
           }
-          if (chatId) {
-            chatStateManager.updateChatTitle(chatId, aiTitle);
-          }
-        }).catch((error: Error) => {
-          if (process.env.NODE_ENV === 'development') {
-            console.error('Failed to generate title:', error);
-          }
-          // Fallback to truncated content
-          const fallbackTitle = content.slice(0, 30) + (content.length > 30 ? '...' : '');
-          if (process.env.NODE_ENV === 'development') {
-            
-          }
-          if (chatId) {
-            chatStateManager.updateChatTitle(chatId, fallbackTitle);
-          }
-        });
+        })();
       } else {
         // Update existing chat with user message (images already stored above)
         if (chatId) {

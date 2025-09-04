@@ -93,133 +93,45 @@ export function sanitizeCustomInstructions(instructions: string): string {
 }
 
 /**
- * Gets custom prompt configuration from localStorage
+ * DEPRECATED: Gets custom prompt configuration
+ * @deprecated User prompts should be fetched from Supabase via API proxy
  */
 export function getCustomPromptConfig(): CustomPromptConfig | null {
-  if (typeof window === 'undefined') return null;
-
-  try {
-    const stored = localStorage.getItem(STORAGE_KEYS.CUSTOM_PROMPT);
-    if (!stored) return null;
-
-    const parsed = JSON.parse(stored);
-    if (!validatePromptConfig(parsed)) {
-      console.warn('Invalid prompt config found, using default');
-      return null;
-    }
-
-    // Sanitize all user inputs
-    parsed.preferredName = sanitizeUserInput(parsed.preferredName || '');
-    parsed.desiredTraits = sanitizeUserInput(parsed.desiredTraits || '');
-    parsed.personalInfo = sanitizeUserInput(parsed.personalInfo || '');
-    parsed.additionalRequests = sanitizeUserInput(parsed.additionalRequests || '');
-
-    return parsed;
-  } catch (error) {
-    console.error('Error loading custom prompt config:', error);
-    return null;
-  }
+  // No longer using localStorage - prompts come from Supabase
+  return null;
 }
 
 /**
- * Saves custom prompt configuration to localStorage
+ * DEPRECATED: Saves custom prompt configuration
+ * @deprecated User prompts should be saved to Supabase via API
  */
 export async function saveCustomPromptConfig(config: CustomPromptConfig): Promise<void> {
-  if (typeof window === 'undefined') return;
-
-  try {
-    // Validate configuration
-    if (!validatePromptConfig(config)) {
-      throw new Error('Invalid prompt configuration');
-    }
-
-    // Sanitize all user inputs
-    const sanitizedConfig = {
-      ...config,
-      preferredName: sanitizeUserInput(config.preferredName || ''),
-      desiredTraits: sanitizeUserInput(config.desiredTraits || ''),
-      personalInfo: sanitizeUserInput(config.personalInfo || ''),
-      additionalRequests: sanitizeUserInput(config.additionalRequests || ''),
-      updatedAt: new Date().toISOString(),
-      createdAt: config.createdAt || new Date().toISOString()
-    };
-
-    // Save to localStorage
-    localStorage.setItem(STORAGE_KEYS.CUSTOM_PROMPT, JSON.stringify(sanitizedConfig));
-    localStorage.setItem(STORAGE_KEYS.PROMPT_VERSION, CURRENT_VERSION);
-
-    // Future: Add server-side sync here
-    // await syncToServer(sanitizedConfig);
-
-  } catch (error) {
-    console.error('Error saving custom prompt config:', error);
-    throw error;
-  }
+  // No longer using localStorage - prompts saved to Supabase
+  console.warn('saveCustomPromptConfig is deprecated. Use Supabase API to save prompts.');
 }
 
 /**
- * Resets to default prompt configuration
+ * DEPRECATED: Resets to default prompt configuration
+ * @deprecated User prompts should be reset via Supabase API
  */
 export function resetToDefaultPrompt(): void {
-  if (typeof window === 'undefined') return;
-
-  try {
-    localStorage.removeItem(STORAGE_KEYS.CUSTOM_PROMPT);
-    localStorage.setItem(STORAGE_KEYS.PROMPT_VERSION, CURRENT_VERSION);
-  } catch (error) {
-    console.error('Error resetting prompt config:', error);
-  }
+  // No longer using localStorage - prompts managed in Supabase
+  console.warn('resetToDefaultPrompt is deprecated. Use Supabase API to reset prompts.');
 }
 
 /**
  * Composes the final system prompt by combining core identity with user prompt
+ * NOTE: User custom prompt should be passed from Supabase via API proxy
+ * This function is only for client-side fallback without custom prompt
  */
-export function composeSystemPrompt(_customConfig?: CustomPromptConfig | null): string {
-  // Get language instruction from settings
+export function composeSystemPrompt(): string {
+  // Get language instruction
   const languageInstruction = getLanguageInstruction();
 
-  // Get user prompt from separate system - using direct localStorage access
-  let userPrompt = '';
-  try {
-    // Direct localStorage access to avoid module loading issues
-    if (typeof window !== 'undefined') {
-      // Try new key first, then fallback to old key
-      let stored = localStorage.getItem('user_custom_prompt_config');
-      let isNewSystem = true;
-
-      if (!stored) {
-        // Fallback to old system key
-        stored = localStorage.getItem('irin_sensei_custom_prompt');
-        isNewSystem = false;
-      }
-
-      if (stored) {
-        const config = JSON.parse(stored);
-        // Handle both new and old system formats
-        userPrompt = isNewSystem
-          ? (config?.generatedUserPrompt || '')
-          : (config?.generatedPrompt || '');
-
-
-      }
-    }
-  } catch (error) {
-    userPrompt = '';
-  }
-
-  // Build base prompt
+  // Build base prompt - Core identity is always included
   let finalPrompt = `${CORE_IDENTITY_PROMPT}
 
 ${languageInstruction}`;
-
-  // Add user prompt if available
-  if (userPrompt) {
-    finalPrompt += `
-
-${userPrompt}
-
-Apply the above communication style in all conversations with the user.`;
-  }
 
   // Add reminder
   finalPrompt += `
@@ -318,52 +230,27 @@ export function detectLanguageFromMessage(message: string): string {
 }
 
 /**
- * Get AI communication language from user-scoped settings
+ * DEPRECATED: Get AI communication language 
+ * @deprecated Language settings should come from Supabase via API proxy
  */
 export function getAICommunicationLanguage(userMessage?: string): string {
-  if (typeof window === 'undefined') return 'Tiếng Việt'; // SSR fallback
-
-  // Use UserStorage for user-scoped settings with fallback
-  let aiLanguage = 'auto';
-  let customLanguage = '';
-
-  // For now, fallback to localStorage until we can refactor this to be async
-  // TODO: Refactor this function to be async when UserStorage is properly integrated
-  aiLanguage = localStorage.getItem('ai_language') || 'auto';
-  customLanguage = localStorage.getItem('ai_custom_language') || '';
-
-  // Auto detect mode
-  if (aiLanguage === 'auto' && userMessage) {
+  // Default to auto-detect from message or Vietnamese
+  if (userMessage) {
     return detectLanguageFromMessage(userMessage);
   }
-
-  if (aiLanguage === 'custom' && customLanguage.trim()) {
-    return customLanguage.trim();
-  }
-
-  const languageMap: Record<string, string> = {
-    'vietnamese': 'Tiếng Việt',
-    'english': 'English',
-    'japanese': '日本語'
-  };
-
-  return languageMap[aiLanguage] || 'Tiếng Việt';
+  return 'Tiếng Việt';
 }
 
 /**
  * Get optimized language instruction for system prompt
+ * NOTE: Language preferences should be passed from Supabase via API proxy
+ * This is only for client-side fallback
  */
 export function getLanguageInstruction(userMessage?: string): string {
-  if (typeof window === 'undefined') return '';
-
-  const aiLanguage = localStorage.getItem('ai_language') || 'vietnamese';
-  const language = getAICommunicationLanguage(userMessage);
-
-  if (aiLanguage === 'auto') {
-    return `Respond in the user's language. Adapt cultural communication style naturally.`;
-  }
-
-  return createCulturalLanguageInstruction(language);
+  // Default to auto-detect based on message
+  const language = userMessage ? detectLanguageFromMessage(userMessage) : 'Tiếng Việt';
+  const instruction = createCulturalLanguageInstruction(language);
+  return instruction;
 }
 
 /**

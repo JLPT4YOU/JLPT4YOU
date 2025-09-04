@@ -93,6 +93,7 @@
     "jest": "^30.0.4",
     "jest-environment-jsdom": "^30.0.4",
     "lighthouse": "^12.8.1",
+    "sharp": "^0.34.3",
     "supertest": "^7.1.4",
     "tailwindcss": "^4",
     "typescript": "^5"

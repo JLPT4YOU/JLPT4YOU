@@ -145,6 +145,7 @@ function Content({ language, translations, t }: ContentProps) {
               void (isSearchMode ? fetchSearchWords(true) : fetchLevelWords(true))
             }}
             onNext={() => onLoadMore()}
+            t={t}
           />
         </div>
       </div>
@@ -202,7 +203,7 @@ function Controls({
         )}
       </div>
       <div className="flex items-center gap-2">
-        <label className="text-sm text-muted-foreground">Limit</label>
+        <label className="text-sm text-muted-foreground">{t('common.limit')}</label>
         <select
           value={limit}
           onChange={(e) => setLimit(Number(e.target.value))}
@@ -242,14 +243,14 @@ function WordGrid({ words, loading, error, t }: { words: JLPTWord[]; loading: bo
         </div>
       )}
       {loading && (
-        <div className="text-center text-muted-foreground mb-6">Loading...</div>
+        <div className="text-center text-muted-foreground mb-6">{t('common.loading')}</div>
       )}
     </>
   )
 }
 
-function FooterControls({ loading, hasNext, page, limit, total, onPrev, onNext }:
-  { loading: boolean; hasNext: boolean; page: number; limit: number; total: number | null; onPrev: () => void; onNext: () => void }) {
+function FooterControls({ loading, hasNext, page, limit, total, onPrev, onNext, t }:
+  { loading: boolean; hasNext: boolean; page: number; limit: number; total: number | null; onPrev: () => void; onNext: () => void; t: (key: string) => string }) {
   return (
     <div className="flex items-center justify-center gap-3">
       <button
@@ -257,7 +258,7 @@ function FooterControls({ loading, hasNext, page, limit, total, onPrev, onNext }
         onClick={onPrev}
         className="px-5 py-2 rounded-xl bg-card border border-border text-foreground disabled:opacity-50"
       >
-        Previous
+        {t('common.previous')}
       </button>
       <div className="text-sm text-muted-foreground">
         Page {Math.max(1, page || 1)}{total ? ` • ~${total} items` : ''} • {limit} / page
@@ -267,7 +268,7 @@ function FooterControls({ loading, hasNext, page, limit, total, onPrev, onNext }
         onClick={onNext}
         className="px-5 py-2 rounded-xl bg-card border border-border text-foreground disabled:opacity-50"
       >
-        Next
+        {t('common.next')}
       </button>
     </div>
   )

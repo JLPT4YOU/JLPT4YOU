@@ -27,6 +27,7 @@ export class UserStorage {
    */
   private static getUserKey(key: string): string {
     if (!this.currentUserId) {
+      console.warn('[UserStorage] No currentUserId set, using global key for:', key)
       return key // Fallback to global key if no user set
     }
     return `${key}_user_${this.currentUserId}`
@@ -50,7 +51,8 @@ export class UserStorage {
   static getItem(key: string): string | null {
     try {
       const userKey = this.getUserKey(key)
-      return localStorage.getItem(userKey)
+      const value = localStorage.getItem(userKey)
+      return value
     } catch (error) {
       console.error('Failed to get localStorage item:', error)
       return null

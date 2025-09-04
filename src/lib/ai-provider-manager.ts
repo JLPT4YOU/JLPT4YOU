@@ -4,9 +4,8 @@
  */
 
 import { AIService, AIMessage } from './ai-config';
-import { getGeminiService } from './gemini-service';
-import { getGroqService } from './groq-service';
-import { createSecureAIService, SecureAIServiceWrapper } from './secure-ai-service-wrapper';
+import { getGeminiService } from './gemini-service-unified';
+import { getGroqService } from './groq-service-unified';
 
 export type ProviderType = 'gemini' | 'groq';
 
@@ -24,7 +23,7 @@ export interface ChatMessage extends AIMessage {
 }
 
 export class AIProviderManager {
-  private providers: Map<ProviderType, SecureAIServiceWrapper> = new Map();
+  private providers: Map<ProviderType, AIService> = new Map();
   private currentProvider: ProviderType = 'gemini'; // Default provider
 
   constructor() {
@@ -32,18 +31,16 @@ export class AIProviderManager {
   }
 
   /**
-   * Initialize all available providers với secure wrappers
+   * Initialize all available providers (client-only keys)
    */
   private initializeProviders(): void {
-    // Initialize Gemini với secure wrapper
+    // Initialize Gemini service directly
     const geminiService = getGeminiService();
-    const secureGeminiService = createSecureAIService('gemini', geminiService);
-    this.providers.set('gemini', secureGeminiService);
+    this.providers.set('gemini', geminiService);
 
-    // Initialize Groq với secure wrapper
+    // Initialize Groq service directly
     const groqService = getGroqService();
-    const secureGroqService = createSecureAIService('groq', groqService);
-    this.providers.set('groq', secureGroqService);
+    this.providers.set('groq', groqService);
 
     // Load current provider from localStorage
     const savedProvider = this.getSavedProvider();
@@ -114,7 +111,7 @@ export class AIProviderManager {
   }
 
   /**
-   * Configure a provider - now just clears cache to force refetch
+   * Configure a provider with an API key (client-only)
    */
   configureProvider(provider: ProviderType, apiKey?: string): void {
     const service = this.providers.get(provider);
@@ -122,8 +119,10 @@ export class AIProviderManager {
       throw new Error(`Provider ${provider} is not available`);
     }
 
-    // Clear cache to force refetch from server
-    service.clearCache();
+    // If a key is provided, configure the underlying service
+    if (apiKey && typeof service.configure === 'function') {
+      service.configure(apiKey);
+    }
 
     // Notify listeners (e.g., ProviderSelector) that provider configuration changed
     if (typeof window !== 'undefined') {
@@ -133,8 +132,6 @@ export class AIProviderManager {
         }),
       );
     }
-
-
   }
 
   /**
@@ -150,12 +147,16 @@ export class AIProviderManager {
     return false;
   }
 
+
+
   /**
    * Clear all API key caches (useful for logout)
    */
   clearAllCaches(): void {
     this.providers.forEach((service) => {
-      service.clearCache();
+      if ((service as any)?.clearCache) {
+        (service as any).clearCache();
+      }
     });
   }
 

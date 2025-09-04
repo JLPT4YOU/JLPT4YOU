@@ -132,24 +132,47 @@ export interface ConvertedMessage {
  * Convert AIMessage to Gemini format
  */
 export function convertMessagesToGemini(messages: AIMessage[]): ConvertedMessage[] {
-  return messages
-    .filter(msg => msg.role !== 'system') // Filter out system messages
-    .map(msg => ({
+  const systemPrompt = getCurrentSystemPrompt();
+  // Gemini prefers the system prompt to be part of the first user message.
+  const geminiMessages: ConvertedMessage[] = [];
+
+  messages.forEach((msg, index) => {
+    if (msg.role === 'system') return; // Skip any explicit system messages
+
+    let content = msg.content;
+    // Prepend system prompt to the very first user message
+    if (index === 0 && msg.role === 'user') {
+      content = `${systemPrompt}\n\n---\n\n${msg.content}`;
+    }
+
+    geminiMessages.push({
       role: msg.role === 'assistant' ? 'model' : 'user',
-      parts: [{ text: msg.content }]
-    }));
+      parts: [{ text: content }]
+    });
+  });
+
+  return geminiMessages;
 }
 
 /**
  * Convert AIMessage to Groq/OpenAI format
  */
+import { getCurrentSystemPrompt } from './prompt-storage';
+
 export function convertMessagesToGroq(messages: AIMessage[]): ConvertedMessage[] {
-  return messages
-    .filter(msg => msg.role !== 'system') // Filter out system messages
-    .map(msg => ({
-      role: msg.role === 'assistant' ? 'assistant' : 'user',
-      content: msg.content
-    }));
+  const systemPrompt = getCurrentSystemPrompt();
+  const groqMessages: ConvertedMessage[] = [{ role: 'system', content: systemPrompt }];
+
+  messages.forEach(msg => {
+    if (msg.role !== 'system') {
+      groqMessages.push({
+        role: msg.role === 'assistant' ? 'assistant' : 'user',
+        content: msg.content
+      });
+    }
+  });
+
+  return groqMessages;
 }
 
 /**

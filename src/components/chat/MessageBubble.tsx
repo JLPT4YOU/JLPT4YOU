@@ -232,10 +232,15 @@ const MessageBubbleComponent: React.FC<MessageBubbleProps> = ({
                     // Truyền trạng thái streaming để code hiển thị ngay khi về chunk
                     isStreaming={isAIGenerating || message.status === 'sending'}
                   />
-                ) : isAIGenerating && !message.thinking?.thoughtSummary ? (
-                  // Show pulsing dot only when AI is generating AND no thinking content yet
-                  <InlinePulsingDot size="md" />
-                ) : null
+                ) : (
+                  // Show pulsing dot when:
+                  // 1. AI is generating (searching/thinking/coding)
+                  // 2. Message is in sending status but no content yet
+                  // 3. Not showing thinking display
+                  (isAIGenerating || message.status === 'sending') && !message.thinking?.thoughtSummary ? (
+                    <InlinePulsingDot size="md" />
+                  ) : null
+                )
               )}
             </div>
 

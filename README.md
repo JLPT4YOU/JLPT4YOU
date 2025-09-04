@@ -34,6 +34,59 @@ Nền tảng học tập JLPT (Japanese Language Proficiency Test) với AI hỗ
 - **User Dashboard**: Theo dõi tiến độ
 - **Premium Features**: Tải PDF, AI unlimited
 
+
+## 🔐 AI Secure Proxy & Feature Status (2025-09-02)
+
+This project now uses a secure, server‑only key model. All AI calls are proxied via backend; API keys never touch the browser.
+
+Endpoints
+- POST `/api/ai-proxy/chat` – Unified proxy for Gemini/Groq (supports streaming flag)
+- POST `/api/ai-proxy/generate-title` – Generate chat title (Gemini)
+- POST `/api/ai-proxy/generate-prompt` – Generate personalized user prompt (Gemini)
+- GET/PUT `/api/user/prompt` – Persist per-user prompt config and AI language
+- POST `/api/user/keys/validate` – Server-side key validation (Gemini/Groq)
+
+Server persistence (Supabase)
+- `public.users.metadata` JSONB
+  - `promptConfig` { preferredName, desiredTraits, personalInfo, additionalRequests, generatedPrompt }
+  - `customPrompt` (compat fallback = promptConfig.generatedPrompt)
+  - `aiLanguage` one of: `auto | vietnamese | english | japanese | custom`
+  - `customAiLanguage` string
+- `public.user_api_keys` stores provider keys securely (never sent to client)
+
+Current Status
+- Security
+  - ✅ Keys never exposed to client
+  - ✅ Removed insecure decrypt endpoint
+  - ✅ Server-side validation for keys
+- Prompt & Language
+  - ✅ Save/load full prompt config to server
+  - ✅ Merge Core iRIN + language instruction + user custom prompt per request
+  - ✅ Title generation with auto language detection from first message
+- Streaming
+  - Groq: ✅ true delta streaming
+  - Gemini: ⚠️ pseudo-stream (single-chunk fallback); needs upgrade to true streaming
+- “Thinking” feature
+  - Gemini: ❌ not implemented in current server path
+  - Groq: ❌ thinking markers not emitted by proxy (regular content only)
+- Gemini advanced tools
+  - Google Search: ❌ not implemented server-side
+  - Code Execution: ❌ not implemented server-side
+  - File/Image upload: ❌ not implemented server-side (legacy client flow removed)
+
+What’s working now (summary)
+- Secure backend proxy for chat (Gemini/Groq)
+- Per-user prompt + AI language, applied server-side to every chat
+- Auto title generation (Gemini), auto-detect language
+- Streaming: Groq (yes), Gemini (fallback single response)
+
+Planned Next Steps
+1) True Gemini streaming via server SDK/HTTP chunk piping
+2) Add Gemini tools support (search, code execution) behind server flags
+3) Server routes for file/image upload & multimodal chat
+4) Optional: Groq “thinking” markers emission for UI
+5) Observability: structured logs/error codes for proxy endpoints
+
 ## 🏗️ Kiến trúc kỹ thuật
 
 ### Tech Stack
@@ -144,7 +197,7 @@ src/__tests__/auth/middleware.test.ts  # Auth middleware
 
 # Integration Tests (planned)
 - Login/redirect flows
-- JLPT exam workflows  
+- JLPT exam workflows
 - i18n language switching
 - API endpoints
 

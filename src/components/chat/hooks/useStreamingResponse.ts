@@ -43,6 +43,9 @@ export const useStreamingResponse = ({
       thoughtSummary: '',
       isThinkingComplete: false
     });
+    
+    // Set status to 'sending' to trigger dots animation immediately
+    aiMessage.status = 'sending';
 
     // Add initial message to chat
     setChats(prev => prev.map(chat => {
@@ -79,7 +82,12 @@ export const useStreamingResponse = ({
             ...chat,
             messages: chat.messages.map(msg =>
               msg.id === messageId
-                ? { ...msg, content: state.fullResponse }
+                ? { 
+                    ...msg, 
+                    content: state.fullResponse,
+                    // Update status to 'sent' when content starts arriving
+                    status: state.fullResponse ? 'sent' : 'sending'
+                  }
                 : msg
             ),
             lastMessage: state.fullResponse,
@@ -151,6 +159,8 @@ export const useStreamingResponse = ({
                 ? {
                     ...msg,
                     content: state.fullResponse,
+                    // Update status to 'sent' when content arrives
+                    status: state.fullResponse ? 'sent' : 'sending',
                     thinking: {
                       ...msg.thinking,
                       thoughtSummary: state.fullThoughts,

@@ -1,10 +1,12 @@
 "use client"
 
+import { useState, useEffect } from 'react'
 import dynamic from 'next/dynamic'
 import { LandingHeader } from "@/components/landing/landing-header"
 import { HeroSection } from "@/components/landing/hero-section"
 import { TranslationData, Language } from "@/lib/i18n"
 import { useScrollPreservation } from "@/lib/use-scroll-preservation"
+import { useViewport } from "@/hooks/use-viewport"
 
 // Lazy load below-the-fold components for better LCP
 const KeyBenefitsSection = dynamic(() => import("@/components/landing/key-benefits-section").then(mod => ({ default: mod.KeyBenefitsSection })), {
@@ -50,6 +52,41 @@ interface LandingPageProps {
 export function LandingPage({ translations, language = 'vn' }: LandingPageProps) {
   // Initialize scroll preservation hook
   useScrollPreservation()
+  
+  const { isMobile, mounted } = useViewport()
+  const [showBelowHero, setShowBelowHero] = useState(false)
+
+  // On mobile, use Intersection Observer to lazy load below-hero content
+  useEffect(() => {
+    if (!mounted) return
+    
+    // On desktop, show everything immediately
+    if (!isMobile) {
+      setShowBelowHero(true)
+      return
+    }
+
+    // On mobile, wait for user scroll
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            setShowBelowHero(true)
+            observer.disconnect()
+          }
+        })
+      },
+      { rootMargin: '100px' } // Load 100px before visible
+    )
+
+    // Observe a trigger element at bottom of hero
+    const trigger = document.getElementById('hero-trigger')
+    if (trigger) {
+      observer.observe(trigger)
+    }
+
+    return () => observer.disconnect()
+  }, [isMobile, mounted])
 
   // Create translation function
   const t = (key: string) => {
@@ -72,25 +109,33 @@ export function LandingPage({ translations, language = 'vn' }: LandingPageProps)
           <HeroSection translations={translations} />
         </section>
 
-        <section aria-label="Key Benefits" id="benefits">
-          <KeyBenefitsSection translations={translations} />
-        </section>
+        {/* Trigger element for lazy loading on mobile */}
+        <div id="hero-trigger" className="h-0" />
 
-        <section aria-label="AI Demo" id="demo">
-          <AIExplanationDemo translations={translations} />
-        </section>
+        {/* On mobile, only render below-hero content after scroll */}
+        {(!mounted || !isMobile || showBelowHero) && (
+          <>
+            <section aria-label="Key Benefits" id="benefits">
+              <KeyBenefitsSection translations={translations} />
+            </section>
 
-        <section aria-label="Pricing" id="pricing">
-          <PricingSection translations={translations} />
-        </section>
+            <section aria-label="AI Demo" id="demo">
+              <AIExplanationDemo translations={translations} />
+            </section>
 
-        <section aria-label="Why Choose Us" id="why-choose-us">
-          <WhyChooseUsSection translations={translations} />
-        </section>
+            <section aria-label="Pricing" id="pricing">
+              <PricingSection translations={translations} />
+            </section>
 
-        <section aria-label="Call to Action">
-          <FinalCTASection translations={translations} />
-        </section>
+            <section aria-label="Why Choose Us" id="why-choose-us">
+              <WhyChooseUsSection translations={translations} />
+            </section>
+
+            <section aria-label="Call to Action">
+              <FinalCTASection translations={translations} />
+            </section>
+          </>
+        )}
       </main>
 
       <footer>

@@ -8,7 +8,7 @@
  * thêm getCurrentSystemPrompt() vào mọi request.
  */
 
-import { getAIProviderManager } from './ai-provider-manager';
+
 
 export interface UserPromptInputs {
   preferredName: string;        // Tên gọi mong muốn
@@ -35,73 +35,42 @@ const USER_PROMPT_STORAGE_KEY = 'user_custom_prompt_config';
 export async function generateUserPrompt(inputs: UserPromptInputs): Promise<string> {
   try {
     // Validate inputs
-    if (!inputs.preferredName.trim()) {
+    if (!inputs.preferredName?.trim()) {
       throw new Error('Tên gọi mong muốn là bắt buộc');
     }
 
-    // Tạo instruction tối ưu cho việc tạo prompt user
-    const promptInstruction = `You are a professional Prompt Engineer. I need you to create a personalized communication prompt for an AI assistant.
-
-Here is what the user wants:
-
-1. "Please call me: ${inputs.preferredName}"
-2. "I want you to have these characteristics: ${inputs.desiredTraits}"
-3. "I want you to know about me: ${inputs.personalInfo}"
-4. "I want you to pay attention to: ${inputs.additionalRequests}"
-
-Based on this information, create a prompt that helps the AI understand who I am and what my needs are.
-
-REQUIREMENTS:
-- DO NOT mention AI identity or name (avoid "you are", "your name is")
-- Focus on communication style and user preferences
-- Maximum 250 words
-- Use clear, direct instructions
-- Structure it as guidance for how to communicate with this specific user
-
-Create an optimized prompt that captures the user's identity and communication preferences.`;
-
-    // ✅ Sử dụng secure wrapper với method đặc biệt không có system prompt
-    const aiProviderManager = getAIProviderManager();
-
-    // Ensure we're using Gemini for prompt generation
-    const currentProvider = aiProviderManager.getCurrentProvider();
-    if (currentProvider !== 'gemini') {
-      aiProviderManager.switchProvider('gemini');
-    }
-
-    const secureService = aiProviderManager.getCurrentService();
-
-    // Gọi method đặc biệt không có system prompt để tránh inject core identity
-    if (!secureService.sendMessageWithoutSystemPrompt) {
-      throw new Error('sendMessageWithoutSystemPrompt method not available');
-    }
-
-    const generatedPrompt = await secureService.sendMessageWithoutSystemPrompt([{
-      role: 'user',
-      content: promptInstruction
-    }], {
-      temperature: 0.8,
-      maxTokens: 400,
-      model: 'gemini-2.0-flash-exp'
+    // Call secure backend to generate user-specific prompt (no core injection)
+    const res = await fetch('/api/ai-proxy/generate-prompt', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(inputs)
     });
 
-    if (!generatedPrompt?.trim()) {
+    if (!res.ok) {
+      const txt = await res.text();
+      throw new Error(`Server error ${res.status}: ${txt}`);
+    }
+
+    const data = await res.json();
+    const generatedPrompt = (data?.generatedPrompt || '').toString();
+
+    if (!generatedPrompt.trim()) {
       throw new Error('Không thể tạo prompt. Vui lòng thử lại.');
     }
 
     return generatedPrompt.trim();
-
   } catch (error) {
     console.error('Error generating user prompt:', error);
 
-    // Provide more specific error messages
     if (error instanceof Error) {
-      if (error.message.includes('API key') || error.message.includes('dummy')) {
+      if (error.message.includes('Unauthorized')) {
+        throw new Error('Bạn cần đăng nhập để tạo prompt cá nhân hóa');
+      }
+      if (error.message.toLowerCase().includes('api key')) {
         throw new Error('Cần cấu hình Gemini API key trong Settings để tạo prompt');
       }
       throw new Error(`Lỗi tạo prompt: ${error.message}`);
     }
-
     throw new Error('Lỗi tạo prompt: Unknown error');
   }
 }

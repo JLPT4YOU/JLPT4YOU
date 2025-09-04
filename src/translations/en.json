@@ -28,6 +28,8 @@
     "error": "An error occurred",
     "retry": "Retry",
     "close": "Close",
+    "saving": "Saving...",
+    "saved": "Saved!",
     "back": "Back",
     "next": "Next",
     "previous": "Previous",
@@ -37,7 +39,8 @@
     "continue": "Continue",
     "instruction": "Choose an option above to get started",
     "preview": "Preview",
-    "hide": "Hide"
+    "hide": "Hide",
+    "limit": "Limit"
   },
   "landingChat": {
     "bubble": {
@@ -119,7 +122,7 @@
       },
       {
         "problem": "Teacher fees of tens of thousands of yen/month",
-        "solution": "24/7 AI guidance for just $1.99/month"
+        "solution": "AI guidance 24/7 for just $2.49/month"
       },
       {
         "problem": "Overwhelming materials, ineffective learning",
@@ -132,7 +135,7 @@
     "solutionTitle": "JLPT4YOU provides",
     "finalProblem": "Struggling with no progress, scattered materials, high costs?",
     "finalSolution": "JLPT4YOU solves it all with smart AI, quality materials and affordable pricing!",
-    "priceComparison": "Just $1.99/month - cheaper than a bubble tea 🧋"
+    "priceComparison": "Only $2.49/month - cheaper than a bubble tea 🧋"
   },
   "pricing": {
     "title": "Simple Pricing",
@@ -140,35 +143,37 @@
     "free": {
       "name": "Free",
       "price": "$0",
-      "period": "/month",
-      "description": "For beginners",
+      "period": "/lifetime",
+      "description": "Lifetime access to basic content",
       "features": [
-        "5 exams per month",
-        "Basic N5-N4 vocabulary",
-        "N5-N4 grammar",
-        "Basic result reports"
+        "Complete N5-N4 content lifetime",
+        "Full JLPT N5-N4 exams",
+        "Detailed N5-N4 vocabulary",
+        "Complete N5-N4 grammar",
+        "N5-N4 textbooks"
       ],
       "limitations": [
-        "No AI explanations",
-        "No progress tracking",
-        "No advanced materials"
+        "No AI support",
+        "No exclusive movies",
+        "No driving test practice"
       ],
       "button": "Start Free"
     },
     "premium": {
       "name": "Premium",
-      "price": "$1.99",
+      "price": "$2.49",
       "period": "/month",
       "badge": "RECOMMENDED",
       "description": "Complete learning experience",
       "features": [
-        "Unlimited exams",
-        "Complete N5-N1 vocabulary",
-        "Detailed N5-N1 grammar",
-        "iRIN AI explanations",
-        "Detailed progress tracking",
-        "Exclusive materials library",
-        "Priority support"
+        "All content from N5 to N1",
+        "Unlimited iRIN AI",
+        "Full JLPT N5-N1 exams",
+        "Japanese driving test practice",
+        "Exclusive movie content",
+        "Continuously updated textbooks",
+        "Detailed N5-N1 vocabulary & grammar",
+        "Priority support 24/7"
       ],
       "button": "Upgrade to Premium"
     }
@@ -279,13 +284,6 @@
       "register": "Create Account",
       "forgotPassword": "Forgot Password"
     },
-
-
-
-
-
-
-
     "subtitles": {
       "login": "Welcome back to JLPT4YOU",
       "register": "Start your Japanese learning journey",
@@ -383,7 +381,6 @@
     "errors": {
       "general": "An error occurred. Please try again.",
       "loginFailed": "Incorrect username or password",
-
       "emailExists": "This email is already in use",
       "resendFailed": "Failed to resend email. Please try again.",
       "registrationError": "An error occurred during registration. Please try again.",
@@ -450,7 +447,11 @@
       },
       "settings": {
         "title": "Settings",
-        "description": "Account customization"
+        "description": "Customize your account"
+      },
+      "movie": {
+        "title": "Movies",
+        "description": "Watch Japanese learning movies"
       },
       "resultsDemo": {
         "title": "Results Demo",
@@ -536,7 +537,6 @@
       "incorrect": "Incorrect",
       "flagged": "Flagged"
     },
-
     "question": {
       "number": "Question {number}",
       "details": "Details",
@@ -955,7 +955,6 @@
       "cancelButton": "Cancel"
     }
   },
-
   "pageTitle": {
     "home": "Home",
     "examResults": "Exam Results",
@@ -1229,6 +1228,53 @@
     }
   },
   "chat": {
+    "prompts": {
+      "aiLanguage": {
+        "title": "AI Language",
+        "placeholder": "Select AI language",
+        "customPlaceholder": "Enter your preferred language (e.g., Spanish, French, German)",
+        "options": {
+          "auto": "Auto",
+          "vietnamese": "Vietnamese",
+          "english": "English",
+          "japanese": "Japanese",
+          "custom": "Custom"
+        }
+      },
+      "personalization": {
+        "title": "Personalization",
+        "preferredName": {
+          "label": "Preferred Name",
+          "placeholder": "Enter your preferred name"
+        },
+        "desiredTraits": {
+          "label": "Desired Traits",
+          "placeholder": "e.g., friendly, humorous, formal"
+        },
+        "personalInfo": {
+          "label": "Personal Info",
+          "placeholder": "Share some personal info for better responses"
+        },
+        "additionalRequests": {
+          "label": "Additional Requests",
+          "placeholder": "Any other requests for the AI"
+        }
+      },
+      "generate": {
+        "title": "Generate Prompt",
+        "description": "Generate a prompt based on your settings.",
+        "button": "Generate",
+        "buttonLoading": "Generating..."
+      },
+      "generated": {
+        "title": "Generated Prompt",
+        "description": "Here is the generated prompt based on your settings."
+      },
+      "buttons": {
+        "reset": "Reset",
+        "save": "Save"
+      }
+    },
     "welcomeMessage": "Start a conversation to get learning support from iRIN",
     "inputPlaceholder": "Type a message...",
     "userLabel": "You",
@@ -1317,63 +1363,63 @@
           "successMessage": "✅ Reset successful!\n\n• Custom prompt: Deleted\n• Language settings: Reset\n• Core iRIN: Preserved"
         }
       }
-    },
-      "prompts": {
-        "aiLanguage": {
-          "title": "What language should iRIN use to communicate with you?",
-          "placeholder": "Select language",
-          "options": {
-            "auto": "Auto Detect",
-            "vietnamese": "Vietnamese",
-            "english": "English",
-            "japanese": "Japanese",
-            "custom": "Custom"
-          },
-          "customPlaceholder": "Enter desired language (e.g., Korean, French, Spanish...)"
-        },
-        "personalization": {
-          "title": "Personalization Settings",
-          "preferredName": {
-            "label": "What should iRIN call you?",
-            "placeholder": "Name or nickname you want iRIN to use"
-          },
-          "desiredTraits": {
-            "label": "What traits do you want iRIN to have?",
-            "placeholder": "Describe the personality and traits you want in iRIN"
-          },
-          "personalInfo": {
-            "label": "What else should iRIN know about you?",
-            "placeholder": "Personal info for iRIN to better assist you (optional)"
-          },
-          "additionalRequests": {
-            "label": "Additional Requests",
-            "placeholder": "Anything else you want iRIN to keep in mind? (optional)"
-          }
-        },
-        "generate": {
-          "title": "Generate Custom Prompt",
-          "description": "Use AI to create a suitable prompt based on your input",
-          "button": "Generate Prompt",
-          "buttonLoading": "Generating..."
-        },
-        "generated": {
-          "title": "Generated Prompt",
-          "description": "This is the custom prompt generated for you"
-        },
-        "footer": {
-          "note": "Settings are saved locally and will persist across sessions"
-        },
-        "buttons": {
-          "reset": "Reset",
-          "save": "Save"
-        },
-        "resetDialog": {
-          "title": "Reset all prompts and settings",
-          "description": "Are you sure you want to reset all prompts and settings? This will: Delete all custom prompts, Reset AI language settings, Reset the form to default. iRIN's core prompt will be preserved.",
-          "confirm": "Reset All",
-          "successMessage": "✅ Reset successful!\n\n• Custom prompt: Deleted\n• Language settings: Reset\n• Core iRIN: Preserved"
-        }
+    }
+  },
+  "irin": {
+    "aiLanguage": {
+      "title": "What language should iRIN use to communicate with you?",
+      "placeholder": "Select language",
+      "options": {
+        "auto": "Auto Detect",
+        "vietnamese": "Vietnamese",
+        "english": "English",
+        "japanese": "Japanese",
+        "custom": "Custom"
       },
+      "customPlaceholder": "Enter desired language (e.g., Korean, French, Spanish...)"
+    },
+    "personalization": {
+      "title": "Personalization Settings",
+      "preferredName": {
+        "label": "What should iRIN call you?",
+        "placeholder": "Name or nickname you want iRIN to use"
+      },
+      "desiredTraits": {
+        "label": "What traits do you want iRIN to have?",
+        "placeholder": "Describe the personality and traits you want in iRIN"
+      },
+      "personalInfo": {
+        "label": "What else should iRIN know about you?",
+        "placeholder": "Personal info for iRIN to better assist you (optional)"
+      },
+      "additionalRequests": {
+        "label": "Additional Requests",
+        "placeholder": "Anything else you want iRIN to keep in mind? (optional)"
+      }
+    },
+    "generate": {
+      "title": "Generate Custom Prompt",
+      "description": "Use AI to create a suitable prompt based on your input",
+      "button": "Generate Prompt",
+      "buttonLoading": "Generating..."
+    },
+    "generated": {
+      "title": "Generated Prompt",
+      "description": "This is the custom prompt generated for you"
+    },
+    "footer": {
+      "note": "Settings are saved locally and will persist across sessions"
+    },
+    "buttons": {
+      "reset": "Reset",
+      "save": "Save"
+    },
+    "resetDialog": {
+      "title": "Reset all prompts and settings",
+      "description": "Are you sure you want to reset all prompts and settings? This will: Delete all custom prompts, Reset AI language settings, Reset the form to default. iRIN's core prompt will be preserved.",
+      "confirm": "Reset All",
+      "successMessage": "✅ Reset successful!\n\n• Custom prompt: Deleted\n• Language settings: Reset\n• Core iRIN: Preserved"
+    },
     "loading": "Loading iRIN...",
     "languages": {
       "auto": "Auto Detect Language",
@@ -1388,7 +1434,6 @@
     "startNewChat": "Start a new chat to begin",
     "inputHelper": "Press Enter to send, Shift + Enter for new line",
     "characterCount": "{{count}} characters",
-
     "newChatTitle": "New Chat",
     "generatingTitle": "Generating title...",
     "editTitle": "Edit title",
@@ -1408,7 +1453,18 @@
       "validationError": "Invalid input provided. Please check your data and try again."
     },
     "keywords": {
-      "programming": ["code", "python", "javascript", "java", "calculate", "compute", "algorithm", "function", "script", "program"]
+      "programming": [
+        "code",
+        "python",
+        "javascript",
+        "java",
+        "calculate",
+        "compute",
+        "algorithm",
+        "function",
+        "script",
+        "program"
+      ]
     }
   },
   "review": {
@@ -1441,7 +1497,43 @@
         "title": "Japanese Theory",
         "subtitle": "Basic knowledge and fundamentals"
       },
-      "comingSoon": "Feature under development. Please come back later!"
+      "comingSoon": "Feature under development. Please come back later!",
+      "comingSoonMessage": "We are developing this feature to bring you the best learning experience.",
+      "vocabulary": {
+        "title": "Vocabulary",
+        "description": "Learn vocabulary by level",
+        "card": {
+          "ariaLabel": "Learn vocabulary level {level}"
+        },
+        "pageTitle": "JLPT {level} Vocabulary",
+        "pageSubtitle": "Learn vocabulary by level",
+        "search": {
+          "placeholder": "Search vocabulary or meaning (JP/EN/VN)",
+          "clear": "Clear",
+          "noResults": "No vocabulary found"
+        }
+      },
+      "grammar": {
+        "title": "Grammar",
+        "description": "Learn grammar by level",
+        "card": {
+          "ariaLabel": "Learn grammar level {level}",
+          "clickForDetails": "Click for details"
+        },
+        "pageTitle": "JLPT {level} Grammar",
+        "pageSubtitle": "Learn grammar patterns by level",
+        "search": {
+          "placeholder": "Search grammar or meaning (JP/EN/VN)",
+          "clear": "Clear",
+          "noResults": "No grammar found"
+        },
+        "detail": {
+          "structure": "Structure",
+          "vietnameseMeaning": "Vietnamese Meaning",
+          "englishMeaning": "English Meaning",
+          "examples": "Examples"
+        }
+      }
     },
     "practice": {
       "page": {
@@ -1505,7 +1597,6 @@
           "grammarAriaLabel": "AI grammar quiz"
         }
       },
-
       "generator": {
         "title": "Generate AI-Powered Exercise",
         "description": "Customize your practice session with AI-generated questions",
@@ -1526,7 +1617,8 @@
           "easy": "Easy",
           "medium": "Medium",
           "hard": "Hard",
-          "extremely_hard": "Extremely Hard"
+          "extremely_hard": "Extremely Hard",
+          "extremely": "Extremely"
         },
         "thinking": {
           "off": "Off",
@@ -1562,7 +1654,6 @@
           "tip4": "Track your progress over time"
         }
       },
-
       "exercise": {
         "feedback": {
           "correct": "You answered correctly",
@@ -2073,7 +2164,6 @@
       "search": {
         "placeholder": "Search books, authors..."
       },
-
       "noResults": {
         "title": "No books found",
         "description": "Try changing search keywords or filters"
@@ -2173,11 +2263,12 @@
     }
   },
   "seo": {
-    "title": "Free JLPT Practice Test N1-N5 | JLPT4YOU - AI Japanese Learning",
-    "description": "Free online JLPT practice tests for N5 to N1. Thousands of questions, mock exams with instant scoring, and detailed explanations. Start mastering the JLPT with JLPT4YOU today!",
+    "title": "Free JLPT Practice Tests N5 N4 N3 N2 N1 Online | Japanese Language Test - JLPT4YOU",
+    "description": "Free JLPT practice tests online for all levels N5 to N1. 10,000+ questions, past JLPT exams, kanji, grammar, vocabulary. Learn Japanese with AI tutor, detailed explanations, high pass rate. Start free today!",
+    "keywords": "jlpt practice test, jlpt n5 n4 n3 n2 n1, japanese test online, jlpt mock exam, learn japanese online, jlpt kanji, jlpt grammar, jlpt vocabulary, jlpt4you, japanese proficiency test",
     "structuredData": {
-      "title": "Online JLPT Practice",
-      "description": "Leading JLPT practice website with AI support"
+      "title": "JLPT4YOU - Free JLPT Practice Tests N5 N4 N3 N2 N1 Online",
+      "description": "Leading JLPT practice test website with AI-powered Japanese learning. Complete JLPT exam preparation with detailed explanations for all levels."
     }
   }
 }

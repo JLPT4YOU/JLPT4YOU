@@ -12,23 +12,33 @@ const originalConsole = {
   error: console.error
 };
 
+const BANNED_PATTERNS_DEV = [
+  'Download the React DevTools',
+  '[TranslationsContext]',
+  '[AuthContext]',
+  '[UserStorage.getItem]',
+];
+
 /**
  * Initialize console override based on environment
  */
 export function initConsoleOverride() {
-  // Only override in production
   if (process.env.NODE_ENV === 'production') {
-    // Disable debug logs in production
+    // In production, disable all non-error logs completely
     console.log = () => {};
     console.warn = () => {};
     console.info = () => {};
     console.debug = () => {};
-    
-    // Keep console.error for production debugging
-    // console.error remains unchanged
-    
-    // Optional: Add a subtle indicator that console is overridden
-    console.info = () => {};
+  } else {
+    // In development, filter out specific noisy logs
+    const originalLog = console.log;
+    console.log = (...args: any[]) => {
+      const firstArg = args[0];
+      if (typeof firstArg === 'string' && BANNED_PATTERNS_DEV.some(pattern => firstArg.includes(pattern))) {
+        return;
+      }
+      originalLog(...args);
+    };
   }
 }
 

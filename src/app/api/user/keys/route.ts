@@ -1,48 +1,38 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { supabaseAdmin } from '@/utils/supabase/admin'
+import { NextResponse } from 'next/server';
+import { createClient } from '@/utils/supabase/server';
 
-function getAccessToken(req: NextRequest): string | null {
-  const authHeader = req.headers.get('authorization')
-  if (authHeader?.startsWith('Bearer ')) {
-    return authHeader.replace('Bearer ', '').trim()
+export async function GET(request: Request) {
+  try {
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (!user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const { data, error } = await supabase
+      .from('user_api_keys')
+      .select('provider')
+      .eq('user_id', user.id);
+
+    if (error) {
+      console.error('Error fetching API key status:', error);
+      throw new Error('Failed to fetch key status from database.');
+    }
+
+    const configuredProviders = data?.map(item => item.provider) || [];
+
+    const status = {
+      gemini: configuredProviders.includes('gemini'),
+      groq: configuredProviders.includes('groq'),
+    };
+
+    return NextResponse.json(status);
+
+  } catch (err) {
+    const errorMessage = err instanceof Error ? err.message : 'An unexpected error occurred';
+    console.error('GET /api/user/keys Error:', errorMessage);
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
-  const cookieToken = req.cookies.get('sb-access-token')?.value
-  return cookieToken || null
 }
 
-// GET /api/user/keys -> { gemini: boolean, groq: boolean }
-export async function GET(request: NextRequest) {
-  if (!supabaseAdmin) {
-    return NextResponse.json({ error: 'Service role unavailable' }, { status: 500 })
-  }
-
-    const accessToken = getAccessToken(request)
-  if (!accessToken) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  }
-
-  const { data: { user }, error: authError } = await supabaseAdmin.auth.getUser(accessToken)
-  if (authError || !user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  }
-
-  const { data, error } = await (supabaseAdmin as any)
-    .from('user_api_keys')
-    .select('provider, key_encrypted')
-    .eq('user_id', user.id)
-
-  if (error) {
-    console.error('Error fetching keys:', error)
-    return NextResponse.json({ error: 'Failed to fetch' }, { status: 500 })
-  }
-
-  const providers: Record<string, boolean> = {
-    gemini: false,
-    groq: false
-  }
-  data.forEach((row: any) => {
-    providers[row.provider as string] = true
-  })
-
-  return NextResponse.json(providers)
-}

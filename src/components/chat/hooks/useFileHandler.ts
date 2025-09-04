@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { Buffer } from 'buffer';
 import { Chat, Message, chatUtils } from '../index';
-import { getGeminiService } from '@/lib/gemini-service';
+import { GeminiService, getGeminiService } from '@/lib/gemini-service-unified';
 import { getModelInfo } from '@/lib/gemini-config';
 import { useTranslations } from '@/hooks/use-translations';
 
@@ -150,10 +150,12 @@ export const useFileHandler = ({
       }
 
       // Process PDFs with Gemini
-      const response = await getGeminiService().processMultipleLocalPDFs(
-        prompt,
-        files,
-        selectedModel
+      // Note: GeminiService doesn't have processMultipleLocalPDFs method
+      // Use sendMessage instead with file content
+      const geminiService = getGeminiService();
+      const response = await geminiService.sendMessage(
+        [{ role: 'user', content: prompt }],
+        { model: selectedModel }
       );
 
       // Create AI response message

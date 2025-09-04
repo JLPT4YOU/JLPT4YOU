@@ -1,9 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getGeminiService } from '@/lib/gemini-service';
 import { generateExercisePrompt } from '@/lib/study/exercise-prompts';
-// Remove external API imports - use local proxy endpoints instead
 import { z } from 'zod';
 import { devConsole } from '@/lib/console-override';
+import { createClient } from '@/utils/supabase/server';
 
 // Request validation schema
 const generateRequestSchema = z.object({
@@ -38,55 +37,91 @@ export async function POST(request: NextRequest) {
     // Get materials from JLPT API or fallback to defaults
     const materialsToUse = await getMaterials(request, params.level, params.type, params.selectionMode, params.offset, params.materialLimit ?? params.count);
 
-    // Generate prompt for Gemini
+    // Get user's AI language setting first
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    let explainLanguage = 'auto';
+    
+    if (user) {
+      const { data: userData } = await supabase
+        .from('users')
+        .select('metadata')
+        .eq('id', user.id)
+        .single();
+      
+      explainLanguage = userData?.metadata?.aiLanguage || 'auto';
+      const customAiLanguage = userData?.metadata?.customAiLanguage || '';
+      
+      // Handle custom language
+      if (explainLanguage === 'custom' && customAiLanguage) {
+        explainLanguage = customAiLanguage;
+      }
+      
+      // Debug logging
+      console.log('[Exercise Generation] User metadata:', userData?.metadata);
+      console.log('[Exercise Generation] AI Language setting:', explainLanguage);
+    }
+    
+    // Generate prompt for Gemini with explicit language
     const prompt = generateExercisePrompt({
       level: params.level,
       type: params.type,
       count: finalCount,
       difficulty: params.difficulty,
       materials: materialsToUse,
-      tags: params.tags
+      tags: params.tags,
+      explanationLanguage: explainLanguage
     });
     
-    // Fetch Gemini API key from secure endpoint (Supabase-backed)
+    // Call AI proxy with exercise-specific system prompt override
     const origin = new URL(request.url).origin;
     const authHeader = request.headers.get('authorization') || '';
-    const keyRes = await fetch(`${origin}/api/user/keys/gemini/decrypt`, {
+    const cookieHeader = request.headers.get('cookie') || '';
+    
+    // Language instruction is now included in the prompt itself
+    // Exercise-specific system prompt - simple and focused
+    const exerciseSystemPrompt = `You are an expert JLPT exercise generator. Create high-quality practice questions following the exact format specified. Do NOT introduce yourself or add any personality. Focus only on generating accurate, educational content.`;
+    
+    const aiProxyRes = await fetch(`${origin}/api/ai-proxy/chat`, {
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        ...(authHeader ? { Authorization: authHeader } : {})
+        ...(authHeader ? { Authorization: authHeader } : {}),
+        ...(cookieHeader ? { Cookie: cookieHeader } : {})
       },
-      // Forward cookies as well in case auth uses cookies
-      // Next.js fetch in route handlers forwards cookies by default when same-origin
+      body: JSON.stringify({
+        provider: 'gemini',
+        messages: [
+          { role: 'system', content: exerciseSystemPrompt }, // Override system prompt
+          { role: 'user', content: prompt }
+        ],
+        options: {
+          model: params.model,
+          enableThinking: params.enableThinking,
+          thinkingConfig: { includeThoughts: true, thinkingBudget: -1 }
+        }
+      })
     });
-
-    if (!keyRes.ok) {
-      const status = keyRes.status;
+    
+    if (!aiProxyRes.ok) {
+      const status = aiProxyRes.status;
       if (status === 401) throw new Error('Bạn chưa đăng nhập. Vui lòng đăng nhập để sử dụng AI.');
-      if (status === 404) throw new Error('Chưa tìm thấy Gemini API key. Vào Settings → API Keys để thêm key.');
-      throw new Error(`Không thể lấy Gemini API key (status ${status}).`);
+      if (status === 404) throw new Error('Chưa tìm thấy API key. Vào Settings → API Keys để thêm key.');
+      let errorMsg = `AI proxy error (status ${status})`;
+      try {
+        const errorData = await aiProxyRes.json();
+        errorMsg = errorData.error || errorData.message || errorMsg;
+      } catch {}
+      throw new Error(errorMsg);
     }
-
-    const keyData = await keyRes.json().catch(() => ({} as any));
-    const apiKey = keyData?.key as string | undefined;
-    if (!apiKey) {
-      throw new Error('Gemini API key rỗng hoặc không hợp lệ. Vào Settings → API Keys để cấu hình.');
-    }
-
-    // Call Gemini AI to generate questions with server-fetched key
-    const geminiService = getGeminiService(apiKey);
-    const response = await geminiService.sendMessage([
-      { role: 'user', content: prompt }
-    ], {
-      model: params.model,
-      enableThinking: params.enableThinking,
-      thinkingConfig: { includeThoughts: true, thinkingBudget: -1 }
-    });
+    
+    const aiResponse = await aiProxyRes.json();
+    const responseText = aiResponse.response || aiResponse.content || aiResponse.message || '';
     
     // Parse AI response (robust)
     let questions: any;
     try {
-      const text = (response || '').trim();
+      const text = responseText.trim();
 
       // 1) Direct JSON parse
       try {

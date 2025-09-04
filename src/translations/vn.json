@@ -28,6 +28,8 @@
     "error": "Đã xảy ra lỗi",
     "retry": "Thử lại",
     "close": "Đóng",
+    "saving": "Đang lưu...",
+    "saved": "Đã lưu!",
     "back": "Quay lại",
     "next": "Tiếp theo",
     "previous": "Trước đó",
@@ -37,7 +39,8 @@
     "continue": "Tiếp tục",
     "instruction": "Chọn một tùy chọn phía trên để bắt đầu",
     "preview": "Xem trước",
-    "hide": "Ẩn"
+    "hide": "Ẩn",
+    "limit": "Giới hạn"
   },
   "landingChat": {
     "bubble": {
@@ -119,7 +122,7 @@
       },
       {
         "problem": "Học phí giáo viên hàng chục ngàn yên/tháng",
-        "solution": "AI hướng dẫn 24/7 chỉ $1.99/tháng"
+        "solution": "AI hướng dẫn 24/7 chỉ $2.49/tháng"
       },
       {
         "problem": "Tài liệu tràn lan, học không hiệu quả",
@@ -132,7 +135,7 @@
     "solutionTitle": "JLPT4YOU mang lại",
     "finalProblem": "Học hoài không tiến bộ, tài liệu loạn xạ, học phí quá cao?",
     "finalSolution": "JLPT4YOU giải quyết tất cả với AI thông minh, tài liệu chuẩn và giá cả hợp lý!",
-    "priceComparison": "Chỉ $1.99/tháng - rẻ hơn 1 ly trà sữa 🧋"
+    "priceComparison": "Chỉ $2.49/tháng - rẻ hơn 1 ly trà sữa 🧋"
   },
   "pricing": {
     "title": "Bảng Giá Đơn Giản",
@@ -140,35 +143,37 @@
     "free": {
       "name": "Miễn Phí",
       "price": "$0",
-      "period": "/tháng",
-      "description": "Dành cho người mới bắt đầu",
+      "period": "/trọn đời",
+      "description": "Truy cập trọn đời nội dung cơ bản",
       "features": [
-        "5 đề thi mỗi tháng",
-        "Từ vựng N5-N4 cơ bản",
-        "Ngữ pháp N5-N4",
-        "Báo cáo kết quả cơ bản"
+        "Toàn bộ nội dung N5-N4 trọn đời",
+        "Đề thi JLPT N5-N4 đầy đủ",
+        "Từ vựng N5-N4 chi tiết",
+        "Ngữ pháp N5-N4 hoàn chỉnh",
+        "Sách giáo khoa N5-N4"
       ],
       "limitations": [
-        "Không có AI giải thích",
-        "Không theo dõi tiến độ",
-        "Không có tài liệu nâng cao"
+        "Không có AI hỗ trợ",
+        "Không xem phim độc quyền",
+        "Không luyện thi lái xe"
       ],
       "button": "Bắt đầu miễn phí"
     },
     "premium": {
       "name": "Premium",
-      "price": "$1.99",
+      "price": "$2.49",
       "period": "/tháng",
       "badge": "KHUYẾN NGHỊ",
-      "description": "Trải nghiệm học tập hoàn chỉnh",
+      "description": "Trải nghiệm học tập toàn diện",
       "features": [
-        "Không giới hạn đề thi",
-        "Đầy đủ từ vựng N5-N1",
-        "Ngữ pháp N5-N1 chi tiết",
-        "AI giải thích iRIN",
-        "Theo dõi tiến độ chi tiết",
-        "Thư viện tài liệu độc quyền",
-        "Hỗ trợ ưu tiên"
+        "Toàn bộ nội dung N5 đến N1",
+        "AI iRIN không giới hạn",
+        "Đề thi JLPT N5-N1 đầy đủ",
+        "Luyện thi lái xe Nhật Bản",
+        "Xem phim độc quyền",
+        "Tài liệu giáo khoa cập nhật liên tục",
+        "Từ vựng & ngữ pháp N5-N1 chi tiết",
+        "Hỗ trợ ưu tiên 24/7"
       ],
       "button": "Nâng cấp Premium"
     }
@@ -279,13 +284,6 @@
       "register": "Tạo tài khoản",
       "forgotPassword": "Quên mật khẩu"
     },
-
-
-
-
-
-
-
     "subtitles": {
       "login": "Chào mừng bạn quay trở lại với JLPT4YOU",
       "register": "Bắt đầu hành trình học tiếng Nhật của bạn",
@@ -383,7 +381,6 @@
     "errors": {
       "general": "Đã xảy ra lỗi. Vui lòng thử lại.",
       "loginFailed": "Sai tên đăng nhập hoặc mật khẩu",
-
       "emailExists": "Email này đã được sử dụng",
       "resendFailed": "Không thể gửi lại email. Vui lòng thử lại.",
       "registrationError": "Đã xảy ra lỗi trong quá trình đăng ký. Vui lòng thử lại.",
@@ -451,10 +448,13 @@
       "settings": {
         "title": "Cài đặt",
         "description": "Tùy chỉnh tài khoản"
+      },
+      "movie": {
+        "title": "Phim ảnh",
+        "description": "Xem phim học tiếng Nhật"
       }
     }
   },
-
   "jlpt": {
     "page": {
       "title": "Chọn loại đề thi JLPT",
@@ -796,7 +796,6 @@
       "incorrect": "Sai",
       "flagged": "Câu đánh dấu"
     },
-
     "question": {
       "number": "Câu {number}",
       "details": "Chi tiết",
@@ -944,22 +943,21 @@
       "cancelButton": "Hủy bỏ"
     }
   },
-
   "pageTitle": {
-    "home": "Trang chủ",
-    "examResults": "Kết quả thi",
-    "reviewAnswers": "Xem đáp án",
-    "study": "Học bài",
-    "studyTheory": "Lý thuyết",
-    "studyPractice": "Thực hành"
+    "home": "Luyện Thi JLPT Online - Trang Chủ",
+    "challenge": "Thách Thức JLPT - Đề Thi Thử",
+    "study": "Học Tiếng Nhật Online - Kanji, Ngữ Pháp, Từ Vựng",
+    "jlptExercise": "Bài Tập JLPT N5 N4 N3 N2 N1 - Luyện Tập",
+    "jlptTestHistory": "Lịch Sử Đề Thi JLPT - Kết Quả Học Tập",
+    "drivingTestHistory": "Lịch Sử Bài Thi Lái Xe Nhật Bản"
   },
   "pageDescription": {
-    "home": "Trang chủ - Luyện thi JLPT và bằng lái xe online",
-    "examResults": "Xem kết quả thi và phân tích chi tiết",
-    "reviewAnswers": "Xem đáp án chi tiết và phân tích từng câu hỏi",
-    "study": "Học bài - Lý thuyết và thực hành tiếng Nhật",
-    "studyTheory": "Lý thuyết - Kiến thức cơ bản tiếng Nhật",
-    "studyPractice": "Thực hành - Bài tập ứng dụng tiếng Nhật"
+    "home": "Website luyện thi JLPT online miễn phí tốt nhất. Đề thi thử JLPT N5, N4, N3, N2, N1 với hơn 10,000 câu hỏi. Học tiếng Nhật với AI, giải thích chi tiết.",
+    "challenge": "Thử sức với đề thi thử JLPT các năm gần nhất. Đánh giá năng lực tiếng Nhật chính xác với bài thi mô phỏng JLPT thực tế.",
+    "study": "Học tiếng Nhật online hệ thống từ N5 đến N1. Kanji JLPT, ngữ pháp JLPT, từ vựng JLPT đầy đủ. AI hỗ trợ học tập 24/7.",
+    "jlptExercise": "10,000+ câu hỏi luyện thi JLPT các cấp độ N5, N4, N3, N2, N1. Bài tập kanji, ngữ pháp, từ vựng, đọc hiểu, nghe hiểu.",
+    "jlptTestHistory": "Theo dõi tiến độ luyện thi JLPT của bạn. Phân tích điểm mạnh, điểm yếu để cải thiện kỹ năng tiếng Nhật hiệu quả.",
+    "drivingTestHistory": "Lịch sử và kết quả thi bằng lái xe tại Nhật Bản. Ôn thi lý thuyết lái xe Nhật Bản tiếng Việt."
   },
   "examTitle": {
     "challenge": "Thử thách JLPT {level}",
@@ -1219,6 +1217,53 @@
     }
   },
   "chat": {
+    "prompts": {
+      "aiLanguage": {
+        "title": "Ngôn ngữ AI",
+        "placeholder": "Chọn ngôn ngữ AI",
+        "customPlaceholder": "Nhập ngôn ngữ bạn muốn (ví dụ: Tiếng Tây Ban Nha, Pháp, Đức)",
+        "options": {
+          "auto": "Tự động",
+          "vietnamese": "Tiếng Việt",
+          "english": "Tiếng Anh",
+          "japanese": "Tiếng Nhật",
+          "custom": "Tùy chỉnh"
+        }
+      },
+      "personalization": {
+        "title": "Cá nhân hóa",
+        "preferredName": {
+          "label": "Tên ưa thích",
+          "placeholder": "Nhập tên ưa thích của bạn"
+        },
+        "desiredTraits": {
+          "label": "Đặc điểm mong muốn",
+          "placeholder": "ví dụ: thân thiện, hài hước, trang trọng"
+        },
+        "personalInfo": {
+          "label": "Thông tin cá nhân",
+          "placeholder": "Chia sẻ một số thông tin cá nhân để có phản hồi tốt hơn"
+        },
+        "additionalRequests": {
+          "label": "Yêu cầu bổ sung",
+          "placeholder": "Bất kỳ yêu cầu nào khác cho AI"
+        }
+      },
+      "generate": {
+        "title": "Tạo gợi ý",
+        "description": "Tạo một gợi ý dựa trên cài đặt của bạn.",
+        "button": "Tạo",
+        "buttonLoading": "Đang tạo..."
+      },
+      "generated": {
+        "title": "Gợi ý đã tạo",
+        "description": "Đây là gợi ý được tạo dựa trên cài đặt của bạn."
+      },
+      "buttons": {
+        "reset": "Đặt lại",
+        "save": "Lưu"
+      }
+    },
     "welcomeMessage": "Hãy bắt đầu cuộc trò chuyện để nhận được hỗ trợ học tập từ cô iRIN",
     "inputPlaceholder": "Nhập tin nhắn...",
     "userLabel": "Em",
@@ -1322,7 +1367,6 @@
     "startNewChat": "Bắt đầu chat mới để học cùng cô iRIN",
     "inputHelper": "Nhấn Enter để gửi, Shift + Enter để xuống dòng",
     "characterCount": "{{count}} ký tự",
-
     "newChatTitle": "Cuộc trò chuyện mới",
     "generatingTitle": "Đang tạo tiêu đề...",
     "editTitle": "Chỉnh sửa tiêu đề",
@@ -1342,7 +1386,13 @@
       "validationError": "Dữ liệu đầu vào không hợp lệ. Vui lòng kiểm tra và thử lại."
     },
     "keywords": {
-      "programming": ["tính toán", "lập trình", "viết code", "chạy code", "thực thi"]
+      "programming": [
+        "tính toán",
+        "lập trình",
+        "viết code",
+        "chạy code",
+        "thực thi"
+      ]
     }
   },
   "review": {
@@ -1375,7 +1425,43 @@
         "title": "Lý thuyết tiếng Nhật",
         "subtitle": "Kiến thức cơ bản và nền tảng"
       },
-      "comingSoon": "Tính năng đang được phát triển. Vui lòng quay lại sau!"
+      "comingSoon": "Tính năng đang được phát triển. Vui lòng quay lại sau!",
+      "comingSoonMessage": "Chúng tôi đang phát triển tính năng này để mang đến trải nghiệm học tập tốt nhất cho bạn.",
+      "vocabulary": {
+        "title": "Từ vựng",
+        "description": "Học từ vựng theo cấp độ",
+        "card": {
+          "ariaLabel": "Học từ vựng cấp độ {level}"
+        },
+        "pageTitle": "JLPT {level} Từ vựng",
+        "pageSubtitle": "Học từ vựng theo cấp độ",
+        "search": {
+          "placeholder": "Tìm từ vựng hoặc nghĩa (JP/EN/VN)",
+          "clear": "Xóa",
+          "noResults": "Không có từ vựng"
+        }
+      },
+      "grammar": {
+        "title": "Ngữ pháp",
+        "description": "Học ngữ pháp theo cấp độ",
+        "card": {
+          "ariaLabel": "Học ngữ pháp cấp độ {level}",
+          "clickForDetails": "Xem chi tiết"
+        },
+        "pageTitle": "JLPT {level} Ngữ pháp",
+        "pageSubtitle": "Học mẫu ngữ pháp theo cấp độ",
+        "search": {
+          "placeholder": "Tìm ngữ pháp hoặc nghĩa (JP/EN/VN)",
+          "clear": "Xóa",
+          "noResults": "Không có ngữ pháp"
+        },
+        "detail": {
+          "structure": "Cấu trúc",
+          "vietnameseMeaning": "Nghĩa tiếng Việt",
+          "englishMeaning": "Nghĩa tiếng Anh",
+          "examples": "Ví dụ"
+        }
+      }
     },
     "practice": {
       "page": {
@@ -1439,7 +1525,6 @@
           "grammarAriaLabel": "Trắc nghiệm AI ngữ pháp"
         }
       },
-
       "generator": {
         "title": "Tạo bài tập thực hành bằng AI",
         "description": "Tùy chỉnh phiên luyện tập của bạn với câu hỏi được tạo bởi AI",
@@ -1460,7 +1545,8 @@
           "easy": "Dễ",
           "medium": "Trung bình",
           "hard": "Khó",
-          "extremely_hard": "Cực khó"
+          "extremely_hard": "Cực khó",
+          "extremely": "Cực kỳ"
         },
         "thinking": {
           "off": "Tắt",
@@ -1496,7 +1582,6 @@
           "tip4": "Theo dõi tiến trình theo thời gian"
         }
       },
-
       "exercise": {
         "feedback": {
           "correct": "Bạn đã trả lời đúng",
@@ -1661,7 +1746,6 @@
       }
     }
   },
-
   "settings": {
     "main": {
       "description": "Tùy chỉnh giao diện, hành vi và cấu hình API của iRIN."
@@ -1952,7 +2036,6 @@
       "search": {
         "placeholder": "Tìm kiếm sách, tác giả..."
       },
-
       "noResults": {
         "title": "Không tìm thấy sách",
         "description": "Thử thay đổi từ khóa tìm kiếm hoặc bộ lọc"
@@ -2052,11 +2135,78 @@
     }
   },
   "seo": {
-    "title": "Luyện thi JLPT Online N1-N5 Miễn Phí | JLPT4YOU - Học Tiếng Nhật với AI",
-    "description": "Luyện thi JLPT online từ N5 đến N1 với hàng ngàn câu hỏi, đề thi thử miễn phí có đáp án và giải thích chi tiết. Bắt đầu chinh phục JLPT cùng JLPT4YOU ngay hôm nay!",
+    "title": "Luyện Thi JLPT N5 N4 N3 N2 N1 Online Miễn Phí | Đề Thi Thử JLPT - JLPT4YOU",
+    "description": "Luyện thi JLPT online miễn phí từ N5 đến N1. 10,000+ câu hỏi, đề thi thử JLPT các năm, kanji, ngữ pháp, từ vựng. Học tiếng Nhật với AI, giải thích chi tiết, tỷ lệ đậu cao. Đăng ký học thử ngay!",
+    "keywords": "luyện thi jlpt, đề thi jlpt n5 n4 n3 n2 n1, thi jlpt online, đề thi thử jlpt, học tiếng nhật online, kanji jlpt, ngữ pháp jlpt, từ vựng jlpt, jlpt4you, thi năng lực tiếng nhật",
     "structuredData": {
-      "title": "Luyện thi JLPT Online",
-      "description": "Website luyện thi JLPT hàng đầu với AI hỗ trợ"
+      "title": "JLPT4YOU - Luyện Thi JLPT N5 N4 N3 N2 N1 Online Miễn Phí",
+      "description": "Website luyện thi JLPT online hàng đầu Việt Nam với AI hỗ trợ học tiếng Nhật. Đề thi thử JLPT đầy đủ các cấp độ, giải thích chi tiết từng câu hỏi."
     }
+  },
+  "irin": {
+    "aiLanguage": {
+      "title": "Bạn muốn iRIN sử dụng ngôn ngữ nào để giao tiếp với bạn?",
+      "placeholder": "Chọn ngôn ngữ",
+      "options": {
+        "auto": "Tự động phát hiện",
+        "vietnamese": "Tiếng Việt",
+        "english": "Tiếng Anh",
+        "japanese": "Tiếng Nhật",
+        "custom": "Tùy chỉnh"
+      },
+      "customPlaceholder": "Nhập ngôn ngữ mong muốn (ví dụ: Tiếng Hàn, Tiếng Pháp, Tiếng Tây Ban Nha...)"
+    },
+    "personalization": {
+      "title": "Cài đặt cá nhân hóa",
+      "preferredName": {
+        "label": "Bạn muốn iRIN gọi bạn là gì?",
+        "placeholder": "Tên hoặc biệt danh bạn muốn iRIN sử dụng"
+      },
+      "desiredTraits": {
+        "label": "Bạn muốn iRIN có những đặc điểm gì?",
+        "placeholder": "Mô tả tính cách và đặc điểm bạn muốn ở iRIN"
+      },
+      "personalInfo": {
+        "label": "Bạn muốn iRIN biết gì thêm về bạn?",
+        "placeholder": "Thông tin cá nhân để iRIN hỗ trợ bạn tốt hơn (tùy chọn)"
+      },
+      "additionalRequests": {
+        "label": "Yêu cầu bổ sung",
+        "placeholder": "Điều gì khác bạn muốn iRIN ghi nhớ? (tùy chọn)"
+      }
+    },
+    "generate": {
+      "title": "Tạo Prompt tùy chỉnh",
+      "description": "Sử dụng AI để tạo prompt phù hợp dựa trên thông tin của bạn",
+      "button": "Tạo Prompt",
+      "buttonLoading": "Đang tạo..."
+    },
+    "generated": {
+      "title": "Prompt đã tạo",
+      "description": "Đây là prompt tùy chỉnh được tạo cho bạn"
+    },
+    "footer": {
+      "note": "Cài đặt được lưu cục bộ và sẽ được giữ qua các phiên làm việc"
+    },
+    "buttons": {
+      "reset": "Đặt lại",
+      "save": "Lưu"
+    },
+    "resetDialog": {
+      "title": "Đặt lại tất cả prompt và cài đặt",
+      "description": "Bạn có chắc muốn đặt lại tất cả prompt và cài đặt? Điều này sẽ: Xóa tất cả prompt tùy chỉnh, Đặt lại cài đặt ngôn ngữ AI, Đặt lại form về mặc định. Prompt cốt lõi của iRIN sẽ được giữ nguyên.",
+      "confirm": "Đặt lại tất cả",
+      "successMessage": "✅ Đặt lại thành công!\n\n• Prompt tùy chỉnh: Đã xóa\n• Cài đặt ngôn ngữ: Đã đặt lại\n• iRIN cốt lõi: Được giữ nguyên"
+    },
+    "loading": "Đang tải iRIN...",
+    "languages": {
+      "auto": "Tự động phát hiện ngôn ngữ",
+      "vietnamese": "Tiếng Việt",
+      "english": "Tiếng Anh",
+      "japanese": "日本語",
+      "custom": "Tùy chỉnh"
+    },
+    "aiResponse": "Xin chào! Tôi là iRIN từ nền tảng JLPT4YOU. Mặc dù chuyên môn của tôi là tiếng Nhật, tôi có thể thảo luận về bất kỳ chủ đề nào bạn quan tâm. Bạn đã hỏi: \"{{question}}\". Hôm nay bạn muốn nói về điều gì?",
+    "aiAssistant": "Trợ lý AI"
   }
 }

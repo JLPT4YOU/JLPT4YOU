@@ -29,11 +29,12 @@ export interface SEOConfig {
 export const JLPT_KEYWORDS = {
   vn: {
     general: [
-      'JLPT', 'thi JLPT', 'luyện thi JLPT', 'học tiếng Nhật', 
-      'tiếng Nhật trực tuyến', 'thi năng lực tiếng Nhật',
+      'luyện thi jlpt', 'đề thi jlpt n5 n4 n3 n2 n1', 'thi jlpt online',
+      'đề thi thử jlpt', 'học tiếng nhật online', 'kanji jlpt',
+      'ngữ pháp jlpt', 'từ vựng jlpt', 'jlpt4you', 'thi năng lực tiếng nhật',
       'JLPT N1', 'JLPT N2', 'JLPT N3', 'JLPT N4', 'JLPT N5',
-      'từ vựng tiếng Nhật', 'ngữ pháp tiếng Nhật', 'kanji',
-      'luyện thi tiếng Nhật miễn phí', 'đề thi JLPT'
+      'đề thi jlpt các năm', 'luyện thi tiếng nhật miễn phí',
+      'bài tập jlpt', 'đọc hiểu jlpt', 'nghe hiểu jlpt'
     ],
     login: ['đăng nhập JLPT', 'tài khoản học tiếng Nhật'],
     register: ['đăng ký học tiếng Nhật', 'tạo tài khoản JLPT'],
@@ -41,11 +42,11 @@ export const JLPT_KEYWORDS = {
   },
   jp: {
     general: [
-      'JLPT', '日本語能力試験', 'JLPT対策', '日本語学習',
-      'オンライン日本語', 'JLPT練習問題',
+      'jlpt 練習問題', 'jlpt n5 n4 n3 n2 n1', '日本語能力試験',
+      'jlpt 過去問', '日本語学習 オンライン', 'jlpt 漢字',
+      'jlpt 文法', 'jlpt 語彙', 'jlpt4you', '日本語試験対策',
       'JLPT N1', 'JLPT N2', 'JLPT N3', 'JLPT N4', 'JLPT N5',
-      '日本語語彙', '日本語文法', '漢字練習',
-      '無料JLPT対策', 'JLPT模擬試験'
+      '無料JLPT対策', 'JLPT模擬試験', '読解問題', '聴解問題'
     ],
     login: ['JLPTログイン', '日本語学習アカウント'],
     register: ['日本語学習登録', 'JLPTアカウント作成'],
@@ -53,11 +54,12 @@ export const JLPT_KEYWORDS = {
   },
   en: {
     general: [
-      'JLPT', 'Japanese Language Proficiency Test', 'JLPT practice',
-      'learn Japanese online', 'Japanese study', 'JLPT preparation',
+      'jlpt practice test', 'jlpt n5 n4 n3 n2 n1', 'japanese test online',
+      'jlpt mock exam', 'learn japanese online', 'jlpt kanji',
+      'jlpt grammar', 'jlpt vocabulary', 'jlpt4you', 'japanese proficiency test',
       'JLPT N1', 'JLPT N2', 'JLPT N3', 'JLPT N4', 'JLPT N5',
-      'Japanese vocabulary', 'Japanese grammar', 'kanji practice',
-      'free JLPT practice', 'JLPT mock test', 'Japanese learning app'
+      'past jlpt exams', 'free jlpt practice', 'jlpt exercises',
+      'jlpt reading comprehension', 'jlpt listening', 'japanese learning app'
     ],
     login: ['JLPT login', 'Japanese learning account'],
     register: ['Japanese learning signup', 'create JLPT account'],
@@ -68,18 +70,18 @@ export const JLPT_KEYWORDS = {
 // Site information by language
 export const SITE_INFO = {
   vn: {
-    name: 'JLPT4You - Luyện thi JLPT Online',
-    description: 'Website luyện thi JLPT hàng đầu Việt Nam. Học tiếng Nhật miễn phí với AI, luyện đề thi JLPT N1-N5, từ vựng, ngữ pháp và kanji.',
+    name: 'Luyện Thi JLPT N5 N4 N3 N2 N1 Online Miễn Phí | Đề Thi Thử JLPT - JLPT4YOU',
+    description: 'Luyện thi JLPT online miễn phí từ N5 đến N1. 10,000+ câu hỏi, đề thi thử JLPT các năm, kanji, ngữ pháp, từ vựng. Học tiếng Nhật với AI, giải thích chi tiết, tỷ lệ đậu cao. Đăng ký học thử ngay!',
     author: 'JLPT4You Team'
   },
   jp: {
-    name: 'JLPT4You - オンラインJLPT対策',
-    description: '最高のJLPT対策サイト。AIと一緒に無料で日本語を学習、JLPT N1-N5の練習問題、語彙、文法、漢字を提供。',
+    name: 'JLPT練習問題 N5 N4 N3 N2 N1 無料オンライン | 日本語能力試験対策 - JLPT4YOU',
+    description: '日本語能力試験(JLPT) N5からN1まで完全無料オンライン学習。10,000問以上、過去問、漢字、文法、語彙、読解、聴解。AI講師による詳細解説、合格率アップ。今すぐ無料体験！',
     author: 'JLPT4You チーム'
   },
   en: {
-    name: 'JLPT4You - Online JLPT Practice',
-    description: 'Leading JLPT practice website. Learn Japanese for free with AI, practice JLPT N1-N5 tests, vocabulary, grammar and kanji.',
+    name: 'Free JLPT Practice Tests N5 N4 N3 N2 N1 Online | Japanese Language Test - JLPT4YOU',
+    description: 'Free JLPT practice tests online for all levels N5 to N1. 10,000+ questions, past JLPT exams, kanji, grammar, vocabulary. Learn Japanese with AI tutor, detailed explanations, high pass rate. Start free today!',
     author: 'JLPT4You Team'
   }
 }

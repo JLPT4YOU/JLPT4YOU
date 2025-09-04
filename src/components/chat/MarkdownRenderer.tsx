@@ -46,6 +46,12 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
 }) => {
   // Pre-process content to fix list formatting and math issues
   const processedContent = content
+    // IMPORTANT: Remove any think/thinking tags that might have slipped through
+    // This prevents React from trying to render them as HTML elements
+    .replace(/<(?:think|thinking)>[\s\S]*?<\/(?:think|thinking)>/g, '')
+    // Also remove any unclosed think tags as a safety measure
+    .replace(/<(?:think|thinking)>/g, '')
+    .replace(/<\/(?:think|thinking)>/g, '')
     // Fix numbered lists where number and text are on separate lines
     .replace(/^(\d+\.)\s*\n([^\n])/gm, '$1 $2')
     // Fix bullet lists where bullet and text are on separate lines (only at start of line)

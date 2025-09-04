@@ -57,7 +57,7 @@ export function PremiumPricingPage({ translations }: PremiumPricingPageProps) {
 
   const premiumData = (t('pricing.premium') || {
     name: 'Premium',
-    price: '$1.99',
+    price: '$2.49',
     period: '/month',
     description: 'Complete learning experience',
     features: ['Unlimited exams', 'Complete N5-N1 vocabulary', 'Detailed N5-N1 grammar', 'iRIN AI explanations', 'Detailed progress tracking', 'Exclusive materials library', 'Priority support'],

@@ -76,6 +76,43 @@ export const PromptSettings: React.FC<PromptSettingsProps> = ({
       const savedCustomLanguage = UserStorage.getItem('ai_custom_language') || '';
       setAiLanguage(savedLanguage);
       setCustomLanguage(savedCustomLanguage);
+
+      // Also load custom prompt from server
+      (async () => {
+        try {
+          const { createClient } = await import('@/utils/supabase/client');
+          const supabase = createClient();
+          const { data: { session } } = await supabase.auth.getSession();
+          const headers: HeadersInit = { 'Content-Type': 'application/json' };
+          if (session?.access_token) headers['Authorization'] = `Bearer ${session.access_token}`;
+          const res = await fetch('/api/user/prompt', { headers });
+          if (res.ok) {
+            const { promptConfig, customPrompt, aiLanguage: srvLang, customAiLanguage: srvCustomLang } = await res.json();
+            // Full prompt config from server if available
+            if (promptConfig && typeof promptConfig === 'object') {
+              setConfig({
+                preferredName: promptConfig.preferredName || '',
+                desiredTraits: promptConfig.desiredTraits || '',
+                personalInfo: promptConfig.personalInfo || '',
+                additionalRequests: promptConfig.additionalRequests || '',
+                generatedPrompt: promptConfig.generatedPrompt || ''
+              });
+            } else {
+              // Fallback: only generated prompt
+              if (typeof customPrompt === 'string' && customPrompt.trim()) {
+                setConfig(prev => ({ ...prev, generatedPrompt: customPrompt }));
+              } else if (customPrompt?.generatedPrompt) {
+                setConfig(prev => ({ ...prev, generatedPrompt: customPrompt.generatedPrompt }));
+              }
+            }
+            // Language
+            if (srvLang) setAiLanguage(srvLang);
+            if (typeof srvCustomLang === 'string') setCustomLanguage(srvCustomLang);
+          }
+        } catch (e) {
+          console.warn('Failed to load server custom prompt:', e);
+        }
+      })();
     } else {
       // Reset to defaults when no user
       setAiLanguage('auto');
@@ -111,7 +148,42 @@ export const PromptSettings: React.FC<PromptSettingsProps> = ({
     setIsSaving(true);
     setIsSaved(false);
     try {
+      // Save locally for fast UX and offline fallback
       await saveCustomPromptConfig(config);
+
+      // Persist to server (Supabase) so it applies across devices and server-side chats
+      try {
+        const { createClient } = await import('@/utils/supabase/client');
+        const supabase = createClient();
+        const { data: { session } } = await supabase.auth.getSession();
+
+        const payload = {
+          promptConfig: {
+            preferredName: config.preferredName,
+            desiredTraits: config.desiredTraits,
+            personalInfo: config.personalInfo,
+            additionalRequests: config.additionalRequests,
+            generatedPrompt: config.generatedPrompt
+          },
+          aiLanguage,
+          customAiLanguage: customLanguage
+        };
+
+        const headers: HeadersInit = { 'Content-Type': 'application/json' };
+        if (session?.access_token) headers['Authorization'] = `Bearer ${session.access_token}`;
+
+        const res = await fetch('/api/user/prompt', {
+          method: 'PUT',
+          headers,
+          body: JSON.stringify(payload)
+        });
+        if (!res.ok) {
+          const txt = await res.text();
+          console.warn('Failed to save prompt to server:', res.status, txt);
+        }
+      } catch (e) {
+        console.warn('Network error saving prompt to server:', e);
+      }
 
       // Save AI language settings to user-scoped storage
       UserStorage.setItem('ai_language', aiLanguage);

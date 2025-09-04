@@ -61,13 +61,10 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: '/favicon.svg?v=graduation-cap-2025', type: 'image/svg+xml' },
-      { url: '/favicon-32x32.svg?v=graduation-cap-2025', sizes: '32x32', type: 'image/svg+xml' },
-      { url: '/favicon-16x16.svg?v=graduation-cap-2025', sizes: '16x16', type: 'image/svg+xml' }
+      { url: '/favicon.ico', type: 'image/x-icon', sizes: 'any' },
+      { url: '/favicon.svg', type: 'image/svg+xml' },
     ],
-    apple: [
-      { url: '/favicon.svg?v=graduation-cap-2025', sizes: '180x180', type: 'image/svg+xml' }
-    ]
+    apple: '/apple-touch-icon.png',
   },
   manifest: '/site.webmanifest',
   openGraph: {
@@ -115,10 +112,28 @@ export default function RootLayout({
   return (
     <html lang="vi" suppressHydrationWarning>
       <head>
-        <link rel="icon" type="image/svg+xml" href="/graduation-cap-icon.svg" />
-        <link rel="icon" type="image/svg+xml" sizes="32x32" href="/favicon-32x32.svg?v=graduation-cap-2025" />
-        <link rel="icon" type="image/svg+xml" sizes="16x16" href="/favicon-16x16.svg?v=graduation-cap-2025" />
-        <link rel="shortcut icon" href="/graduation-cap-icon.svg" />
+        {/* Critical: Apply theme immediately to prevent FOUC */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  const theme = localStorage.getItem('jlpt4you-theme');
+                  if (theme) {
+                    document.documentElement.classList.add(theme);
+                  } else {
+                    // Default to light theme if no preference saved
+                    document.documentElement.classList.add('light');
+                  }
+                } catch (e) {
+                  // Fallback to light theme if localStorage is not available
+                  document.documentElement.classList.add('light');
+                }
+              })();
+            `,
+          }}
+        />
+
 
         {/* Theme color tự động điều chỉnh theo giao diện sáng/tối */}
         <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
@@ -147,9 +162,10 @@ export default function RootLayout({
       >
         <ThemeProvider
           attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
+          defaultTheme="light"
+          enableSystem={false}
+          disableTransitionOnChange={false}
+          storageKey="jlpt4you-theme"
         >
             <TranslationsProvider>
               <LoadingProvider>

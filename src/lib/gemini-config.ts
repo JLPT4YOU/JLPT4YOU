@@ -8,9 +8,9 @@ import {
   HarmCategory,
 } from '@google/genai';
 
-// Gemini Model Definitions
+// Gemini model definitions with support for various features
 export const GEMINI_MODELS = {
-  // Gemini 2.5 Series (Support Google Search + Thinking)
+  // Gemini 2.5 Series (Support Google Search + Code Execution + Thinking)
   PRO_2_5: 'gemini-2.5-pro',
   FLASH_2_5: 'gemini-2.5-flash',
   FLASH_LITE_2_5: 'gemini-2.5-flash-lite',
@@ -46,10 +46,10 @@ export interface GeminiModelInfo {
 }
 
 export const GEMINI_MODEL_INFO: Record<string, GeminiModelInfo> = {
-  // Gemini 2.5 Series (Support Google Search + Thinking)
+  // Gemini 2.5 Series (Support Google Search + Code Execution + Thinking)
   [GEMINI_MODELS.PRO_2_5]: {
     id: GEMINI_MODELS.PRO_2_5,
-    name: 'Gemini 2.5 Pro',
+    name: 'Gemini Pro 2.5',
     description: 'Most capable model with thinking mode',
     supportsStreaming: true,
     supportsFiles: true,
@@ -60,7 +60,7 @@ export const GEMINI_MODEL_INFO: Record<string, GeminiModelInfo> = {
   },
   [GEMINI_MODELS.FLASH_2_5]: {
     id: GEMINI_MODELS.FLASH_2_5,
-    name: 'Gemini 2.5 Flash',
+    name: 'Gemini Flash 2.5',
     description: 'Fast with thinking mode',
     supportsStreaming: true,
     supportsFiles: true,
@@ -71,7 +71,7 @@ export const GEMINI_MODEL_INFO: Record<string, GeminiModelInfo> = {
   },
   [GEMINI_MODELS.FLASH_LITE_2_5]: {
     id: GEMINI_MODELS.FLASH_LITE_2_5,
-    name: 'Gemini 2.5 Flash-Lite',
+    name: 'Gemini Flash-Lite 2.5',
     description: 'Most cost-efficient with thinking',
     supportsStreaming: true,
     supportsFiles: true,
@@ -82,7 +82,7 @@ export const GEMINI_MODEL_INFO: Record<string, GeminiModelInfo> = {
   },
   [GEMINI_MODELS.FLASH_LITE_PREVIEW_2_5]: {
     id: GEMINI_MODELS.FLASH_LITE_PREVIEW_2_5,
-    name: 'Gemini 2.5 Flash-Lite Preview',
+    name: 'Gemini Flash-Lite Preview 2.5',
     description: 'Preview version of Flash-Lite',
     supportsStreaming: true,
     supportsFiles: true,
@@ -93,7 +93,7 @@ export const GEMINI_MODEL_INFO: Record<string, GeminiModelInfo> = {
   },
   [GEMINI_MODELS.FLASH_PREVIEW_2_5]: {
     id: GEMINI_MODELS.FLASH_PREVIEW_2_5,
-    name: 'Gemini 2.5 Flash Preview',
+    name: 'Gemini Flash Preview 2.5',
     description: 'Preview version with latest features',
     supportsFiles: true,
     supportsStreaming: true,
@@ -106,7 +106,7 @@ export const GEMINI_MODEL_INFO: Record<string, GeminiModelInfo> = {
   // Gemini 2.0 Series (Support Google Search)
   [GEMINI_MODELS.FLASH_2_0]: {
     id: GEMINI_MODELS.FLASH_2_0,
-    name: 'Gemini 2.0 Flash',
+    name: 'Gemini Flash 2.0',
     description: 'Next-gen with search',
     supportsStreaming: true,
     supportsFiles: true,
@@ -117,7 +117,7 @@ export const GEMINI_MODEL_INFO: Record<string, GeminiModelInfo> = {
   },
   [GEMINI_MODELS.FLASH_001_2_0]: {
     id: GEMINI_MODELS.FLASH_001_2_0,
-    name: 'Gemini 2.0 Flash-001',
+    name: 'Gemini Flash-001 2.0',
     description: 'Stable version of 2.0 Flash',
     supportsStreaming: true,
     supportsFiles: true,
@@ -128,7 +128,7 @@ export const GEMINI_MODEL_INFO: Record<string, GeminiModelInfo> = {
   },
   [GEMINI_MODELS.FLASH_EXP_2_0]: {
     id: GEMINI_MODELS.FLASH_EXP_2_0,
-    name: 'Gemini 2.0 Flash Experimental',
+    name: 'Gemini Flash Exp 2.0',
     description: 'Experimental features and capabilities',
     supportsStreaming: true,
     supportsFiles: true,
@@ -139,7 +139,7 @@ export const GEMINI_MODEL_INFO: Record<string, GeminiModelInfo> = {
   },
   [GEMINI_MODELS.FLASH_LITE_2_0]: {
     id: GEMINI_MODELS.FLASH_LITE_2_0,
-    name: 'Gemini 2.0 Flash-Lite',
+    name: 'Gemini Flash-Lite 2.0',
     description: 'Cost-efficient with search',
     supportsStreaming: true,
     supportsFiles: true,
@@ -150,7 +150,7 @@ export const GEMINI_MODEL_INFO: Record<string, GeminiModelInfo> = {
   },
   [GEMINI_MODELS.FLASH_LITE_001_2_0]: {
     id: GEMINI_MODELS.FLASH_LITE_001_2_0,
-    name: 'Gemini 2.0 Flash-Lite-001',
+    name: 'Gemini Flash-Lite 001 2.0',
     description: 'Stable version of 2.0 Flash-Lite',
     supportsStreaming: true,
     supportsFiles: true,
@@ -161,7 +161,7 @@ export const GEMINI_MODEL_INFO: Record<string, GeminiModelInfo> = {
   },
   [GEMINI_MODELS.FLASH_LITE_PREVIEW_2_0]: {
     id: GEMINI_MODELS.FLASH_LITE_PREVIEW_2_0,
-    name: 'Gemini 2.0 Flash-Lite Preview',
+    name: 'Gemini Flash-Lite Preview 2.0',
     description: 'Preview version of Flash-Lite',
     supportsStreaming: true,
     supportsFiles: true,
@@ -172,7 +172,7 @@ export const GEMINI_MODEL_INFO: Record<string, GeminiModelInfo> = {
   },
   [GEMINI_MODELS.FLASH_LITE_PREVIEW_0205_2_0]: {
     id: GEMINI_MODELS.FLASH_LITE_PREVIEW_0205_2_0,
-    name: 'Gemini 2.0 Flash-Lite Preview 02-05',
+    name: 'Gemini Flash-Lite Preview 0205 2.0',
     description: 'Specific preview build from 02-05',
     supportsStreaming: true,
     supportsFiles: true,
@@ -185,7 +185,7 @@ export const GEMINI_MODEL_INFO: Record<string, GeminiModelInfo> = {
   // Gemini 2.0 Thinking Series (Support Google Search + Thinking)
   [GEMINI_MODELS.FLASH_THINKING_EXP_2_0]: {
     id: GEMINI_MODELS.FLASH_THINKING_EXP_2_0,
-    name: 'Gemini 2.0 Flash Thinking Experimental',
+    name: 'Gemini Thinking Exp 2.0',
     description: 'Experimental thinking mode for 2.0',
     supportsStreaming: true,
     supportsFiles: true,
@@ -196,7 +196,7 @@ export const GEMINI_MODEL_INFO: Record<string, GeminiModelInfo> = {
   },
   [GEMINI_MODELS.FLASH_THINKING_EXP_0121_2_0]: {
     id: GEMINI_MODELS.FLASH_THINKING_EXP_0121_2_0,
-    name: 'Gemini 2.0 Flash Thinking Exp 01-21',
+    name: 'Gemini Thinking 0121 2.0',
     description: 'Thinking experimental build from 01-21',
     supportsStreaming: true,
     supportsFiles: true,
@@ -207,7 +207,7 @@ export const GEMINI_MODEL_INFO: Record<string, GeminiModelInfo> = {
   },
   [GEMINI_MODELS.FLASH_THINKING_EXP_1219_2_0]: {
     id: GEMINI_MODELS.FLASH_THINKING_EXP_1219_2_0,
-    name: 'Gemini 2.0 Flash Thinking Exp 12-19',
+    name: 'Gemini Thinking 1219 2.0',
     description: 'Thinking experimental build from 12-19',
     supportsStreaming: true,
     supportsFiles: true,

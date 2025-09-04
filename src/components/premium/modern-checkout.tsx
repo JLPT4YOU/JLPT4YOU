@@ -66,8 +66,8 @@ export function ModernCheckout({ translations }: ModernCheckoutProps) {
   const [isValidatingCoupon, setIsValidatingCoupon] = useState(false)
 
   // Pricing configuration based on billing period
-  const basePrice = 1.99 // $1.99 USD per month
-  const yearlyPrice = 19.99 // $19.99 USD per year (save ~17%)
+  const basePrice = 2.49 // $2.49 USD per month
+  const yearlyPrice = 24.99 // $24.99 USD per year (save ~17%)
   
   // Duration options with discounts
   const durationOptions = [
