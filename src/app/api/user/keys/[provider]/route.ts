@@ -34,8 +34,6 @@ export async function PUT(
         provider: provider,
         api_key: key,
         updated_at: new Date().toISOString()
-      }, {
-        onConflict: 'user_id,provider'
       });
 
     if (error) {
