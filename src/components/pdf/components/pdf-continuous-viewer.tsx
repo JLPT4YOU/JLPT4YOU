@@ -285,7 +285,7 @@ export function PDFContinuousViewer({
 
             const pageWidth = pageWidths[pageNumber] || 0
             const pageHeight = pageHeights[pageNumber] || 0
-            const dimensions = getDisplayDimensions(scale, pageWidth, pageHeight, scaleOptions)
+            const dimensions = getDisplayDimensions(scale, pageWidth, pageHeight, rotation, scaleOptions)
             const isPageLoading = pageLoadingStates[pageNumber] !== false && (pageWidth === 0 || isZooming)
             const pageError = pageErrors[pageNumber]
 

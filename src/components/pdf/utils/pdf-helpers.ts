@@ -55,13 +55,17 @@ export function getDisplayDimensions(
   baseScale: number,
   pageWidth: number,
   pageHeight: number,
+  rotation: number, // Add rotation parameter
   options: ScaleOptions = {}
 ): DisplayDimensions {
   const effectiveScale = getEffectiveScale(baseScale, options)
-  
+
+  // Get dimensions after rotation
+  const rotatedDimensions = getRotatedDimensions(pageWidth, pageHeight, rotation)
+
   return {
-    width: pageWidth * effectiveScale,
-    height: pageHeight * effectiveScale
+    width: rotatedDimensions.width * effectiveScale,
+    height: rotatedDimensions.height * effectiveScale
   }
 }
 
@@ -228,10 +232,11 @@ export function reverseTransformCoordinatesForRotation(
       return { x: point.x, y: point.y }
 
     case 90:
-      // Reverse 90 degrees: (x,y) -> (y, width-x)
+      // Reverse 90 degrees: (x,y) -> (y, height-x)
+      // This is the inverse of: (x,y) -> (height-y, x)
       return {
         x: point.y,
-        y: width - point.x
+        y: height - point.x
       }
 
     case 180:
@@ -242,9 +247,10 @@ export function reverseTransformCoordinatesForRotation(
       }
 
     case 270:
-      // Reverse 270 degrees: (x,y) -> (height-y, x)
+      // Reverse 270 degrees: (x,y) -> (width-y, x)
+      // This is the inverse of: (x,y) -> (y, width-x)
       return {
-        x: height - point.y,
+        x: width - point.y,
         y: point.x
       }
 

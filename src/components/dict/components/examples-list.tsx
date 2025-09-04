@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { dictService } from '@/lib/dict/dict-service';
 import { Loader2 } from 'lucide-react';
+import { TranslationData } from '@/lib/i18n';
 
 // Helper function to safely render string or object fields
 const renderField = (field: any): string => {
@@ -62,7 +63,7 @@ export function ExamplesList({ selectedItem }: ExamplesListProps) {
   if (!selectedItem) {
     return (
       <div className="text-center py-12 text-muted-foreground">
-        <p>Chọn một từ vựng hoặc ngữ pháp để xem ví dụ</p>
+        <p>Chọn một từ hoặc ngữ pháp để xem ví dụ</p>
       </div>
     );
   }
