@@ -95,7 +95,7 @@ export function PDFViewer({
   }, [activeAnnotationTool, onPrevPage, onNextPage])
 
   // Calculate display dimensions using shared utilities - MUST be called before any conditional returns
-  const displayDimensions = getDisplayDimensions(scale, pageWidth, pageHeight)
+  const displayDimensions = getDisplayDimensions(scale, pageWidth, pageHeight, rotation, {})
   const effectiveScale = getEffectiveScale(scale)
 
   // Show loading state while fetching PDF
