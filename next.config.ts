@@ -64,6 +64,11 @@ const nextConfig: NextConfig = {
       { message: /Critical dependency: the request of a dependency is an expression/ },
     ]
 
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      '@': require('path').resolve(__dirname, 'src'),
+    }
+
     return config
   },
 
