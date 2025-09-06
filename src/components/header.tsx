@@ -3,7 +3,7 @@
 import { GraduationCap, LogOut, Settings, BarChart3, Home, Infinity, Shield } from "lucide-react"
 import { getIconComponent } from "@/components/settings/icon-selector"
 import { getRoleClasses, getExpiryDisplayText, getExpiryTextColor, getUserBalanceDisplay } from '@/lib/role-utils'
-import { useAuth } from "@/contexts/auth-context"
+import { useAuth } from "../contexts/auth-context"
 import { useUserData } from '@/hooks/use-user-data' // ✅ ADDED: Import user data hook
 import { useEffect, useState } from 'react'
 import { useRouter } from "next/navigation"
