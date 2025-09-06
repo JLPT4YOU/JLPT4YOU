@@ -149,9 +149,12 @@ export function validateScale(scale: number): number {
 }
 
 /**
- * Coordinate transformation utilities for PDF rotation
- * Handle coordinate conversion when PDF is rotated
+ * PDF coordinate transformation utilities
+ * Handles conversion between screen coordinates and PDF coordinates
+ * with support for rotation and scaling
  */
+
+import { logger } from '../../../lib/logger'
 
 export interface Point {
   x: number
@@ -203,7 +206,7 @@ export function transformCoordinatesForRotation(
 
     default:
       // For non-standard rotations, return original coordinates
-      console.warn(`Unsupported rotation angle: ${rotation}. Using original coordinates.`)
+      logger.warn('Unsupported rotation angle', { rotation, point })
       return { x: point.x, y: point.y }
   }
 }
@@ -305,7 +308,7 @@ export const ColorStorage = {
       localStorage.setItem(this.KEYS.TOOL_COLORS, JSON.stringify(toolColors))
       localStorage.setItem(this.KEYS.SELECTED_COLOR, color)
     } catch (error) {
-      console.warn('Failed to save selected color:', error)
+      logger.warn('Failed to save selected color', { error, color, tool })
     }
   },
 
@@ -315,7 +318,7 @@ export const ColorStorage = {
       const toolColors = this.getToolColors()
       return toolColors[tool] || this.getDefaultColor(tool)
     } catch (error) {
-      console.warn('Failed to load selected color:', error)
+      logger.warn('Failed to load selected color', { error, tool })
       return this.getDefaultColor(tool)
     }
   },
@@ -335,7 +338,7 @@ export const ColorStorage = {
     try {
       localStorage.setItem(this.KEYS.CUSTOM_COLORS, JSON.stringify(colors))
     } catch (error) {
-      console.warn('Failed to save custom colors:', error)
+      logger.warn('Failed to save custom colors', { error, colorsCount: colors.length })
     }
   },
 
@@ -369,7 +372,7 @@ export const ColorStorage = {
       toolBrushSizes[tool] = size
       localStorage.setItem(this.KEYS.TOOL_BRUSH_SIZES, JSON.stringify(toolBrushSizes))
     } catch (error) {
-      console.warn('Failed to save brush size:', error)
+      logger.warn('Failed to save brush size', { error, tool, size })
     }
   },
 
@@ -379,7 +382,7 @@ export const ColorStorage = {
       const toolBrushSizes = this.getToolBrushSizes()
       return toolBrushSizes[tool] || this.getDefaultBrushSize(tool)
     } catch (error) {
-      console.warn('Failed to load brush size:', error)
+      logger.warn('Failed to load brush size', { error, tool })
       return this.getDefaultBrushSize(tool)
     }
   },
