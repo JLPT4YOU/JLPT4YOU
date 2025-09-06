@@ -20,6 +20,14 @@
       "invalid": "API key phải bắt đầu bằng \"AIza\"",
       "testFailed": "API key không hợp lệ hoặc đã hết hạn",
       "networkError": "Lỗi kết nối. Vui lòng thử lại."
+    },
+    "templates": {
+      "premiumUpgrade": {
+        "title": "Nâng cấp Premium thành công",
+        "content": "Chúc mừng! Bạn đã nâng cấp lên Premium {plan}. Tài khoản sẽ hết hạn vào {date}.",
+        "planMonthly": "theo tháng",
+        "planYearly": "theo năm"
+      }
     }
   },
   "common": {
@@ -163,6 +171,8 @@
       "name": "Premium",
       "price": "$2.49",
       "period": "/tháng",
+      "periodUnit": "USD/tháng",
+      "saveBadge": "Tiết kiệm 17%",
       "badge": "KHUYẾN NGHỊ",
       "description": "Trải nghiệm học tập toàn diện",
       "features": [
@@ -176,13 +186,19 @@
         "Hỗ trợ ưu tiên 24/7"
       ],
       "button": "Nâng cấp Premium"
+    },
+    "trustIndicators": {
+      "secure": "Bảo mật",
+      "cancelAnytime": "Hủy bất cứ lúc nào",
+      "sslSecure": "Bảo mật SSL",
+      "encryption": "Mã hóa 256-bit"
     }
   },
   "footer": {
     "description": "Nền tảng học tiếng Nhật JLPT hàng đầu với công nghệ AI tiên tiến, giúp bạn chinh phục mọi cấp độ từ N5 đến N1.",
     "contact": {
       "title": "Liên hệ",
-      "email": "support@jlpt4you.com",
+      "email": "admin@jlpt4you.com",
       "chat": "Chat hỗ trợ"
     },
     "links": {
@@ -656,9 +672,11 @@
       "translate": "Dịch"
     },
     "search": {
-      "placeholder": "Nhập từ khóa tìm kiếm...",
+      "placeholder": "Tìm kiếm từ vựng, kanji, ngữ pháp...",
       "button": "Tìm kiếm",
-      "clear": "Xóa",
+      "loading": "Đang tìm kiếm...",
+      "typeLabel": "Loại:",
+      "positionLabel": "Vị trí:",
       "positions": {
         "start": "Bắt đầu",
         "middle": "Giữa",
@@ -668,6 +686,20 @@
         "word": "Từ vựng",
         "grammar": "Ngữ pháp"
       }
+    },
+    "messages": {
+      "selectWord": "Nhập từ khóa và chọn một từ vựng để xem chi tiết",
+      "selectGrammar": "Nhập từ khóa và chọn một mẫu ngữ pháp để xem chi tiết",
+      "selectKanji": "Chọn một từ vựng để xem thông tin kanji",
+      "noKanji": "Từ này không có kanji",
+      "selectExample": "Chọn một từ vựng hoặc ngữ pháp để xem ví dụ",
+      "noKanjiWriting": "Không tìm thấy thông tin viết kanji cho từ này",
+      "selectKanjiToLearn": "Chọn kanji để học viết:",
+      "kanjiWritingTitle": "Viết kanji",
+      "learnWriting": "Học viết: {char}",
+      "kanjiInfo": "Thông tin kanji:",
+      "searching": "Đang tìm kiếm...",
+      "searchError": "Lỗi khi tìm kiếm kanji"
     },
     "wordDetail": {
       "level": "JLPT {level}",
@@ -1021,7 +1053,8 @@
   },
   "pages": {
     "topup": {
-      "title": "Nạp tiền"
+      "title": "Nạp tiền",
+      "description": "Thêm tín dụng vào tài khoản của bạn"
     },
     "payment": {
       "title": "Nâng cấp tài khoản",
@@ -1064,6 +1097,23 @@
         "emailSent": "📧 Email xác nhận đã được gửi tới"
       },
       "checkout": {
+        "selectPlan": "Chọn gói",
+        "youWillGet": "Bạn sẽ nhận được",
+        "unlimitedExams": "Đề thi luyện tập không giới hạn",
+        "irinAiExplanations": "Giải thích được hỗ trợ bởi AI Irin",
+        "exclusiveMaterials": "Tài liệu độc quyền",
+        "orderSummary": "Tóm tắt đơn hàng",
+        "total": "Tổng cộng",
+        "couponCode": "Mã giảm giá",
+        "validating": "Đang kiểm tra...",
+        "yourBalance": "Số dư của bạn",
+        "durationDiscount": "Giảm giá theo gói",
+        "couponApplied": "Mã giảm giá",
+        "couponDiscount": "Giảm từ mã",
+        "couponAppliedSuccessfully": "Áp dụng mã giảm giá thành công!",
+        "couponRecalculated": "Mã giảm giá đã được tính lại!",
+        "couponNotValidForPlan": "Mã giảm giá không còn hợp lệ với gói này",
+        "couponRecalculationError": "Không thể tính lại mã giảm giá. Vui lòng áp dụng lại.",
         "save5": "Tiết kiệm 5%",
         "popular": "Phổ biến",
         "best": "Tốt nhất",
@@ -1085,8 +1135,7 @@
         "processing": "Đang xử lý...",
         "payNow": "Thanh toán ngay",
         "termsAgreement": "Bằng việc thanh toán, bạn đồng ý với",
-        "termsOfService": "Điều khoản dịch vụ",
-        "orderSummary": "Tóm tắt đơn hàng"
+        "termsOfService": "Điều khoản dịch vụ"
       }
     },
     "settings": {
@@ -1217,6 +1266,21 @@
     }
   },
   "chat": {
+    "languages": {
+      "auto": "Tự động dò ngôn ngữ (Auto Detect)",
+      "vietnamese": "Tiếng Việt",
+      "english": "Tiếng Anh",
+      "japanese": "Tiếng Nhật",
+      "custom": "Tùy chọn (Custom)"
+    },
+    "editTitle": "Chỉnh sửa tiêu đề",
+    "deleteChat": "Xóa cuộc trò chuyện",
+    "navigation": {
+      "home": "Trang chủ",
+      "settings": "Cài đặt"
+    },
+    "noConversations": "Chưa có cuộc trò chuyện nào",
+    "startNewChat": "Bắt đầu chat mới để học cùng cô iRIN",
     "prompts": {
       "aiLanguage": {
         "title": "Ngôn ngữ AI",
@@ -1282,6 +1346,7 @@
       "save": "Lưu",
       "apiKeyHelper": "Lấy API key từ Google AI Studio",
       "aiLanguage": "Ngôn ngữ giao tiếp AI",
+      "aiLanguageDescription": "Chọn ngôn ngữ cho phản hồi AI và phong cách giao tiếp",
       "selectLanguage": "Chọn ngôn ngữ",
       "customLanguagePlaceholder": "Nhập ngôn ngữ mong muốn (ví dụ: Tiếng Hàn, Français, Español...)",
       "saving": "Đang lưu...",
@@ -1354,30 +1419,15 @@
       }
     },
     "loading": "Đang tải iRIN...",
-    "languages": {
-      "auto": "Tự động dò ngôn ngữ (Auto Detect)",
-      "vietnamese": "Tiếng Việt",
-      "english": "English",
-      "japanese": "日本語",
-      "custom": "Tùy chọn (Custom)"
-    },
     "aiResponse": "Xin chào em! Cô là iRIN từ nền tảng JLPT4YOU. Mặc dù chuyên môn của cô là tiếng Nhật, cô có thể thảo luận về bất kỳ chủ đề nào mà em quan tâm. Em đã hỏi: \"{{question}}\". Hôm nay em muốn nói chuyện về gì?",
     "aiAssistant": "Trợ lý AI",
-    "noConversations": "Chưa có cuộc trò chuyện nào",
-    "startNewChat": "Bắt đầu chat mới để học cùng cô iRIN",
     "inputHelper": "Nhấn Enter để gửi, Shift + Enter để xuống dòng",
     "characterCount": "{{count}} ký tự",
     "newChatTitle": "Cuộc trò chuyện mới",
     "generatingTitle": "Đang tạo tiêu đề...",
-    "editTitle": "Chỉnh sửa tiêu đề",
-    "deleteChat": "Xóa cuộc trò chuyện",
     "retry": "Thử lại",
     "stopGeneration": "Dừng tạo nội dung",
     "scrollToBottom": "Cuộn xuống cuối",
-    "navigation": {
-      "home": "Trang chủ",
-      "settings": "Cài đặt"
-    },
     "errors": {
       "geminiConnection": "Xin lỗi, có lỗi xảy ra khi kết nối với Gemini AI. Vui lòng thử lại sau.",
       "pdfProcessing": "Xin lỗi, có lỗi xảy ra khi xử lý file PDF. Vui lòng thử lại.",
@@ -1681,6 +1731,9 @@
       "description": "Học từ vựng theo cấp độ",
       "pageTitle": "Học {level} - Từ vựng",
       "pageSubtitle": "Học từ vựng JLPT theo cấp độ. Sử dụng tìm kiếm để tìm từ cụ thể.",
+      "card": {
+        "ariaLabel": "Học từ vựng cấp độ {level}"
+      },
       "search": {
         "placeholder": "Tìm từ (kanji/hiragana/nghĩa)",
         "clear": "Xóa",
@@ -1692,6 +1745,16 @@
       "description": "Học ngữ pháp theo cấp độ",
       "pageTitle": "Học {level} - Ngữ pháp",
       "pageSubtitle": "Học ngữ pháp JLPT theo cấp độ. Sử dụng tìm kiếm để tìm mẫu câu hoặc nghĩa cụ thể.",
+      "card": {
+        "ariaLabel": "Học ngữ pháp cấp độ {level}",
+        "clickForDetails": "Nhấp để xem chi tiết"
+      },
+      "detail": {
+        "structure": "Cấu trúc",
+        "vietnameseMeaning": "Nghĩa tiếng Việt",
+        "englishMeaning": "Nghĩa tiếng Anh",
+        "examples": "Ví dụ"
+      },
       "search": {
         "placeholder": "Tìm ngữ pháp hoặc nghĩa (JP/EN/VN)",
         "clear": "Xóa",
@@ -1931,7 +1994,31 @@
         "saving": "Đang lưu...",
         "updateSuccess": "Cập nhật thông tin thành công!",
         "updateError": "Có lỗi xảy ra khi cập nhật",
-        "unexpectedError": "Đã xảy ra lỗi không mong muốn"
+        "unexpectedError": "Đã xảy ra lỗi không mong muốn",
+        "checkout": {
+          "selectPlan": "Chọn gói",
+          "payment": "Thanh toán",
+          "premiumPlan": "Premium Plan",
+          "monthlyBilling": "Monthly billing",
+          "yearlyBilling": "Yearly billing",
+          "youWillGet": "Bạn sẽ nhận được",
+          "unlimitedExams": "Không giới hạn bài thi",
+          "irinAiExplanations": "iRIN AI giải thích chi tiết",
+          "exclusiveMaterials": "Tài liệu độc quyền N5-N1",
+          "orderSummary": "Tóm tắt đơn hàng",
+          "total": "Tổng cộng",
+          "couponCode": "Mã giảm giá",
+          "enterCoupon": "Nhập mã giảm giá",
+          "apply": "Apply",
+          "validating": "Đang kiểm tra...",
+          "durationDiscount": "Giảm giá theo gói",
+          "couponApplied": "Mã giảm giá",
+          "couponDiscount": "Giảm từ mã",
+          "processing": "Đang xử lý...",
+          "payNow": "Pay Now",
+          "termsAgreement": "By proceeding with payment, you agree to our",
+          "termsOfService": "Terms of Service"
+        }
       },
       "security": {
         "title": "Bảo mật",
@@ -2088,7 +2175,8 @@
   "notifications": {
     "button": {
       "ariaLabel": "Thông báo",
-      "dialogTitle": "Trung tâm thông báo"
+      "dialogTitle": "Trung tâm thông báo",
+      "dialogDescription": "Xem và quản lý thông báo của bạn"
     },
     "inbox": {
       "title": "Hộp thư đến",
@@ -2121,6 +2209,7 @@
           "plan": "Gói:",
           "planMonthly": "Tháng",
           "planYearly": "Năm",
+          "orderId": "Mã đơn hàng:",
           "code": "Mã:",
           "status": "Trạng thái:"
         }
@@ -2198,15 +2287,6 @@
       "confirm": "Đặt lại tất cả",
       "successMessage": "✅ Đặt lại thành công!\n\n• Prompt tùy chỉnh: Đã xóa\n• Cài đặt ngôn ngữ: Đã đặt lại\n• iRIN cốt lõi: Được giữ nguyên"
     },
-    "loading": "Đang tải iRIN...",
-    "languages": {
-      "auto": "Tự động phát hiện ngôn ngữ",
-      "vietnamese": "Tiếng Việt",
-      "english": "Tiếng Anh",
-      "japanese": "日本語",
-      "custom": "Tùy chỉnh"
-    },
-    "aiResponse": "Xin chào! Tôi là iRIN từ nền tảng JLPT4YOU. Mặc dù chuyên môn của tôi là tiếng Nhật, tôi có thể thảo luận về bất kỳ chủ đề nào bạn quan tâm. Bạn đã hỏi: \"{{question}}\". Hôm nay bạn muốn nói về điều gì?",
-    "aiAssistant": "Trợ lý AI"
+    "loading": "Đang tải iRIN..."
   }
 }

@@ -1,7 +1,7 @@
 import React from 'react'
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { loadTranslation, getLanguageFromCode, generateHreflangLinksLegacy as generateHreflangLinks, Language, TranslationData } from '@/lib/i18n'
+import { loadTranslation, getLanguageFromCode, generateHreflangLinks, Language, TranslationData } from '@/lib/i18n/'
 
 // Standard interface for page props (Next.js 15 compatible)
 export interface ProtectedPageProps {

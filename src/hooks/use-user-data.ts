@@ -5,7 +5,7 @@
 
 import { useState, useEffect } from 'react'
 import { createClient } from '@/utils/supabase/client'
-import { useAuth } from '@/contexts/auth-context-simple'
+import { useAuth } from '@/contexts/auth-context'
 
 export interface UserData {
   id: string

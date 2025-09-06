@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { GraduationCap } from "lucide-react"
 
-import { TranslationData } from "@/lib/i18n"
+import { TranslationData } from "@/lib/i18n/"
 import { useTranslation } from "@/lib/use-translation"
 
 interface ChatBubbleProps {

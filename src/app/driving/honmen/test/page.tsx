@@ -5,7 +5,7 @@ import { generateDrivingQuestions } from "@/lib/sample-exam-data"
 import { ExamPageTemplate } from "@/components/layout/exam-page-template";
 import { useExamConfig } from "@/hooks/use-exam-config";
 import { useRouter } from "next/navigation"
-import { TranslationData } from "@/lib/i18n";
+import { TranslationData } from "@/lib/i18n/";
 import { Suspense } from "react"
 
 interface HonmenTestContentProps {

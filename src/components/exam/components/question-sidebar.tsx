@@ -4,7 +4,7 @@ import { forwardRef } from "react"
 import { Button } from "@/components/ui/button"
 import { Flag, X } from "lucide-react"
 import { cn } from "@/lib/utils"
-import { TranslationData } from "@/lib/i18n"
+import { TranslationData } from "@/lib/i18n/"
 import { useTranslation } from "@/lib/use-translation"
 
 export interface Question {
@@ -61,7 +61,7 @@ export const QuestionSidebar = forwardRef<HTMLDivElement, QuestionSidebarProps>(
         )}>
           <div className="h-full flex flex-col">
             {/* Sidebar Header */}
-            <div className="flex items-center justify-between p-3 border-b bg-muted/30 md:app-p-sm">
+            <div className="flex items-center justify-between p-3 border-b bg-muted/30 md:p-2">
               <h3 className="text-sm font-semibold text-foreground">{t('exam.interface.questionList')}</h3>
               <Button
                 variant="ghost"

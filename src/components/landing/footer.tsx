@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion"
 import { GraduationCap, Mail, MessageCircle, FileText, Shield, Heart } from "lucide-react"
-import { TranslationData } from "@/lib/i18n"
+import { TranslationData } from "@/lib/i18n/"
 import { useTranslation } from "@/lib/use-translation"
 
 interface FooterProps {

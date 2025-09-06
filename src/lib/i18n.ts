@@ -6,7 +6,7 @@ export {
   SUPPORTED_LANGUAGES,
   DEFAULT_LANGUAGE,
   LANGUAGE_METADATA
-} from './i18n-types'
+} from './i18n/'
 
 // Re-export types separately for isolatedModules compatibility
 export type {
@@ -17,7 +17,7 @@ export type {
   ExamTranslations,
   TranslationPath,
   TranslationKey
-} from './i18n-types'
+} from './i18n/'
 
 // Re-export optimized utilities
 export {
@@ -26,14 +26,14 @@ export {
   ROUTES,
   isProtectedRoute,
   isPublicRoute
-} from './i18n-utils'
+} from './i18n/'
 
 // Import for internal use
-import { SUPPORTED_LANGUAGES, DEFAULT_LANGUAGE, Language, TranslationData } from './i18n-types'
-import { LANGUAGE_METADATA } from './i18n-types'
+import { SUPPORTED_LANGUAGES, DEFAULT_LANGUAGE, Language, TranslationData } from './i18n/'
+import { LANGUAGE_METADATA } from './i18n/'
 
 // Keep backward compatibility exports
-export { PathManager as UrlUtils } from './i18n-utils'
+export { PathManager as UrlUtils } from './i18n/'
 
 /**
  * Legacy regex builders - kept for backward compatibility

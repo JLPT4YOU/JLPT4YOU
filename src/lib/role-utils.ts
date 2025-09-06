@@ -42,7 +42,7 @@ export function getRoleClasses(role: UserRole | undefined): string {
   // Default to 'Free' if role is undefined or invalid
   const safeRole = role && role in ROLE_COLORS ? role : 'Free'
   const colors = ROLE_COLORS[safeRole]
-  return `inline-flex items-center app-px-xs app-py-xs rounded-full text-sm font-medium ${colors.bg} ${colors.text} ${colors.border} border`
+  return `inline-flex items-center px-2 py-1 rounded-full text-sm font-medium ${colors.bg} ${colors.text} ${colors.border} border`
 }
 
 /**

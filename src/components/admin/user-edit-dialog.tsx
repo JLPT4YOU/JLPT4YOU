@@ -4,6 +4,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
   DialogFooter
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
@@ -116,6 +117,9 @@ export default function UserEditDialog({ user, open, onClose, onSaved }: EditDia
       <DialogContent className="max-w-lg">
         <DialogHeader>
           <DialogTitle>Chỉnh sửa người dùng</DialogTitle>
+          <DialogDescription>
+            Chỉnh sửa thông tin và quản lý số dư của người dùng
+          </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4 py-4">

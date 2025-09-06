@@ -217,7 +217,8 @@ class PremiumService {
       await notificationService.sendPremiumUpgradeNotification(
         data.userId,
         data.months >= 12 ? 'yearly' : 'monthly',
-        newExpiryDate.toISOString()
+        newExpiryDate.toISOString(),
+        transactionId
       )
 
       return {

@@ -5,7 +5,7 @@
 
 import { createClient } from '@/utils/supabase/client'
 import { AuthError } from '@supabase/supabase-js'
-import { createTranslationFunction, loadTranslation, DEFAULT_LANGUAGE, TranslationData } from './i18n'
+import { createTranslationFunction, loadTranslation, DEFAULT_LANGUAGE, TranslationData } from './i18n/'
 
 export interface AuthResult {
   success: boolean

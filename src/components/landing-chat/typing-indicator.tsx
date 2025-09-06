@@ -1,7 +1,7 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { TranslationData } from "@/lib/i18n"
+import { TranslationData } from "@/lib/i18n/"
 import { useTranslation } from "@/lib/use-translation"
 
 interface TypingIndicatorProps {

@@ -104,7 +104,6 @@ function Content() {
   }, [level])
 
   const handleSessionComplete = (session: FlashcardSession) => {
-    // TODO: Save session results to database
     console.log('Session completed:', session)
     
     // Show completion message and redirect

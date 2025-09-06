@@ -3,7 +3,7 @@
 import { useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
-import { TranslationData } from "@/lib/i18n"
+import { TranslationData } from "@/lib/i18n/"
 import { useTranslation } from "@/lib/use-translation"
 import { setLanguagePreferenceFromPath } from "@/lib/auth-utils"
 import { GraduationCap } from "lucide-react"

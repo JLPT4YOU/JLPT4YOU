@@ -1,7 +1,7 @@
 "use client"
 
 import { Book, FileText, Search, Loader2, AlertCircle } from "lucide-react";
-import { TranslationData, Language, createTranslationFunction } from "@/lib/i18n";
+import { TranslationData, Language, createTranslationFunction } from "@/lib/i18n/";
 import { createPageContent, type BasePageContentProps } from "@/components/shared/component-utils";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -83,10 +83,10 @@ export const BookSelectionPageContent = createPageContent<{ isAuthenticated: boo
       {/* Main content container */}
       <div className="app-container pt-8 sm:pt-12 lg:pt-16 pb-8">
         <div className="app-content">
-          <div className="max-w-7xl mx-auto app-space-2xl">
+          <div className="max-w-7xl mx-auto space-y-12">
 
             {/* Header section */}
-            <div className="text-center app-space-lg">
+            <div className="text-center space-y-6">
               <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight">
                 {getPageTitle()}
               </h1>
@@ -96,7 +96,7 @@ export const BookSelectionPageContent = createPageContent<{ isAuthenticated: boo
             </div>
 
             {/* Search section */}
-            <div className="app-space-xl">
+            <div className="space-y-8">
               <div className="flex justify-center">
                 {/* Search input */}
                 <div className="w-full max-w-2xl relative">
@@ -128,14 +128,14 @@ export const BookSelectionPageContent = createPageContent<{ isAuthenticated: boo
             )}
 
             {/* Books grid */}
-            <div className="app-space-xl">
+            <div className="space-y-8">
               {loading ? (
-                <div className="flex items-center justify-center py-12">
+                <div className="flex items-center justify-center py-16">
                   <Loader2 className="h-8 w-8 animate-spin mr-2" />
                   <span>Đang tải sách...</span>
                 </div>
               ) : filteredBooks.length === 0 ? (
-                <div className="text-center py-12">
+                <div className="text-center py-16">
                   <Book className="h-16 w-16 mx-auto text-muted-foreground mb-4" />
                   <h3 className="text-xl font-semibold text-foreground mb-2">
                     {searchTerm ? 'Không tìm thấy sách' : 'Chưa có sách nào'}

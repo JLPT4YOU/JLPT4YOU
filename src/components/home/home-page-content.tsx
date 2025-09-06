@@ -15,14 +15,15 @@ import {
   Book,
   Film
 } from "lucide-react";
-import { useAuth } from '@/contexts/auth-context-simple';
+import { useAuth } from '@/contexts/auth-context';
 import { useUserData } from '@/hooks/use-user-data'; // ✅ ADDED: Import user data hook
 import { getIconComponent } from "@/components/settings/icon-selector"
 import { getRoleClasses, getExpiryDisplayText, getExpiryTextColor } from "@/lib/role-utils";
-import { Language } from "@/lib/i18n";
+import { Language } from "@/lib/i18n/";
 import { createPageContent, type BasePageContentProps } from "@/components/shared/component-utils";
 import { routes } from "@/shared/constants/routes";
 
+import { Card } from "@/components/ui/card";
 interface HomePageContentProps extends BasePageContentProps {
   isAuthenticated?: boolean;
 }
@@ -161,24 +162,24 @@ function HomeContent({ t, language }: HomeContentProps) {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Main container with improved spacing */}
-      <div className="app-container pt-6 sm:pt-8 lg:pt-12">
-        <div className="app-content app-space-xl">
+      {/* Main container with standardized spacing */}
+      <div className="app-container app-section">
+        <div className="app-content space-y-8">
 
           {/* User Info Section with enhanced spacing */}
-          <div className="border border-border bg-muted/30 rounded-2xl app-p-lg">
-            <div className="flex items-center app-gap-md">
+          <Card size="md" radius="2xl" elevation="sm" className="border border-border bg-muted/30">
+            <div className="flex items-center gap-4">
               <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center border-2 border-primary/20">
                 {(() => {
                   const AvatarIcon = getIconComponent(displayUser.avatarIcon || undefined) // ✅ FIXED
                   return <AvatarIcon className="w-6 h-6 text-primary" />
                 })()}
               </div>
-              <div className="app-space-xs">
+              <div className="space-y-1">
                 <h2 className="text-xl sm:text-2xl font-bold text-foreground">
                   {t('home.userGreeting').replace('{{name}}', displayUser.name)} {/* ✅ FIXED */}
                 </h2>
-                <div className="flex items-center app-gap-xs mt-1">
+                <div className="flex items-center gap-1 mt-1">
                   <span className={getRoleClasses(displayUser.role as any)}> {/* ✅ FIXED */}
                     {displayUser.role} {/* ✅ FIXED */}
                   </span>
@@ -207,10 +208,10 @@ function HomeContent({ t, language }: HomeContentProps) {
                 </div>
               </div>
             </div>
-          </div>
+          </Card>
 
           {/* Practice Grid Section with improved spacing */}
-          <div className="app-space-lg">
+          <div className="space-y-6">
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4 md:gap-6">
               {practiceItems.map((item) => {
                 const IconComponent = item.icon;
@@ -220,7 +221,7 @@ function HomeContent({ t, language }: HomeContentProps) {
                     href={item.href}
                     className="block"
                   >
-                    <div className="group cursor-pointer bg-muted/10 rounded-2xl p-3 sm:p-4 md:p-6 h-full text-center transition-all duration-200 hover:bg-muted/30 border border-border/20">
+                    <Card interactive radius="2xl" className="group cursor-pointer bg-muted/10 h-full text-center transition-all duration-200 hover:bg-muted/30 border-border/20 p-3 sm:p-4 md:p-6">
                       <div className={`w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 mx-auto mb-2 sm:mb-3 md:mb-4 ${item.bgColor} rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform duration-200`}>
                         <IconComponent className={`w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 ${item.textColor}`} />
                       </div>
@@ -232,7 +233,7 @@ function HomeContent({ t, language }: HomeContentProps) {
                           {t(`home.practiceItems.${item.key}.description`)}
                         </p>
                       </div>
-                    </div>
+                    </Card>
                   </Link>
                 );
               })}

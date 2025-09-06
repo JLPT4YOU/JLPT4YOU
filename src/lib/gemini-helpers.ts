@@ -400,7 +400,7 @@ export class GeminiStreamingHandler {
         config
       });
 
-      let thoughtsTokenCount = 0;
+      const thoughtsTokenCount = 0;
       let outputTokenCount = 0;
 
       for await (const chunk of stream) {

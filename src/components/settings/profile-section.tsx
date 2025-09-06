@@ -6,7 +6,7 @@
 "use client"
 
 import { useState, useEffect } from 'react'
-import { useAuth } from '@/contexts/auth-context-simple'
+import { useAuth } from '@/contexts/auth-context'
 import { useUserData } from '@/hooks/use-user-data' // ✅ ADDED: Import user data hook
 import { userSettingsService } from '@/lib/user-settings-service'
 import { IconSelector, getIconComponent } from './icon-selector'

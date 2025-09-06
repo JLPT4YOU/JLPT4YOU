@@ -199,7 +199,7 @@ export function ExerciseGenerator({
 
           {/* Sequential Mode Options */}
           {selectionMode === 'sequential' && (
-            <div className="space-y-3 p-3 bg-muted/30 rounded-lg border border-border">
+            <div className="px-2 py-1 bg-muted/30 rounded-lg border border-border">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <Label htmlFor="lesson">{t('study.practice.generator.lesson')}</Label>
@@ -234,7 +234,7 @@ export function ExerciseGenerator({
                 </SelectContent>
               </Select>
             </div>
-            <p className="text-xs text-black dark:text-white">
+            <p className="text-xs text-foreground">
               {isProModel
                 ? `🔒 ${t('study.practice.generator.thinking.proDefault')}`
                 : `💡 ${t('study.practice.generator.thinking.description')}`
@@ -243,7 +243,7 @@ export function ExerciseGenerator({
           </div>
 
           {/* Compact Summary */}
-          <div className="rounded-lg bg-muted p-3">
+          <div className="rounded-lg bg-muted p-2">
             <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 text-sm">
               <div className="text-center">
                 <div className="text-muted-foreground text-xs">{t('study.practice.generator.summary.type')}</div>
@@ -289,7 +289,7 @@ export function ExerciseGenerator({
           <Button
             onClick={handleGenerate}
             disabled={isGenerating}
-            className="w-full"
+            className="w-full p-4 justify-center"
             size="lg"
           >
             {isGenerating ? (
@@ -321,7 +321,7 @@ export function ExerciseGenerator({
                   <div className="flex items-center gap-2 mb-1">
                     <h3 className="font-medium text-gray-900 text-sm">🤖 {t('study.practice.generator.generating')}</h3>
                     {enableThinking && (
-                      <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full">{t('study.practice.generator.thinkingMode')}</span>
+                      <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full">{t('study.practice.generator.thinkingMode')}</span>
                     )}
                   </div>
                   <div className="flex items-center gap-4 text-xs text-gray-600">
@@ -346,11 +346,11 @@ export function ExerciseGenerator({
       </div>
 
       {/* Tips Section */}
-      <div className="bg-background rounded-2xl p-4">
+      <div className="bg-background rounded-2xl p-6">
         <h4 className="font-medium mb-3 text-sm flex items-center gap-2">
           💡 {t('study.practice.generator.tips.title')}
         </h4>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-muted-foreground">
+        <div className="grid sm:grid-cols-2 gap-6 text-sm p-6 rounded-lg bg-muted/20">
           <div>• {t('study.practice.generator.tips.tip1')}</div>
           <div>• {t('study.practice.generator.tips.tip2')}</div>
           <div>• {t('study.practice.generator.tips.tip3')}</div>

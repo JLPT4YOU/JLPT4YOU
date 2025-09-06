@@ -21,6 +21,26 @@
       "testFailed": "Invalid or expired API key",
       "networkError": "Connection error. Please try again."
     }
+    ,
+    "templates": {
+      "premiumUpgrade": {
+        "title": "Premium upgraded successfully",
+        "content": "Congratulations! You upgraded to Premium {plan}. Your Premium will expire on {date}.",
+        "planMonthly": "Monthly",
+        "planYearly": "Yearly"
+      }
+    }
+  },
+  "templates": {
+    "premiumUpgrade": {
+      "title": "Premium upgraded successfully",
+      "content": "Congratulations! You upgraded to Premium {plan}. Your Premium will expire on {date}.",
+      "planMonthly": "Monthly",
+      "planYearly": "Yearly"
+    },
+    "notifications": {
+      "orderId": "Order ID: {orderId}"
+    }
   },
   "common": {
     "appName": "JLPT4YOU",
@@ -163,6 +183,8 @@
       "name": "Premium",
       "price": "$2.49",
       "period": "/month",
+      "periodUnit": "USD/month",
+      "saveBadge": "Save 17%",
       "badge": "RECOMMENDED",
       "description": "Complete learning experience",
       "features": [
@@ -176,13 +198,19 @@
         "Priority support 24/7"
       ],
       "button": "Upgrade to Premium"
+    },
+    "trustIndicators": {
+      "secure": "Secure",
+      "cancelAnytime": "Cancel anytime",
+      "sslSecure": "SSL Secure",
+      "encryption": "256-bit encryption"
     }
   },
   "footer": {
     "description": "Leading JLPT Japanese learning platform with advanced AI technology, helping you conquer all levels from N5 to N1.",
     "contact": {
       "title": "Contact",
-      "email": "support@jlpt4you.com",
+      "email": "admin@jlpt4you.com",
       "chat": "Support Chat"
     },
     "links": {
@@ -756,18 +784,34 @@
       "translate": "Translate"
     },
     "search": {
-      "placeholder": "Enter search keyword...",
+      "placeholder": "Search words, kanji, grammar...",
       "button": "Search",
-      "clear": "Clear",
+      "loading": "Searching...",
+      "typeLabel": "Type:",
+      "positionLabel": "Position:",
+      "types": {
+        "word": "Word",
+        "grammar": "Grammar"
+      },
       "positions": {
         "start": "Start",
         "middle": "Middle",
         "end": "End"
-      },
-      "types": {
-        "word": "Vocabulary",
-        "grammar": "Grammar"
       }
+    },
+    "messages": {
+      "selectWord": "Enter a keyword and select a word to view details",
+      "selectGrammar": "Enter a keyword and select a grammar pattern to view details", 
+      "selectKanji": "Select a word to view kanji information",
+      "noKanji": "This word has no kanji",
+      "selectExample": "Select a word or grammar to view examples",
+      "noKanjiWriting": "No kanji writing information found for this word",
+      "selectKanjiToLearn": "Select kanji to learn writing:",
+      "kanjiWritingTitle": "Kanji Writing",
+      "learnWriting": "Learn writing: {char}",
+      "kanjiInfo": "Kanji Information:",
+      "searching": "Searching...",
+      "searchError": "Error searching kanji"
     },
     "wordDetail": {
       "level": "JLPT {level}",
@@ -1034,8 +1078,7 @@
   "pages": {
     "topup": {
       "title": "Top Up",
-      "description": "Top up service - Feature under development",
-      "comingSoon": "This page is under construction. Please come back later!"
+      "description": "Add credits to your account"
     },
     "payment": {
       "title": "Upgrade Your Account",
@@ -1080,6 +1123,23 @@
         "emailSent": "📧 A confirmation email has been sent to"
       },
       "checkout": {
+        "selectPlan": "Select Plan",
+        "youWillGet": "You will get",
+        "unlimitedExams": "Unlimited practice tests",
+        "irinAiExplanations": "AI Irin-powered explanations",
+        "exclusiveMaterials": "Exclusive materials",
+        "orderSummary": "Order Summary",
+        "total": "Total",
+        "couponCode": "Coupon Code",
+        "validating": "Validating...",
+        "yourBalance": "Your Balance",
+        "durationDiscount": "Duration discount",
+        "couponApplied": "Coupon code",
+        "couponDiscount": "Coupon discount",
+        "couponAppliedSuccessfully": "Coupon applied successfully!",
+        "couponRecalculated": "Coupon has been recalculated!",
+        "couponNotValidForPlan": "Coupon is no longer valid for this plan",
+        "couponRecalculationError": "Cannot recalculate coupon. Please reapply.",
         "save5": "Save 5%",
         "popular": "Popular",
         "best": "Best Value",
@@ -1101,8 +1161,7 @@
         "processing": "Processing...",
         "payNow": "Pay Now",
         "termsAgreement": "By proceeding with payment, you agree to our",
-        "termsOfService": "Terms of Service",
-        "orderSummary": "Order Summary"
+        "termsOfService": "Terms of Service"
       }
     },
     "settings": {
@@ -1228,6 +1287,21 @@
     }
   },
   "chat": {
+    "languages": {
+      "auto": "Auto Detect Language",
+      "vietnamese": "Vietnamese",
+      "english": "English",
+      "japanese": "Japanese",
+      "custom": "Custom Language"
+    },
+    "editTitle": "Edit Title",
+    "deleteChat": "Delete Chat",
+    "navigation": {
+      "home": "Home",
+      "settings": "Settings"
+    },
+    "noConversations": "No conversations yet",
+    "startNewChat": "Start a new chat to begin",
     "prompts": {
       "aiLanguage": {
         "title": "AI Language",
@@ -1293,6 +1367,7 @@
       "save": "Save",
       "apiKeyHelper": "Get your API key from Google AI Studio",
       "aiLanguage": "AI Communication Language",
+      "aiLanguageDescription": "Choose the language for AI responses and communication style",
       "selectLanguage": "Select language",
       "customLanguagePlaceholder": "Enter desired language (e.g., Korean, Français, Español...)",
       "saving": "Saving...",
@@ -1753,6 +1828,9 @@
       "description": "Learn vocabulary by level",
       "pageTitle": "Study {level} - Vocabulary",
       "pageSubtitle": "Learn JLPT vocabulary by level. Use search to find specific words.",
+      "card": {
+        "ariaLabel": "Learn vocabulary level {level}"
+      },
       "search": {
         "placeholder": "Search word (kanji/hiragana/meaning)",
         "clear": "Clear",
@@ -1764,6 +1842,16 @@
       "description": "Learn grammar by level",
       "pageTitle": "Study {level} - Grammar",
       "pageSubtitle": "Learn JLPT grammar by level. Use search to find specific patterns or meanings.",
+      "card": {
+        "ariaLabel": "Learn grammar level {level}",
+        "clickForDetails": "Click for details"
+      },
+      "detail": {
+        "structure": "Structure",
+        "vietnameseMeaning": "Vietnamese Meaning",
+        "englishMeaning": "English Meaning",
+        "examples": "Examples"
+      },
       "search": {
         "placeholder": "Search grammar or meaning (JP/EN/VN)",
         "clear": "Clear",
@@ -2059,7 +2147,31 @@
         "saving": "Saving...",
         "updateSuccess": "Information updated successfully!",
         "updateError": "Error occurred while updating",
-        "unexpectedError": "An unexpected error occurred"
+        "unexpectedError": "An unexpected error occurred",
+        "checkout": {
+          "selectPlan": "Select Plan",
+          "payment": "Payment",
+          "premiumPlan": "Premium Plan",
+          "monthlyBilling": "Monthly billing",
+          "yearlyBilling": "Yearly billing",
+          "youWillGet": "You will get",
+          "unlimitedExams": "Unlimited exams",
+          "irinAiExplanations": "iRIN AI detailed explanations",
+          "exclusiveMaterials": "Exclusive N5-N1 materials",
+          "orderSummary": "Order Summary",
+          "total": "Total",
+          "couponCode": "Coupon Code",
+          "enterCoupon": "Enter coupon code",
+          "apply": "Apply",
+          "validating": "Validating...",
+          "durationDiscount": "Duration discount",
+          "couponApplied": "Coupon code",
+          "couponDiscount": "Coupon discount",
+          "processing": "Processing...",
+          "payNow": "Pay Now",
+          "termsAgreement": "By proceeding with payment, you agree to our",
+          "termsOfService": "Terms of Service"
+        }
       },
       "security": {
         "title": "Security",
@@ -2216,7 +2328,8 @@
   "notifications": {
     "button": {
       "ariaLabel": "Notifications",
-      "dialogTitle": "Notification Center"
+      "dialogTitle": "Notification Center",
+      "dialogDescription": "View and manage your notifications"
     },
     "inbox": {
       "title": "Inbox",
@@ -2249,6 +2362,7 @@
           "plan": "Plan:",
           "planMonthly": "Monthly",
           "planYearly": "Yearly",
+          "orderId": "Order ID:",
           "code": "Code:",
           "status": "Status:"
         }

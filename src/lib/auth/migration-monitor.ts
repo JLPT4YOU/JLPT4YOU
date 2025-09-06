@@ -3,6 +3,8 @@
  * Real-time monitoring for migration metrics and health
  */
 
+import { logger } from '../logger'
+
 export interface MigrationMetrics {
   newAuthRequests: number
   legacyAuthRequests: number
@@ -211,25 +213,28 @@ export function getMigrationDashboard(): {
 export function logMigrationStatus(): void {
   const dashboard = getMigrationDashboard()
   
-  console.log('🚀 Authentication Migration Status:')
-  console.log('┌─────────────────────────────────────┐')
-  console.log(`│ Health: ${dashboard.health.status.toUpperCase().padEnd(8)} │`)
-  console.log(`│ Error Rate: ${dashboard.health.errorRate.toFixed(2)}%`.padEnd(37) + '│')
-  console.log(`│ Avg Response: ${dashboard.health.responseTime.toFixed(0)}ms`.padEnd(37) + '│')
-  console.log(`│ Rollout: ${dashboard.metrics.rolloutPercentage}%`.padEnd(37) + '│')
-  console.log('├─────────────────────────────────────┤')
-  console.log(`│ New Auth Requests: ${dashboard.metrics.newAuthRequests}`.padEnd(37) + '│')
-  console.log(`│ Legacy Auth Requests: ${dashboard.metrics.legacyAuthRequests}`.padEnd(37) + '│')
-  console.log(`│ New Auth Errors: ${dashboard.metrics.newAuthErrors}`.padEnd(37) + '│')
-  console.log(`│ Legacy Auth Errors: ${dashboard.metrics.legacyAuthErrors}`.padEnd(37) + '│')
-  console.log('└─────────────────────────────────────┘')
+  const statusReport = [
+    '🚀 Authentication Migration Status:',
+    '┌─────────────────────────────────────┐',
+    `│ Health: ${dashboard.health.status.toUpperCase().padEnd(8)} │`,
+    `│ Error Rate: ${dashboard.health.errorRate.toFixed(2)}%`.padEnd(37) + '│',
+    `│ Avg Response: ${dashboard.health.responseTime.toFixed(0)}ms`.padEnd(37) + '│',
+    `│ Rollout: ${dashboard.metrics.rolloutPercentage}%`.padEnd(37) + '│',
+    '├─────────────────────────────────────┤',
+    `│ New Auth Requests: ${dashboard.metrics.newAuthRequests}`.padEnd(37) + '│',
+    `│ Legacy Auth Requests: ${dashboard.metrics.legacyAuthRequests}`.padEnd(37) + '│',
+    `│ New Auth Errors: ${dashboard.metrics.newAuthErrors}`.padEnd(37) + '│',
+    `│ Legacy Auth Errors: ${dashboard.metrics.legacyAuthErrors}`.padEnd(37) + '│',
+    '└─────────────────────────────────────┘'
+  ].join('\n')
+  
+  logger.migration(statusReport)
   
   if (dashboard.recommendations.length > 0) {
-    console.log('\n🎯 Recommendations:')
-    dashboard.recommendations.forEach(rec => console.log(`  ${rec}`))
+    logger.migration('🎯 Recommendations:', dashboard.recommendations)
   }
   
-  console.log(`\n💡 Action: ${dashboard.health.recommendedAction}`)
+  logger.migration(`💡 Action: ${dashboard.health.recommendedAction}`)
 }
 
 /**
@@ -246,13 +251,13 @@ export function startAutoMonitoring(intervalMs: number = 30000): void {
     logMigrationStatus()
   }, intervalMs)
   
-  console.log(`📊 Auto-monitoring started (${intervalMs}ms intervals)`)
+  logger.migration(`Auto-monitoring started (${intervalMs}ms intervals)`)
 }
 
 export function stopAutoMonitoring(): void {
   if (monitoringInterval) {
     clearInterval(monitoringInterval)
     monitoringInterval = null
-    console.log('📊 Auto-monitoring stopped')
+    logger.migration('Auto-monitoring stopped')
   }
 }

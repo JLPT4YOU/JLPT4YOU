@@ -8,11 +8,12 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
 } from '@/components/ui/dialog';
 
 import { Bell, BellDot } from 'lucide-react';
 import { notificationService } from '@/services/notification-service';
-import { useAuth } from '@/contexts/auth-context-simple';
+import { useAuth } from '@/contexts/auth-context';
 import { useTranslations } from '@/hooks/use-translations';
 import NotificationInbox from './NotificationInbox';
 import { NotificationPollingManager, createPollingConfig } from '@/utils/notification-polling';
@@ -107,9 +108,12 @@ const NotificationButton: React.FC = () => {
           </Button>
 
       <Dialog open={showInbox} onOpenChange={setShowInbox}>
-        <DialogContent className="max-w-[1200px] h-[80vh] p-0">
-          <DialogHeader className="px-6 py-4 border-b">
-            <DialogTitle>{t('notifications.button.dialogTitle')}</DialogTitle>
+        <DialogContent className="max-w-[1200px] h-[80vh] p-0 flex flex-col">
+          <DialogHeader className="px-4 py-2 border-b">
+            <DialogTitle className="text-base">{t('notifications.button.dialogTitle')}</DialogTitle>
+            <DialogDescription className="text-xs text-muted-foreground">
+              {t('notifications.button.dialogDescription') || 'View and manage your notifications'}
+            </DialogDescription>
           </DialogHeader>
           <div className="flex-1 overflow-hidden">
             <NotificationInbox onClose={handleCloseInbox} />

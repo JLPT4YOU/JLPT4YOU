@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion"
 import { FileText, Bot, Library, TrendingUp } from "lucide-react"
-import { TranslationData } from "@/lib/i18n"
+import { TranslationData } from "@/lib/i18n/"
 import { useTranslation } from "@/lib/use-translation"
 
 interface KeyBenefitsSectionProps {

@@ -4,7 +4,7 @@
  */
 
 import { Metadata } from 'next'
-import { Language, TranslationData } from '@/lib/i18n'
+import { Language, TranslationData } from '@/lib/i18n/'
 
 // Base URL configuration
 const BASE_URL = 'https://jlpt4you.com'
@@ -88,7 +88,7 @@ export const METADATA_CONFIGS = {
 } as const
 
 // Generate hreflang links for international SEO (delegates to unified i18n implementation)
-import { generateHreflangLinksLegacy as generateHreflangLinksUnified } from '@/lib/i18n'
+import { generateHreflangLinks as generateHreflangLinksUnified } from '@/lib/i18n/'
 
 export function generateHreflangLinks(path: string): Record<string, string> {
   // Use unified implementation from i18n.ts and convert Array to Record format

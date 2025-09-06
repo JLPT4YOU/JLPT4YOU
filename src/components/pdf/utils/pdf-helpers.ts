@@ -154,7 +154,7 @@ export function validateScale(scale: number): number {
  * with support for rotation and scaling
  */
 
-import { logger } from '../../../lib/logger'
+import { logger } from '@/lib/logger'
 
 export interface Point {
   x: number

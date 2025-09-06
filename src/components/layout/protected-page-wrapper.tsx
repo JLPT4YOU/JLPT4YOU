@@ -53,8 +53,10 @@ export function ProtectedPageWrapper({
             <Header />
           )}
           
-          <main className="app-container">
-            {children}
+          <main className="app-container app-section">
+            <div className="app-content">
+              {children}
+            </div>
           </main>
         </div>
       </ProtectedRoute>
@@ -70,23 +72,25 @@ function ProtectedPageSkeleton({ showHeader = true }: { showHeader?: boolean }) 
         <div className="h-16 bg-muted border-b border-border mb-6" />
       )}
       
-      <div className="app-container">
-        <div className="space-y-6">
-          {/* Page title skeleton */}
-          <div className="h-8 bg-muted rounded w-1/3" />
-          
-          {/* Content skeleton */}
-          <div className="space-y-4">
-            <div className="h-4 bg-muted rounded w-full" />
-            <div className="h-4 bg-muted rounded w-3/4" />
-            <div className="h-4 bg-muted rounded w-1/2" />
-          </div>
-          
-          {/* Cards skeleton */}
-          <div className="grid grid-cols-2 lg:grid-cols-3 gap-6">
-            {Array.from({ length: 6 }).map((_, i) => (
-              <div key={i} className="h-32 bg-muted rounded-lg" />
-            ))}
+      <div className="app-container app-section">
+        <div className="app-content">
+          <div className="space-y-6">
+            {/* Page title skeleton */}
+            <div className="h-8 bg-muted rounded w-1/3" />
+
+            {/* Content skeleton */}
+            <div className="space-y-4">
+              <div className="h-4 bg-muted rounded w-full" />
+              <div className="h-4 bg-muted rounded w-3/4" />
+              <div className="h-4 bg-muted rounded w-1/2" />
+            </div>
+
+            {/* Cards skeleton */}
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-6">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <div key={i} className="h-32 bg-muted rounded-lg" />
+              ))}
+            </div>
           </div>
         </div>
       </div>

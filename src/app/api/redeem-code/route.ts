@@ -58,55 +58,39 @@ export async function POST(request: NextRequest): Promise<NextResponse<RedeemCod
       }, { status: 401 })
     }
 
-    // TODO: Replace with actual code validation logic
-    // For now, we'll use some demo codes for testing
-    const validCodes = {
-      'PREMIUM30': { days: 30, type: 'Premium' },
-      'PREMIUM90': { days: 90, type: 'Premium' },
-      'PREMIUM365': { days: 365, type: 'Premium' },
-      'TEST30': { days: 30, type: 'Premium' }
-    }
-
-    const trimmedCode = code.trim().toUpperCase()
-    const codeInfo = validCodes[trimmedCode as keyof typeof validCodes]
-
-    if (!codeInfo) {
-      return NextResponse.json({
-        success: false,
-        message: 'Code không hợp lệ hoặc đã hết hạn'
-      }, { status: 400 })
-    }
-
-    // Calculate new expiry date
-    const now = new Date()
-    const expiryDate = new Date(now.getTime() + (codeInfo.days * 24 * 60 * 60 * 1000))
-
-    // Update user's premium status
-    const { error: updateError } = await supabaseAdmin
-      .from('users')
-      .update({
-        role: codeInfo.type as 'Premium',
-        subscription_expires_at: expiryDate.toISOString(),
-        updated_at: new Date().toISOString()
+    // Use database function to redeem code
+    const { data: redeemResult, error: redeemError } = await supabaseAdmin
+      .rpc('redeem_code', {
+        p_code: code,
+        p_user_id: user.id
       })
-      .eq('id', user.id)
 
-    if (updateError) {
-      console.error('Error updating user premium status:', updateError)
+    if (redeemError) {
+      console.error('Error calling redeem_code function:', redeemError)
       return NextResponse.json({
         success: false,
-        message: 'Có lỗi xảy ra khi kích hoạt code'
+        message: 'Có lỗi xảy ra khi xử lý mã'
       }, { status: 500 })
     }
 
+    if (!redeemResult.success) {
+      return NextResponse.json({
+        success: false,
+        message: redeemResult.error === 'Invalid code' ? 'Mã không hợp lệ' :
+                redeemResult.error === 'Code has already been redeemed or expired' ? 'Mã đã được sử dụng hoặc đã hết hạn' :
+                redeemResult.error === 'Code has expired' ? 'Mã đã hết hạn' :
+                'Mã không hợp lệ'
+      }, { status: 400 })
+    }
+
     // 📣 Send notifications
-    await sendPremiumUpgradeAdmin(user.id, 'code', expiryDate.toISOString())
-    await sendRedeemCodeAdmin(user.id, trimmedCode, 'premium_days', codeInfo.days)
+    await sendPremiumUpgradeAdmin(user.id, 'code', redeemResult.new_expiry)
+    await sendRedeemCodeAdmin(user.id, code, 'premium_days', redeemResult.premium_days_added)
 
     return NextResponse.json({
       success: true,
       message: 'Kích hoạt Premium thành công!',
-      expiryDate: expiryDate.toISOString()
+      expiryDate: redeemResult.new_expiry
     })
 
   } catch (error) {

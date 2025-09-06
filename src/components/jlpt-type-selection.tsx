@@ -5,7 +5,7 @@ import { GraduationCap, BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "@/lib/use-translation";
 import { useEffect, useState } from "react";
-import { loadTranslation, DEFAULT_LANGUAGE, TranslationData } from "@/lib/i18n";
+import { loadTranslation, DEFAULT_LANGUAGE, TranslationData } from "@/lib/i18n/";
 
 interface JLPTTypeSelectionProps {
   type: "official" | "custom";

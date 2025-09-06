@@ -162,7 +162,7 @@ function getLevelFromPath() {
 
 function Header({ level, t }: { level: string; t: (key: string) => string }) {
   return (
-    <div className="text-center app-space-md">
+    <div className="text-center space-y-4">
       <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight">
         {t('study.vocabulary.pageTitle').replace('{level}', level.toUpperCase())}
       </h1>
@@ -195,7 +195,7 @@ function Controls({
         />
         {query && (
           <button
-            className="px-3 py-2 rounded-xl bg-muted text-foreground border border-border"
+            className="px-2 py-2 rounded-xl bg-muted text-foreground border border-border"
             onClick={() => setQuery('')}
           >
             {t('study.vocabulary.search.clear')}
@@ -207,7 +207,7 @@ function Controls({
         <select
           value={limit}
           onChange={(e) => setLimit(Number(e.target.value))}
-          className="px-3 py-2 rounded-xl bg-card text-foreground border border-border"
+          className="px-2 py-2 rounded-xl bg-card text-foreground border border-border"
         >
           {LIMIT_OPTIONS.map((opt) => (
             <option key={opt} value={opt}>{opt}</option>
@@ -237,7 +237,7 @@ function WordGrid({ words, loading, error, t }: { words: JLPTWord[]; loading: bo
               <div className="text-foreground">{w.vn || '—'}</div>
               <div className="text-foreground">{w.en || '—'}</div>
               <div className="text-sm text-muted-foreground italic min-h-[1.25rem]">{w.vd || '—'}</div>
-              <div className="text-xs bg-muted rounded-full inline-block px-2 py-1 mt-2">{w.level}</div>
+              <div className="text-xs bg-muted rounded-full inline-block px-2 py-0.5 mt-2">{w.level}</div>
             </div>
           ))}
         </div>
@@ -256,8 +256,7 @@ function FooterControls({ loading, hasNext, page, limit, total, onPrev, onNext, 
       <button
         disabled={loading || page <= 1}
         onClick={onPrev}
-        className="px-5 py-2 rounded-xl bg-card border border-border text-foreground disabled:opacity-50"
-      >
+        className="px-6 py-2 rounded-xl bg-card border border-border text-foreground disabled:opacity-50">
         {t('common.previous')}
       </button>
       <div className="text-sm text-muted-foreground">
@@ -266,8 +265,7 @@ function FooterControls({ loading, hasNext, page, limit, total, onPrev, onNext, 
       <button
         disabled={loading || !hasNext}
         onClick={onNext}
-        className="px-5 py-2 rounded-xl bg-card border border-border text-foreground disabled:opacity-50"
-      >
+        className="px-6 py-2 rounded-xl bg-card border border-border text-foreground disabled:opacity-50">
         {t('common.next')}
       </button>
     </div>

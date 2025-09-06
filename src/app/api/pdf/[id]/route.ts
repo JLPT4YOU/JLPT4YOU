@@ -4,9 +4,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server'
-// import { createServerClient } from '@supabase/ssr' // Currently unused
 import { createClient as createSupabaseClient } from '@supabase/supabase-js'
-// import { cookies } from 'next/headers' // Currently unused
 import { SessionValidator } from '@/lib/session-validator' // ✅ ADDED: Session validator
 import {
   performSecurityCheck,

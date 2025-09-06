@@ -59,7 +59,7 @@ export function WordDetail({ selectedItem, translations }: WordDetailProps) {
   if (!selectedItem || selectedItem.type !== 'word') {
     return (
       <div className="text-center py-12 text-muted-foreground">
-        <p>Nhập từ khóa và chọn một từ vựng để xem chi tiết</p>
+        <p>{t('dict.messages.selectWord')}</p>
       </div>
     );
   }

@@ -103,7 +103,7 @@ export async function validateCoupon(
       discount_type: isPercentage ? 'percentage' : 'fixed',
       discount_value: actualDiscountValue,
       coupon_id: typedCoupon.id,
-      message: 'Áp dụng mã giảm giá thành công!'
+      message: 'Coupon applied successfully!' // This will be translated in the component
     }
   } catch (error) {
     console.error('Error validating coupon:', error)

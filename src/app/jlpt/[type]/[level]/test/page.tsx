@@ -3,14 +3,14 @@
 import { ExamInterface } from "@/components/exam"
 import { generateJLPTQuestions } from "@/lib/sample-exam-data"
 import { ExamPageTemplate } from "@/components/layout/exam-page-template"
-import { getLanguageFromPath, DEFAULT_LANGUAGE, type Language } from "@/lib/i18n"
+import { getLanguageFromPath, DEFAULT_LANGUAGE, type Language } from "@/lib/i18n/"
 import { usePathname } from "next/navigation"
 import { useExamConfig } from "@/hooks/use-exam-config";
 
 import { isValidJLPTLevel, isValidJLPTType } from "@/lib/utils";
 import { notFound, useRouter } from "next/navigation"
 import { useEffect, useState, Suspense } from "react"
-import { TranslationData } from "@/lib/i18n"
+import { TranslationData } from "@/lib/i18n/"
 
 interface JLPTTestPageProps {
   params: Promise<{

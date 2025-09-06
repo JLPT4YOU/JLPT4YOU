@@ -131,7 +131,7 @@ export function SearchBar({
         <div className="flex gap-4 mt-3 pt-3 border-t">
           {/* Type Selector */}
           <div className="flex items-center gap-2">
-            <span className="text-sm text-muted-foreground">Loại:</span>
+            <span className="text-sm text-muted-foreground">{t('dict.search.typeLabel')}</span>
             <div className="flex gap-1">
               {typeOptions.map((option) => (
                 <button
@@ -152,7 +152,7 @@ export function SearchBar({
 
           {/* Position Selector */}
           <div className="flex items-center gap-2">
-            <span className="text-sm text-muted-foreground">Vị trí:</span>
+            <span className="text-sm text-muted-foreground">{t('dict.search.positionLabel')}</span>
             <div className="flex gap-1">
               {positionOptions.map((option) => (
                 <button
@@ -178,7 +178,7 @@ export function SearchBar({
         <div className="absolute top-full left-0 right-0 mt-2 bg-card border rounded-lg shadow-lg max-h-96 overflow-y-auto z-50">
           {loading && (
             <div className="p-4 text-center text-muted-foreground">
-              Đang tìm kiếm...
+              {t('dict.search.loading')}
             </div>
           )}
           {!loading && suggestions.map((item, index) => (

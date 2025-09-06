@@ -122,38 +122,38 @@ export function FullscreenRequirementModal({
         <div className="p-6 md:p-8 space-y-6">
           {/* Mobile Device Detection */}
           {isMobile ? (
-            <div className="text-center app-space-md">
-              <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto app-mb-md">
+            <div className="text-center space-y-4">
+              <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Smartphone className="w-8 h-8 text-primary" />
               </div>
               
-              <h3 className="text-lg font-semibold text-foreground app-mb-sm">
+              <h3 className="text-lg font-semibold text-foreground mb-2">
                 {t('exam.fullscreenModal.mobile.detected')}
               </h3>
 
-              <p className="text-sm text-muted-foreground app-mb-md">
+              <p className="text-sm text-muted-foreground mb-4">
                 {t('exam.fullscreenModal.mobile.description')}
               </p>
               
-              <div className="app-p-md bg-card border border-red-300 dark:border-red-700 rounded-lg app-mb-md">
-                <div className="flex items-start app-gap-sm">
+              <div className="p-4 bg-card border border-red-300 dark:border-red-700 rounded-lg mb-4">
+                <div className="flex items-start gap-2">
                   <AlertTriangle className="w-5 h-5 text-red-600 mt-0.5 flex-shrink-0" />
                   <div className="text-left">
                     <p className="text-sm font-bold text-red-700 dark:text-red-300">
                       {t('exam.fullscreenModal.mobile.importantNote')}
                     </p>
-                    <p className="text-xs text-red-600 dark:text-red-400 app-mt-xs">
+                    <p className="text-xs text-red-600 dark:text-red-400 mt-1">
                       {t('exam.fullscreenModal.mobile.warning')}
                     </p>
                   </div>
                 </div>
               </div>
               
-              <div className="flex app-gap-sm justify-center">
+              <div className="flex gap-2 justify-center">
                 <Button variant="outline" onClick={onCancel}>
                   {t('exam.fullscreenModal.cancelButton')}
                 </Button>
-                <Button onClick={handleMobileProceed} className="app-px-lg">
+                <Button onClick={handleMobileProceed} className="px-6">
                   <CheckCircle className="w-4 h-4 mr-2" />
                   {t('exam.fullscreenModal.mobile.continueButton')}
                 </Button>
@@ -161,27 +161,27 @@ export function FullscreenRequirementModal({
             </div>
           ) : (
             /* Desktop Fullscreen Requirement */
-            <div className="text-center app-space-md">
-              <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto app-mb-md">
+            <div className="text-center space-y-4">
+              <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Monitor className="w-8 h-8 text-primary" />
               </div>
               
-              <h3 className="text-lg font-semibold text-foreground app-mb-sm">
+              <h3 className="text-lg font-semibold text-foreground mb-2">
                 {t('exam.fullscreenModal.desktop.title')}
               </h3>
 
-              <p className="text-sm text-muted-foreground app-mb-md">
+              <p className="text-sm text-muted-foreground mb-4">
                 {t('exam.fullscreenModal.desktop.description')}
               </p>
 
               {/* Requirements List */}
-              <div className="text-left app-mb-md">
-                <h4 className="font-semibold text-foreground app-mb-sm">
+              <div className="text-left mb-4">
+                <h4 className="font-semibold text-foreground mb-2">
                   {t('exam.fullscreenModal.desktop.requirementsTitle')}
                 </h4>
-                <div className="app-space-xs text-sm text-muted-foreground">
+                <div className="space-y-2 text-sm text-muted-foreground">
                   {t('exam.fullscreenModal.desktop.requirements').map((requirement: string, index: number) => (
-                    <div key={index} className="flex items-start app-gap-sm">
+                    <div key={index} className="flex items-start gap-2">
                       <div className="w-1.5 h-1.5 bg-primary rounded-full mt-2 flex-shrink-0"></div>
                       <span>{requirement}</span>
                     </div>
@@ -190,14 +190,14 @@ export function FullscreenRequirementModal({
               </div>
 
               {/* Warning */}
-              <div className="app-p-md bg-card border border-red-300 dark:border-red-700 rounded-lg app-mb-md">
-                <div className="flex items-start app-gap-sm">
+              <div className="p-4 bg-card border border-red-300 dark:border-red-700 rounded-lg mb-4">
+                <div className="flex items-start gap-2">
                   <AlertTriangle className="w-5 h-5 text-red-600 mt-0.5 flex-shrink-0" />
                   <div className="text-left">
                     <p className="text-sm font-bold text-red-700 dark:text-red-300">
                       {t('exam.fullscreenModal.desktop.importantNote')}
                     </p>
-                    <p className="text-xs text-red-600 dark:text-red-400 app-mt-xs">
+                    <p className="text-xs text-red-600 dark:text-red-400 mt-1">
                       {t('exam.fullscreenModal.desktop.warningText')}
                     </p>
                   </div>
@@ -206,20 +206,20 @@ export function FullscreenRequirementModal({
 
               {/* Action Buttons */}
               {!isFullscreenSupported ? (
-                <div className="app-p-md bg-destructive/10 border border-destructive/20 rounded-lg">
+                <div className="p-4 bg-destructive/10 border border-destructive/20 rounded-lg">
                   <p className="text-sm text-destructive">
                     {t('exam.fullscreenModal.desktop.unsupportedBrowser')}
                   </p>
                 </div>
               ) : (
-                <div className="flex app-gap-sm justify-center">
+                <div className="flex gap-2 justify-center">
                   <Button variant="outline" onClick={onCancel} disabled={isActivating}>
                     {t('exam.fullscreenModal.cancelButton')}
                   </Button>
                   <Button
                     onClick={requestFullscreen}
                     disabled={isActivating}
-                    className="app-px-lg"
+                    className="px-6"
                   >
                     <Maximize className="w-4 h-4 mr-2" />
                     {isActivating

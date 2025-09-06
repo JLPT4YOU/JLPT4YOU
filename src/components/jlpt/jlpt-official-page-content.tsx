@@ -4,7 +4,7 @@ import Link from "next/link";
 import { GraduationCap, BookOpen, Award } from "lucide-react";
 import { ProtectedRoute } from "@/components/auth/protected-route";
 import { useTranslation } from "@/lib/use-translation";
-import { TranslationData, Language } from "@/lib/i18n";
+import { TranslationData, Language } from "@/lib/i18n/";
 
 interface JLPTOfficialPageContentProps {
   translations: TranslationData;
@@ -66,8 +66,8 @@ function JLPTOfficialPageContentInner({ translations, language }: JLPTOfficialPa
       <div className="border-b bg-muted/30">
         <div className="app-container app-section">
           <div className="app-content">
-            <div className="text-center app-space-md">
-              <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto shadow-lg app-mb-md">
+            <div className="text-center space-y-4">
+              <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto shadow-lg mb-4">
                 <GraduationCap className="w-8 h-8 text-primary" />
               </div>
               <h1 className="text-2xl sm:text-3xl font-bold text-foreground">

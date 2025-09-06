@@ -10,7 +10,7 @@ import { ExamHeader } from "./components/exam-header";
 import { QuestionContent } from "./components/question-content";
 import { QuestionSidebar } from "./components/question-sidebar";
 import { ExamModals } from "./components/exam-modals";
-import { TranslationData } from "@/lib/i18n";
+import { TranslationData } from "@/lib/i18n/";
 import { useTranslation } from "@/lib/use-translation";
 
 // Types
@@ -35,8 +35,6 @@ export interface ExamInterfaceProps {
   onSubmit: (answers: Record<number, 'A' | 'B' | 'C' | 'D'>) => void;
   onPause?: () => void;
   examMode?: 'practice' | 'challenge'; // New prop to determine exam mode
-  onViolation?: (violation: AntiCheatViolation) => void; // For anti-cheat violations
-  violationCount?: number; // Current violation count
   translations: TranslationData; // Add translations prop
 }
 
@@ -47,8 +45,6 @@ export function ExamInterface({
   onSubmit,
   onPause,
   examMode = 'practice',
-  onViolation: _onViolation, // eslint-disable-line @typescript-eslint/no-unused-vars
-  violationCount = 0,
   translations
 }: ExamInterfaceProps) {
   // Initialize translation function (used by child components)
@@ -195,7 +191,7 @@ export function ExamInterface({
         examTitle={examTitle}
         timer={timer}
         examMode={examMode}
-        violationCount={violationCount}
+        violationCount={0}
         flaggedCount={flaggedCount}
         onShowFlaggedQuestions={showFlaggedQuestions}
         onPause={handlePause}
@@ -204,13 +200,14 @@ export function ExamInterface({
         translations={translations}
       />
 
-      <div className="flex app-container app-gap-lg transition-all duration-300">
+      <div className="flex px-4 sm:px-6 lg:px-8 gap-6 transition-all duration-300">
         {/* Main Content */}
         <div className={cn(
-          "flex-1 app-py-md md:app-section transition-all duration-300",
+          "flex-1 py-4 md:py-8 transition-all duration-300",
           examMode === 'practice' && timer.isPaused && "blur-sm pointer-events-none select-none"
         )}>
-          <div className="app-content max-w-4xl mx-auto">
+          <div className="max-w-6xl mx-auto">
+            <div className="max-w-4xl mx-auto">
             {currentQuestion && (
               <QuestionContent
                 question={currentQuestion}
@@ -227,6 +224,7 @@ export function ExamInterface({
                 translations={translations}
               />
             )}
+            </div>
           </div>
         </div>
 

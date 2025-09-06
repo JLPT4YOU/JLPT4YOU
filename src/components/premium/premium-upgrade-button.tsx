@@ -8,7 +8,7 @@
 import { Button } from '@/components/ui/button'
 import { Crown } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import { useAuth } from '@/contexts/auth-context-simple'
+import { useAuth } from '@/contexts/auth-context'
 
 interface PremiumUpgradeButtonProps {
   size?: 'sm' | 'default' | 'lg'

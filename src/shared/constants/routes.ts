@@ -13,7 +13,7 @@ export type AuthType = 'login' | 'register' | 'forgot-password' | 'landing'
 
 // Route parameter interfaces
 export interface RouteParams {
-  home: {}
+  home: Record<string, never>
   jlpt: {
     type?: JLPTType
     level?: string
@@ -27,7 +27,7 @@ export interface RouteParams {
     type: 'honmen' | 'karimen'
     action?: 'test' | 'test-setup'
   }
-  dict: {}
+  dict: Record<string, never>
   study: {
     type?: StudyType
   }
@@ -38,10 +38,10 @@ export interface RouteParams {
   auth: {
     type: AuthType
   }
-  landing: {}
-  settings: {}
-  'exam-results': {}
-  'review-answers': {}
+  landing: Record<string, never>
+  settings: Record<string, never>
+  'exam-results': Record<string, never>
+  'review-answers': Record<string, never>
 }
 
 // Base route patterns
@@ -168,52 +168,52 @@ export function generateRoute<T extends RouteFeature>(
 // Convenience functions for common routes
 export const routes = {
   // Protected routes (clean URLs - language parameter ignored for consistency)
-  home: (language?: Language) => '/home',
+  home: () => '/home',
 
-  jlpt: (language?: Language) => '/jlpt',
+  jlpt: () => '/jlpt',
 
-  jlptOfficial: (language?: Language) => '/jlpt/official',
+  jlptOfficial: () => '/jlpt/official',
 
-  jlptCustom: (language?: Language) => '/jlpt/custom',
+  jlptCustom: () => '/jlpt/custom',
 
-  jlptLevel: (language: Language, type: JLPTType, level: string) =>
+  jlptLevel: (type: JLPTType, level: string) =>
     `/jlpt/${type}/${level}`,
 
-  jlptTest: (language: Language, type: JLPTType, level: string) =>
+  jlptTest: (type: JLPTType, level: string) =>
     `/jlpt/${type}/${level}/test`,
 
-  jlptTestSetup: (language: Language, type: JLPTType, level: string) =>
+  jlptTestSetup: (type: JLPTType, level: string) =>
     `/jlpt/${type}/${level}/test-setup`,
 
-  challenge: (language?: Language) => '/challenge',
+  challenge: () => '/challenge',
 
-  challengeLevel: (language: Language, level: string) =>
+  challengeLevel: (level: string) =>
     `/challenge/${level}`,
 
-  challengeTest: (language: Language, level: string) =>
+  challengeTest: (level: string) =>
     `/challenge/${level}/test`,
 
-  challengeTestSetup: (language: Language, level: string) =>
+  challengeTestSetup: (level: string) =>
     `/challenge/${level}/test-setup`,
 
-  driving: (language?: Language) => '/driving',
+  driving: () => '/driving',
 
-  drivingType: (language: Language, type: 'honmen' | 'karimen') =>
+  drivingType: (type: 'honmen' | 'karimen') =>
     `/driving/${type}`,
 
-  drivingTest: (language: Language, type: 'honmen' | 'karimen') =>
+  drivingTest: (type: 'honmen' | 'karimen') =>
     `/driving/${type}/test`,
 
-  drivingTestSetup: (language: Language, type: 'honmen' | 'karimen') =>
+  drivingTestSetup: (type: 'honmen' | 'karimen') =>
     `/driving/${type}/test-setup`,
 
   dict: () => '/dict',
 
-  study: (language?: Language) => '/study',
+  study: () => '/study',
 
-  studyTheory: (language?: Language) => '/study/theory',
+  studyTheory: () => '/study/theory',
 
-  studyPractice: (language?: Language) => '/study/practice',
+  studyPractice: () => '/study/practice',
 
   // Public routes (language-prefixed)
   login: (language: Language) =>
@@ -333,9 +333,18 @@ export interface Breadcrumb {
   isActive: boolean
 }
 
+interface TranslationsStructure {
+  common?: { home?: string };
+  jlpt?: Record<string, { page?: { title?: string }; title?: string }>;
+  challenge?: { page?: { title?: string } };
+  driving?: { page?: { title?: string } };
+  study?: { page?: { title?: string } };
+  [key: string]: unknown;
+}
+
 export function generateBreadcrumbs(
   pathname: string,
-  translations: any
+  translations: TranslationsStructure
 ): Breadcrumb[] {
   const { language, feature, params } = parseRoute(pathname)
 

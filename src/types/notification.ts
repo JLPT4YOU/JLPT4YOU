@@ -11,7 +11,7 @@ export interface Notification {
   type: NotificationType;
   title: string;
   content: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
   is_read: boolean;
   is_important: boolean;
   created_at: string;
@@ -31,7 +31,7 @@ export interface NotificationMetadata {
   // For redeem_code
   code?: string;
   reward_type?: string;
-  reward_value?: any;
+  reward_value?: unknown;
   
   // For admin_message
   priority?: 'low' | 'normal' | 'high';

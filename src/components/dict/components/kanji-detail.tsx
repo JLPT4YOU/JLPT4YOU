@@ -2,7 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import { dictService, type WordDetail } from '@/lib/dict/dict-service';
+import { Badge } from '@/components/ui/badge';
 import { Loader2 } from 'lucide-react';
+import { TranslationData } from '@/lib/i18n';
 
 // Helper function to safely render string or object fields
 const renderField = (field: any): string => {
@@ -14,12 +16,24 @@ const renderField = (field: any): string => {
 
 interface KanjiDetailProps {
   selectedItem: any;
+  translations?: TranslationData;
 }
 
-export function KanjiDetail({ selectedItem }: KanjiDetailProps) {
+export function KanjiDetail({ selectedItem, translations }: KanjiDetailProps) {
   const [wordDetail, setWordDetail] = useState<WordDetail | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Translation function
+  const t = (key: string) => {
+    if (!translations) return key;
+    const keys = key.split('.');
+    let value: any = translations;
+    for (const k of keys) {
+      value = value?.[k];
+    }
+    return value || key;
+  };
 
   useEffect(() => {
     if (selectedItem && selectedItem.type === 'word') {
@@ -45,7 +59,7 @@ export function KanjiDetail({ selectedItem }: KanjiDetailProps) {
   if (!selectedItem || selectedItem.type !== 'word') {
     return (
       <div className="text-center py-12 text-muted-foreground">
-        <p>Chọn một từ vựng để xem thông tin kanji</p>
+        <p>{t('dict.messages.selectKanji')}</p>
       </div>
     );
   }
@@ -69,7 +83,7 @@ export function KanjiDetail({ selectedItem }: KanjiDetailProps) {
   if (!wordDetail || !wordDetail.kanjis || wordDetail.kanjis.length === 0) {
     return (
       <div className="text-center py-12 text-muted-foreground">
-        <p>Từ này không có kanji</p>
+        <p>{t('dict.messages.noKanji')}</p>
       </div>
     );
   }

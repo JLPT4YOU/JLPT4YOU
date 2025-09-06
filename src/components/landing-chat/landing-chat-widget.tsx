@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { ChatBubble } from "./chat-bubble"
 import { ChatInterface } from "./chat-interface"
-import { TranslationData } from "@/lib/i18n"
+import { TranslationData } from "@/lib/i18n/"
 
 interface LandingChatWidgetProps {
   translations: TranslationData

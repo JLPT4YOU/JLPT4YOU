@@ -92,32 +92,6 @@ export function sanitizeCustomInstructions(instructions: string): string {
   return sanitizeUserInput(instructions);
 }
 
-/**
- * DEPRECATED: Gets custom prompt configuration
- * @deprecated User prompts should be fetched from Supabase via API proxy
- */
-export function getCustomPromptConfig(): CustomPromptConfig | null {
-  // No longer using localStorage - prompts come from Supabase
-  return null;
-}
-
-/**
- * DEPRECATED: Saves custom prompt configuration
- * @deprecated User prompts should be saved to Supabase via API
- */
-export async function saveCustomPromptConfig(config: CustomPromptConfig): Promise<void> {
-  // No longer using localStorage - prompts saved to Supabase
-  console.warn('saveCustomPromptConfig is deprecated. Use Supabase API to save prompts.');
-}
-
-/**
- * DEPRECATED: Resets to default prompt configuration
- * @deprecated User prompts should be reset via Supabase API
- */
-export function resetToDefaultPrompt(): void {
-  // No longer using localStorage - prompts managed in Supabase
-  console.warn('resetToDefaultPrompt is deprecated. Use Supabase API to reset prompts.');
-}
 
 /**
  * Composes the final system prompt by combining core identity with user prompt
@@ -150,9 +124,10 @@ export function getCurrentSystemPrompt(): string {
 
 /**
  * Checks if custom prompt is currently active
+ * NOTE: This should be checked via Supabase API
  */
 export function hasCustomPrompt(): boolean {
-  return getCustomPromptConfig() !== null;
+  return false; // Always false since config comes from server
 }
 
 /**
@@ -175,26 +150,6 @@ export function hasCustomPrompt(): boolean {
 // NOTE: generateCustomPrompt function đã được chuyển sang user-prompt-generator.ts
 // để tránh inject core identity qua geminiService.sendMessage()
 
-/**
- * Migration utilities for future server-side storage
- */
-export function exportPromptConfig(): string {
-  const config = getCustomPromptConfig();
-  return JSON.stringify(config, null, 2);
-}
-
-export function importPromptConfig(jsonString: string): boolean {
-  try {
-    const config = JSON.parse(jsonString);
-    if (validatePromptConfig(config)) {
-      saveCustomPromptConfig(config);
-      return true;
-    }
-    return false;
-  } catch {
-    return false;
-  }
-}
 
 /**
  * Detect language from user message
@@ -229,17 +184,6 @@ export function detectLanguageFromMessage(message: string): string {
   return 'Tiếng Việt';
 }
 
-/**
- * DEPRECATED: Get AI communication language 
- * @deprecated Language settings should come from Supabase via API proxy
- */
-export function getAICommunicationLanguage(userMessage?: string): string {
-  // Default to auto-detect from message or Vietnamese
-  if (userMessage) {
-    return detectLanguageFromMessage(userMessage);
-  }
-  return 'Tiếng Việt';
-}
 
 /**
  * Get optimized language instruction for system prompt

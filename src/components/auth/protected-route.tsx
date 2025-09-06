@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
-import { useAuth } from '@/contexts/auth-context-simple'
+import { useAuth } from '@/contexts/auth-context'
 import { isProtectedRoute, setLoginRedirectUrl, getLoginUrl } from '@/lib/auth-utils'
 import { Loader2 } from 'lucide-react'
 
@@ -111,7 +111,7 @@ export function ProtectedRoute({
 function LoadingFallback() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-background">
-      <div className="flex flex-col items-center app-gap-md">
+      <div className="flex flex-col items-center gap-4">
         <Loader2 className="w-8 h-8 animate-spin text-primary" />
         <p className="text-sm text-muted-foreground">Đang kiểm tra quyền truy cập...</p>
       </div>

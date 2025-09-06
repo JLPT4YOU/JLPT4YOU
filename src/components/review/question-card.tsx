@@ -16,6 +16,7 @@ import { cn } from '@/lib/utils'
 import { getQuestionStatusColor } from '@/lib/review-data-utils'
 import { useTranslations } from '@/hooks/use-translations'
 
+import { Card } from "@/components/ui/card";
 interface QuestionCardProps {
   question: ReviewQuestion
   questionNumber: number
@@ -41,7 +42,7 @@ export function QuestionCard({
     if (!question.isAnswered) {
       return <HelpCircle className="h-4 w-4 text-muted-foreground" />
     }
-    return question.isCorrect 
+    return question.isCorrect
       ? <CheckCircle className="h-4 w-4 text-foreground" />
       : <XCircle className="h-4 w-4 text-muted-foreground" />
   }
@@ -78,7 +79,7 @@ export function QuestionCard({
   }
 
   return (
-    <div className="bg-background rounded-2xl p-6 md:p-8">
+    <Card radius="2xl" size="md" className="bg-background md:p-8">
       {/* Header */}
       <div className="flex-start mb-6">
         <div className="flex items-center gap-2">
@@ -181,6 +182,6 @@ export function QuestionCard({
             )}
           </div>
         )}
-    </div>
+    </Card>
   )
 }

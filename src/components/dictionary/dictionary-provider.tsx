@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, useRef } from 'react'
-import { useAuth } from '@/contexts/auth-context-simple'
+import { useAuth } from '@/contexts/auth-context'
 import { usePathname } from 'next/navigation'
 import { Search } from 'lucide-react'
 import { DictionaryPopup } from './popup'

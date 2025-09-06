@@ -11,7 +11,7 @@ import {
   removeLanguageFromPath,
   getLocalizedPath,
   createTranslationFunction
-} from './i18n'
+} from './i18n/'
 
 /**
  * Client-side hook for using translations in components

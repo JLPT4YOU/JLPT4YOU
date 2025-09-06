@@ -50,8 +50,9 @@ export class GroqService extends BaseAIService {
         throw new Error('Groq API key is required for server-side service.');
       }
       // Dynamic import to avoid client-side bundle issues
-      const Groq = require('groq-sdk');
-      this.client = new Groq({ apiKey });
+      import('groq-sdk').then(Groq => {
+        this.client = new Groq.default({ apiKey });
+      });
       this.isConfigured = true;
     } else {
       // Client-side - service is configured by default (proxy handles the key)
@@ -66,8 +67,9 @@ export class GroqService extends BaseAIService {
     this.apiKey = apiKey;
     
     if (this.isServerSide && apiKey) {
-      const Groq = require('groq-sdk');
-      this.client = new Groq({ apiKey });
+      import('groq-sdk').then(Groq => {
+        this.client = new Groq.default({ apiKey });
+      });
     }
     
     this.isConfigured = true;
@@ -85,8 +87,8 @@ export class GroqService extends BaseAIService {
     if (this.isServerSide) {
       // Server-side validation via direct API call
       try {
-        const Groq = require('groq-sdk');
-        const tempClient = new Groq({ apiKey });
+        const Groq = await import('groq-sdk');
+        const tempClient = new Groq.default({ apiKey });
         
         const completion = await tempClient.chat.completions.create({
           messages: [{ role: 'user', content: 'Test' }],

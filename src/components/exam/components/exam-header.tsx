@@ -11,7 +11,7 @@ import {
 import { cn } from "@/lib/utils"
 import { AntiCheatWarningBadge } from "@/components/anti-cheat-system"
 import { UseExamTimerReturn } from "../hooks/useExamTimer"
-import { TranslationData } from "@/lib/i18n"
+import { TranslationData } from "@/lib/i18n/"
 import { useTranslation } from "@/lib/use-translation"
 
 interface ExamHeaderProps {
@@ -42,8 +42,9 @@ export function ExamHeader({
   const { t } = useTranslation(translations);
   return (
     <header className="sticky top-0 z-30 border-b bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/60">
-      <div className="app-container app-py-sm">
-        <div className="app-content max-w-4xl mx-auto flex items-center justify-between gap-1 md:app-gap-md">
+      <div className="px-4 sm:px-6 lg:px-8 py-2">
+        <div className="max-w-6xl mx-auto">
+          <div className="max-w-4xl mx-auto flex items-center justify-between gap-1 md:gap-4">
           {/* Left: Exam Title */}
           <div className="flex items-center min-w-0 flex-1 md:flex-none">
             <h1 className="text-sm font-semibold text-foreground truncate md:text-lg">
@@ -52,7 +53,7 @@ export function ExamHeader({
           </div>
 
           {/* Center: Timer */}
-          <div className="flex items-center gap-1 md:app-gap-sm">
+          <div className="flex items-center gap-1 md:gap-2">
             <Clock className="w-4 h-4 text-muted-foreground md:w-5 md:h-5" />
             <span className={cn(
               "font-mono text-sm font-semibold md:text-lg",
@@ -63,7 +64,7 @@ export function ExamHeader({
           </div>
 
           {/* Right: Action Buttons */}
-          <div className="flex items-center gap-1 md:app-gap-sm">
+          <div className="flex items-center gap-1 md:gap-2">
             {/* Anti-Cheat Warning Badge for Challenge Mode */}
             <AntiCheatWarningBadge
               violationCount={violationCount}
@@ -155,6 +156,7 @@ export function ExamHeader({
             >
               <Menu className="w-4 h-4 text-foreground" />
             </Button>
+          </div>
           </div>
         </div>
       </div>

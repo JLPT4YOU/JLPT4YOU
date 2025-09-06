@@ -23,13 +23,10 @@ import {
   Globe
 } from 'lucide-react';
 import {
-  getCustomPromptConfig,
-  saveCustomPromptConfig,
-  resetToDefaultPrompt,
   type CustomPromptConfig
 } from '@/lib/prompt-storage';
 import { UserStorage } from '@/lib/user-storage';
-import { useAuth } from '@/contexts/auth-context-simple';
+import { useAuth } from '@/contexts/auth-context';
 import { generateUserPrompt, clearUserPromptConfig } from '@/lib/user-prompt-generator';
 
 interface PromptSettingsProps {
@@ -65,10 +62,7 @@ export const PromptSettings: React.FC<PromptSettingsProps> = ({
 
   // Load saved configuration on mount and when user changes
   useEffect(() => {
-    const savedConfig = getCustomPromptConfig();
-    if (savedConfig) {
-      setConfig(savedConfig);
-    }
+    // Prompt config now comes from server only
 
     if (user?.id) {
       // Load user-scoped AI language settings
@@ -148,8 +142,7 @@ export const PromptSettings: React.FC<PromptSettingsProps> = ({
     setIsSaving(true);
     setIsSaved(false);
     try {
-      // Save locally for fast UX and offline fallback
-      await saveCustomPromptConfig(config);
+      // Save to server only (removed deprecated local storage)
 
       // Persist to server (Supabase) so it applies across devices and server-side chats
       try {
@@ -212,9 +205,8 @@ export const PromptSettings: React.FC<PromptSettingsProps> = ({
     // Reset current form (bao gồm chức năng của handleReset cũ)
     setConfig(DEFAULT_CONFIG);
 
-    // Clear all prompt-related localStorage (except core)
-    resetToDefaultPrompt(); // Clear old system prompt
-    clearUserPromptConfig(); // Clear new system prompt
+    // Clear user prompt config
+    clearUserPromptConfig();
 
     // Reset AI language settings
     setAiLanguage('auto');

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { BookOpen, Sparkles, Lightbulb } from "lucide-react";
 import { ProtectedRoute } from "@/components/auth/protected-route";
 import { useTranslation } from "@/lib/use-translation";
-import { TranslationData, Language } from "@/lib/i18n";
+import { TranslationData, Language } from "@/lib/i18n/";
 
 interface JLPTCustomPageContentProps {
   translations: TranslationData;
@@ -66,11 +66,11 @@ function JLPTCustomPageContentInner({ translations, language }: JLPTCustomPageCo
       <div className="border-b bg-muted/30">
         <div className="app-container app-section">
           <div className="app-content">
-            <div className="text-center app-space-md">
-              <div className="w-16 h-16 bg-accent rounded-full flex items-center justify-center mx-auto shadow-lg app-mb-md">
+            <div className="text-center space-y-4">
+              <div className="w-16 h-16 bg-accent rounded-full flex items-center justify-center mx-auto shadow-lg mb-4">
                 <BookOpen className="w-8 h-8 text-accent-foreground" />
               </div>
-              <div className="flex items-center justify-center app-gap-xs app-mb-sm">
+              <div className="flex items-center justify-center gap-2 mb-2">
                 <h1 className="text-2xl sm:text-3xl font-bold text-foreground">
                   {t('jlpt.custom.page.title')}
                 </h1>

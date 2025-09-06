@@ -3,7 +3,7 @@
  * Keyword optimization, heading structure, and content analysis
  */
 
-import { Language } from './i18n'
+import { Language } from './i18n/'
 
 // JLPT Level Information
 export const JLPT_LEVELS = {

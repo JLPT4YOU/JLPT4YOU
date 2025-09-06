@@ -5,10 +5,10 @@
 
 import { useState, useCallback, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import { TranslationData, Language, getLocalizedPath } from "@/lib/i18n"
+import { TranslationData, Language, getLocalizedPath } from "@/lib/i18n/"
 import { useTranslation } from "@/lib/use-translation"
 import { baseValidationRules, defaultErrorMessages, translationKeys } from "@/lib/auth-validation"
-import { useAuth } from '@/contexts/auth-context-simple'
+import { useAuth } from '@/contexts/auth-context'
 import { getLoginRedirectUrl, getLoginUrl, getRegisterUrl, getForgotPasswordUrl } from "@/lib/auth-utils"
 
 export interface AuthFormConfig {

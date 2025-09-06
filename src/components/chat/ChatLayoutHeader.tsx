@@ -1,7 +1,7 @@
 import React, { memo, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { PanelRight, Edit, User, Home, Settings } from 'lucide-react';
-import { useAuth } from '@/contexts/auth-context-simple';
+import { useAuth } from '@/contexts/auth-context';
 import { useUserData } from '@/hooks/use-user-data'; // ✅ ADDED: Import user data hook
 import { useRouter } from 'next/navigation';
 import { useTranslations } from '@/hooks/use-translations';

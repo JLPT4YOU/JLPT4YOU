@@ -1,6 +1,6 @@
 "use client"
 
-import { Language, TranslationData } from '@/lib/i18n'
+import { Language, TranslationData } from '@/lib/i18n/'
 import { useTranslationsContext } from '@/contexts/translations-context'
 
 export interface UseTranslationsReturn {

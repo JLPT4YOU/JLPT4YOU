@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { LanguagePageWrapper } from '@/components/language-page-wrapper'
 
+import { Card } from "@/components/ui/card";
 // Force dynamic rendering for pages using useSearchParams
 export const dynamic = 'force-dynamic'
 
@@ -31,14 +32,14 @@ function ReviewAnswersWithSearchParams({ t }: { t: (key: string) => string }) {
 
 function ReviewAnswersContent({ t, searchParams }: ReviewAnswersContentProps) {
   const router = useRouter()
-  
+
   // State
   const [reviewData, setReviewData] = useState<ReviewData | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [currentFilter, setCurrentFilter] = useState<'all' | 'correct' | 'incorrect' | 'flagged'>('all')
   const [currentPage, setCurrentPage] = useState(1)
   const [expandedQuestion, setExpandedQuestion] = useState<number | null>(null)
-  
+
   useEffect(() => {
     // Get exam parameters from URL
     const examType = (searchParams.get('type') as 'jlpt' | 'driving' | 'challenge') || 'jlpt'
@@ -120,7 +121,7 @@ function ReviewAnswersContent({ t, searchParams }: ReviewAnswersContentProps) {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="app-container app-py-md md:app-section">
+      <div className="app-container app-section">
         <div className="app-content max-w-4xl mx-auto space-y-6">
           {/* Header */}
           <ReviewHeader
@@ -151,11 +152,11 @@ function ReviewAnswersContent({ t, searchParams }: ReviewAnswersContentProps) {
                 </div>
               ))
             ) : (
-              <div className="bg-background rounded-2xl app-p-xl text-center">
+              <Card radius="2xl" size="lg" className="text-center border-0 bg-background text-foreground">
                 <p className="text-muted-foreground">
                   {t('reviewAnswers.noQuestionsFound')}
                 </p>
-              </div>
+              </Card>
             )}
           </div>
 

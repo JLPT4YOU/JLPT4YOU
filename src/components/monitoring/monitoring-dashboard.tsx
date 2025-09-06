@@ -318,7 +318,6 @@ function AlertsTab({ alerts }: { alerts: any[] }) {
         ) : (
           <div>
             <p>{alerts.length} active alerts</p>
-            {/* TODO: Implement alert display */}
           </div>
         )}
       </div>

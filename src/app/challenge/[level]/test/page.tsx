@@ -9,7 +9,7 @@ import { notFound, useRouter } from "next/navigation"
 import { useEffect, useState, Suspense } from "react"
 import { ExamPageTemplate } from "@/components/layout/exam-page-template";
 import { useExamConfig } from "@/hooks/use-exam-config";
-import { createTranslationFunction, TranslationData } from "@/lib/i18n"
+import { createTranslationFunction, TranslationData } from "@/lib/i18n/"
 
 interface ChallengeTestPageProps {
   params: Promise<{
@@ -163,8 +163,6 @@ function ChallengeTestContent({ params, translations }: ChallengeTestContentProp
         onSubmit={handleExamSubmit}
         onPause={handleExamPause}
         examMode="challenge"
-        onViolation={handleViolation}
-        violationCount={violations.length}
         translations={translations}
       />
     </AntiCheatSystem>

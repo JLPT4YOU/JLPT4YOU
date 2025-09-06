@@ -6,7 +6,6 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient as createSupabaseClient } from '@supabase/supabase-js'
-import { cookies } from 'next/headers'
 import { BookCreateInput, BookListParams } from '@/types/books'
 import { devConsole } from '@/lib/console-override'
 

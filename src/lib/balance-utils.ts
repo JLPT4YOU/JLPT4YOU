@@ -4,6 +4,7 @@
  */
 
 import { createClient } from '@/utils/supabase/client'
+import { logger } from './logger'
 import type { Database } from '@/types/supabase'
 import { ensureUserRecord, debugUserRecord } from '@/lib/user-creation-helper'
 
@@ -15,12 +16,12 @@ type UserUpdate = Database['public']['Tables']['users']['Update']
  */
 export async function getUserBalance(userId: string): Promise<number> {
   try {
-    console.log('🔍 Fetching balance for user:', userId)
+    logger.debug('Fetching balance for user', { userId })
 
     // Use browser client for client-side calls
     const supabase = createClient()
     if (!supabase) {
-      console.error('Supabase client not initialized')
+      logger.error('Supabase client not initialized')
       return 0
     }
 
@@ -32,8 +33,8 @@ export async function getUserBalance(userId: string): Promise<number> {
       .maybeSingle() // Use maybeSingle to handle missing records gracefully
 
     if (error) {
-      console.error('Error fetching user balance:', error)
-      console.error('Error details:', {
+      logger.error('Error fetching user balance', {
+        error,
         code: error.code,
         message: error.message,
         details: error.details,
@@ -42,18 +43,17 @@ export async function getUserBalance(userId: string): Promise<number> {
 
       // Check if it's a "user not found" error (PGRST116)
       if (error.code === 'PGRST116') {
-        console.error('🚨 CRITICAL: User record missing from public.users table!')
-        console.error('📧 User ID:', userId)
+        logger.error('CRITICAL: User record missing from public.users table!', { userId })
 
         // Debug user record status
         await debugUserRecord(userId)
 
         // Try to auto-create user record
-        console.log('🔧 Attempting auto-creation of user record...')
+        logger.info('Attempting auto-creation of user record...', { userId })
         const created = await ensureUserRecord(userId)
 
         if (created) {
-          console.log('✅ User record auto-created, retrying balance fetch...')
+          logger.info('User record auto-created, retrying balance fetch...', { userId })
           // Retry balance fetch after creation
           const { data: retryData, error: retryError } = await supabase
             .from('users')
@@ -62,17 +62,17 @@ export async function getUserBalance(userId: string): Promise<number> {
             .maybeSingle()
 
           if (!retryError && retryData) {
-            console.log('✅ Balance fetched successfully after auto-creation:', (retryData as any).balance)
+            logger.info('Balance fetched successfully after auto-creation', { balance: (retryData as any).balance, userId })
             return (retryData as any).balance || 0
           }
         }
 
-        console.error('💡 Auto-creation failed. Manual fix required: Visit /test-auth-fix')
+        logger.error('Auto-creation failed. Manual fix required: Visit /test-auth-fix', { userId })
         return 0
       }
 
       // Try fallback: get user without balance field
-      console.log('🔄 Trying fallback: fetch user without balance field')
+      logger.debug('Trying fallback: fetch user without balance field', { userId })
       const { data: userData, error: userError } = await supabase
         .from('users')
         .select('id, email, role')
@@ -80,18 +80,18 @@ export async function getUserBalance(userId: string): Promise<number> {
         .single()
 
       if (userError) {
-        console.error('❌ User not found in public.users table:', userError)
+        logger.error('User not found in public.users table', { userError, userId })
         return 0
       } else {
-        console.log('✅ User found but balance field inaccessible:', userData)
+        logger.warn('User found but balance field inaccessible', { userData, userId })
         return 0 // Default balance for existing users
       }
     }
 
-    console.log('✅ Balance fetched successfully:', (data as any)?.balance)
+    logger.debug('Balance fetched successfully', { balance: (data as any)?.balance, userId })
     return (data as any)?.balance || 0
   } catch (error) {
-    console.error('Error in getUserBalance:', error)
+    logger.error('Error in getUserBalance', { error, userId })
     return 0
   }
 }
@@ -124,7 +124,7 @@ export async function deductBalance(userId: string, amount: number): Promise<{ s
       .single()
 
     if (fetchError) {
-      console.error('Error fetching current balance:', fetchError)
+      logger.error('Error fetching current balance', { fetchError, userId })
       return { success: false, error: 'Failed to fetch current balance' }
     }
 
@@ -148,7 +148,7 @@ export async function deductBalance(userId: string, amount: number): Promise<{ s
       .single()
 
     if (updateError) {
-      console.error('Error updating balance:', updateError)
+      logger.error('Error updating balance', { updateError, userId, amount })
       return { success: false, error: 'Failed to update balance' }
     }
 
@@ -157,7 +157,7 @@ export async function deductBalance(userId: string, amount: number): Promise<{ s
       newBalance: (data as any)?.balance || newBalance
     }
   } catch (error) {
-    console.error('Error in deductBalance:', error)
+    logger.error('Error in deductBalance', { error, userId, amount })
     return { success: false, error: 'Internal server error' }
   }
 }

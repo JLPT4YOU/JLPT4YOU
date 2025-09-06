@@ -3,7 +3,7 @@ import { Noto_Sans_JP } from "next/font/google";
 import "./globals.css";
 import "@/components/dictionary/styles.css";
 import { ThemeProvider } from "@/components/theme-provider";
-import { AuthProvider } from "@/contexts/auth-context-simple";
+import { AuthProvider } from "@/contexts/auth-context";
 
 import { TranslationsProvider } from "@/contexts/translations-context";
 import { LoadingProvider } from "@/contexts/loading-context";
@@ -12,13 +12,23 @@ import { ToastProvider } from "@/components/ui/toast";
 import { Header } from "@/components/header";
 import { NavigationProtectionWrapper } from "@/components/navigation-protection-wrapper";
 import { ConditionalHeaderWrapper } from "@/components/conditional-header-wrapper";
-import { ComprehensivePerformanceMonitor } from "@/components/performance-monitor";
 // Initialize console override for production
 import "@/lib/console-override";
 import { PageTransitionWrapper } from "@/components/layout/page-transition-wrapper";
 import { GlobalLoadingOverlay } from "@/components/layout/global-loading-overlay";
-import { DictionaryProvider } from "@/components/dictionary/dictionary-provider";
-import { Suspense } from "react";
+import { Suspense, lazy } from "react";
+
+// Lazy load heavy components for better performance
+const ComprehensivePerformanceMonitor = lazy(() => 
+  import("@/components/performance-monitor").then(mod => ({ 
+    default: mod.ComprehensivePerformanceMonitor 
+  }))
+);
+const DictionaryProvider = lazy(() => 
+  import("@/components/dictionary/dictionary-provider").then(mod => ({ 
+    default: mod.DictionaryProvider 
+  }))
+);
 import Script from "next/script";
 
 // Optimized Noto Sans Japanese font loading - reduced weights for better performance
@@ -171,29 +181,30 @@ export default function RootLayout({
               <LoadingProvider>
                 <AuthProvider>
                   <ToastProvider>
-                    <NavigationProtectionWrapper>
-                    <PageTransitionWrapper>
+                    <Suspense fallback={null}>
                       <DictionaryProvider>
                         <ConditionalHeaderWrapper>
                           <Header />
                         </ConditionalHeaderWrapper>
-                        <main>
-                          <Suspense fallback={<div className="min-h-screen bg-background" />}>
+                        <GlobalLoadingOverlay />
+                        <NavigationProtectionWrapper>
+                          <PageTransitionWrapper>
                             {children}
-                          </Suspense>
-                        </main>
+                          </PageTransitionWrapper>
+                        </NavigationProtectionWrapper>
                       </DictionaryProvider>
-                    </PageTransitionWrapper>
-                    </NavigationProtectionWrapper>
-
+                    </Suspense>
                     {/* Global Loading Overlay */}
-                    <GlobalLoadingOverlay />
                   </ToastProvider>
                 </AuthProvider>
               </LoadingProvider>
 
               {/* Performance monitoring for Core Web Vitals - Console logging disabled */}
-              {process.env.NODE_ENV === 'production' && <ComprehensivePerformanceMonitor />}
+              {process.env.NODE_ENV === 'development' && (
+                <Suspense fallback={null}>
+                  <ComprehensivePerformanceMonitor />
+                </Suspense>
+              )}
             </TranslationsProvider>
         </ThemeProvider>
 

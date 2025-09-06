@@ -7,6 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "lint:css": "stylelint \"src/**/*.{css}\"",
+    "lint:css:fix": "stylelint \"src/**/*.{css}\" --fix",
+    "lint:all": "npm run lint && npm run lint:css",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
@@ -94,6 +97,8 @@
     "jest-environment-jsdom": "^30.0.4",
     "lighthouse": "^12.8.1",
     "sharp": "^0.34.3",
+    "stylelint": "^16.23.1",
+    "stylelint-config-standard": "^39.0.0",
     "supertest": "^7.1.4",
     "tailwindcss": "^4",
     "typescript": "^5"

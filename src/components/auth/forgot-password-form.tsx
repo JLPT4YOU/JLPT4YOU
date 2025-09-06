@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useAuthForm, ForgotPasswordFormData } from "@/hooks/use-auth-form"
-import { TranslationData, Language } from "@/lib/i18n"
+import { TranslationData, Language } from "@/lib/i18n/"
 import { useTranslation } from "@/lib/use-translation"
 import { cn } from "@/lib/utils"
 
@@ -67,7 +67,7 @@ export function ForgotPasswordForm({
 
         {/* Instructions */}
         <div className="p-4 bg-muted/30 rounded-lg text-left">
-          <div className="flex items-start app-gap-sm">
+          <div className="flex items-start gap-2">
             <Mail className="h-5 w-5 text-muted-foreground mt-0.5 flex-shrink-0" />
             <div className="space-y-2 text-sm">
               <p className="font-medium text-foreground">{t('auth.forgotPassword.checkEmail')}</p>

@@ -84,7 +84,7 @@ export function ExerciseDisplay({
 
   if (!question) {
     return (
-      <div className="bg-background rounded-2xl py-12 text-center">
+      <div className="bg-background rounded-2xl py-16 text-center">
         <p className="text-muted-foreground">{t('study.practice.exercise.noQuestion')}</p>
       </div>
     );
@@ -114,7 +114,7 @@ export function ExerciseDisplay({
           <div className="flex items-start justify-between">
             <div className="flex-1 space-x-2">
               {question.type === 'multiple_choice' && (
-                <span className="inline-block px-3 py-1 text-xs font-medium bg-muted text-foreground rounded-full">
+                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-primary/10 text-primary">
                   {t('study.practice.exercise.multipleChoice')}
                 </span>
               )}

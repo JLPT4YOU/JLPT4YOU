@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import dynamic from 'next/dynamic'
 import { LandingHeader } from "@/components/landing/landing-header"
 import { HeroSection } from "@/components/landing/hero-section"
-import { TranslationData, Language } from "@/lib/i18n"
+import { TranslationData, Language } from "@/lib/i18n/"
 import { useScrollPreservation } from "@/lib/use-scroll-preservation"
 import { useViewport } from "@/hooks/use-viewport"
 

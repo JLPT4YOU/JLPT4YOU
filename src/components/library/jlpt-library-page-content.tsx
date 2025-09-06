@@ -1,7 +1,7 @@
 "use client"
 
 import { GraduationCap } from "lucide-react";
-import { TranslationData, Language, createTranslationFunction } from "@/lib/i18n";
+import { TranslationData, Language, createTranslationFunction } from "@/lib/i18n/";
 import { BasePageTemplate } from "@/components/layout/base-page-template";
 import { createPageContent, type BasePageContentProps } from "@/components/shared/component-utils";
 

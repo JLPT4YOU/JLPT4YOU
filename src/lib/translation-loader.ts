@@ -1,4 +1,4 @@
-import { Language, TranslationData, DEFAULT_LANGUAGE, loadTranslation } from '@/lib/i18n'
+import { Language, TranslationData, DEFAULT_LANGUAGE, loadTranslation } from '@/lib/i18n/'
 
 // Configuration for retry logic
 interface RetryConfig {

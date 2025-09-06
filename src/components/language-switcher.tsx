@@ -7,7 +7,7 @@ import {
   Language,
   LANGUAGE_METADATA,
   SUPPORTED_LANGUAGES
-} from "@/lib/i18n"
+} from "@/lib/i18n/"
 import { useTranslations } from "@/hooks/use-translations"
 import { useScrollPreservation } from "@/lib/use-scroll-preservation"
 

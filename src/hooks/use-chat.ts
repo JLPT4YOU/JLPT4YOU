@@ -13,7 +13,7 @@ import { shouldAutoEnableThinking } from '@/lib/model-utils';
 // createAIMessage import removed - not used
 import { useTranslations } from './use-translations';
 import { UserStorage } from '@/lib/user-storage';
-import { useAuth } from '@/contexts/auth-context-simple';
+import { useAuth } from '@/contexts/auth-context';
 
 export interface UseChatOptions {
   autoSaveToStorage?: boolean;

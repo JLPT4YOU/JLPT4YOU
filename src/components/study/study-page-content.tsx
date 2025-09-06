@@ -2,7 +2,7 @@
 
 import { BookOpen } from "lucide-react"
 import { BasePageTemplate, CardItem } from "@/components/layout/base-page-template"
-import { Language, TranslationData } from "@/lib/i18n"
+import { Language, TranslationData } from "@/lib/i18n/"
 import { createPageContent, type BasePageContentProps } from "@/components/shared/component-utils"
 
 interface StudyPageContentProps extends BasePageContentProps {

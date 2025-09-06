@@ -72,12 +72,12 @@
   --chat-font-size: 16px;                       /* Default medium font size */
 
   /* JLPT4YOU Font Weight System - Noto Sans Japanese */
-  /* Optimized for Vietnamese, Japanese, and English content */
-  --font-weight-light: 300;                     /* Text phụ/muted text */
+  /* Optimized for Vietnamese, Japanese, and English content - Balanced weights */
+  --font-weight-light: 350;                     /* Text phụ/muted text - không quá mỏng */
   --font-weight-normal: 400;                    /* Nội dung chính/body text */
   --font-weight-medium: 500;                    /* Button text, Navigation items */
-  --font-weight-semibold: 600;                  /* Tiêu đề phụ (h3, h4) */
-  --font-weight-bold: 700;                      /* Tiêu đề chính (h1, h2) */
+  --font-weight-semibold: 550;                  /* Tiêu đề phụ (h3, h4) - giảm từ 600 */
+  --font-weight-bold: 650;                      /* Tiêu đề chính (h1, h2) - giảm từ 700 */
 
   /* Code Block Colors - Pure monochrome light theme */
   --code-block-bg: #EEEEEE;                     /* Light gray background for code blocks */

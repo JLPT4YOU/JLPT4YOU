@@ -116,8 +116,8 @@ export function StudyPracticePageContent({ level, type }: StudyPracticePageConte
       description={t('study.practice.pageDescription')}
       breadcrumbs={breadcrumbs}
     >
-      <div className="container mx-auto py-8">
-        <div className="max-w-4xl mx-auto">
+      <div className="app-container app-section">
+        <div className="app-content max-w-4xl">
           {/* Error Alert */}
           {error && (
             <Alert variant="destructive" className="mb-6">
@@ -125,7 +125,7 @@ export function StudyPracticePageContent({ level, type }: StudyPracticePageConte
               <AlertDescription>{error}</AlertDescription>
             </Alert>
           )}
-          
+
           {/* Main Content */}
           {view === 'generator' && (
             <ExerciseGenerator
@@ -135,7 +135,7 @@ export function StudyPracticePageContent({ level, type }: StudyPracticePageConte
               isGenerating={isGenerating}
             />
           )}
-          
+
           {view === 'exercise' && (
             <ExerciseDisplay
               question={getCurrentQuestion()}
@@ -151,7 +151,7 @@ export function StudyPracticePageContent({ level, type }: StudyPracticePageConte
               isLastQuestion={currentQuestionIndex === questions.length - 1}
             />
           )}
-          
+
           {view === 'results' && session && (
             <ExerciseResults
               session={session}
@@ -165,8 +165,6 @@ export function StudyPracticePageContent({ level, type }: StudyPracticePageConte
           )}
         </div>
       </div>
-
-
     </PageTemplate>
   )
 }

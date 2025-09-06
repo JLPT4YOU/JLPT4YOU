@@ -3,7 +3,7 @@
  * Supports both translation and non-translation modes
  */
 
-import { createTranslationFunction, loadTranslation, DEFAULT_LANGUAGE, TranslationData } from './i18n'
+import { createTranslationFunction, loadTranslation, DEFAULT_LANGUAGE, TranslationData } from './i18n/'
 
 // Translation helper for validation messages
 let cachedTranslations: TranslationData | null = null
@@ -96,83 +96,43 @@ export const translationKeys = {
   }
 } as const
 
-// Validator factory function (deprecated - use hook-based validation instead)
-export function createAuthValidator() {
-  // Note: This function is deprecated in favor of hook-based validation
-  // It's kept for backward compatibility but should not be used in new code
 
-  const getMessage = (category: keyof typeof translationKeys, key: string) => {
-    // Use the function-based error messages that support i18n
-    const messageFunc = (defaultErrorMessages as any)[category]?.[key]
-    return typeof messageFunc === 'function' ? messageFunc() : ""
-  }
-
-  return {
-    validateEmail: (value: string): string => {
-      if (baseValidationRules.email.required(value)) {
-        return getMessage('email', 'required')
-      }
-      if (baseValidationRules.email.invalid(value)) {
-        return getMessage('email', 'invalid')
-      }
-      return ""
-    },
-
-    validatePassword: (value: string): string => {
-      if (baseValidationRules.password.required(value)) {
-        return getMessage('password', 'required')
-      }
-      if (baseValidationRules.password.tooShort(value)) {
-        return getMessage('password', 'tooShort')
-      }
-      return ""
-    },
-
-    validateConfirmPassword: (value: string, password: string): string => {
-      if (baseValidationRules.confirmPassword.required(value)) {
-        return getMessage('confirmPassword', 'required')
-      }
-      if (baseValidationRules.confirmPassword.mismatch(value, password)) {
-        return getMessage('confirmPassword', 'mismatch')
-      }
-      return ""
-    },
-
-    validateAcceptTerms: (value: boolean): string => {
-      if (baseValidationRules.acceptTerms.required(value)) {
-        return getMessage('acceptTerms', 'required')
-      }
-      return ""
-    },
-
-    // General error messages
-    getGeneralError: () => getMessage('general', 'error'),
-    getLoginFailedError: () => getMessage('general', 'loginFailed'),
-    getEmailExistsError: () => getMessage('general', 'emailExists'),
-    getResendFailedError: () => getMessage('general', 'resendFailed')
-  }
-}
-
-// Form field validation function
+// Form field validation function (uses hook-based validation)
 export function validateField(
   name: string,
   value: string | boolean,
-  formData?: Record<string, string | boolean>,
-  validator?: ReturnType<typeof createAuthValidator>
+  formData?: Record<string, string | boolean>
 ): string {
-  if (!validator) {
-    validator = createAuthValidator()
-  }
-
   switch (name) {
     case 'email':
-      return validator.validateEmail(value as string)
+      if (baseValidationRules.email.required(value as string)) {
+        return defaultErrorMessages.email.required()
+      }
+      if (baseValidationRules.email.invalid(value as string)) {
+        return defaultErrorMessages.email.invalid()
+      }
+      return ""
     case 'password':
-      return validator.validatePassword(value as string)
+      if (baseValidationRules.password.required(value as string)) {
+        return defaultErrorMessages.password.required()
+      }
+      if (baseValidationRules.password.tooShort(value as string)) {
+        return defaultErrorMessages.password.tooShort()
+      }
+      return ""
     case 'confirmPassword':
-      return validator.validateConfirmPassword(value as string, (formData?.password as string) || '')
+      if (baseValidationRules.confirmPassword.required(value as string)) {
+        return defaultErrorMessages.confirmPassword.required()
+      }
+      if (baseValidationRules.confirmPassword.mismatch(value as string, (formData?.password as string) || '')) {
+        return defaultErrorMessages.confirmPassword.mismatch()
+      }
+      return ""
     case 'acceptTerms':
-      return validator.validateAcceptTerms(value as boolean)
+      if (baseValidationRules.acceptTerms.required(value as boolean)) {
+        return defaultErrorMessages.acceptTerms.required()
+      }
+      return ""
     default:
       return ""
   }
@@ -181,13 +141,12 @@ export function validateField(
 // Form validation helper
 export function validateForm(
   formData: Record<string, string | boolean>,
-  fields: string[],
-  validator?: ReturnType<typeof createAuthValidator>
+  fields: string[]
 ): Record<string, string> {
   const errors: Record<string, string> = {}
   
   for (const field of fields) {
-    const error = validateField(field, formData[field], formData, validator)
+    const error = validateField(field, formData[field], formData)
     if (error) {
       errors[field] = error
     }

@@ -6,6 +6,7 @@ import { Settings, User, Shield, Gift } from "lucide-react"
 import { useTranslations } from "@/hooks/use-translations"
 import { cn } from "@/lib/utils"
 
+import { Card } from "@/components/ui/card";
 // Dynamic imports for settings sections to reduce initial bundle size
 const ProfileSection = lazy(() => import("@/components/settings/profile-section").then(module => ({
   default: module.ProfileSection
@@ -83,7 +84,7 @@ export default function SettingsPage() {
             <div className="flex flex-col lg:flex-row gap-8">
               {/* Sidebar */}
               <div className="lg:w-80 flex-shrink-0">
-                <div className="bg-muted/20 rounded-2xl p-6">
+                <Card size="md" radius="2xl" elevation="sm" className="bg-muted/20">
                   <h3 className="font-semibold text-foreground mb-4">
                     {t ? t('pages.settings.sidebar.title') : 'Cài đặt'}
                   </h3>
@@ -127,7 +128,7 @@ export default function SettingsPage() {
                       )
                     })}
                   </nav>
-                </div>
+                </Card>
               </div>
 
               {/* Main Content */}

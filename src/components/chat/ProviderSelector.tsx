@@ -150,16 +150,6 @@ export const ProviderSelector: React.FC<ProviderSelectorProps> = ({
             <span className="hidden sm:inline truncate">
               {getProviderDisplayName(currentProvider)}
             </span>
-            {/* Status badge - only show on desktop */}
-            {currentConfig?.isConfigured ? (
-              <Badge variant="secondary" className="hidden sm:inline-flex h-4 px-1 text-[10px]">
-                Ready
-              </Badge>
-            ) : (
-              <Badge variant="destructive" className="hidden sm:inline-flex h-4 px-1 text-[10px]">
-                Setup
-              </Badge>
-            )}
             <ChevronDown className="h-3 w-3" />
           </Button>
         </DropdownMenuTrigger>
@@ -196,16 +186,6 @@ export const ProviderSelector: React.FC<ProviderSelectorProps> = ({
               </div>
 
               <div className="flex items-center gap-2">
-                {config.isConfigured ? (
-                  <Badge variant="secondary" className="h-5 px-2 text-[10px]">
-                    Ready
-                  </Badge>
-                ) : (
-                  <Badge variant="destructive" className="h-5 px-2 text-[10px]">
-                    Setup Required
-                  </Badge>
-                )}
-
                 {showConfigButton && (
                   <Button
                     variant="ghost"

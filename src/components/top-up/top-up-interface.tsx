@@ -84,46 +84,40 @@ export function TopUpInterface() {
       </div>
 
       {/* Progress Steps */}
-      <div className="flex items-center justify-center mb-8">
-        <div className="flex items-center space-x-4">
+      <div className="flex justify-between items-start mb-8 max-w-md mx-auto">
+        <div className="flex flex-col items-center space-y-2 w-24 text-center">
           <div className={`flex items-center justify-center w-8 h-8 rounded-full text-sm font-medium ${
-            step === "amount" ? "bg-primary text-primary-foreground" : 
-            step === "payment" || step === "processing" ? "bg-primary text-primary-foreground" : 
-            "bg-muted text-muted-foreground"
+            step === "amount" || step === "payment" || step === "processing" ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
           }`}>
             1
           </div>
-          <div className={`h-px w-12 ${
-            step === "payment" || step === "processing" ? "bg-primary" : "bg-muted"
-          }`} />
+          <span className={`text-sm ${step === "amount" ? "text-primary font-medium" : "text-muted-foreground"}`}>
+            {t ? t('topup.steps.amount') : 'Select Amount'}
+          </span>
+        </div>
+
+        <div className="flex-1 h-px bg-muted mt-4" />
+
+        <div className="flex flex-col items-center space-y-2 w-24 text-center">
           <div className={`flex items-center justify-center w-8 h-8 rounded-full text-sm font-medium ${
-            step === "payment" ? "bg-primary text-primary-foreground" : 
-            step === "processing" ? "bg-primary text-primary-foreground" : 
-            "bg-muted text-muted-foreground"
+            step === "payment" || step === "processing" ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
           }`}>
             2
           </div>
-          <div className={`h-px w-12 ${
-            step === "processing" ? "bg-primary" : "bg-muted"
-          }`} />
+          <span className={`text-sm ${step === "payment" ? "text-primary font-medium" : "text-muted-foreground"}`}>
+            {t ? t('topup.steps.payment') : 'Payment Method'}
+          </span>
+        </div>
+
+        <div className="flex-1 h-px bg-muted mt-4" />
+
+        <div className="flex flex-col items-center space-y-2 w-24 text-center">
           <div className={`flex items-center justify-center w-8 h-8 rounded-full text-sm font-medium ${
             step === "processing" ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
           }`}>
             3
           </div>
-        </div>
-      </div>
-
-      {/* Step Labels */}
-      <div className="flex justify-center mb-8">
-        <div className="flex space-x-16 text-sm">
-          <span className={step === "amount" ? "text-primary font-medium" : "text-muted-foreground"}>
-            {t ? t('topup.steps.amount') : 'Select Amount'}
-          </span>
-          <span className={step === "payment" ? "text-primary font-medium" : "text-muted-foreground"}>
-            {t ? t('topup.steps.payment') : 'Payment Method'}
-          </span>
-          <span className={step === "processing" ? "text-primary font-medium" : "text-muted-foreground"}>
+          <span className={`text-sm ${step === "processing" ? "text-primary font-medium" : "text-muted-foreground"}`}>
             {t ? t('topup.steps.confirm') : 'Confirm'}
           </span>
         </div>

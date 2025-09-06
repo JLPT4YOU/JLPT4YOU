@@ -3,7 +3,7 @@
  * International SEO optimized for Vietnamese, Japanese, and English markets
  */
 
-import { Language } from './i18n'
+import { Language, generateHreflangLinks as generateHreflangLinksUnified } from './i18n/'
 
 export interface SEOConfig {
   title: string
@@ -250,7 +250,6 @@ function getLocale(language: Language): string {
 }
 
 // Generate hreflang links (delegate to unified i18n implementation)
-import { generateHreflangLinksLegacy as generateHreflangLinksUnified } from '@/lib/i18n'
 
 export function generateHreflangLinks(basePath: string): Array<{
   hreflang: string

@@ -90,7 +90,7 @@ export function calculateExpiryDate(
 }
 
 // Translation function type
-type TranslationFunction = (key: string, params?: Record<string, any>) => string
+type TranslationFunction = (key: string, params?: Record<string, unknown>) => string
 
 /**
  * Format premium days for display

@@ -42,7 +42,7 @@ export function ExitConfirmDialog({ isOpen, onConfirm, onCancel }: ExitConfirmDi
               variant="ghost"
               size="sm"
               onClick={onCancel}
-              className="h-8 w-8 p-0 hover:bg-muted"
+              className="h-8 w-8 hover:bg-muted"
             >
               <X className="h-4 w-4" />
             </Button>
@@ -53,7 +53,7 @@ export function ExitConfirmDialog({ isOpen, onConfirm, onCancel }: ExitConfirmDi
             <p className="text-base text-foreground">
               {t('study.practice.confirmExit.message')}
             </p>
-            <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg p-3">
+            <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg p-2">
               <p className="text-sm text-amber-800 dark:text-amber-200 flex items-start gap-2">
                 <AlertTriangle className="w-4 h-4 mt-0.5 flex-shrink-0" />
                 {t('study.practice.confirmExit.warning')}

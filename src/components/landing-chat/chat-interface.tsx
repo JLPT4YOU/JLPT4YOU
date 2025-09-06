@@ -6,7 +6,7 @@ import { ArrowUp, GraduationCap, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ChatMessageComponent, ChatMessage } from "./chat-message"
 import { TypingIndicator } from "./typing-indicator"
-import { TranslationData } from "@/lib/i18n"
+import { TranslationData } from "@/lib/i18n/"
 import { useTranslation } from "@/lib/use-translation"
 
 interface ChatInterfaceProps {

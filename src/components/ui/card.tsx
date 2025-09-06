@@ -1,18 +1,53 @@
 import * as React from "react"
 import { cn } from "@/lib/utils"
 
+export type CardSize = 'sm' | 'md' | 'lg' | 'none'
+export type CardRadius = 'md' | 'lg' | 'xl' | '2xl'
+export type CardElevation = 'none' | 'sm' | 'md'
+
 interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
   interactive?: boolean
+  size?: CardSize
+  radius?: CardRadius
+  elevation?: CardElevation
+}
+
+const sizeClasses: Record<CardSize, string> = {
+  none: "",
+  sm: "p-4",
+  md: "p-6",
+  lg: "p-8",
+}
+
+const radiusClasses: Record<CardRadius, string> = {
+  md: "rounded-md",
+  lg: "rounded-lg",
+  xl: "rounded-xl",
+  "2xl": "rounded-2xl",
+}
+
+const elevationClasses: Record<CardElevation, string> = {
+  none: "shadow-none",
+  sm: "shadow-sm",
+  md: "shadow-md",
 }
 
 const Card = React.forwardRef<
   HTMLDivElement,
   CardProps
->(({ className, interactive = false, ...props }, ref) => (
+>(({ className, interactive = false, size = 'none', radius, elevation, ...props }, ref) => (
   <div
     ref={ref}
     className={cn(
-      "rounded-lg border bg-card text-card-foreground shadow-sm",
+      // base surface & text
+      "border bg-card text-card-foreground",
+      // defaults for backward compatibility if not provided
+      !radius && "rounded-lg",
+      !elevation && "shadow-sm",
+      // variants
+      radius && radiusClasses[radius],
+      elevation && elevationClasses[elevation],
+      sizeClasses[size],
       interactive && "hover-card cursor-pointer",
       className
     )}

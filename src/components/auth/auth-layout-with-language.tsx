@@ -2,7 +2,7 @@
 
 import { AuthLayout } from "@/components/auth/auth-layout"
 import { LanguageSwitcher } from "@/components/language-switcher"
-import { TranslationData, Language } from "@/lib/i18n"
+import { TranslationData, Language } from "@/lib/i18n/"
 
 interface AuthLayoutWithLanguageProps {
   children: React.ReactNode

@@ -21,7 +21,8 @@ import {
   CheckCircle,
   XCircle,
   AlertCircle,
-  Wand2
+  Wand2,
+  Globe
 } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { useTranslations } from '@/hooks/use-translations';
@@ -31,6 +32,8 @@ import { hasCustomPrompt } from '@/lib/prompt-storage';
 import { cn } from '@/lib/utils';
 import { ConfirmationDialog } from '@/components/ui/confirmation-dialog';
 import { createClient } from '@/utils/supabase/client';
+import { UserStorage } from '@/lib/user-storage';
+import { useAuth } from '@/contexts/auth-context';
 
 
 // ✅ FIXED: Create supabase client instance
@@ -69,12 +72,17 @@ export const UnifiedSettings: React.FC<UnifiedSettingsProps> = ({
 
 
   const [fontSize, setFontSize] = useState<'small' | 'medium' | 'large' | 'extraLarge'>('medium');
+  const [aiLanguage, setAiLanguage] = useState('auto');
+  const [customLanguage, setCustomLanguage] = useState('');
+  const [isSaving, setIsSaving] = useState(false);
+  const [showSavedMessage, setShowSavedMessage] = useState(false);
   const { theme, setTheme } = useTheme();
   const { t } = useTranslations();
+  const { user } = useAuth();
   const [mounted, setMounted] = useState(false);
   const [showClearHistoryDialog, setShowClearHistoryDialog] = useState(false);
 
-  // Prevent hydration mismatch
+  // Prevent hydration mismatch and load user-scoped settings
   useEffect(() => {
     setMounted(true);
     // Load saved settings
@@ -84,9 +92,21 @@ export const UnifiedSettings: React.FC<UnifiedSettingsProps> = ({
       setFontSize(savedFontSize);
     }
 
+    if (user?.id) {
+      // Load user-scoped AI language settings
+      const savedLanguage = UserStorage.getItem('ai_language') || 'auto';
+      const savedCustomLanguage = UserStorage.getItem('ai_custom_language') || '';
+      setAiLanguage(savedLanguage);
+      setCustomLanguage(savedCustomLanguage);
+    } else {
+      // Reset to defaults when no user
+      setAiLanguage('auto');
+      setCustomLanguage('');
+    }
+
     // Load API key status from server
     loadKeyStatus();
-  }, []);
+  }, [user?.id]);
 
   const loadKeyStatus = async () => {
     try {
@@ -229,7 +249,14 @@ export const UnifiedSettings: React.FC<UnifiedSettingsProps> = ({
   };
 
   const handleConfirmClearHistory = () => {
-    localStorage.removeItem('chat_history');
+    if (user?.id) {
+      // Clear user-scoped chat history
+      UserStorage.removeItem('chat_history');
+      UserStorage.removeItem('current_chat_id');
+    } else {
+      // Fallback to localStorage for guests
+      localStorage.removeItem('chat_history');
+    }
     onClearHistory?.();
   };
 
@@ -250,6 +277,33 @@ export const UnifiedSettings: React.FC<UnifiedSettingsProps> = ({
       extraLarge: '20px'
     };
     root.style.setProperty('--chat-font-size', fontSizeMap[newSize]);
+  };
+
+  const handleLanguageChange = (language: string) => {
+    setAiLanguage(language);
+  };
+
+  const handleCustomLanguageChange = (language: string) => {
+    setCustomLanguage(language);
+  };
+
+  const handleSaveLanguageSettings = async () => {
+    if (!user?.id) return;
+
+    setIsSaving(true);
+    try {
+      // Save settings to user-scoped storage
+      UserStorage.setItem('ai_language', aiLanguage);
+      UserStorage.setItem('ai_custom_language', customLanguage);
+
+      // Show success message
+      setShowSavedMessage(true);
+      setTimeout(() => setShowSavedMessage(false), 2000);
+    } catch (error) {
+      console.error('Failed to save language settings:', error);
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const getKeyValidationIcon = (provider: ProviderType) => {
@@ -387,6 +441,68 @@ export const UnifiedSettings: React.FC<UnifiedSettingsProps> = ({
                       </SelectItem>
                     </SelectContent>
                   </Select>
+                </div>
+
+                {/* AI Language Selection */}
+                <div className="space-y-2">
+                  <Label className="flex items-center gap-2 text-sm font-medium">
+                    <Globe className="h-4 w-4 text-muted-foreground" />
+                    {t ? t('chat.settings.aiLanguage') : 'AI Communication Language'}
+                  </Label>
+                  <p className="text-xs text-muted-foreground">
+                    {t ? t('chat.settings.aiLanguageDescription') : 'Choose the language for AI responses and communication style'}
+                  </p>
+                  <Select value={aiLanguage} onValueChange={handleLanguageChange}>
+                    <SelectTrigger className="rounded-2xl border-0">
+                      <SelectValue placeholder={t ? t('chat.settings.selectLanguage') : 'Select language'} />
+                    </SelectTrigger>
+                    <SelectContent className="rounded-2xl border-0">
+                      <SelectItem value="auto">{t ? t('chat.languages.auto') : 'Tự động dò ngôn ngữ (Auto Detect)'}</SelectItem>
+                      <SelectItem value="vietnamese">{t ? t('chat.languages.vietnamese') : 'Tiếng Việt'}</SelectItem>
+                      <SelectItem value="english">{t ? t('chat.languages.english') : 'English'}</SelectItem>
+                      <SelectItem value="japanese">{t ? t('chat.languages.japanese') : '日本語'}</SelectItem>
+                      <SelectItem value="custom">{t ? t('chat.languages.custom') : 'Tùy chọn (Custom)'}</SelectItem>
+                    </SelectContent>
+                  </Select>
+
+                  {/* Custom Language Input */}
+                  {aiLanguage === 'custom' && (
+                    <div className="mt-2">
+                      <Input
+                        placeholder={t ? t('chat.settings.customLanguagePlaceholder') : 'Nhập ngôn ngữ mong muốn (ví dụ: Tiếng Hàn, Français, Español...)'}
+                        value={customLanguage}
+                        onChange={(e) => handleCustomLanguageChange(e.target.value)}
+                        className="text-sm"
+                      />
+                    </div>
+                  )}
+
+                  {/* Save Language Settings Button */}
+                  {user?.id && (
+                    <div className="flex items-center justify-between pt-2">
+                      {showSavedMessage && (
+                        <div className="flex items-center gap-2 text-sm text-green-600">
+                          <div className="w-2 h-2 bg-green-600 rounded-full"></div>
+                          {t ? t('chat.settings.saved') : 'Đã lưu'}
+                        </div>
+                      )}
+                      <Button
+                        onClick={handleSaveLanguageSettings}
+                        disabled={isSaving}
+                        size="sm"
+                        className="ml-auto"
+                      >
+                        {isSaving ? (
+                          <div className="flex items-center gap-2">
+                            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                            {t ? t('chat.settings.saving') : 'Đang lưu...'}
+                          </div>
+                        ) : (
+                          t ? t('chat.settings.save') : 'Lưu'
+                        )}
+                      </Button>
+                    </div>
+                  )}
                 </div>
 
               </CardContent>

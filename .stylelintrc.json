@@ -1,0 +1,25 @@
+{
+  "extends": ["stylelint-config-standard"],
+  "rules": {
+    "at-rule-no-unknown": [
+      true,
+      {
+        "ignoreAtRules": [
+          "tailwind",
+          "apply",
+          "variants",
+          "responsive",
+          "screen",
+          "theme"
+        ]
+      }
+    ],
+    "selector-class-pattern": [
+      "^(?!p(|x|y|t|b|l|r)-|m(|x|y|t|b|l|r)-|space-(x|y)-|gap-|grid(|-cols.*)?$|container$|btn$).+$",
+      {
+        "message": "Do not define custom classes that collide with Tailwind utilities (p-*, m-*, space-*, gap-*, grid-*, container, btn)."
+      }
+    ]
+  }
+}
+

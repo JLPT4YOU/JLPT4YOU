@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, useMemo } from 'react';
 import { Chat, StoredChat, StoredMessage, chatStorage, Message } from '../index';
 import { safeJsonStringify } from '@/lib/chat-error-handler';
 import { UserStorage } from '@/lib/user-storage';
-import { useAuth } from '@/contexts/auth-context-simple';
+import { useAuth } from '@/contexts/auth-context';
 
 /**
  * Return type for the useChatManager hook

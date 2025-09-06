@@ -16,7 +16,7 @@ export default function PremiumCheckoutPage() {
       {(translations) => (
         <ProtectedRoute>
           <div className="min-h-screen bg-background">
-            <div className="app-container app-py-lg">
+            <div className="app-container py-6">
               <Suspense fallback={
                 <div className="flex items-center justify-center min-h-[400px]">
                   <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>

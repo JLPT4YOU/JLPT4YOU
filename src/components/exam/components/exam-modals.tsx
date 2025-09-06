@@ -5,7 +5,7 @@ import { Clock, Pause } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { SubmissionConfirmationModal } from "@/components/submission-confirmation-modal"
 import { UseExamTimerReturn } from "../hooks/useExamTimer"
-import { TranslationData } from "@/lib/i18n"
+import { TranslationData } from "@/lib/i18n/"
 import { useTranslation } from "@/lib/use-translation"
 
 interface SubmissionStats {

@@ -10,7 +10,7 @@ import {
   Clock
 } from "lucide-react"
 import { cn } from "@/lib/utils"
-import { TranslationData } from "@/lib/i18n"
+import { TranslationData } from "@/lib/i18n/"
 import { useTranslation } from "@/lib/use-translation"
 
 interface SubmissionStats {

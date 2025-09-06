@@ -10,6 +10,7 @@ import { ExamResult } from '@/types'
 import { useTranslation } from '@/lib/use-translation'
 import { TranslationData, Language } from '@/lib/i18n'
 import { Button } from '@/components/ui/button'
+import { Card } from '@/components/ui/card'
 interface ExamResultsPageContentProps {
   translations: TranslationData
   language: Language
@@ -85,8 +86,8 @@ export function ExamResultsPageContent({ translations, language }: ExamResultsPa
       <div className="min-h-screen bg-background">
         <div className="app-container app-section">
           <div className="app-content max-w-4xl mx-auto">
-            <div className="bg-background rounded-2xl p-8 text-center">
-              <h1 className="text-lg font-semibold text-foreground mb-2">
+            <Card radius="2xl" size="lg" className="text-center border-0 bg-background text-foreground">
+              <h1 className="text-lg font-semibold mb-2">
                 {t('examResults.title').replace('{examType}', '')}
               </h1>
               <p className="text-muted-foreground mb-4">
@@ -95,7 +96,7 @@ export function ExamResultsPageContent({ translations, language }: ExamResultsPa
               <Button onClick={() => router.push(`/${language}/home`)} className="rounded-xl bg-primary/90 hover:bg-primary">
                 {t('examResults.actions.backToHome')}
               </Button>
-            </div>
+            </Card>
           </div>
         </div>
       </div>
@@ -107,8 +108,8 @@ export function ExamResultsPageContent({ translations, language }: ExamResultsPa
       <div className="relative">
 
         {/* Main Content */}
-        <div className="app-container py-6 md:py-12">
-          <div className="max-w-6xl mx-auto">
+        <div className="app-container app-section">
+          <div className="app-content max-w-6xl">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
               {/* Combined Score & Stats Display - 2 columns on desktop */}
               <div className="lg:col-span-2">

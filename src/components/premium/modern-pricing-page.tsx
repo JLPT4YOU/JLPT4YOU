@@ -8,11 +8,11 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { 
-  Crown, 
-  Check, 
-  X, 
-  Sparkles, 
+import {
+  Crown,
+  Check,
+  X,
+  Sparkles,
   Zap,
   Shield,
   Users,
@@ -25,10 +25,11 @@ import {
   Star
 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import { useAuth } from '@/contexts/auth-context-simple'
+import { useAuth } from '@/contexts/auth-context'
 import { useTranslations } from '@/hooks/use-translations'
 import { cn } from '@/lib/utils'
 
+import { Card } from '@/components/ui/card'
 interface ModernPricingPageProps {
   translations?: any
 }
@@ -120,7 +121,7 @@ export function ModernPricingPage({ translations }: ModernPricingPageProps) {
         <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-secondary/5" />
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-primary/10 rounded-full blur-3xl" />
         <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-secondary/10 rounded-full blur-3xl" />
-        
+
         <div className="relative max-w-7xl mx-auto px-4 py-16 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -165,8 +166,8 @@ export function ModernPricingPage({ translations }: ModernPricingPageProps) {
                 </div>
               )}
 
-              <div className={cn(
-                "relative h-full rounded-2xl p-8 transition-all duration-300",
+              <Card radius="2xl" size="md" elevation="sm" className={cn(
+                "relative h-full p-8 transition-all duration-300",
                 "bg-card",
                 "border-2 hover:shadow-2xl",
                 plan.borderColor,
@@ -195,20 +196,20 @@ export function ModernPricingPage({ translations }: ModernPricingPageProps) {
                   {/* Pricing */}
                   <div className="mb-8">
                     <div className="flex items-baseline gap-2">
-                      <span className="text-5xl font-bold">
-                        {plan.price.monthly === 0 ? 'Miễn phí' : `$${plan.price.monthly}`}
+                      <span className="text-4xl font-semibold md:text-5xl">
+                        {plan.price.monthly === 0 ? '$0' : `$${plan.price.monthly}`}
                       </span>
                       <span className="text-muted-foreground">
-                        USD/tháng
+                        {plan.price.monthly === 0 ? t('pricing.free.period').replace('/', '') : t('pricing.premium.periodUnit')}
                       </span>
                     </div>
                     {plan.originalPrice && plan.originalPrice.yearly && plan.id === 'premium' && (
                       <div className="flex items-center gap-2 mt-2">
                         <del className="text-muted-foreground">
-                          ${(plan.originalPrice.yearly / 12).toFixed(2)} USD/tháng
+                          ${(plan.originalPrice.yearly / 12).toFixed(2)} {t('pricing.premium.periodUnit')}
                         </del>
                         <Badge variant="secondary" className="text-xs bg-success text-success-foreground">
-                          Tiết kiệm 17%
+                          {t('pricing.premium.saveBadge')}
                         </Badge>
                       </div>
                     )}
@@ -221,8 +222,8 @@ export function ModernPricingPage({ translations }: ModernPricingPageProps) {
                         {feature.included ? (
                           <div className={cn(
                             "rounded-full p-1",
-                            feature.highlight 
-                              ? "bg-primary/20 text-primary" 
+                            feature.highlight
+                              ? "bg-primary/20 text-primary"
                               : "bg-green-500/20 text-green-600 dark:text-green-400"
                           )}>
                             <Check className="w-4 h-4" />
@@ -248,7 +249,7 @@ export function ModernPricingPage({ translations }: ModernPricingPageProps) {
                     onClick={() => handlePlanSelect(plan.id)}
                     className={cn(
                       "w-full h-12 text-base font-medium transition-all",
-                      plan.popular 
+                      plan.popular
                         ? "bg-primary hover:brightness-110 text-primary-foreground shadow-lg transition-all"
                         : "bg-secondary hover:brightness-110 text-secondary-foreground transition-all"
                     )}
@@ -262,16 +263,16 @@ export function ModernPricingPage({ translations }: ModernPricingPageProps) {
                     <div className="mt-4 flex items-center justify-center gap-4 text-xs text-muted-foreground">
                       <div className="flex items-center gap-1">
                         <Shield className="w-3 h-3" />
-                        Bảo mật
+                        {t('pricing.trustIndicators.secure')}
                       </div>
                       <div className="flex items-center gap-1">
                         <Clock className="w-3 h-3" />
-                        Hủy bất cứ lúc nào
+                        {t('pricing.trustIndicators.cancelAnytime')}
                       </div>
                     </div>
                   )}
                 </div>
-              </div>
+              </Card>
             </motion.div>
           ))}
         </div>
@@ -332,16 +333,18 @@ export function ModernPricingPage({ translations }: ModernPricingPageProps) {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: index * 0.05 }}
-              className="group relative rounded-xl p-6 bg-card border border-border/50 hover:border-primary/50 transition-all"
+              className="group relative"
             >
-              <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-primary/5 to-secondary/5 opacity-0 group-hover:opacity-100 transition-opacity" />
-              <div className="relative">
-                <div className="rounded-lg bg-primary/10 w-12 h-12 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                  <feature.icon className="w-6 h-6 text-primary" />
+              <Card radius="xl" size="md" elevation="none" className="h-full bg-card border border-border/50 hover:border-primary/50 transition-all">
+                <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-primary/5 to-secondary/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="relative">
+                  <div className="rounded-lg bg-primary/10 w-12 h-12 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                    <feature.icon className="w-6 h-6 text-primary" />
+                  </div>
+                  <h3 className="font-semibold mb-2">{feature.title}</h3>
+                  <p className="text-sm text-muted-foreground">{feature.description}</p>
                 </div>
-                <h3 className="font-semibold mb-2">{feature.title}</h3>
-                <p className="text-sm text-muted-foreground">{feature.description}</p>
-              </div>
+              </Card>
             </motion.div>
           ))}
         </div>

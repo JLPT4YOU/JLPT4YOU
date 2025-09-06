@@ -100,14 +100,14 @@ export function ChallengeTestSetup({ level }: ChallengeTestSetupProps) {
 
       <div className="app-container app-section">
         <div className="app-content">
-          <div className="max-w-4xl mx-auto app-space-lg">
+          <div className="max-w-4xl mx-auto space-y-6">
             
             {/* Challenge Sections Display - Read-only */}
-            <div className="app-mb-xl">
-              <h2 className="text-xl font-semibold text-foreground app-mb-md">
+            <div className="mb-8">
+              <h2 className="text-xl font-semibold text-foreground mb-4">
                 {t('challenge.setup.sectionsTitle')}
               </h2>
-              <p className="text-sm text-muted-foreground app-mb-md">
+              <p className="text-sm text-muted-foreground mb-4">
                 {t('challenge.setup.sectionsSubtitle')}
               </p>
               <div className="grid grid-cols-2 gap-3 sm:gap-4">
@@ -119,8 +119,8 @@ export function ChallengeTestSetup({ level }: ChallengeTestSetupProps) {
                       key={section.id}
                       className="border-primary border-2 bg-primary/5 shadow-lg"
                     >
-                      <CardContent className="app-p-md">
-                        <div className="flex items-center app-gap-sm">
+                      <CardContent className="p-4">
+                        <div className="flex items-center gap-2">
                           <div className="w-10 h-10 rounded-lg flex items-center justify-center bg-primary text-primary-foreground shadow-md">
                             <IconComponent className="w-5 h-5" />
                           </div>
@@ -144,14 +144,14 @@ export function ChallengeTestSetup({ level }: ChallengeTestSetupProps) {
             </div>
 
             {/* Time Information */}
-            <div className="app-mb-xl">
-              <h2 className="text-xl font-semibold text-foreground app-mb-md">
+            <div className="mb-8">
+              <h2 className="text-xl font-semibold text-foreground mb-4">
                 {t('challenge.setup.timeTitle')}
               </h2>
 
               <Card className="border-primary bg-primary/5 shadow-sm">
-                <CardContent className="app-p-md">
-                  <div className="flex items-center app-gap-sm">
+                <CardContent className="p-4">
+                  <div className="flex items-center gap-2">
                     <div className="w-10 h-10 rounded-lg flex items-center justify-center bg-primary text-primary-foreground">
                       <Clock className="w-5 h-5" />
                     </div>
@@ -165,7 +165,7 @@ export function ChallengeTestSetup({ level }: ChallengeTestSetupProps) {
                 </CardContent>
               </Card>
 
-              <p className="text-sm text-muted-foreground app-mt-sm text-center">
+              <p className="text-sm text-muted-foreground mt-2 text-center">
                 {t('challenge.setup.timeNote')}
               </p>
             </div>
@@ -175,7 +175,7 @@ export function ChallengeTestSetup({ level }: ChallengeTestSetupProps) {
               <Button
                 size="lg"
                 onClick={handleStartTest}
-                className="app-px-xl app-py-md text-base font-semibold"
+                className="px-8 py-4 text-base font-semibold"
               >
                 <Trophy className="w-5 h-5 mr-2" />
                 {t('challenge.setup.startChallenge')}

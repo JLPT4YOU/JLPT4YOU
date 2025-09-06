@@ -99,7 +99,7 @@ function ExamResultsContent({ t, searchParams }: ExamResultsContentProps) {
       <div className="min-h-screen bg-background">
         <div className="app-container app-section">
           <div className="app-content max-w-4xl mx-auto">
-            <div className="bg-background rounded-2xl app-p-xl text-center">
+            <div className="bg-background rounded-2xl p-8 text-center">
               <h1 className="text-lg font-semibold text-foreground mb-2">
                 {t('common.error')}
               </h1>
@@ -123,7 +123,7 @@ function ExamResultsContent({ t, searchParams }: ExamResultsContentProps) {
       <div className="relative">
 
         {/* Main Content */}
-        <div className="app-container app-py-lg md:app-py-2xl">
+        <div className="app-container py-6 md:py-12">
           <div className="max-w-6xl mx-auto">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
               {/* Combined Score & Stats Display - 2 columns on desktop */}

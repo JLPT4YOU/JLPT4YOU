@@ -129,7 +129,7 @@ export function PasswordInput({
 
       {/* Caps Lock Warning */}
       {showCapsLockWarning && capsLockOn && value.length > 0 && (
-        <div className="flex items-center app-gap-xs text-warning text-sm">
+        <div className="flex items-center gap-2 text-warning text-sm">
           <AlertTriangle className="h-4 w-4" />
           <span>Caps Lock đang bật</span>
         </div>
@@ -138,7 +138,7 @@ export function PasswordInput({
       {/* Password Strength Meter */}
       {showStrengthMeter && value.length > 0 && (
         <div className="space-y-2">
-          <div className="flex app-gap-xs">
+          <div className="flex gap-2">
             {[...Array(5)].map((_, i) => (
               <div
                 key={i}

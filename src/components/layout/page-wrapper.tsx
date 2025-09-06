@@ -3,7 +3,7 @@
 import { ReactNode } from "react";
 import { ProtectedRoute } from "@/components/auth/protected-route";
 import { LanguagePageWrapper } from "@/components/language-page-wrapper";
-import { TranslationData, Language } from "@/lib/i18n";
+import { TranslationData, Language } from "@/lib/i18n/";
 
 export interface PageContentProps {
   language: Language;

@@ -7,6 +7,7 @@
 import { createClient } from '@/utils/supabase/client'
 import { SessionStorage } from './session-storage'
 import { Session, User } from '@supabase/supabase-js'
+import { logger } from './logger'
 
 interface RecoveryResult {
   success: boolean
@@ -42,7 +43,7 @@ export class SessionRecovery {
     const opts = { ...this.defaultOptions, ...options }
     
     if (opts.logRecovery) {
-      console.log('🔄 [SessionRecovery] Starting comprehensive session recovery...')
+      logger.session('Starting comprehensive session recovery...')
     }
 
     // Method 1: Try to get session from Supabase directly
@@ -69,7 +70,7 @@ export class SessionRecovery {
 
     // All methods failed
     if (opts.logRecovery) {
-      console.log('❌ [SessionRecovery] All recovery methods failed')
+      logger.session('All recovery methods failed')
     }
 
     return {
@@ -86,21 +87,21 @@ export class SessionRecovery {
   private static async recoverFromSupabase(options: RecoveryOptions): Promise<RecoveryResult> {
     try {
       if (options.logRecovery) {
-        console.log('🔄 [SessionRecovery] Attempting Supabase session recovery...')
+        logger.session('Attempting Supabase session recovery...')
       }
 
       const { data: { session }, error } = await this.supabase.auth.getSession()
       
       if (error) {
         if (options.logRecovery) {
-          console.log('❌ [SessionRecovery] Supabase session error:', error.message)
+          logger.session('Supabase session error', { message: error.message })
         }
         return { success: false, error: error.message, method: 'supabase' }
       }
 
       if (session && this.isSessionValid(session)) {
         if (options.logRecovery) {
-          console.log('✅ [SessionRecovery] Session recovered from Supabase')
+          logger.session('Session recovered from Supabase')
         }
         
         // Save to storage for future recovery
@@ -115,13 +116,13 @@ export class SessionRecovery {
       }
 
       if (options.logRecovery) {
-        console.log('ℹ️ [SessionRecovery] No valid session found in Supabase')
+        logger.session('No valid session found in Supabase')
       }
       
       return { success: false, error: 'No valid session', method: 'supabase' }
     } catch (error) {
       if (options.logRecovery) {
-        console.error('❌ [SessionRecovery] Supabase recovery failed:', error)
+        logger.error('Supabase recovery failed', error, 'SESSION')
       }
       return { 
         success: false, 
@@ -137,21 +138,21 @@ export class SessionRecovery {
   private static async recoverFromRefreshToken(options: RecoveryOptions): Promise<RecoveryResult> {
     try {
       if (options.logRecovery) {
-        console.log('🔄 [SessionRecovery] Attempting refresh token recovery...')
+        logger.session('Attempting refresh token recovery...')
       }
 
       const { data: { session }, error } = await this.supabase.auth.refreshSession()
       
       if (error) {
         if (options.logRecovery) {
-          console.log('❌ [SessionRecovery] Refresh token error:', error.message)
+          logger.session('Refresh token error', { message: error.message })
         }
         return { success: false, error: error.message, method: 'refresh' }
       }
 
       if (session && this.isSessionValid(session)) {
         if (options.logRecovery) {
-          console.log('✅ [SessionRecovery] Session recovered via refresh token')
+          logger.session('Session recovered via refresh token')
         }
         
         // Save refreshed session to storage
@@ -166,13 +167,13 @@ export class SessionRecovery {
       }
 
       if (options.logRecovery) {
-        console.log('ℹ️ [SessionRecovery] Refresh token did not return valid session')
+        logger.session('Refresh token did not return valid session')
       }
       
       return { success: false, error: 'Refresh failed', method: 'refresh' }
     } catch (error) {
       if (options.logRecovery) {
-        console.error('❌ [SessionRecovery] Refresh token recovery failed:', error)
+        logger.error('Refresh token recovery failed', error, 'SESSION')
       }
       return { 
         success: false, 
@@ -188,21 +189,21 @@ export class SessionRecovery {
   private static async recoverFromStorage(options: RecoveryOptions): Promise<RecoveryResult> {
     try {
       if (options.logRecovery) {
-        console.log('🔄 [SessionRecovery] Attempting storage recovery...')
+        logger.session('Attempting storage recovery...')
       }
 
       const storedSession = SessionStorage.getSession()
       
       if (!storedSession) {
         if (options.logRecovery) {
-          console.log('ℹ️ [SessionRecovery] No session found in storage')
+          logger.session('No session found in storage')
         }
         return { success: false, error: 'No stored session', method: 'storage' }
       }
 
       if (!this.isSessionValid(storedSession)) {
         if (options.logRecovery) {
-          console.log('ℹ️ [SessionRecovery] Stored session is invalid or expired')
+          logger.session('Stored session is invalid or expired')
         }
         SessionStorage.clearSession() // Clean up invalid session
         return { success: false, error: 'Stored session invalid', method: 'storage' }
@@ -213,14 +214,14 @@ export class SessionRecovery {
       
       if (!isValidWithSupabase) {
         if (options.logRecovery) {
-          console.log('ℹ️ [SessionRecovery] Stored session not valid with Supabase')
+          logger.session('Stored session not valid with Supabase')
         }
         SessionStorage.clearSession() // Clean up invalid session
         return { success: false, error: 'Session not valid with server', method: 'storage' }
       }
 
       if (options.logRecovery) {
-        console.log('✅ [SessionRecovery] Session recovered from storage')
+        logger.session('Session recovered from storage')
       }
       
       return {
@@ -231,7 +232,7 @@ export class SessionRecovery {
       }
     } catch (error) {
       if (options.logRecovery) {
-        console.error('❌ [SessionRecovery] Storage recovery failed:', error)
+        logger.error('Storage recovery failed', error, 'SESSION')
       }
       return { 
         success: false, 
@@ -300,7 +301,7 @@ export class SessionRecovery {
     for (let attempt = 1; attempt <= (opts.maxRetries || 3); attempt++) {
       try {
         if (opts.logRecovery && attempt > 1) {
-          console.log(`🔄 [SessionRecovery] Retry attempt ${attempt}/${opts.maxRetries}`)
+          logger.session(`Retry attempt ${attempt}/${opts.maxRetries}`)
         }
         
         return await operation()
@@ -311,7 +312,7 @@ export class SessionRecovery {
           const delay = (opts.retryDelay || 1000) * Math.pow(2, attempt - 1) // Exponential backoff
           
           if (opts.logRecovery) {
-            console.log(`⏳ [SessionRecovery] Waiting ${delay}ms before retry...`)
+            logger.session(`Waiting ${delay}ms before retry...`)
           }
           
           await new Promise(resolve => setTimeout(resolve, delay))
@@ -327,7 +328,7 @@ export class SessionRecovery {
    */
   static async forceCleanup(): Promise<void> {
     try {
-      console.log('🧹 [SessionRecovery] Performing force cleanup...')
+      logger.session('Performing force cleanup...')
       
       // Clear Supabase session
       await this.supabase.auth.signOut()
@@ -335,9 +336,9 @@ export class SessionRecovery {
       // Clear storage
       SessionStorage.clearSession()
       
-      console.log('✅ [SessionRecovery] Force cleanup completed')
+      logger.session('Force cleanup completed')
     } catch (error) {
-      console.error('❌ [SessionRecovery] Force cleanup failed:', error)
+      logger.error('Force cleanup failed', error, 'SESSION')
     }
   }
 
@@ -390,10 +391,10 @@ export class SessionRecovery {
       // Overall success if any method works
       results.overall = results.supabase || results.refresh || results.storage
 
-      console.log('🧪 [SessionRecovery] Test results:', results)
+      logger.session('Test results', results)
       return results
     } catch (error) {
-      console.error('❌ [SessionRecovery] Test failed:', error)
+      logger.error('Test failed', error, 'SESSION')
       return results
     }
   }

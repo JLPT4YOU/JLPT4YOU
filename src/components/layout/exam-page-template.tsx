@@ -2,7 +2,7 @@
 
 import { ReactNode } from "react";
 import { LanguagePageWrapper } from "@/components/language-page-wrapper";
-import { type TranslationData, type Language } from "@/lib/i18n";
+import { type TranslationData, type Language } from "@/lib/i18n/";
 
 interface ExamPageTemplateProps {
   /**

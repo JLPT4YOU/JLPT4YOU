@@ -75,7 +75,7 @@ function Content() {
             id: `vocab_${word.Kanji}`,
             front: word.Kanji || word.Hiragana || 'N/A',
             back: backContent,
-            frontAudio: undefined, // TODO: Add TTS
+            frontAudio: undefined,
             backAudio: undefined,
             image: undefined,
             difficulty: 'medium',
@@ -102,7 +102,6 @@ function Content() {
   }, [level])
 
   const handleSessionComplete = (session: FlashcardSession) => {
-    // TODO: Save session results to database
     console.log('Session completed:', session)
     
     // Show completion message and redirect

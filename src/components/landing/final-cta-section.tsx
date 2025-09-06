@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { ArrowRight, Star } from "lucide-react"
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import { TranslationData, getLocalizedPath } from "@/lib/i18n"
+import { TranslationData, getLocalizedPath } from "@/lib/i18n/"
 import { useTranslation } from "@/lib/use-translation"
 import { setLanguagePreferenceFromPath } from "@/lib/auth-utils"
 

@@ -3,8 +3,8 @@
  * For testing purposes and shared logic
  */
 
-import { Language, getLanguageFromCode as getLanguageFromCodeUnified } from '@/lib/i18n'
-import { generateHreflangLinksLegacy as generateHreflangLinksUnified } from '@/lib/i18n'
+import { Language, getLanguageFromCode as getLanguageFromCodeUnified } from '@/lib/i18n/'
+import { generateHreflangLinks as generateHreflangLinksUnified } from '@/lib/i18n/utils'
 
 // Language code mapping utility (delegates to unified i18n)
 // NOTE: Keeps legacy numeric codes for backward compatibility

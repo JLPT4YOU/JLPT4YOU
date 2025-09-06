@@ -157,7 +157,7 @@ export function useFlashcardLogic(
           const progress: FlashcardProgress = {
             cardId: currentCard.id,
             isCorrect,
-            responseTime: 0, // TODO: Track actual response time
+            responseTime: 0,
             difficulty: action,
             timestamp: now
           }

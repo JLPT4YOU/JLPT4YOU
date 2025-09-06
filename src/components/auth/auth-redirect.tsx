@@ -7,7 +7,7 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
-import { useAuth } from '@/contexts/auth-context-simple'
+import { useAuth } from '@/contexts/auth-context'
 import { Loader2 } from 'lucide-react'
 
 interface AuthRedirectProps {

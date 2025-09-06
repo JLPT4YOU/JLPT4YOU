@@ -5,6 +5,8 @@
 @import '../styles/base/animations.css';
 @import '../styles/base/focus-fix.css';
 @import "../styles/themes/tailwind-config.css";
+
+
 @import "../styles/components/animations.css";
 @import "../styles/components/hover-effects.css";
 @import "../styles/components/scrollbar.css";
@@ -33,7 +35,6 @@
   -khtml-user-drag: none !important;
   -moz-user-drag: none !important;
   -o-user-drag: none !important;
-  user-drag: none !important;
 }
 
 /* PDF Watermark */

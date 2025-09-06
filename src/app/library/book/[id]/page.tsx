@@ -16,7 +16,7 @@ import { ArrowLeft, Loader2, AlertCircle } from "lucide-react"
 
 // Dynamically import PDF viewer to avoid SSR issues
 const PDFViewerClient = dynamic(
-  () => import("@/components/pdf/pdf-viewer-client").then(mod => ({ default: mod.PDFViewerClient })),
+  () => import("@/components/pdf/pdf-viewer-client").then((mod) => ({ default: mod.PDFViewerClient })),
   {
     ssr: false,
     loading: () => (

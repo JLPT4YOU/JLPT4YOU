@@ -150,7 +150,7 @@ export async function applyCouponUsage(
         coupon_id: couponData.id,
         user_id: userId,
         order_amount: orderAmount,
-        discount_applied: discountApplied,
+        amount_discounted: discountApplied,
         transaction_id: transactionId
       } as any)
 
@@ -224,6 +224,7 @@ export async function createCoupon(coupon: Omit<Coupon, 'id' | 'created_at' | 'u
         usage_limit: coupon.usage_limit,
         valid_from: coupon.valid_from,
         valid_until: coupon.valid_until,
+        is_active: coupon.is_active,
         usage_count: 0
       } as any)
       .select()

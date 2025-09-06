@@ -27,7 +27,7 @@ export function CriticalCSS() {
       }
       
       /* Header critical styles */
-      .header {
+      .crit-header {
         position: sticky;
         top: 0;
         z-index: 50;
@@ -36,8 +36,8 @@ export function CriticalCSS() {
         background-color: hsl(var(--background) / 0.95);
         backdrop-filter: blur(8px);
       }
-      
-      .header-container {
+
+      .crit-header-container {
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -45,24 +45,24 @@ export function CriticalCSS() {
         max-width: 1200px;
         margin: 0 auto;
       }
-      
+
       /* Logo critical styles */
-      .logo {
+      .crit-logo {
         font-size: 1.5rem;
         font-weight: 700;
         color: hsl(var(--foreground));
         text-decoration: none;
       }
-      
+
       /* Navigation critical styles */
-      .nav-menu {
+      .crit-nav-menu {
         display: flex;
         align-items: center;
         gap: 1rem;
       }
-      
+
       /* Button critical styles */
-      .btn {
+      .crit-btn {
         display: inline-flex;
         align-items: center;
         justify-content: center;
@@ -75,27 +75,27 @@ export function CriticalCSS() {
         cursor: pointer;
         text-decoration: none;
       }
-      
-      .btn-primary {
+
+      .crit-btn-primary {
         background-color: hsl(var(--primary));
         color: hsl(var(--primary-foreground));
       }
-      
-      .btn-primary:hover {
+
+      .crit-btn-primary:hover {
         background-color: hsl(var(--primary) / 0.9);
       }
-      
-      .btn-secondary {
+
+      .crit-btn-secondary {
         background-color: hsl(var(--secondary));
         color: hsl(var(--secondary-foreground));
       }
-      
-      .btn-ghost {
+
+      .crit-btn-ghost {
         background-color: transparent;
         color: hsl(var(--foreground));
       }
-      
-      .btn-ghost:hover {
+
+      .crit-btn-ghost:hover {
         background-color: hsl(var(--accent));
         color: hsl(var(--accent-foreground));
       }
@@ -152,55 +152,55 @@ export function CriticalCSS() {
       }
       
       /* Container critical styles */
-      .container {
+      .crit-container {
         width: 100%;
         max-width: 1200px;
         margin: 0 auto;
         padding: 0 1rem;
       }
-      
-      .section {
+
+      .crit-section {
         padding: 3rem 0;
       }
       
       /* Grid critical styles */
-      .grid {
+      .crit-grid {
         display: grid;
         gap: 1.5rem;
       }
-      
-      .grid-cols-1 {
+
+      .crit-grid-cols-1 {
         grid-template-columns: repeat(1, minmax(0, 1fr));
       }
-      
-      .grid-cols-2 {
+
+      .crit-grid-cols-2 {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
-      
-      .grid-cols-3 {
+
+      .crit-grid-cols-3 {
         grid-template-columns: repeat(3, minmax(0, 1fr));
       }
       
       /* Card critical styles */
-      .card {
+      .crit-card {
         background-color: hsl(var(--card));
         border: 1px solid hsl(var(--border));
         border-radius: 0.5rem;
         padding: 1.5rem;
         box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
       }
-      
-      .card-header {
+
+      .crit-card-header {
         margin-bottom: 1rem;
       }
-      
-      .card-title {
+
+      .crit-card-title {
         font-size: 1.25rem;
         font-weight: 600;
         margin-bottom: 0.5rem;
       }
-      
-      .card-description {
+
+      .crit-card-description {
         color: hsl(var(--muted-foreground));
         font-size: 0.875rem;
       }
@@ -210,44 +210,44 @@ export function CriticalCSS() {
         .hero-title {
           font-size: 2rem;
         }
-        
+
         .hero-subtitle {
           font-size: 1.125rem;
         }
-        
-        .grid-cols-2 {
+
+        .crit-grid-cols-2 {
           grid-template-columns: repeat(1, minmax(0, 1fr));
         }
-        
-        .grid-cols-3 {
+
+        .crit-grid-cols-3 {
           grid-template-columns: repeat(1, minmax(0, 1fr));
         }
-        
-        .header-container {
+
+        .crit-header-container {
           padding: 0.5rem 1rem;
         }
-        
-        .nav-menu {
+
+        .crit-nav-menu {
           gap: 0.5rem;
         }
       }
       
       @media (min-width: 768px) {
-        .grid-cols-md-2 {
+        .crit-grid-cols-md-2 {
           grid-template-columns: repeat(2, minmax(0, 1fr));
         }
-        
-        .grid-cols-md-3 {
+
+        .crit-grid-cols-md-3 {
           grid-template-columns: repeat(3, minmax(0, 1fr));
         }
       }
-      
+
       @media (min-width: 1024px) {
-        .grid-cols-lg-3 {
+        .crit-grid-cols-lg-3 {
           grid-template-columns: repeat(3, minmax(0, 1fr));
         }
-        
-        .grid-cols-lg-4 {
+
+        .crit-grid-cols-lg-4 {
           grid-template-columns: repeat(4, minmax(0, 1fr));
         }
       }
@@ -278,7 +278,7 @@ export function CriticalCSS() {
       }
       
       /* Focus styles for accessibility */
-      .btn:focus-visible,
+      .crit-btn:focus-visible,
       a:focus-visible,
       button:focus-visible {
         outline: 2px solid hsl(var(--ring));

@@ -3,7 +3,7 @@
 import { TestSectionSelector } from "@/components/test-section-selector"
 import { useRouter, usePathname } from "next/navigation"
 import { generateJLPTTestUrl } from "@/lib/utils"
-import { TranslationData, getLanguageFromPath, DEFAULT_LANGUAGE } from "@/lib/i18n"
+import { TranslationData, getLanguageFromPath, DEFAULT_LANGUAGE } from "@/lib/i18n/"
 
 interface JLPTTestSetupProps {
   type: 'custom' | 'official'

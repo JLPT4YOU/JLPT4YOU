@@ -17,7 +17,7 @@ import {
   Smile
 } from "lucide-react"
 import { ThemeToggle } from "@/components/theme-toggle"
-import { TranslationData, createTranslationFunction } from "@/lib/i18n"
+import { TranslationData, createTranslationFunction } from "@/lib/i18n/"
 
 interface AuthLayoutProps {
   children: React.ReactNode
@@ -241,7 +241,7 @@ export function AuthLayout({ children, title, subtitle, translations, languageSw
 
       <div className="lg:grid lg:grid-cols-2 lg:min-h-screen">
         {/* Brand Side - Hidden on mobile */}
-        <div className="hidden lg:flex lg:flex-col lg:justify-center lg:items-center bg-muted/20 app-p-xl relative overflow-hidden">
+        <div className="hidden lg:flex lg:flex-col lg:justify-center lg:items-center bg-muted/20 p-8 relative overflow-hidden">
           {/* Brand Side Background Pattern */}
           <BrandSidePattern />
 
@@ -261,7 +261,7 @@ export function AuthLayout({ children, title, subtitle, translations, languageSw
 
             {/* Features */}
             <div className="space-y-4">
-              <div className="flex items-center app-gap-sm">
+              <div className="flex items-center gap-2">
                 <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-accent">
                   <BookOpen className="h-4 w-4 text-accent-foreground" />
                 </div>
@@ -270,7 +270,7 @@ export function AuthLayout({ children, title, subtitle, translations, languageSw
                 </span>
               </div>
 
-              <div className="flex items-center app-gap-sm">
+              <div className="flex items-center gap-2">
                 <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-accent">
                   <Library className="h-4 w-4 text-accent-foreground" />
                 </div>
@@ -279,7 +279,7 @@ export function AuthLayout({ children, title, subtitle, translations, languageSw
                 </span>
               </div>
 
-              <div className="flex items-center app-gap-sm">
+              <div className="flex items-center gap-2">
                 <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-accent">
                   <Heart className="h-4 w-4 text-accent-foreground" />
                 </div>
@@ -288,7 +288,7 @@ export function AuthLayout({ children, title, subtitle, translations, languageSw
                 </span>
               </div>
 
-              <div className="flex items-center app-gap-sm">
+              <div className="flex items-center gap-2">
                 <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-accent">
                   <Smile className="h-4 w-4 text-accent-foreground" />
                 </div>
@@ -303,7 +303,7 @@ export function AuthLayout({ children, title, subtitle, translations, languageSw
               <p className="text-sm text-muted-foreground italic">
                 &ldquo;{t('auth.brand.testimonial')}&rdquo;
               </p>
-              <div className="flex items-center justify-center mt-3 app-gap-xs">
+              <div className="flex items-center justify-center mt-3 gap-2">
                 {[...Array(5)].map((_, i) => (
                   <div key={i} className="w-1.5 h-1.5 rounded-full bg-primary/60" />
                 ))}
@@ -319,7 +319,7 @@ export function AuthLayout({ children, title, subtitle, translations, languageSw
         </div>
 
         {/* Form Side */}
-        <div className="flex flex-col justify-center min-h-screen lg:min-h-auto px-4 py-8 md:px-6 md:py-12 lg:app-p-xl relative overflow-hidden">
+        <div className="flex flex-col justify-center min-h-screen lg:min-h-auto px-4 py-8 md:px-6 md:py-12 lg:p-8 relative overflow-hidden">
           {/* Form Side Background Pattern - Desktop only */}
           <div className="hidden lg:block">
             <FormSidePattern />

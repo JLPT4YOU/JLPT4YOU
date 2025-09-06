@@ -2,7 +2,7 @@
 
 import { useParams } from 'next/navigation'
 import { BookOpen, Target } from "lucide-react"
-import { Language, TranslationData } from "@/lib/i18n"
+import { Language, TranslationData } from "@/lib/i18n/"
 import { createPageContent, type BasePageContentProps } from "@/components/shared/component-utils"
 import { BasePageTemplate, CardItem } from "@/components/layout/base-page-template"
 

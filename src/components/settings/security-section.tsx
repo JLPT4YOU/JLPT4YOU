@@ -6,7 +6,7 @@
 "use client"
 
 import { useState } from 'react'
-import { useAuth } from '@/contexts/auth-context-simple'
+import { useAuth } from '@/contexts/auth-context'
 import { userSettingsService } from '@/lib/user-settings-service'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'

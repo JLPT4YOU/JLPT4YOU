@@ -3,7 +3,6 @@
  * Generates structured prompts for Gemini AI to create exercises
  */
 
-import { getAICommunicationLanguage } from '../prompt-storage';
 import { mapLanguageInstruction } from '../shared/language-utils';
 
 
@@ -289,7 +288,7 @@ export function generateSpecificPrompt(
   const basePrompt = prompts[questionType]?.[subType] || prompts.vocabulary.meaning;
 
   // Get explanation language from settings or use override
-  const explainLanguage = explanationLanguage || getAICommunicationLanguage();
+  const explainLanguage = explanationLanguage || 'auto';
 
 
   // Derive a specific question_type value based on questionType and subType for stricter schema

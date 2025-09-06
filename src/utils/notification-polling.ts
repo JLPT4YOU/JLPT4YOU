@@ -16,7 +16,7 @@ export interface NotificationPollingConfig {
 export class NotificationPollingManager {
   private static instance: NotificationPollingManager;
   private intervals: Map<string, NodeJS.Timeout> = new Map();
-  private subscriptions: Map<string, any> = new Map();
+  private subscriptions: Map<string, unknown> = new Map();
 
   private constructor() {}
 
@@ -116,7 +116,7 @@ export class NotificationPollingManager {
   /**
    * Add real-time subscription
    */
-  addSubscription(userId: string, subscription: any): void {
+  addSubscription(userId: string, subscription: unknown): void {
     this.removeSubscription(userId);
     this.subscriptions.set(userId, subscription);
   }

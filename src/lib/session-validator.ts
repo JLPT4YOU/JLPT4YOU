@@ -7,6 +7,7 @@
 import { NextRequest } from 'next/server'
 import { createServerClient } from '@supabase/ssr'
 import { Session, User } from '@supabase/supabase-js'
+import { logger } from './logger'
 
 interface ValidationResult {
   valid: boolean
@@ -52,7 +53,7 @@ export class SessionValidator {
     const opts = { ...this.defaultOptions, ...options }
     
     if (opts.logValidation) {
-      console.log('🔍 [SessionValidator] Starting session validation...')
+      logger.session('Starting session validation...')
     }
 
     try {
@@ -85,7 +86,7 @@ export class SessionValidator {
 
       // All validation methods failed
       if (opts.logValidation) {
-        console.log('❌ [SessionValidator] All validation methods failed')
+        logger.session('All validation methods failed')
       }
 
       return {
@@ -96,7 +97,7 @@ export class SessionValidator {
 
     } catch (error) {
       if (opts.logValidation) {
-        console.error('❌ [SessionValidator] Validation exception:', error)
+        logger.error('Validation exception', error, 'SESSION')
       }
 
       return {
@@ -116,14 +117,14 @@ export class SessionValidator {
   ): Promise<ValidationResult> {
     try {
       if (options.logValidation) {
-        console.log('🔍 [SessionValidator] Validating existing session...')
+        logger.session('Validating existing session...')
       }
 
       const { data: { session }, error } = await supabase.auth.getSession()
       
       if (error) {
         if (options.logValidation) {
-          console.log('❌ [SessionValidator] Session error:', error.message)
+          logger.session('Session error', { message: error.message })
         }
         return { 
           valid: false, 
@@ -135,7 +136,7 @@ export class SessionValidator {
 
       if (!session) {
         if (options.logValidation) {
-          console.log('ℹ️ [SessionValidator] No session found')
+          logger.session('No session found')
         }
         return { 
           valid: false, 
@@ -152,7 +153,7 @@ export class SessionValidator {
       }
 
       if (options.logValidation) {
-        console.log('✅ [SessionValidator] Session validation successful')
+        logger.session('Session validation successful')
       }
 
       return {
@@ -168,7 +169,7 @@ export class SessionValidator {
 
     } catch (error) {
       if (options.logValidation) {
-        console.error('❌ [SessionValidator] Session validation failed:', error)
+        logger.error('Session validation failed', error, 'SESSION')
       }
       return { 
         valid: false, 
@@ -187,14 +188,14 @@ export class SessionValidator {
   ): Promise<ValidationResult> {
     try {
       if (options.logValidation) {
-        console.log('🔄 [SessionValidator] Attempting session refresh...')
+        logger.session('Attempting session refresh...')
       }
 
       const { data: { session }, error } = await supabase.auth.refreshSession()
       
       if (error) {
         if (options.logValidation) {
-          console.log('❌ [SessionValidator] Refresh error:', error.message)
+          logger.session('Refresh error', { message: error.message })
         }
         return { 
           valid: false, 
@@ -205,7 +206,7 @@ export class SessionValidator {
 
       if (!session) {
         if (options.logValidation) {
-          console.log('ℹ️ [SessionValidator] Refresh did not return session')
+          logger.session('Refresh did not return session')
         }
         return { 
           valid: false, 
@@ -222,7 +223,7 @@ export class SessionValidator {
       }
 
       if (options.logValidation) {
-        console.log('✅ [SessionValidator] Session refresh successful')
+        logger.session('Session refresh successful')
       }
 
       return {
@@ -237,7 +238,7 @@ export class SessionValidator {
 
     } catch (error) {
       if (options.logValidation) {
-        console.error('❌ [SessionValidator] Refresh validation failed:', error)
+        logger.error('Refresh validation failed', error, 'SESSION')
       }
       return { 
         valid: false, 
@@ -256,14 +257,14 @@ export class SessionValidator {
   ): Promise<ValidationResult> {
     try {
       if (options.logValidation) {
-        console.log('👤 [SessionValidator] Attempting user validation...')
+        logger.session('Attempting user validation...')
       }
 
       const { data: { user }, error } = await supabase.auth.getUser()
       
       if (error) {
         if (options.logValidation) {
-          console.log('❌ [SessionValidator] User validation error:', error.message)
+          logger.session('User validation error', { message: error.message })
         }
         return { 
           valid: false, 
@@ -274,7 +275,7 @@ export class SessionValidator {
 
       if (!user) {
         if (options.logValidation) {
-          console.log('ℹ️ [SessionValidator] No user found')
+          logger.session('No user found')
         }
         return { 
           valid: false, 
@@ -284,7 +285,7 @@ export class SessionValidator {
       }
 
       if (options.logValidation) {
-        console.log('✅ [SessionValidator] User validation successful')
+        logger.session('User validation successful')
       }
 
       return {
@@ -301,7 +302,7 @@ export class SessionValidator {
 
     } catch (error) {
       if (options.logValidation) {
-        console.error('❌ [SessionValidator] User validation failed:', error)
+        logger.error('User validation failed', error, 'SESSION')
       }
       return { 
         valid: false, 
@@ -337,7 +338,7 @@ export class SessionValidator {
     // Check if session is expired
     if (securityFlags.isExpired) {
       if (options.logValidation) {
-        console.log('⚠️ [SessionValidator] Session is expired')
+        logger.session('Session is expired')
       }
       return { 
         valid: false, 
@@ -350,7 +351,7 @@ export class SessionValidator {
     // Check if session expires soon
     if (securityFlags.expiresSoon) {
       if (options.logValidation) {
-        console.log('⚠️ [SessionValidator] Session expires soon, refresh recommended')
+        logger.session('Session expires soon, refresh recommended')
       }
       return { 
         valid: true, 
@@ -362,7 +363,7 @@ export class SessionValidator {
     // Check user validity
     if (!securityFlags.hasValidUser) {
       if (options.logValidation) {
-        console.log('⚠️ [SessionValidator] Invalid user data')
+        logger.session('Invalid user data')
       }
       return { 
         valid: false, 
@@ -374,7 +375,7 @@ export class SessionValidator {
     // Check token validity
     if (!securityFlags.hasValidToken) {
       if (options.logValidation) {
-        console.log('⚠️ [SessionValidator] Invalid access token')
+        logger.session('Invalid access token')
       }
       return { 
         valid: false, 

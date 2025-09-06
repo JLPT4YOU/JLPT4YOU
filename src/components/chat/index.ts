@@ -3,7 +3,10 @@ export { ChatSidebar } from './ChatSidebar';
 export { MessageBubble } from './MessageBubble';
 export { InputArea } from './InputArea';
 
-export { ChatSettings } from './ChatSettings';
+// Legacy ChatSettings - deprecated, use UnifiedSettings instead
+// export { ChatSettings } from './ChatSettings';
+export { UnifiedSettings } from './UnifiedSettings';
+export { UnifiedSettings as ChatSettings } from './UnifiedSettings'; // Backward compatibility
 
 // Types
 export interface FileAttachment {

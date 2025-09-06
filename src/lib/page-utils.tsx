@@ -5,7 +5,7 @@
 
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { loadTranslation, Language, TranslationData } from '@/lib/i18n'
+import { loadTranslation, Language, TranslationData } from '@/lib/i18n/'
 
 // Import core functions
 import {

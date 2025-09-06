@@ -7,7 +7,7 @@ import {
   ChevronRight
 } from "lucide-react"
 import { cn } from "@/lib/utils"
-import { TranslationData } from "@/lib/i18n"
+import { TranslationData } from "@/lib/i18n/"
 import { useTranslation } from "@/lib/use-translation"
 
 export interface Question {
@@ -55,9 +55,9 @@ export function QuestionContent({
   return (
     <div className="bg-background rounded-2xl p-6 md:p-8">
         {/* Question Header with Flag */}
-        <div className="flex items-start justify-between mb-4 md:app-mb-lg">
+        <div className="flex items-start justify-between mb-4 md:mb-6">
           <div className="flex-1">
-            <div className="flex items-center gap-2 mb-3 md:app-gap-sm md:app-mb-md">
+            <div className="flex items-center gap-2 mb-3 md:gap-2 md:mb-4">
               <span className="text-sm font-medium text-muted-foreground">
                 {t('exam.interface.question')} {questionNumber}/{totalQuestions}
               </span>
@@ -83,13 +83,13 @@ export function QuestionContent({
         </div>
 
         {/* Answer Options */}
-        <div className="space-y-2 mb-4 md:space-y-3 md:app-mb-lg">
+        <div className="space-y-2 mb-4 md:space-y-3 md:mb-6">
           {Object.entries(question.options).map(([key, value]) => (
             <button
               key={key}
               onClick={() => onAnswerSelect(question.id, key as 'A' | 'B' | 'C' | 'D')}
               className={cn(
-                "w-full text-left p-3 rounded-lg border-2 transition-all duration-200 md:app-p-md",
+                "w-full text-left p-3 rounded-lg border-2 transition-all duration-200 md:p-4",
                 "hover:bg-accent/50 hover:border-accent-foreground/30",
                 "focus-button",
                 selectedAnswer === key
@@ -97,7 +97,7 @@ export function QuestionContent({
                   : "border-border bg-card hover:border-muted-foreground/50"
               )}
             >
-              <div className="flex items-start gap-3 md:app-gap-sm">
+              <div className="flex items-start gap-3 md:gap-2">
                 <span className={cn(
                   "w-6 h-6 rounded-full border-2 flex items-center justify-center text-sm font-semibold shrink-0 mt-0.5 transition-all duration-200",
                   selectedAnswer === key

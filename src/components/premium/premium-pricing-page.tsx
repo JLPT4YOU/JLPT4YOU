@@ -9,7 +9,7 @@ import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { Crown, Check, X, ArrowRight } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import { useAuth } from '@/contexts/auth-context-simple'
+import { useAuth } from '@/contexts/auth-context'
 import { useTranslations } from '@/hooks/use-translations'
 import { TranslationData } from '@/lib/i18n'
 

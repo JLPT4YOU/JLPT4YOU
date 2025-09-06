@@ -6,9 +6,9 @@
 const BASE_URL = (process.env.NEXT_PUBLIC_JLPT_API_URL as string) || 'https://jlpt-vocabulary-api-6jmc.vercel.app'
 const API_KEY = (process.env.NEXT_PUBLIC_JLPT_API_KEY as string) || 'test_key'
 
-const cache = new Map<string, any>()
+const cache = new Map<string, unknown>()
 
-function buildUrl(endpoint: string, params?: Record<string, any>) {
+function buildUrl(endpoint: string, params?: Record<string, string | number | boolean>) {
   const isBrowser = typeof window !== 'undefined'
   const isJest = typeof process !== 'undefined' && (!!(process as any).env) && (process as any).env.NODE_ENV === 'test'
   const useLocalBase = isBrowser && !isJest && window.location.hostname === 'localhost'
@@ -22,7 +22,7 @@ function buildUrl(endpoint: string, params?: Record<string, any>) {
   return url.toString()
 }
 
-async function call(endpoint: string, params?: Record<string, any>) {
+async function call(endpoint: string, params?: Record<string, string | number | boolean>) {
   const isBrowser = typeof window !== 'undefined'
   const isJest = typeof process !== 'undefined' && (!!(process as any).env) && (process as any).env.NODE_ENV === 'test'
   const useLocalProxy = isBrowser && !isJest && window.location.hostname === 'localhost'
@@ -74,7 +74,7 @@ export function getWordsByLevel(level: string, limit = 10, offset = 0): Promise<
 }
 
 export function searchWords(word: string, opts?: { level?: string; limit?: number; offset?: number }): Promise<WordsResponse> {
-  const params: Record<string, any> = { word }
+  const params: Record<string, string | number> = { word }
   if (opts?.level) params.level = opts.level
   if (typeof opts?.limit === 'number') params.limit = opts.limit
   if (typeof opts?.offset === 'number') params.offset = opts.offset
@@ -82,7 +82,9 @@ export function searchWords(word: string, opts?: { level?: string; limit?: numbe
 }
 
 export function getRandomWords(limit = 10, level?: string): Promise<WordsResponse> {
-  return call('/api/words/random', { limit, level })
+  const params: Record<string, string | number> = { limit }
+  if (level) params.level = level
+  return call('/api/words/random', params)
 }
 
 // ===== Grammar types & functions =====
@@ -116,7 +118,7 @@ export function getGrammarByLevel(level: string, limit = 10, offset = 0): Promis
 }
 
 export function searchGrammar(query: string, opts?: { level?: string; limit?: number; offset?: number }): Promise<GrammarResponse> {
-  const params: Record<string, any> = { grammar: query }
+  const params: Record<string, string | number> = { grammar: query }
   if (opts?.level) params.level = opts.level
   if (typeof opts?.limit === 'number') params.limit = opts.limit
   if (typeof opts?.offset === 'number') params.offset = opts.offset
@@ -124,7 +126,7 @@ export function searchGrammar(query: string, opts?: { level?: string; limit?: nu
 }
 
 export function getRandomGrammar(count = 1, level?: string): Promise<GrammarResponse> {
-  const params: Record<string, any> = { count }
+  const params: Record<string, string | number> = { count }
   if (level) params.level = level
   return call('/api/grammar/random', params)
 }

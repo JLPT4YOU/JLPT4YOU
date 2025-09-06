@@ -68,11 +68,11 @@ function JLPTCustomPageContent({ t }: JLPTCustomPageContentProps) {
       <div className="border-b bg-muted/30">
         <div className="app-container app-section">
           <div className="app-content">
-            <div className="text-center app-space-md">
-              <div className="w-16 h-16 bg-accent rounded-full flex items-center justify-center mx-auto shadow-lg app-mb-md">
+            <div className="text-center space-y-4">
+              <div className="w-16 h-16 bg-accent rounded-full flex items-center justify-center mx-auto shadow-lg mb-4">
                 <BookOpen className="w-8 h-8 text-accent-foreground" />
               </div>
-              <div className="flex items-center justify-center app-gap-xs app-mb-sm">
+              <div className="flex items-center justify-center gap-2 mb-2">
                 <h1 className="text-2xl sm:text-3xl font-bold text-foreground">
                   {t('jlpt.custom.page.title')}
                 </h1>
@@ -115,7 +115,7 @@ function JLPTCustomPageContent({ t }: JLPTCustomPageContentProps) {
 
             {/* Custom JLPT Info */}
             <div className="mt-12">
-              <div className="bg-muted/30 rounded-2xl border-dashed border-2 border-border/30 app-p-lg md:app-p-xl text-center">
+              <div className="bg-muted/30 rounded-2xl border-dashed border-2 border-border/30 p-6 md:p-8 text-center">
                 <div className="flex items-center justify-center gap-4 mb-4">
                   <Sparkles className="w-6 h-6 text-primary" />
                   <h3 className="text-lg font-semibold text-foreground">

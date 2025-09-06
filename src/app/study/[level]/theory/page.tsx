@@ -30,9 +30,9 @@ function Content({ language, translations, t }: ContentProps) {
     <div className="min-h-screen bg-background">
       <div className="app-container app-section">
         <div className="app-content">
-          <div className="max-w-4xl mx-auto app-space-2xl">
+          <div className="max-w-4xl mx-auto space-y-12">
             {/* Header Section */}
-            <header className="text-center app-space-lg">
+            <header className="text-center space-y-6">
               <div className="w-20 h-20 mx-auto mb-6 bg-muted/50 rounded-full flex items-center justify-center border border-border" aria-hidden="true">
                 <BookOpen className="h-10 w-10 text-foreground" />
               </div>
@@ -42,7 +42,7 @@ function Content({ language, translations, t }: ContentProps) {
             </header>
 
             {/* Selection Cards - Responsive Grid: 2-2-2-2-2 for this specific case */}
-            <main className="flex justify-center app-space-xl" role="main">
+            <main className="flex justify-center space-y-8" role="main">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 md:gap-8 place-items-center w-max">
                 {/* Vocabulary Card */}
                 <Link

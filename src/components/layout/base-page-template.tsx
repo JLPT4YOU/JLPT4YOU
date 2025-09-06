@@ -2,8 +2,9 @@
 
 import { LoadingLink } from "@/components/ui/loading-link";
 import { ArrowLeft, LucideIcon } from "lucide-react";
-import { TranslationData, Language } from "@/lib/i18n";
+import { TranslationData, Language } from "@/lib/i18n/";
 
+import { Card } from "@/components/ui/card";
 export interface CardItem {
   id: string;
   title: string;
@@ -48,18 +49,18 @@ export function BasePageTemplate({
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Main content container with improved spacing */}
-      <div className="app-container pt-8 sm:pt-12 lg:pt-16 pb-8">
+      {/* Main content container with standardized spacing */}
+      <div className="app-container app-section">
         <div className="app-content">
-          <div className="max-w-7xl mx-auto app-space-2xl">
+          <div className="max-w-7xl mx-auto space-y-12">
 
             {/* Header section with better spacing */}
-            <div className="text-center app-space-lg">
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight">{title}</h1>
+            <div className="text-center space-y-6">
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight">{title}</h1>
             </div>
 
             {/* Card grid section with enhanced spacing */}
-            <div className="flex justify-center app-space-xl">
+            <div className="flex justify-center space-y-8">
               <div className={`grid ${getGridCols()} gap-4 sm:gap-6 md:gap-8 place-items-center w-max`}>
                 {cards.map((card) => {
                   const IconComponent = card.icon;
@@ -70,12 +71,15 @@ export function BasePageTemplate({
                       href={card.href}
                       className="group block w-full max-w-[280px] min-w-[160px]"
                     >
-                      <div className={`
-                        relative p-4 sm:p-6 md:p-8 rounded-2xl border-2 border-transparent
-                        hover-lift
-                        h-full flex flex-col backdrop-blur-sm
-                        ${card.bgColor}
-                      `}>
+                      <Card
+                        interactive
+                        radius="2xl"
+                        elevation="sm"
+                        className={`
+                          relative h-full flex flex-col backdrop-blur-sm border-2 border-transparent hover-lift
+                          ${card.bgColor} p-4 sm:p-6 md:p-8
+                        `}
+                      >
                         {/* Icon */}
                         <div className="flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-full bg-muted/30 mb-4 sm:mb-6 mx-auto shadow-lg">
                           <IconComponent className={`h-7 w-7 sm:h-8 sm:w-8 md:h-10 md:w-10 ${card.textColor}`} />
@@ -83,11 +87,11 @@ export function BasePageTemplate({
 
                         {/* Content */}
                         <div className="space-y-3 text-center flex-1">
-                          <h3 className={`text-base sm:text-xl md:text-2xl lg:text-3xl font-bold ${card.textColor}`}>
+                          <h3 className={`text-base sm:text-xl md:text-2xl lg:text-3xl font-semibold ${card.textColor}`}>
                             {card.title}
                           </h3>
                           {card.subtitle && (
-                            <p className={`text-sm sm:text-base font-medium ${card.textColor}/80`}>
+                            <p className={`text-sm sm:text-base font-normal ${card.textColor}/80`}>
                               {card.subtitle}
                             </p>
                           )}
@@ -102,7 +106,7 @@ export function BasePageTemplate({
                             <ArrowLeft className={`h-4 w-4 sm:h-5 sm:w-5 ${card.textColor} rotate-180`} />
                           </div>
                         </div>
-                      </div>
+                      </Card>
                     </LoadingLink>
                   );
                 })}
@@ -110,17 +114,17 @@ export function BasePageTemplate({
             </div>
 
             {/* Description section with improved spacing */}
-            <div className="max-w-4xl mx-auto app-space-xl">
-              <div className="bg-muted/60 backdrop-blur-sm rounded-2xl app-p-xl border border-border/50 shadow-lg">
-                <div className="text-center app-space-md">
-                  <div className={`text-lg sm:text-xl font-semibold text-foreground`}>
+            <div className="max-w-4xl mx-auto space-y-8">
+              <Card size="lg" radius="2xl" elevation="sm" className="bg-muted/60 backdrop-blur-sm border border-border/50">
+                <div className="text-center space-y-4">
+                  <div className={`text-lg sm:text-xl font-medium text-foreground`}>
                     {subtitle}
                   </div>
                   <div className="text-base sm:text-lg text-muted-foreground">
                     {t('common.instruction') || 'Chọn một tùy chọn phía trên để bắt đầu'}
                   </div>
                 </div>
-              </div>
+              </Card>
             </div>
 
           </div>

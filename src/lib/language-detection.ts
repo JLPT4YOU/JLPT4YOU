@@ -5,7 +5,7 @@
  */
 
 import { NextRequest } from 'next/server'
-import { Language, DEFAULT_LANGUAGE, SUPPORTED_LANGUAGES } from './i18n'
+import { Language, DEFAULT_LANGUAGE, SUPPORTED_LANGUAGES } from './i18n/'
 
 export interface LanguageDetectionOptions {
   request?: NextRequest

@@ -2,7 +2,7 @@
 
 import { useEffect, Suspense, lazy } from "react";
 import { useRouter } from "next/navigation";
-import { useAuth } from '@/contexts/auth-context-simple';
+import { useAuth } from '@/contexts/auth-context';
 import { getLoginUrl } from '@/lib/auth-utils';
 
 // Dynamic import for ChatLayout to reduce initial bundle size

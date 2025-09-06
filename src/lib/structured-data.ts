@@ -3,7 +3,7 @@
  * Educational content markup for better search visibility
  */
 
-import { Language } from './i18n'
+import { Language } from './i18n/'
 
 // Schema.org types
 type SchemaOrgType = Record<string, unknown>
@@ -21,7 +21,7 @@ export function generateOrganizationSchema() {
     "contactPoint": {
       "@type": "ContactPoint",
       "contactType": "customer service",
-      "email": "support@jlpt4you.com"
+      "email": "admin@jlpt4you.com"
     },
     "sameAs": [
       "https://twitter.com/jlpt4you",

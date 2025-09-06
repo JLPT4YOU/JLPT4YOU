@@ -2,7 +2,6 @@ import { createClient } from '@/utils/supabase/client';
 import { 
   generateRedeemCode, 
   cleanRedeemCode, 
-  formatRedeemCode,
   validateRedeemCode,
   generateBatchRedeemCodes 
 } from '@/utils/redeem-utils';
@@ -18,7 +17,7 @@ export interface RedeemCode {
   redeemed_by?: string;
   expires_at?: string;
   description?: string;
-  metadata?: any;
+  metadata?: Record<string, unknown>;
 }
 
 export interface RedeemHistory {
@@ -28,7 +27,7 @@ export interface RedeemHistory {
   action: string;
   premium_days_added: number;
   created_at: string;
-  metadata?: any;
+  metadata?: Record<string, unknown>;
 }
 
 export interface CreateRedeemCodeParams {
@@ -81,7 +80,7 @@ class RedeemService {
         const { data: existing } = await this.supabase
           .from('redeem_codes')
           .select('id')
-          .eq('code', code as any)
+          .eq('code', code)
           .single();
 
         if (!existing) break;
@@ -104,7 +103,7 @@ class RedeemService {
           expires_at: params.expires_at,
           created_by: user.id,
           status: 'active'
-        } as any)
+        })
         .select()
         .single();
 
@@ -112,7 +111,7 @@ class RedeemService {
         return { success: false, error: error.message };
       }
 
-      return { success: true, data: data as any };
+      return { success: true, data };
     } catch (error) {
       console.error('Error creating redeem code:', error);
       return { success: false, error: 'Failed to create redeem code' };
@@ -151,9 +150,9 @@ class RedeemService {
       const { data: existing } = await this.supabase
         .from('redeem_codes')
         .select('code')
-        .in('code', cleanedCodes as any);
+        .in('code', cleanedCodes);
 
-      const existingCodes = existing?.map((r: any) => r.code) || [];
+      const existingCodes = existing?.map((r: { code: string }) => r.code) || [];
       const uniqueCodes = cleanedCodes.filter(code => !existingCodes.includes(code));
 
       if (uniqueCodes.length === 0) {
@@ -173,14 +172,14 @@ class RedeemService {
       // Bulk insert
       const { data: insertedCodes, error: insertError } = await this.supabase
         .from('redeem_codes')
-        .insert(insertData as any)
+        .insert(insertData)
         .select();
 
       if (insertError) {
         return { success: false, error: insertError.message };
       }
 
-      return { success: true, data: insertedCodes as any };
+      return { success: true, data: insertedCodes };
     } catch (error) {
       console.error('Error creating batch redeem codes:', error);
       return { success: false, error: 'Failed to create batch redeem codes' };
@@ -235,7 +234,7 @@ class RedeemService {
         .order('created_at', { ascending: false });
 
       if (status) {
-        query = query.eq('status', status as any);
+        query = query.eq('status', status);
       }
 
       const { data, error } = await query;
@@ -246,11 +245,11 @@ class RedeemService {
 
       // Format codes for display
       const formattedData = data?.map(code => ({
-        ...(code as any),
-        code: (code as any).code
+        ...code,
+        code: code.code
       }));
 
-      return { success: true, data: formattedData as any };
+      return { success: true, data: formattedData };
     } catch (error) {
       console.error('Error fetching redeem codes:', error);
       return { success: false, error: 'Failed to fetch redeem codes' };
@@ -279,14 +278,14 @@ class RedeemService {
             description
           )
         `)
-        .eq('user_id', targetUserId as any)
+        .eq('user_id', targetUserId)
         .order('created_at', { ascending: false });
 
       if (error) {
         return { success: false, error: error.message };
       }
 
-      return { success: true, data: (data as any) || [] };
+      return { success: true, data: data || [] };
     } catch (error) {
       console.error('Error fetching redeem history:', error);
       return { success: false, error: 'Failed to fetch redeem history' };
@@ -321,8 +320,8 @@ class RedeemService {
     try {
       const { error } = await this.supabase
         .from('redeem_codes')
-        .update({ status } as any)
-        .eq('id', codeId as any);
+        .update({ status })
+        .eq('id', codeId);
 
       if (error) {
         return { success: false, error: error.message };

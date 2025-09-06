@@ -6,7 +6,7 @@ import { ThemeToggle } from "@/components/theme-toggle"
 import { Button } from "@/components/ui/button"
 import { LanguageSwitcher } from "@/components/language-switcher"
 import { useEffect, useState } from "react"
-import { TranslationData, getLocalizedPath } from "@/lib/i18n"
+import { TranslationData, getLocalizedPath } from "@/lib/i18n/"
 import { useTranslation } from "@/lib/use-translation"
 import { setLanguagePreferenceFromPath } from "@/lib/auth-utils"
 
@@ -46,12 +46,12 @@ export function LandingHeader({ translations }: LandingHeaderProps) {
         }
       `}
     >
-      <div className="app-container app-py-md">
-        <div className="app-content">
+      <div className="px-4 sm:px-6 lg:px-8 py-4">
+        <div className="max-w-6xl mx-auto">
           <div className="flex h-12 items-center justify-between">
             {/* Logo và tên ứng dụng */}
             <div
-              className="flex items-center app-gap-sm hover-opacity focus-ring rounded-md cursor-pointer"
+              className="flex items-center gap-2 hover-opacity focus-ring rounded-md cursor-pointer"
               onClick={() => router.push(getLocalizedPath('landing', currentLanguage))}
             >
               <div className="flex items-center justify-center w-8 h-8 rounded-md bg-muted">
@@ -61,9 +61,9 @@ export function LandingHeader({ translations }: LandingHeaderProps) {
             </div>
 
             {/* Navigation và Actions */}
-            <div className="flex items-center app-gap-sm">
+            <div className="flex items-center gap-2">
               {/* Navigation Menu - Desktop */}
-              <nav className="hidden lg:flex items-center app-gap-md">
+              <nav className="hidden lg:flex items-center gap-4">
                 <a
                   href="#features"
                   className="text-sm font-medium text-muted-foreground hover-link"
@@ -97,7 +97,7 @@ export function LandingHeader({ translations }: LandingHeaderProps) {
               <ThemeToggle />
 
               {/* CTA Buttons - Desktop Only */}
-              <div className="hidden md:flex items-center app-gap-xs">
+              <div className="hidden md:flex items-center gap-1">
                 <Button
                   variant="ghost"
                   onClick={() => {

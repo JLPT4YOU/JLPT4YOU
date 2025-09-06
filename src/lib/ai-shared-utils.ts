@@ -4,7 +4,7 @@
  */
 
 import { AIMessage } from './ai-config';
-import { getAICommunicationLanguage, detectLanguageFromMessage } from './prompt-storage';
+import { detectLanguageFromMessage } from './prompt-storage';
 
 /**
  * Language-specific title generation templates
@@ -115,7 +115,8 @@ export function detectTitleLanguage(firstMessage: string): string {
   if (aiLanguage === 'auto') {
     return detectLanguageFromMessage(firstMessage);
   } else {
-    return getAICommunicationLanguage(firstMessage);
+    // Use detectLanguageFromMessage for all cases since getAICommunicationLanguage is deprecated
+    return detectLanguageFromMessage(firstMessage);
   }
 }
 

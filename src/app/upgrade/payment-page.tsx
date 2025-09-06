@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button"
 import { Crown, Check, Star, DollarSign } from "lucide-react"
 import { useTranslations } from "@/hooks/use-translations"
-import { useAuth } from "@/contexts/auth-context-simple"
+import { useAuth } from "@/contexts/auth-context"
 import { deductBalance } from "@/lib/balance-utils"
 import { logTransaction } from "@/lib/transaction-utils"
 import { userSettingsService } from "@/lib/user-settings-service"

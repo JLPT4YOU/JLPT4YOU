@@ -19,7 +19,7 @@ export interface Book {
   uploaded_by?: string
   created_at: string
   updated_at: string
-  metadata?: Record<string, any>
+  metadata?: Record<string, unknown>
 }
 
 export interface BookCreateInput {
@@ -32,7 +32,7 @@ export interface BookCreateInput {
   file_size: number
   pages?: number
   status?: BookStatus
-  metadata?: Record<string, any>
+  metadata?: Record<string, unknown>
 }
 
 export interface BookUpdateInput {
@@ -42,7 +42,7 @@ export interface BookUpdateInput {
   category?: BookCategory
   pages?: number
   status?: BookStatus
-  metadata?: Record<string, any>
+  metadata?: Record<string, unknown>
 }
 
 export interface BookUploadData {

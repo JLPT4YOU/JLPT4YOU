@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { useAuth } from '@/contexts/auth-context-simple'
+import { useAuth } from '@/contexts/auth-context'
 import { useUserData } from '@/hooks/use-user-data' // ✅ ADDED: Import user data hook
 import { getLoginUrl } from '@/lib/auth-utils'
 import { Loader2 } from 'lucide-react' // ✅ ADDED: Import Loader2

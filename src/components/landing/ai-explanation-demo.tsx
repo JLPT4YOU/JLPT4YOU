@@ -70,7 +70,7 @@ const useTypewriter = (text: string, speed: number = 60) => {
   return { displayText, isTyping, showCursor }
 }
 
-import { TranslationData } from "@/lib/i18n"
+import { TranslationData } from "@/lib/i18n/"
 import { useTranslation } from "@/lib/use-translation"
 
 interface AIExplanationDemoProps {

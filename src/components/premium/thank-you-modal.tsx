@@ -6,7 +6,7 @@
 "use client"
 
 import { motion, AnimatePresence } from 'framer-motion'
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
@@ -70,7 +70,7 @@ export function ThankYouModal({ isOpen, onClose, purchaseResult, user }: ThankYo
     <AnimatePresence>
       {isOpen && (
         <Dialog open={isOpen} onOpenChange={onClose}>
-          <DialogContent className="max-w-2xl p-0 overflow-hidden">
+          <DialogContent className="max-w-2xl p-0 overflow-hidden" aria-describedby="thank-you-description">
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -127,7 +127,7 @@ export function ThankYouModal({ isOpen, onClose, purchaseResult, user }: ThankYo
                         {t('pages.payment.thankYou.title')}
                       </h2>
                     </DialogTitle>
-                    <p className="text-lg text-muted-foreground">
+                    <p id="thank-you-description" className="text-lg text-muted-foreground">
                       {t('pages.payment.thankYou.subtitle')}
                     </p>
                   </motion.div>

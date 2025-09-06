@@ -235,7 +235,7 @@ class NotificationService {
   /**
    * Send notification for premium upgrade
    */
-  async sendPremiumUpgradeNotification(userId: string, planType: 'monthly' | 'yearly', expiresAt: string): Promise<void> {
+  async sendPremiumUpgradeNotification(userId: string, planType: 'monthly' | 'yearly', expiresAt: string, transactionId?: string): Promise<void> {
     const planName = planType === 'monthly' ? 'tháng' : 'năm';
     await this.createNotification({
       user_id: userId,
@@ -244,7 +244,8 @@ class NotificationService {
       content: `Chúc mừng! Bạn đã nâng cấp lên gói Premium ${planName}. Tài khoản Premium của bạn sẽ hết hạn vào ${new Date(expiresAt).toLocaleDateString('vi-VN')}.`,
       metadata: {
         plan_type: planType,
-        expires_at: expiresAt
+        expires_at: expiresAt,
+        transaction_id: transactionId
       },
       is_important: true
     });

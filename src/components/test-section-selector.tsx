@@ -14,7 +14,7 @@ import {
   Infinity,
   Play
 } from "lucide-react"
-import { TranslationData } from "@/lib/i18n"
+import { TranslationData } from "@/lib/i18n/"
 import { useTranslation } from "@/lib/use-translation"
 
 interface TestSection {
@@ -105,12 +105,12 @@ export function TestSectionSelector({
     <div className="min-h-screen bg-background">
       <div className="app-container app-section">
         <div className="app-content">
-          <div className="max-w-4xl mx-auto app-space-lg">
+          <div className="max-w-4xl mx-auto space-y-6">
             
             {/* Test Sections Selection - Only for JLPT */}
             {testType === 'jlpt' && (
-              <div className="app-mb-xl">
-                <h2 className="text-xl font-semibold text-foreground app-mb-md">
+              <div className="mb-8">
+                <h2 className="text-xl font-semibold text-foreground mb-4">
                   {t('exam.sectionSelector.title')}
                 </h2>
                 <div className="grid grid-cols-2 gap-3 sm:gap-4">
@@ -160,12 +160,12 @@ export function TestSectionSelector({
             )}
 
             {/* Time Selection */}
-            <div className="app-mb-xl">
-              <h2 className="text-xl font-semibold text-foreground app-mb-md">
+            <div className="mb-8">
+              <h2 className="text-xl font-semibold text-foreground mb-4">
                 {t('exam.timeSelector.title')}
               </h2>
               
-              <div className="app-space-md">
+              <div className="space-y-4">
                 {/* Default Time */}
                 <div
                   className={`cursor-pointer rounded-2xl p-6 md:p-8 transition-all duration-200 ${
@@ -256,7 +256,7 @@ export function TestSectionSelector({
                 size="lg"
                 onClick={handleStartTest}
                 disabled={!canStartTest}
-                className="app-px-xl app-py-md text-base font-semibold"
+                className="px-8 py-4 text-base font-semibold"
               >
                 <Play className="w-5 h-5 mr-2" />
                 {t('exam.sectionSelector.startTest')}

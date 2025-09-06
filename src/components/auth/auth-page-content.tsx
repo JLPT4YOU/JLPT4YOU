@@ -5,7 +5,7 @@ import { useSearchParams, useRouter } from "next/navigation"
 import { AuthLayoutWithLanguage } from "@/components/auth/auth-layout-with-language"
 import { LoginForm } from "@/components/auth/login-form"
 import { RegisterForm } from "@/components/auth/register-form"
-import { TranslationData, Language, getLocalizedPath } from "@/lib/i18n"
+import { TranslationData, Language, getLocalizedPath } from "@/lib/i18n/"
 import { useTranslation } from "@/lib/use-translation"
 import { setLanguagePreferenceFromPath } from "@/lib/auth-utils"
 

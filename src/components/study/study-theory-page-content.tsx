@@ -1,7 +1,7 @@
 "use client"
 
 import { BookOpen } from "lucide-react"
-import { Language, TranslationData } from "@/lib/i18n"
+import { Language, TranslationData } from "@/lib/i18n/"
 import { createPageContent, type BasePageContentProps } from "@/components/shared/component-utils"
 
 interface StudyTheoryPageContentProps extends BasePageContentProps {
@@ -31,10 +31,10 @@ function StudyTheoryContent({ t }: StudyTheoryContentProps) {
   return (
     <div className="min-h-screen bg-background flex items-center justify-center relative app-container">
       {/* Main content container - perfectly centered */}
-      <div className="w-full max-w-4xl mx-auto app-px-md app-py-lg sm:app-px-lg lg:app-px-xl">
-        <div className="flex flex-col items-center justify-center app-space-lg sm:app-space-xl">
+      <div className="w-full max-w-4xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
+        <div className="flex flex-col items-center justify-center space-y-6 sm:space-y-8">
           {/* Header - centered */}
-          <div className="text-center app-space-md">
+          <div className="text-center space-y-4">
             <div className="w-20 h-20 mx-auto mb-6 bg-muted/50 rounded-full flex items-center justify-center border border-border">
               <BookOpen className="h-10 w-10 text-foreground" />
             </div>
@@ -47,9 +47,9 @@ function StudyTheoryContent({ t }: StudyTheoryContentProps) {
           </div>
 
           {/* Coming soon section */}
-          <div className="w-full max-w-2xl mx-auto app-px-md">
-            <div className="bg-muted/60 backdrop-blur-sm rounded-2xl app-p-lg sm:app-p-xl border border-border/50 shadow-lg">
-              <div className="text-center app-space-sm">
+          <div className="w-full max-w-2xl mx-auto px-4">
+            <div className="bg-muted/60 backdrop-blur-sm rounded-2xl p-6 sm:p-8 border border-border/50 shadow-lg">
+              <div className="text-center space-y-2">
                 <div className="text-base sm:text-lg font-semibold text-foreground mb-4">
                   🚧 {t('study.theory.comingSoon')}
                 </div>

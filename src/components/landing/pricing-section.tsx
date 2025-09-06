@@ -3,7 +3,7 @@
 import { motion } from "framer-motion"
 import { Check, X, Crown } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { TranslationData } from "@/lib/i18n"
+import { TranslationData } from "@/lib/i18n/"
 import { useTranslation } from "@/lib/use-translation"
 import { useRouter } from "next/navigation"
 

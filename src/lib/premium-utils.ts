@@ -6,7 +6,7 @@
 import { formatDateYMD } from './role-utils'
 
 // Translation function type
-import { Language } from './i18n-types'
+import { Language } from './i18n/'
 
 type TranslationFunction = (key: string, params?: Record<string, any>) => string
 

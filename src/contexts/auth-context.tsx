@@ -2,10 +2,10 @@
 
 import { createContext, useContext, useEffect, useState } from 'react'
 import { User } from '@supabase/supabase-js'
-import { createClient } from '../utils/supabase/client'
-import { SessionRecovery } from '../lib/session-recovery'
-import { UserStorage } from '../lib/user-storage'
-import { logger } from '../lib/logger'
+import { createClient } from '@/utils/supabase/client'
+import { SessionRecovery } from '@/lib/session-recovery'
+import { UserStorage } from '@/lib/user-storage'
+import { logger } from '@/lib/logger'
 
 // Simple auth context - no legacy, no complex logic
 interface AuthContextType {

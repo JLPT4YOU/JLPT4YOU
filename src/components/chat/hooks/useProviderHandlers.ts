@@ -106,7 +106,7 @@ export const createProviderHandlers = (): StreamingHandlers => {
   ) => {
     const geminiService = getGeminiService();
     const thinkingStartTime = Date.now();
-    let fullThoughts = '';
+    const fullThoughts = '';
     let fullResponse = '';
     let pendingUpdate = false;
 
@@ -165,7 +165,7 @@ export const createProviderHandlers = (): StreamingHandlers => {
   ) => {
     const geminiService = getGeminiService();
     const thinkingStartTime = Date.now();
-    let fullThoughts = '';
+    const fullThoughts = '';
     let fullResponse = '';
     let pendingUpdate = false;
 

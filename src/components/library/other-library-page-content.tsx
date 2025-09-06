@@ -1,7 +1,7 @@
 "use client"
 
 import { Upload, BookOpen, Plus } from "lucide-react";
-import { TranslationData, Language, createTranslationFunction } from "@/lib/i18n";
+import { TranslationData, Language, createTranslationFunction } from "@/lib/i18n/";
 import { createPageContent, type BasePageContentProps } from "@/components/shared/component-utils";
 
 interface OtherLibraryPageContentProps extends BasePageContentProps {
@@ -19,10 +19,10 @@ export const OtherLibraryPageContent = createPageContent<{ isAuthenticated: bool
       {/* Main content container with improved spacing */}
       <div className="app-container pt-8 sm:pt-12 lg:pt-16 pb-8">
         <div className="app-content">
-          <div className="max-w-7xl mx-auto app-space-2xl">
+          <div className="max-w-7xl mx-auto space-y-12">
 
             {/* Header section with better spacing */}
-            <div className="text-center app-space-lg">
+            <div className="text-center space-y-6">
               <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight">
                 {t('library.other.page.title')}
               </h1>
@@ -32,9 +32,9 @@ export const OtherLibraryPageContent = createPageContent<{ isAuthenticated: bool
             </div>
 
             {/* Coming Soon Section */}
-            <div className="flex justify-center app-space-xl">
+            <div className="flex justify-center space-y-8">
               <div className="max-w-2xl w-full">
-                <div className="bg-muted/60 backdrop-blur-sm rounded-2xl app-p-xl border border-border/50 shadow-lg text-center">
+                <div className="bg-muted/60 backdrop-blur-sm rounded-2xl p-8 border border-border/50 shadow-lg text-center">
                   
                   {/* Icon */}
                   <div className="flex items-center justify-center w-20 h-20 mx-auto mb-6 bg-primary/10 rounded-full">
@@ -49,7 +49,7 @@ export const OtherLibraryPageContent = createPageContent<{ isAuthenticated: bool
                     <p className="text-lg text-muted-foreground">
                       {t('library.other.upload.description')}
                     </p>
-                    <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full text-primary font-medium">
+                    <div className="inline-flex items-center gap-2 px-4 py-1 bg-primary/10 rounded-full text-primary font-medium">
                       <Plus className="h-4 w-4" />
                       <span>{t('library.other.upload.subtitle')}</span>
                     </div>

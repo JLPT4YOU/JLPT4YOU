@@ -1,4 +1,5 @@
-import { Mistral } from "@mistralai/mistralai";
+import { Mistral } from '@mistralai/mistralai'
+import { logger } from './logger';
 
 // Define interfaces locally since they're missing from ai-shared-utils
 interface StreamCallbackData {
@@ -32,10 +33,10 @@ export class MistralService {
     streamCallback?: (data: StreamCallbackData) => void
   ): Promise<AIServiceResponse> {
     try {
-      console.log("[Mistral Service] generateResponse called with:", { messages, model, streamCallback: !!streamCallback });
+      logger.ai('generateResponse called', { messages: messages.length, model, streaming: !!streamCallback });
       
       if (streamCallback) {
-        console.log("[Mistral Service] Streaming mode enabled");
+        logger.ai('Streaming mode enabled');
         // Stream mode
         const stream = await this.client.chat.stream({
           model: model,
@@ -45,13 +46,13 @@ export class MistralService {
           stream: true,
         });
 
-        console.log("[Mistral Service] Stream created successfully");
+        logger.ai('Stream created successfully');
         let fullContent = "";
         const usage = { inputTokens: 0, outputTokens: 0 };
 
         try {
           for await (const chunk of stream) {
-            console.log("[Mistral Service] Received chunk:", JSON.stringify(chunk, null, 2));
+            logger.debug('Received chunk', chunk);
 
             // Cast to any to handle different chunk structures
             const chunkData: any = chunk;
@@ -63,7 +64,7 @@ export class MistralService {
             if (data.choices && data.choices.length > 0) {
               const choice = data.choices[0];
               const content = choice.delta?.content;
-              console.log("[Mistral Service] Content from chunk:", content);
+              logger.debug('Content from chunk', { contentLength: content?.length });
               if (content && typeof content === 'string' && content.length > 0) {
                 fullContent += content;
                 streamCallback({
@@ -80,11 +81,11 @@ export class MistralService {
             }
           }
         } catch (streamError) {
-          console.error("[Mistral Service] Streaming error:", streamError);
+          logger.error('Streaming error', streamError, 'AI');
           throw streamError;
         }
 
-        console.log("[Mistral Service] Streaming complete, full content length:", fullContent.length);
+        logger.ai('Streaming complete', { contentLength: fullContent.length });
         streamCallback({
           content: "",
           isComplete: true,
@@ -95,7 +96,7 @@ export class MistralService {
           usage: usage,
         };
       } else {
-        console.log("[Mistral Service] Non-streaming mode");
+        logger.ai('Non-streaming mode');
         // Non-stream mode
         const response = await this.client.chat.complete({
           model: model,
@@ -104,7 +105,7 @@ export class MistralService {
           maxTokens: 512,
         });
 
-        console.log("[Mistral Service] Non-streaming response:", response);
+        logger.ai('Non-streaming response received', { choicesCount: response.choices?.length });
 
         if (!response.choices || response.choices.length === 0) {
           throw new Error("No response from Mistral");
@@ -125,7 +126,7 @@ export class MistralService {
         };
       }
     } catch (error) {
-      console.error("Mistral API error:", error);
+      logger.error('Mistral API error', error, 'AI');
       throw new Error(`Mistral API error: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }

@@ -1,0 +1,12 @@
+node_modules
+.next
+out
+public
+lighthouse-reports
+supabase
+coverage
+**/*.ts
+**/*.tsx
+**/*.js
+**/*.jsx
+

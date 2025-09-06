@@ -168,7 +168,7 @@ function getLevelFromPath() {
 
 function Header({ level, t }: { level: string; t: (key: string) => string }) {
   return (
-    <div className="text-center app-space-md">
+    <div className="text-center space-y-4">
       <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight">
         {t('study.grammar.pageTitle').replace('{level}', level.toUpperCase())}
       </h1>
@@ -201,7 +201,7 @@ function Controls({
         />
         {query && (
           <button
-            className="px-3 py-2 rounded-xl bg-muted text-foreground border border-border"
+            className="px-2 py-2 rounded-xl bg-muted text-foreground border border-border"
             onClick={() => setQuery('')}
           >
             {t('study.grammar.search.clear')}
@@ -213,7 +213,7 @@ function Controls({
         <select
           value={limit}
           onChange={(e) => setLimit(Number(e.target.value))}
-          className="px-3 py-2 rounded-xl bg-card text-foreground border border-border"
+          className="px-2 py-2 rounded-xl bg-card text-foreground border border-border"
         >
           {LIMIT_OPTIONS.map((opt) => (
             <option key={opt} value={opt}>{opt}</option>
@@ -251,7 +251,7 @@ function GrammarGrid({ items, loading, error, onItemClick, t }: {
                 <div className="text-foreground text-sm opacity-80">{g.meaning_en || '—'}</div>
               </div>
               <div className="flex items-center justify-between">
-                <div className="text-xs bg-muted rounded-full px-2 py-1">{g.level}</div>
+                <div className="text-xs bg-muted rounded-full px-2 py-0.5">{g.level}</div>
                 <div className="text-xs text-muted-foreground">{t('study.grammar.card.clickForDetails')}</div>
               </div>
             </div>
@@ -272,7 +272,7 @@ function FooterControls({ loading, hasNext, page, limit, total, onPrev, onNext, 
       <button
         disabled={loading || page <= 1}
         onClick={onPrev}
-        className="px-5 py-2 rounded-xl bg-card border border-border text-foreground disabled:opacity-50"
+        className="px-6 py-2 rounded-xl bg-card border border-border text-foreground disabled:opacity-50"
       >
         {t('common.previous')}
       </button>
@@ -282,7 +282,7 @@ function FooterControls({ loading, hasNext, page, limit, total, onPrev, onNext, 
       <button
         disabled={loading || !hasNext}
         onClick={onNext}
-        className="px-5 py-2 rounded-xl bg-card border border-border text-foreground disabled:opacity-50"
+        className="px-6 py-2 rounded-xl bg-card border border-border text-foreground disabled:opacity-50"
       >
         {t('common.next')}
       </button>
@@ -351,7 +351,7 @@ function GrammarDetailModal({ grammar, onClose, t }: { grammar: JLPTGrammar; onC
           )}
 
           <div className="flex items-center justify-between pt-4 border-t border-border">
-            <div className="text-xs bg-muted rounded-full px-3 py-1">{grammar.level}</div>
+            <div className="text-xs bg-muted rounded-full px-2 py-0.5">{grammar.level}</div>
             <button
               onClick={onClose}
               className="px-6 py-2 bg-primary text-primary-foreground rounded-xl hover:bg-primary/90 transition-colors"

@@ -2,7 +2,7 @@
 
 import { TestSectionSelector } from "@/components/test-section-selector"
 import { useRouter } from "next/navigation"
-import { TranslationData } from "@/lib/i18n"
+import { TranslationData } from "@/lib/i18n/"
 import { useTranslations } from "@/hooks/use-translations"
 
 export default function HonmenTestSetupPage() {

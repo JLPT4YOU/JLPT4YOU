@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { dictService, type GrammarDetail as GrammarDetailType } from '@/lib/dict/dict-service';
 import { Badge } from '@/components/ui/badge';
 import { Loader2 } from 'lucide-react';
+import { TranslationData } from '@/lib/i18n';
 
 // Helper function to safely render string or object fields
 const renderField = (field: any): string => {
@@ -15,12 +16,24 @@ const renderField = (field: any): string => {
 
 interface GrammarDetailProps {
   selectedItem: any;
+  translations?: TranslationData;
 }
 
-export function GrammarDetail({ selectedItem }: GrammarDetailProps) {
+export function GrammarDetail({ selectedItem, translations }: GrammarDetailProps) {
   const [grammarDetail, setGrammarDetail] = useState<GrammarDetailType | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Translation function
+  const t = (key: string) => {
+    if (!translations) return key;
+    const keys = key.split('.');
+    let value: any = translations;
+    for (const k of keys) {
+      value = value?.[k];
+    }
+    return value || key;
+  };
 
   useEffect(() => {
     if (selectedItem && selectedItem.type === 'grammar') {
@@ -45,7 +58,7 @@ export function GrammarDetail({ selectedItem }: GrammarDetailProps) {
   if (!selectedItem || selectedItem.type !== 'grammar') {
     return (
       <div className="text-center py-12 text-muted-foreground">
-        <p>Nhập từ khóa và chọn một mẫu ngữ pháp để xem chi tiết</p>
+        <p>{t('dict.messages.selectGrammar')}</p>
       </div>
     );
   }

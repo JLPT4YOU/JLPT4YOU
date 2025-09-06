@@ -123,8 +123,8 @@ function DictionaryContent({ translations, language, isAuthenticated }: Dictiona
     <div className="min-h-screen bg-background">
       {/* Header */}
       <div className="border-b bg-card/50 backdrop-blur">
-        <div className="app-container app-py-md">
-          <div className="app-content">
+        <div className="px-4 sm:px-6 lg:px-8 py-4">
+          <div className="max-w-6xl mx-auto">
             <div className="flex items-center gap-3">
               <Book className="w-8 h-8 text-primary" />
               <h1 className="text-2xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
@@ -136,8 +136,9 @@ function DictionaryContent({ translations, language, isAuthenticated }: Dictiona
       </div>
 
       {/* Search Section */}
-      <div className="app-container app-py-lg">
-        <div className="app-content max-w-4xl mx-auto">
+      <div className="px-4 sm:px-6 lg:px-8 py-6">
+        <div className="max-w-6xl mx-auto">
+          <div className="w-full">
           <SearchBar
             searchQuery={searchQuery}
             setSearchQuery={setSearchQuery}
@@ -189,10 +190,10 @@ function DictionaryContent({ translations, language, isAuthenticated }: Dictiona
               <WordDetail selectedItem={selectedItem} translations={translations} />
             )}
             {activeTab === 'kanji' && (
-              <KanjiDetail selectedItem={selectedItem} />
+              <KanjiDetail selectedItem={selectedItem} translations={translations} />
             )}
             {activeTab === 'grammar' && (
-              <GrammarDetail selectedItem={selectedItem} />
+              <GrammarDetail selectedItem={selectedItem} translations={translations} />
             )}
             {activeTab === 'examples' && (
               <ExamplesList selectedItem={selectedItem} />
@@ -203,6 +204,7 @@ function DictionaryContent({ translations, language, isAuthenticated }: Dictiona
             {activeTab === 'kanji-writing' && (
               <KanjiWritingDetail selectedItem={selectedItem} searchQuery={searchQuery} />
             )}
+          </div>
           </div>
         </div>
       </div>

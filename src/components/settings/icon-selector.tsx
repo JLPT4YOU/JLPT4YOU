@@ -14,6 +14,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
   DialogTrigger
 } from '@/components/ui/dialog'
 import { ScrollArea } from '@/components/ui/scroll-area'
@@ -115,6 +116,9 @@ export function IconSelector({ selectedIcon, onIconSelect, className }: IconSele
           <DialogTitle>
             {t ? t('pages.settings.iconSelector.title') : 'Chọn Icon Avatar'}
           </DialogTitle>
+          <DialogDescription>
+            {t ? t('pages.settings.iconSelector.description') : 'Chọn một icon để làm avatar cho tài khoản của bạn'}
+          </DialogDescription>
         </DialogHeader>
 
         {/* Search */}

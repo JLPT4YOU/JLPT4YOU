@@ -21,6 +21,15 @@
       "testFailed": "無効または期限切れのAPIキー",
       "networkError": "接続エラー。再試行してください。"
     }
+    ,
+    "templates": {
+      "premiumUpgrade": {
+        "title": "プレミアムのアップグレードに成功しました",
+        "content": "おめでとうございます！プレミアム{plan}にアップグレードしました。プレミアムは{date}に失効します。",
+        "planMonthly": "月間",
+        "planYearly": "年間"
+      }
+    }
   },
   "common": {
     "appName": "JLPT4YOU",
@@ -163,6 +172,8 @@
       "name": "プレミアム",
       "price": "$2.49",
       "period": "/月",
+      "periodUnit": "USD/月",
+      "saveBadge": "17%節約",
       "badge": "おすすめ",
       "description": "完全な学習体験",
       "features": [
@@ -176,13 +187,19 @@
         "24/7優先サポート"
       ],
       "button": "プレミアムにアップグレード"
+    },
+    "trustIndicators": {
+      "secure": "セキュア",
+      "cancelAnytime": "いつでもキャンセル可能",
+      "sslSecure": "SSL暗号化",
+      "encryption": "256bit暗号化"
     }
   },
   "footer": {
     "description": "先進的なAI技術を搭載した日本語能力試験学習プラットフォームのリーダーとして、N5からN1まですべてのレベルの攻略をサポートします。",
     "contact": {
       "title": "お問い合わせ",
-      "email": "support@jlpt4you.com",
+      "email": "admin@jlpt4you.com",
       "chat": "サポートチャット"
     },
     "links": {
@@ -563,8 +580,8 @@
     "selectLevel": "JLPTレベルを選択",
     "testTypes": {
       "official": {
-        "title": "JLPT4YOU - 日本語能力試験 N5 N4 N3 N2 N1 無料練習問題",
-        "description": "AI搭載の最先端JLPT学習プラットフォーム。全レベル対応の完全無料オンライン日本語学習サイト。詳細な解説付き。",
+        "title": "JLPT",
+        "description": "公式JLPTテスト。",
         "subtitle": "国際標準テスト"
       },
       "custom": {
@@ -756,18 +773,34 @@
       "translate": "翻訳"
     },
     "search": {
-      "placeholder": "検索キーワードを入力...",
+      "placeholder": "単語、漢字、文法を検索...",
       "button": "検索",
-      "clear": "クリア",
+      "loading": "検索中...",
+      "typeLabel": "タイプ:",
+      "positionLabel": "位置:",
       "positions": {
         "start": "開始",
         "middle": "中間",
         "end": "終了"
       },
       "types": {
-        "word": "語彙",
+        "word": "単語",
         "grammar": "文法"
       }
+    },
+    "messages": {
+      "selectWord": "キーワードを入力して単語を選択し、詳細を表示してください",
+      "selectGrammar": "キーワードを入力して文法パターンを選択し、詳細を表示してください",
+      "selectKanji": "単語を選択して漢字情報を表示してください",
+      "noKanji": "この単語には漢字がありません",
+      "selectExample": "単語または文法を選択して例文を表示してください",
+      "noKanjiWriting": "この単語の漢字書き方情報が見つかりません",
+      "selectKanjiToLearn": "書き方を学ぶ漢字を選択:",
+      "kanjiWritingTitle": "漢字の書き方",
+      "learnWriting": "書き方を学ぶ: {char}",
+      "kanjiInfo": "漢字情報:",
+      "searching": "検索中...",
+      "searchError": "漢字検索エラー"
     },
     "wordDetail": {
       "level": "JLPT {level}",
@@ -1035,8 +1068,7 @@
   "pages": {
     "topup": {
       "title": "チャージ",
-      "description": "チャージサービス - 機能開発中",
-      "comingSoon": "このページは構築中です。後でお戻りください！"
+      "description": "アカウントにクレジットを追加"
     },
     "payment": {
       "title": "アカウントをアップグレード",
@@ -1081,6 +1113,23 @@
         "emailSent": "📧 確認メールを送信しました"
       },
       "checkout": {
+        "selectPlan": "プラン選択",
+        "youWillGet": "取得できるもの",
+        "unlimitedExams": "無制限の練習テスト",
+        "irinAiExplanations": "AI Irin による解説",
+        "exclusiveMaterials": "独占教材",
+        "orderSummary": "注文概要",
+        "total": "合計",
+        "couponCode": "クーポンコード",
+        "validating": "確認中...",
+        "yourBalance": "あなたの残高",
+        "durationDiscount": "期間割引",
+        "couponApplied": "クーポンコード",
+        "couponDiscount": "クーポン割引",
+        "couponAppliedSuccessfully": "クーポンの適用が成功しました！",
+        "couponRecalculated": "クーポンが再計算されました！",
+        "couponNotValidForPlan": "クーポンはこのプランには無効です",
+        "couponRecalculationError": "クーポンを再計算できません。再度適用してください。",
         "save5": "5%節約",
         "popular": "人気",
         "best": "最もお得",
@@ -1102,8 +1151,7 @@
         "processing": "処理中...",
         "payNow": "今すぐ支払う",
         "termsAgreement": "支払いを進めることで、以下に同意したものとみなされます",
-        "termsOfService": "利用規約",
-        "orderSummary": "注文概要"
+        "termsOfService": "利用規約"
       }
     },
     "settings": {
@@ -1229,6 +1277,21 @@
     }
   },
   "chat": {
+    "languages": {
+      "auto": "自動言語検出",
+      "vietnamese": "ベトナム語",
+      "english": "英語",
+      "japanese": "日本語",
+      "custom": "カスタム言語"
+    },
+    "editTitle": "タイトルを編集",
+    "deleteChat": "チャットを削除",
+    "navigation": {
+      "home": "ホーム",
+      "settings": "設定"
+    },
+    "noConversations": "まだ会話がありません",
+    "startNewChat": "新しいチャットを始めてください",
     "prompts": {
       "aiLanguage": {
         "title": "AI言語",
@@ -1294,6 +1357,7 @@
       "save": "保存",
       "apiKeyHelper": "Google AI StudioからAPIキーを取得",
       "aiLanguage": "AI対話言語",
+      "aiLanguageDescription": "AI応答と対話スタイルの言語を選択",
       "selectLanguage": "言語を選択",
       "customLanguagePlaceholder": "希望する言語を入力してください（例：한국어、Français、Español...）",
       "saving": "保存中...",
@@ -1366,30 +1430,15 @@
       }
     },
     "loading": "iRIN先生を読み込み中...",
-    "languages": {
-      "auto": "自動言語検出",
-      "vietnamese": "Tiếng Việt",
-      "english": "English",
-      "japanese": "日本語",
-      "custom": "カスタム"
-    },
     "aiResponse": "こんにちは！私はJLPT4YOUプラットフォームのiRINです。日本語が専門ですが、どんな話題でも話し合えます。あなたの質問：「{{question}}」。今日は何について話しましょうか？",
     "aiAssistant": "AIアシスタント",
-    "noConversations": "まだ会話がありません",
-    "startNewChat": "新しいチャットを始めてください",
     "inputHelper": "Enterで送信、Shift + Enterで改行",
     "characterCount": "{{count}}文字",
     "newChatTitle": "新しいチャット",
     "generatingTitle": "タイトルを生成中...",
-    "editTitle": "タイトルを編集",
-    "deleteChat": "チャットを削除",
     "retry": "再試行",
     "stopGeneration": "生成を停止",
     "scrollToBottom": "最下部にスクロール",
-    "navigation": {
-      "home": "ホーム",
-      "settings": "設定"
-    },
     "errors": {
       "geminiConnection": "申し訳ございませんが、Gemini AIとの接続でエラーが発生しました。後でもう一度お試しください。",
       "pdfProcessing": "申し訳ございませんが、PDFファイルの処理中にエラーが発生しました。もう一度お試しください。",
@@ -1694,6 +1743,9 @@
       "description": "レベル別語彙学習",
       "pageTitle": "{level}学習 - 語彙",
       "pageSubtitle": "レベル別JLPT語彙を学習。検索を使用して特定の単語を見つけてください。",
+      "card": {
+        "ariaLabel": "{level}レベル語彙学習"
+      },
       "search": {
         "placeholder": "単語を検索（漢字/ひらがな/意味）",
         "clear": "クリア",
@@ -1705,6 +1757,16 @@
       "description": "レベル別文法学習",
       "pageTitle": "{level}学習 - 文法",
       "pageSubtitle": "レベル別JLPT文法を学習。検索を使用して特定のパターンや意味を見つけてください。",
+      "card": {
+        "ariaLabel": "{level}レベル文法学習",
+        "clickForDetails": "クリックして詳細を見る"
+      },
+      "detail": {
+        "structure": "構造",
+        "vietnameseMeaning": "ベトナム語の意味",
+        "englishMeaning": "英語の意味",
+        "examples": "例文"
+      },
       "search": {
         "placeholder": "文法や意味を検索（JP/EN/VN）",
         "clear": "クリア",
@@ -1944,7 +2006,31 @@
         "saving": "保存中...",
         "updateSuccess": "情報が正常に更新されました！",
         "updateError": "更新中にエラーが発生しました",
-        "unexpectedError": "予期しないエラーが発生しました"
+        "unexpectedError": "予期しないエラーが発生しました",
+        "checkout": {
+          "selectPlan": "プラン選択",
+          "payment": "決済",
+          "premiumPlan": "プレミアムプラン",
+          "monthlyBilling": "月額課金",
+          "yearlyBilling": "年額課金",
+          "youWillGet": "ご利用いただける機能",
+          "unlimitedExams": "試験問題無制限",
+          "irinAiExplanations": "iRIN AI詳細解説",
+          "exclusiveMaterials": "N5-N1独占教材",
+          "orderSummary": "注文概要",
+          "total": "合計",
+          "couponCode": "クーポンコード",
+          "enterCoupon": "クーポンコードを入力",
+          "apply": "適用",
+          "validating": "確認中...",
+          "durationDiscount": "期間割引",
+          "couponApplied": "クーポンコード",
+          "couponDiscount": "クーポン割引",
+          "processing": "処理中...",
+          "payNow": "今すぐ支払う",
+          "termsAgreement": "お支払いを続行することで、当社の",
+          "termsOfService": "利用規約"
+        }
       },
       "security": {
         "title": "セキュリティ",
@@ -2101,7 +2187,8 @@
   "notifications": {
     "button": {
       "ariaLabel": "通知",
-      "dialogTitle": "通知センター"
+      "dialogTitle": "通知センター",
+      "dialogDescription": "通知を表示・管理します"
     },
     "inbox": {
       "title": "受信トレイ",
@@ -2121,25 +2208,6 @@
         "close": "閉じる"
       },
       "states": {
-        "loading": "読み込み中...",
-        "noNotifications": "通知がありません",
-        "selectNotification": "通知を選択して詳細を表示"
-      },
-      "details": {
-        "title": "通知詳細",
-        "important": "重要",
-        "metadata": {
-          "title": "詳細",
-          "amount": "金額:",
-          "plan": "プラン:",
-          "planMonthly": "月額",
-          "planYearly": "年額",
-          "code": "コード:",
-          "status": "ステータス:"
-        }
-      },
-      "comments": {
-        "mobileModal": "モバイルではサイドバーではなくモーダルを開く",
         "closeSidebarAfterSelect": "選択後にモバイルでサイドバーを閉じる",
         "searchAndFilter": "トグルボタン付き検索・フィルターバー",
         "outlookStylePreview": "Outlookスタイルのメッセージプレビュー（レスポンシブ対応）",
@@ -2211,15 +2279,6 @@
       "confirm": "すべてリセット",
       "successMessage": "✅ リセット成功！\n\n• カスタムプロンプト：削除済み\n• 言語設定：リセット済み\n• コアiRIN：保持"
     },
-    "loading": "iRINを読み込み中...",
-    "languages": {
-      "auto": "言語を自動検出",
-      "vietnamese": "ベトナム語",
-      "english": "英語",
-      "japanese": "日本語",
-      "custom": "カスタム"
-    },
-    "aiResponse": "こんにちは！JLPT4YOUプラットフォームのiRINです。私の専門は日本語ですが、あなたが興味のあるどんな話題でも話すことができます。「{{question}}」とお聞きになりましたね。今日は何について話しましょうか？",
-    "aiAssistant": "AIアシスタント"
+    "loading": "iRINを読み込み中..."
   }
 }

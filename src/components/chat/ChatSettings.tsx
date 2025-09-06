@@ -6,14 +6,14 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from '@/components/ui/dialog';
 import { Settings, Moon, Sun, MessageSquare, Trash2, Globe } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { useTranslations } from '@/hooks/use-translations';
 import { cn } from '@/lib/utils';
 import { ConfirmationDialog } from '@/components/ui/confirmation-dialog';
 import { UserStorage } from '@/lib/user-storage';
-import { useAuth } from '@/contexts/auth-context-simple';
+import { useAuth } from '@/contexts/auth-context';
 
 interface ChatSettingsProps {
   onClearHistory?: () => void;
@@ -114,6 +114,9 @@ export const ChatSettings: React.FC<ChatSettingsProps> = ({ onClearHistory }) =>
             <Settings className="h-5 w-5" />
             {t ? t('chat.settings.title') : 'AI Chat Settings'}
           </DialogTitle>
+          <DialogDescription>
+            {t ? t('chat.settings.description') : 'Configure your AI chat preferences and language settings'}
+          </DialogDescription>
         </DialogHeader>
         
         <div className="space-y-6 py-4">

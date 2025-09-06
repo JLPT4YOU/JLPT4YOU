@@ -300,7 +300,6 @@ class MonitoringService {
     }
 
     // In production, send to monitoring service
-    // TODO: Implement actual alerting (email, Slack, etc.)
   }
 
   /**
@@ -353,7 +352,7 @@ class MonitoringService {
     return {
       metrics,
       recentEvents,
-      alerts: [] // TODO: Implement alert history
+      alerts: []
     }
   }
 

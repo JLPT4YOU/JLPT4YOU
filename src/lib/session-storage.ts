@@ -5,8 +5,9 @@
  */
 
 import { Session } from '@supabase/supabase-js'
+import { logger } from './logger'
 
-interface StoredSessionData {
+interface SessionStorageData {
   session: Session
   timestamp: number
   expiresAt: number
@@ -23,7 +24,7 @@ export class SessionStorage {
    */
   static saveSession(session: Session): boolean {
     try {
-      const sessionData: StoredSessionData = {
+      const sessionData: SessionStorageData = {
         session,
         timestamp: Date.now(),
         expiresAt: session.expires_at || 0,
@@ -36,19 +37,19 @@ export class SessionStorage {
       try {
         localStorage.setItem(this.SESSION_KEY, serialized)
       } catch (error) {
-        console.warn('⚠️ [SessionStorage] localStorage save failed:', error)
+        logger.warn('localStorage save failed', error, 'SESSION')
       }
       
       // ✅ BACKUP: Save to sessionStorage
       try {
         sessionStorage.setItem(this.BACKUP_KEY, serialized)
       } catch (error) {
-        console.warn('⚠️ [SessionStorage] sessionStorage save failed:', error)
+        logger.warn('sessionStorage save failed', error, 'SESSION')
       }
       
       return true
     } catch (error) {
-      console.error('❌ [SessionStorage] Failed to save session:', error)
+      logger.error('Failed to save session', error, 'SESSION')
       return false
     }
   }
@@ -70,11 +71,11 @@ export class SessionStorage {
         return null
       }
 
-      const sessionData: StoredSessionData = JSON.parse(stored)
+      const sessionData: SessionStorageData = JSON.parse(stored)
       
       // ✅ VALIDATE: Check version compatibility
       if (sessionData.version !== this.VERSION) {
-        console.warn('⚠️ [SessionStorage] Session version mismatch, clearing')
+        logger.warn('Session version mismatch, clearing', null, 'SESSION')
         this.clearSession()
         return null
       }
@@ -94,7 +95,7 @@ export class SessionStorage {
 
       return sessionData.session
     } catch (error) {
-      console.error('❌ [SessionStorage] Failed to get session:', error)
+      logger.error('Failed to get session', error, 'SESSION')
       this.clearSession() // Clear corrupted data
       return null
     }
@@ -107,7 +108,7 @@ export class SessionStorage {
     try {
       return storage.getItem(key)
     } catch (error) {
-      console.warn(`⚠️ [SessionStorage] Failed to read from ${storage === localStorage ? 'localStorage' : 'sessionStorage'}:`, error)
+      logger.warn(`Failed to read from ${storage === localStorage ? 'localStorage' : 'sessionStorage'}`, error, 'SESSION')
       return null
     }
   }
@@ -120,20 +121,20 @@ export class SessionStorage {
       // Clear from localStorage
       try {
         localStorage.removeItem(this.SESSION_KEY)
-        console.log('✅ [SessionStorage] Cleared from localStorage')
+        logger.debug('Cleared from localStorage')
       } catch (error) {
-        console.warn('⚠️ [SessionStorage] Failed to clear localStorage:', error)
+        logger.warn('Failed to clear localStorage', error, 'SESSION')
       }
       
       // Clear from sessionStorage
       try {
         sessionStorage.removeItem(this.BACKUP_KEY)
-        console.log('✅ [SessionStorage] Cleared from sessionStorage')
+        logger.debug('Cleared from sessionStorage')
       } catch (error) {
-        console.warn('⚠️ [SessionStorage] Failed to clear sessionStorage:', error)
+        logger.warn('Failed to clear sessionStorage', error, 'SESSION')
       }
     } catch (error) {
-      console.error('❌ [SessionStorage] Failed to clear session:', error)
+      logger.error('Failed to clear session', error, 'SESSION')
     }
   }
 
@@ -183,7 +184,7 @@ export class SessionStorage {
         }
       }
 
-      const sessionData: StoredSessionData = JSON.parse(stored)
+      const sessionData: SessionStorageData = JSON.parse(stored)
       const expiresAt = sessionData.expiresAt ? new Date(sessionData.expiresAt * 1000) : null
       const now = new Date()
       const isExpired = expiresAt ? now >= expiresAt : false
@@ -196,7 +197,7 @@ export class SessionStorage {
         isExpired
       }
     } catch (error) {
-      console.error('❌ [SessionStorage] Failed to get session info:', error)
+      logger.error('Failed to get session info', error, 'SESSION')
       return {
         hasSession: false,
         expiresAt: null,
@@ -222,7 +223,7 @@ export class SessionStorage {
         return { isValid: false, reason: 'No stored session' }
       }
 
-      const sessionData: StoredSessionData = JSON.parse(stored)
+      const sessionData: SessionStorageData = JSON.parse(stored)
       
       // Check version
       if (sessionData.version !== this.VERSION) {
